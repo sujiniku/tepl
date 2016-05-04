@@ -42,6 +42,13 @@ struct _GtefFileClass
 
 GtefFile *	gtef_file_new				(void);
 
+gchar *		gtef_file_get_metadata			(GtefFile    *file,
+							 const gchar *key);
+
+void		gtef_file_set_metadata			(GtefFile    *file,
+							 const gchar *key,
+							 const gchar *value);
+
 G_END_DECLS
 
 #endif /* GTEF_FILE_H */

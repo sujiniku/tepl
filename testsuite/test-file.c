@@ -22,6 +22,41 @@
 static void
 test_set_metadata (void)
 {
+	GtefFile *file;
+	const gchar *key;
+	gchar *value;
+
+	file = gtef_file_new ();
+
+	key = "gtef-test-key";
+	value = gtef_file_get_metadata (file, key);
+	g_assert (value == NULL);
+
+	gtef_file_set_metadata (file, key, "zippy");
+	value = gtef_file_get_metadata (file, key);
+	g_assert_cmpstr (value, ==, "zippy");
+	g_free (value);
+
+	value = gtef_file_get_metadata (file, "gtef-test-other-key");
+	g_assert (value == NULL);
+
+	gtef_file_set_metadata (file, key, "zippiness");
+	value = gtef_file_get_metadata (file, key);
+	g_assert_cmpstr (value, ==, "zippiness");
+	g_free (value);
+
+	/* Unset */
+	gtef_file_set_metadata (file, key, NULL);
+	value = gtef_file_get_metadata (file, key);
+	g_assert (value == NULL);
+
+	/* Unset non-set metadata */
+	key = "gtef-test-other-key";
+	gtef_file_set_metadata (file, key, NULL);
+	value = gtef_file_get_metadata (file, key);
+	g_assert (value == NULL);
+
+	g_object_unref (file);
 }
 
 gint

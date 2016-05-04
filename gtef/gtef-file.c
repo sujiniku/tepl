@@ -50,7 +50,7 @@ gtef_file_finalize (GObject *object)
 {
 	GtefFilePrivate *priv = gtef_file_get_instance_private (GTEF_FILE (object));
 
-	g_clear_object (&priv->metadata);
+	g_object_unref (priv->metadata);
 
 	G_OBJECT_CLASS (gtef_file_parent_class)->finalize (object);
 }

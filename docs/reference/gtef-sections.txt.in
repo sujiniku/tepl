@@ -1,1 +1,13 @@
 <INCLUDE>gtef/gtef.h</INCLUDE>
+
+<SECTION>
+<FILE>file</FILE>
+<TITLE>GtefFile</TITLE>
+GtefFile
+gtef_file_new
+gtef_file_get_metadata
+gtef_file_set_metadata
+<SUBSECTION Standard>
+GtefFileClass
+GTEF_TYPE_FILE
+</SECTION>

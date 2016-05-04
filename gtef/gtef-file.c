@@ -19,6 +19,14 @@
 
 #include "gtef-file.h"
 
+/**
+ * SECTION:file
+ * @Short_description: On-disk representation of a GtkSourceBuffer
+ * @Title: GtefFile
+ *
+ * #GtefFile extends #GtkSourceFile with metadata support.
+ */
+
 typedef struct _GtefFilePrivate GtefFilePrivate;
 
 struct _GtefFilePrivate

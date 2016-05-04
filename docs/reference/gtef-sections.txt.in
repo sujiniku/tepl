@@ -7,6 +7,9 @@ GtefFile
 gtef_file_new
 gtef_file_get_metadata
 gtef_file_set_metadata
+gtef_file_load_metadata
+gtef_file_load_metadata_async
+gtef_file_load_metadata_finish
 <SUBSECTION Standard>
 GtefFileClass
 GTEF_TYPE_FILE

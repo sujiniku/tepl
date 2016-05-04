@@ -49,6 +49,20 @@ void		gtef_file_set_metadata			(GtefFile    *file,
 							 const gchar *key,
 							 const gchar *value);
 
+gboolean	gtef_file_load_metadata			(GtefFile      *file,
+							 GCancellable  *cancellable,
+							 GError       **error);
+
+void		gtef_file_load_metadata_async		(GtefFile            *file,
+							 gint                 io_priority,
+							 GCancellable        *cancellable,
+							 GAsyncReadyCallback  callback,
+							 gpointer             user_data);
+
+gboolean	gtef_file_load_metadata_finish		(GtefFile      *file,
+							 GAsyncResult  *result,
+							 GError       **error);
+
 G_END_DECLS
 
 #endif /* GTEF_FILE_H */

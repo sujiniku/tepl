@@ -20,7 +20,7 @@
 #include <gtef/gtef.h>
 
 static void
-test_set_metadata (void)
+test_get_set_metadata (void)
 {
 	GtefFile *file;
 	const gchar *key;
@@ -59,13 +59,114 @@ test_set_metadata (void)
 	g_object_unref (file);
 }
 
+static void
+test_load_save_metadata (void)
+{
+	GtefFile *file;
+	const gchar *key;
+	const gchar *other_key;
+	gchar *value;
+	gchar *path;
+	GFile *location;
+	GError *error = NULL;
+	gboolean ok;
+
+	file = gtef_file_new ();
+
+	/* NULL location */
+
+	key = "gtef-test-key";
+	gtef_file_set_metadata (file, key, "epica");
+
+	ok = gtef_file_load_metadata (file, NULL, &error);
+	g_assert_no_error (error);
+	g_assert (!ok);
+
+	ok = gtef_file_save_metadata (file, NULL, &error);
+	g_assert_no_error (error);
+	g_assert (!ok);
+
+	value = gtef_file_get_metadata (file, key);
+	g_assert_cmpstr (value, ==, "epica");
+	g_free (value);
+
+	/* Save metadata */
+
+	path = g_build_filename (g_get_tmp_dir (), "gtef-metadata-test", NULL);
+	location = g_file_new_for_path (path);
+
+	gtk_source_file_set_location (GTK_SOURCE_FILE (file), location);
+
+	ok = gtef_file_save_metadata (file, NULL, &error);
+	g_assert (error != NULL); /* No such file or directory */
+	g_clear_error (&error);
+	g_assert (!ok);
+
+	g_file_set_contents (path, "blum", -1, &error);
+	g_assert_no_error (error);
+
+	ok = gtef_file_save_metadata (file, NULL, &error);
+	g_assert_no_error (error);
+	g_assert (ok);
+
+	g_object_unref (file);
+
+	/* Load metadata */
+
+	file = gtef_file_new ();
+	gtk_source_file_set_location (GTK_SOURCE_FILE (file), location);
+
+	other_key = "gtef-test-other-key";
+	gtef_file_set_metadata (file, other_key, "embrace");
+
+	ok = gtef_file_load_metadata (file, NULL, &error);
+	g_assert_no_error (error);
+	g_assert (ok);
+
+	value = gtef_file_get_metadata (file, other_key);
+	g_assert (value == NULL);
+
+	value = gtef_file_get_metadata (file, key);
+	g_assert_cmpstr (value, ==, "epica");
+	g_free (value);
+
+	/* Unset */
+
+	gtef_file_set_metadata (file, key, NULL);
+	ok = gtef_file_save_metadata (file, NULL, &error);
+	g_assert_no_error (error);
+	g_assert (ok);
+
+	ok = gtef_file_load_metadata (file, NULL, &error);
+	g_assert_no_error (error);
+	g_assert (ok);
+
+	value = gtef_file_get_metadata (file, key);
+	g_assert (value == NULL);
+
+	/* Clean-up */
+
+	g_file_delete (location, NULL, &error);
+	g_assert_no_error (error);
+
+	ok = gtef_file_load_metadata (file, NULL, &error);
+	g_assert (error != NULL); /* No such file or directory */
+	g_clear_error (&error);
+	g_assert (!ok);
+
+	g_free (path);
+	g_object_unref (location);
+	g_object_unref (file);
+}
+
 gint
 main (gint    argc,
       gchar **argv)
 {
 	gtk_test_init (&argc, &argv);
 
-	g_test_add_func ("/file/set_metadata", test_set_metadata);
+	g_test_add_func ("/file/get_set_metadata", test_get_set_metadata);
+	g_test_add_func ("/file/load_save_metadata", test_load_save_metadata);
 
 	return g_test_run ();
 }

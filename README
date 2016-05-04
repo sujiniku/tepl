@@ -1,0 +1,8 @@
+Gtef - GNOME Text Editor Framework
+==================================
+
+Gtef is a library that eases the development of GtkSourceView-based text
+editors and IDEs. The Gtef code comes from gedit.
+
+https://wiki.gnome.org/Apps/Gedit/ReusableCode
+https://wiki.gnome.org/Projects/GtkSourceView/MdiFramework

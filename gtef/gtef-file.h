@@ -63,6 +63,20 @@ gboolean	gtef_file_load_metadata_finish		(GtefFile      *file,
 							 GAsyncResult  *result,
 							 GError       **error);
 
+gboolean	gtef_file_save_metadata			(GtefFile      *file,
+							 GCancellable  *cancellable,
+							 GError       **error);
+
+void		gtef_file_save_metadata_async		(GtefFile            *file,
+							 gint                 io_priority,
+							 GCancellable        *cancellable,
+							 GAsyncReadyCallback  callback,
+							 gpointer             user_data);
+
+gboolean	gtef_file_save_metadata_finish		(GtefFile      *file,
+							 GAsyncResult  *result,
+							 GError       **error);
+
 G_END_DECLS
 
 #endif /* GTEF_FILE_H */

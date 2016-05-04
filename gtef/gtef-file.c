@@ -327,3 +327,137 @@ gtef_file_load_metadata_finish (GtefFile      *file,
 
 	return g_task_propagate_boolean (G_TASK (result), error);
 }
+
+/**
+ * gtef_file_save_metadata:
+ * @file: a #GtefFile.
+ * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
+ * @error: location to a %NULL #GError, or %NULL.
+ *
+ * Saves synchronously the metadata for #GtkSourceFile:location.
+ *
+ * Returns: whether the metadata was saved successfully.
+ * Since: 1.0
+ */
+gboolean
+gtef_file_save_metadata (GtefFile      *file,
+			 GCancellable  *cancellable,
+			 GError       **error)
+{
+	GtefFilePrivate *priv;
+	GFile *location;
+
+	g_return_val_if_fail (GTEF_IS_FILE (file), FALSE);
+	g_return_val_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable), FALSE);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	priv = gtef_file_get_instance_private (file);
+
+	location = gtk_source_file_get_location (GTK_SOURCE_FILE (file));
+	if (location == NULL)
+	{
+		return FALSE;
+	}
+
+	return g_file_set_attributes_from_info (location,
+						priv->metadata,
+						G_FILE_QUERY_INFO_NONE,
+						cancellable,
+						error);
+}
+
+static void
+save_metadata_async_cb (GObject      *source_object,
+			GAsyncResult *result,
+			gpointer      user_data)
+{
+	GFile *location = G_FILE (source_object);
+	GTask *task = G_TASK (user_data);
+	GError *error = NULL;
+
+	g_file_set_attributes_finish (location, result, NULL, &error);
+
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		g_object_unref (task);
+		return;
+	}
+
+	g_task_return_boolean (task, TRUE);
+	g_object_unref (task);
+}
+
+/**
+ * gtef_file_save_metadata_async:
+ * @file: a #GtefFile.
+ * @io_priority: the I/O priority of the request. E.g. %G_PRIORITY_LOW,
+ *   %G_PRIORITY_DEFAULT or %G_PRIORITY_HIGH.
+ * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
+ * @callback: (scope async): a #GAsyncReadyCallback to call when the request is
+ *   satisfied.
+ * @user_data: user data to pass to @callback.
+ *
+ * The asynchronous version of gtef_file_save_metadata().
+ *
+ * See the #GAsyncResult documentation to know how to use this function.
+ *
+ * Since: 1.0
+ */
+void
+gtef_file_save_metadata_async (GtefFile            *file,
+			       gint                 io_priority,
+			       GCancellable        *cancellable,
+			       GAsyncReadyCallback  callback,
+			       gpointer             user_data)
+{
+	GtefFilePrivate *priv;
+	GTask *task;
+	GFile *location;
+
+	g_return_if_fail (GTEF_IS_FILE (file));
+	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
+
+	priv = gtef_file_get_instance_private (file);
+
+	task = g_task_new (file, cancellable, callback, user_data);
+
+	location = gtk_source_file_get_location (GTK_SOURCE_FILE (file));
+	if (location == NULL)
+	{
+		g_task_return_boolean (task, FALSE);
+		g_object_unref (task);
+		return;
+	}
+
+	g_file_set_attributes_async (location,
+				     priv->metadata,
+				     G_FILE_QUERY_INFO_NONE,
+				     io_priority,
+				     cancellable,
+				     save_metadata_async_cb,
+				     task);
+}
+
+/**
+ * gtef_file_save_metadata_finish:
+ * @file: a #GtefFile.
+ * @result: a #GAsyncResult.
+ * @error: location to a %NULL #GError, or %NULL.
+ *
+ * Finishes the metadata saving started with gtef_file_save_metadata_async().
+ *
+ * Returns: whether the metadata was saved successfully.
+ * Since: 1.0
+ */
+gboolean
+gtef_file_save_metadata_finish (GtefFile      *file,
+				GAsyncResult  *result,
+				GError       **error)
+{
+	g_return_val_if_fail (GTEF_IS_FILE (file), FALSE);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	g_return_val_if_fail (g_task_is_valid (result, file), FALSE);
+
+	return g_task_propagate_boolean (G_TASK (result), error);
+}

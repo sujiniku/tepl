@@ -60,7 +60,7 @@ test_get_set_metadata (void)
 }
 
 static void
-test_load_save_metadata (void)
+test_load_save_metadata_sync (void)
 {
 	GtefFile *file;
 	const gchar *key;
@@ -92,7 +92,7 @@ test_load_save_metadata (void)
 
 	/* Save metadata */
 
-	path = g_build_filename (g_get_tmp_dir (), "gtef-metadata-test", NULL);
+	path = g_build_filename (g_get_tmp_dir (), "gtef-metadata-test-sync", NULL);
 	location = g_file_new_for_path (path);
 
 	gtk_source_file_set_location (GTK_SOURCE_FILE (file), location);
@@ -159,6 +159,94 @@ test_load_save_metadata (void)
 	g_object_unref (file);
 }
 
+static void
+load_metadata_async_cb (GObject      *source_object,
+			GAsyncResult *result,
+			gpointer      user_data)
+{
+	GtefFile *file = GTEF_FILE (source_object);
+	gchar *value;
+	GFile *location;
+	GError *error = NULL;
+	gboolean ok;
+
+	ok = gtef_file_load_metadata_finish (file, result, &error);
+	g_assert_no_error (error);
+	g_assert (ok);
+
+	value = gtef_file_get_metadata (file, "gtef-test-key");
+	g_assert_cmpstr (value, ==, "in flames");
+	g_free (value);
+
+	/* Unset and clean-up */
+
+	gtef_file_set_metadata (file, "gtef-test-key", NULL);
+	ok = gtef_file_save_metadata (file, NULL, &error);
+	g_assert_no_error (error);
+	g_assert (ok);
+
+	location = gtk_source_file_get_location (GTK_SOURCE_FILE (file));
+	g_file_delete (location, NULL, &error);
+	g_assert_no_error (error);
+
+	g_object_unref (file);
+	gtk_main_quit ();
+}
+
+static void
+save_metadata_async_cb (GObject      *source_object,
+			GAsyncResult *result,
+			gpointer      user_data)
+{
+	GtefFile *file = GTEF_FILE (source_object);
+	GError *error = NULL;
+	gboolean ok;
+
+	ok = gtef_file_save_metadata_finish (file, result, &error);
+	g_assert_no_error (error);
+	g_assert (ok);
+
+	gtef_file_set_metadata (file, "gtef-test-key", NULL);
+
+	gtef_file_load_metadata_async (file,
+				       G_PRIORITY_DEFAULT,
+				       NULL,
+				       load_metadata_async_cb,
+				       NULL);
+}
+
+/* Unit test not as complete as the sync version. */
+static void
+test_load_save_metadata_async (void)
+{
+	GtefFile *file;
+	gchar *path;
+	GFile *location;
+	GError *error = NULL;
+
+	file = gtef_file_new ();
+
+	path = g_build_filename (g_get_tmp_dir (), "gtef-metadata-test-async", NULL);
+
+	location = g_file_new_for_path (path);
+	gtk_source_file_set_location (GTK_SOURCE_FILE (file), location);
+	g_object_unref (location);
+
+	g_file_set_contents (path, "blum", -1, &error);
+	g_assert_no_error (error);
+	g_free (path);
+
+	gtef_file_set_metadata (file, "gtef-test-key", "in flames");
+
+	gtef_file_save_metadata_async (file,
+				       G_PRIORITY_DEFAULT,
+				       NULL,
+				       save_metadata_async_cb,
+				       NULL);
+
+	gtk_main ();
+}
+
 gint
 main (gint    argc,
       gchar **argv)
@@ -166,7 +254,8 @@ main (gint    argc,
 	gtk_test_init (&argc, &argv);
 
 	g_test_add_func ("/file/get_set_metadata", test_get_set_metadata);
-	g_test_add_func ("/file/load_save_metadata", test_load_save_metadata);
+	g_test_add_func ("/file/load_save_metadata_sync", test_load_save_metadata_sync);
+	g_test_add_func ("/file/load_save_metadata_async", test_load_save_metadata_async);
 
 	return g_test_run ();
 }

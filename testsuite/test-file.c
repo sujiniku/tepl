@@ -19,41 +19,41 @@
 
 #include <gtef/gtef.h>
 
+#define TEST_KEY "gtef-test-key"
+#define TEST_OTHER_KEY "gtef-test-other-key"
+
 static void
 test_get_set_metadata (void)
 {
 	GtefFile *file;
-	const gchar *key;
 	gchar *value;
 
 	file = gtef_file_new ();
 
-	key = "gtef-test-key";
-	value = gtef_file_get_metadata (file, key);
+	value = gtef_file_get_metadata (file, TEST_KEY);
 	g_assert (value == NULL);
 
-	gtef_file_set_metadata (file, key, "zippy");
-	value = gtef_file_get_metadata (file, key);
+	gtef_file_set_metadata (file, TEST_KEY, "zippy");
+	value = gtef_file_get_metadata (file, TEST_KEY);
 	g_assert_cmpstr (value, ==, "zippy");
 	g_free (value);
 
-	value = gtef_file_get_metadata (file, "gtef-test-other-key");
+	value = gtef_file_get_metadata (file, TEST_OTHER_KEY);
 	g_assert (value == NULL);
 
-	gtef_file_set_metadata (file, key, "zippiness");
-	value = gtef_file_get_metadata (file, key);
+	gtef_file_set_metadata (file, TEST_KEY, "zippiness");
+	value = gtef_file_get_metadata (file, TEST_KEY);
 	g_assert_cmpstr (value, ==, "zippiness");
 	g_free (value);
 
 	/* Unset */
-	gtef_file_set_metadata (file, key, NULL);
-	value = gtef_file_get_metadata (file, key);
+	gtef_file_set_metadata (file, TEST_KEY, NULL);
+	value = gtef_file_get_metadata (file, TEST_KEY);
 	g_assert (value == NULL);
 
 	/* Unset non-set metadata */
-	key = "gtef-test-other-key";
-	gtef_file_set_metadata (file, key, NULL);
-	value = gtef_file_get_metadata (file, key);
+	gtef_file_set_metadata (file, TEST_OTHER_KEY, NULL);
+	value = gtef_file_get_metadata (file, TEST_OTHER_KEY);
 	g_assert (value == NULL);
 
 	g_object_unref (file);
@@ -63,8 +63,6 @@ static void
 test_load_save_metadata_sync (void)
 {
 	GtefFile *file;
-	const gchar *key;
-	const gchar *other_key;
 	gchar *value;
 	gchar *path;
 	GFile *location;
@@ -75,8 +73,7 @@ test_load_save_metadata_sync (void)
 
 	/* NULL location */
 
-	key = "gtef-test-key";
-	gtef_file_set_metadata (file, key, "epica");
+	gtef_file_set_metadata (file, TEST_KEY, "epica");
 
 	ok = gtef_file_load_metadata (file, NULL, &error);
 	g_assert_no_error (error);
@@ -86,7 +83,7 @@ test_load_save_metadata_sync (void)
 	g_assert_no_error (error);
 	g_assert (!ok);
 
-	value = gtef_file_get_metadata (file, key);
+	value = gtef_file_get_metadata (file, TEST_KEY);
 	g_assert_cmpstr (value, ==, "epica");
 	g_free (value);
 
@@ -116,23 +113,22 @@ test_load_save_metadata_sync (void)
 	file = gtef_file_new ();
 	gtk_source_file_set_location (GTK_SOURCE_FILE (file), location);
 
-	other_key = "gtef-test-other-key";
-	gtef_file_set_metadata (file, other_key, "embrace");
+	gtef_file_set_metadata (file, TEST_OTHER_KEY, "embrace");
 
 	ok = gtef_file_load_metadata (file, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ok);
 
-	value = gtef_file_get_metadata (file, other_key);
+	value = gtef_file_get_metadata (file, TEST_OTHER_KEY);
 	g_assert (value == NULL);
 
-	value = gtef_file_get_metadata (file, key);
+	value = gtef_file_get_metadata (file, TEST_KEY);
 	g_assert_cmpstr (value, ==, "epica");
 	g_free (value);
 
 	/* Unset */
 
-	gtef_file_set_metadata (file, key, NULL);
+	gtef_file_set_metadata (file, TEST_KEY, NULL);
 	ok = gtef_file_save_metadata (file, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ok);
@@ -141,7 +137,7 @@ test_load_save_metadata_sync (void)
 	g_assert_no_error (error);
 	g_assert (ok);
 
-	value = gtef_file_get_metadata (file, key);
+	value = gtef_file_get_metadata (file, TEST_KEY);
 	g_assert (value == NULL);
 
 	/* Clean-up */
@@ -174,13 +170,13 @@ load_metadata_async_cb (GObject      *source_object,
 	g_assert_no_error (error);
 	g_assert (ok);
 
-	value = gtef_file_get_metadata (file, "gtef-test-key");
+	value = gtef_file_get_metadata (file, TEST_KEY);
 	g_assert_cmpstr (value, ==, "in flames");
 	g_free (value);
 
 	/* Unset and clean-up */
 
-	gtef_file_set_metadata (file, "gtef-test-key", NULL);
+	gtef_file_set_metadata (file, TEST_KEY, NULL);
 	ok = gtef_file_save_metadata (file, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ok);
@@ -206,7 +202,7 @@ save_metadata_async_cb (GObject      *source_object,
 	g_assert_no_error (error);
 	g_assert (ok);
 
-	gtef_file_set_metadata (file, "gtef-test-key", NULL);
+	gtef_file_set_metadata (file, TEST_KEY, NULL);
 
 	gtef_file_load_metadata_async (file,
 				       G_PRIORITY_DEFAULT,
@@ -236,7 +232,7 @@ test_load_save_metadata_async (void)
 	g_assert_no_error (error);
 	g_free (path);
 
-	gtef_file_set_metadata (file, "gtef-test-key", "in flames");
+	gtef_file_set_metadata (file, TEST_KEY, "in flames");
 
 	gtef_file_save_metadata_async (file,
 				       G_PRIORITY_DEFAULT,

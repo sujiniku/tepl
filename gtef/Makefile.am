@@ -16,9 +16,11 @@ gtef_public_headers =			\
 gtef_public_c_files =			\
 	gtef-file.c
 
-gtef_private_headers =
+gtef_private_headers =			\
+	gtef-metadata-manager.h
 
-gtef_private_c_files =
+gtef_private_c_files =			\
+	gtef-metadata-manager.c
 
 # Helper Libtool library, so that the private functions can be used in unit
 # tests.

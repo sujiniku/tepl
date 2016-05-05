@@ -327,6 +327,81 @@ test_load_save_metadata_async (void)
 	teardown_unit_test ();
 }
 
+/* Setting and saving metadata should not erase previously set metadata if the
+ * metadata were not loaded beforehand.
+ */
+static void
+do_test_set_without_load (gboolean use_gvfs_metadata)
+{
+	GtefFile *file;
+	gchar *path;
+	GFile *location;
+	gchar *value;
+	GError *error = NULL;
+	gboolean ok;
+
+	file = create_file (use_gvfs_metadata);
+	path = g_build_filename (g_get_tmp_dir (), "gtef-metadata-test-set-without-load", NULL);
+	location = g_file_new_for_path (path);
+	gtk_source_file_set_location (GTK_SOURCE_FILE (file), location);
+
+	g_file_set_contents (path, "blom", -1, &error);
+	g_assert_no_error (error);
+
+	/* Set and save one metadata */
+	gtef_file_set_metadata (file, TEST_KEY, "dimmu");
+	ok = gtef_file_save_metadata (file, NULL, &error);
+	g_assert_no_error (error);
+	g_assert (ok);
+
+	g_object_unref (file);
+
+	/* Set and save another metadata, independently */
+	file = create_file (use_gvfs_metadata);
+	gtk_source_file_set_location (GTK_SOURCE_FILE (file), location);
+	gtef_file_set_metadata (file, TEST_OTHER_KEY, "borgir");
+	ok = gtef_file_save_metadata (file, NULL, &error);
+	g_assert_no_error (error);
+	g_assert (ok);
+
+	/* Load */
+	ok = gtef_file_load_metadata (file, NULL, &error);
+	g_assert_no_error (error);
+	g_assert (ok);
+
+	/* Check that the two metadata are present */
+	value = gtef_file_get_metadata (file, TEST_KEY);
+	g_assert_cmpstr (value, ==, "dimmu");
+	g_free (value);
+
+	value = gtef_file_get_metadata (file, TEST_OTHER_KEY);
+	g_assert_cmpstr (value, ==, "borgir");
+	g_free (value);
+
+	/* Clean-up */
+	gtef_file_set_metadata (file, TEST_KEY, NULL);
+	gtef_file_set_metadata (file, TEST_OTHER_KEY, NULL);
+	ok = gtef_file_save_metadata (file, NULL, &error);
+	g_assert_no_error (error);
+	g_assert (ok);
+
+	g_file_delete (location, NULL, &error);
+	g_assert_no_error (error);
+
+	g_free (path);
+	g_object_unref (location);
+	g_object_unref (file);
+}
+
+static void
+test_set_without_load (void)
+{
+	setup_unit_test ();
+	do_test_set_without_load (TRUE);
+	do_test_set_without_load (FALSE);
+	teardown_unit_test ();
+}
+
 gint
 main (gint    argc,
       gchar **argv)
@@ -336,6 +411,7 @@ main (gint    argc,
 	g_test_add_func ("/file/get_set_metadata", test_get_set_metadata);
 	g_test_add_func ("/file/load_save_metadata_sync", test_load_save_metadata_sync);
 	g_test_add_func ("/file/load_save_metadata_async", test_load_save_metadata_async);
+	g_test_add_func ("/file/set_without_load", test_set_without_load);
 
 	return g_test_run ();
 }

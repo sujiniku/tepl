@@ -59,6 +59,8 @@ struct _GtefMetadataManager
 
 	/* It is true if the file has been read. */
 	guint values_loaded : 1;
+
+	guint unit_test_mode : 1;
 };
 
 static gboolean gtef_metadata_manager_save (gpointer data);
@@ -91,6 +93,12 @@ item_free (gpointer data)
 static void
 gtef_metadata_manager_arm_timeout (void)
 {
+	if (gtef_metadata_manager->unit_test_mode)
+	{
+		gtef_metadata_manager_save (NULL);
+		return;
+	}
+
 	if (gtef_metadata_manager->timeout_id == 0)
 	{
 		gtef_metadata_manager->timeout_id =
@@ -130,6 +138,8 @@ gtef_metadata_manager_init (const gchar *metadata_path)
 				       item_free);
 
 	gtef_metadata_manager->metadata_path = g_strdup (metadata_path);
+
+	gtef_metadata_manager->unit_test_mode = FALSE;
 }
 
 /**
@@ -144,7 +154,7 @@ gtef_metadata_manager_shutdown (void)
 	if (gtef_metadata_manager == NULL)
 		return;
 
-	if (gtef_metadata_manager->timeout_id)
+	if (gtef_metadata_manager->timeout_id != 0)
 	{
 		g_source_remove (gtef_metadata_manager->timeout_id);
 		gtef_metadata_manager->timeout_id = 0;
@@ -588,4 +598,17 @@ _gtef_metadata_manager_set_metadata_for_location (GFile     *location,
 	g_free (uri);
 
 	gtef_metadata_manager_arm_timeout ();
+}
+
+void
+_gtef_metadata_manager_set_unit_test_mode (void)
+{
+	gtef_metadata_manager->unit_test_mode = TRUE;
+
+	if (gtef_metadata_manager->timeout_id != 0)
+	{
+		g_source_remove (gtef_metadata_manager->timeout_id);
+		gtef_metadata_manager->timeout_id = 0;
+		gtef_metadata_manager_save (NULL);
+	}
 }

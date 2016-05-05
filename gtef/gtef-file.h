@@ -77,6 +77,10 @@ gboolean	gtef_file_save_metadata_finish		(GtefFile      *file,
 							 GAsyncResult  *result,
 							 GError       **error);
 
+G_GNUC_INTERNAL
+void		_gtef_file_set_use_gvfs_metadata	(GtefFile *file,
+							 gboolean  use_gvfs_metadata);
+
 G_END_DECLS
 
 #endif /* GTEF_FILE_H */

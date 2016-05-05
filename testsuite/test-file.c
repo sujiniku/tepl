@@ -18,17 +18,58 @@
  */
 
 #include <gtef/gtef.h>
+#include <glib/gstdio.h>
 
 #define TEST_KEY "gtef-test-key"
 #define TEST_OTHER_KEY "gtef-test-other-key"
 
+static gchar *
+get_metadata_manager_path (void)
+{
+	return g_build_filename (g_get_tmp_dir (), "gtef-metadata-manager-store.xml", NULL);
+}
+
 static void
-test_get_set_metadata (void)
+setup_unit_test (void)
+{
+	gchar *path;
+
+	path = get_metadata_manager_path ();
+	gtef_metadata_manager_init (path);
+	_gtef_metadata_manager_set_unit_test_mode ();
+	g_free (path);
+}
+
+static void
+teardown_unit_test (void)
+{
+	gchar *path;
+
+	gtef_metadata_manager_shutdown ();
+
+	path = get_metadata_manager_path ();
+	g_unlink (path);
+	g_free (path);
+}
+
+static GtefFile *
+create_file (gboolean use_gvfs_metadata)
+{
+	GtefFile *file;
+
+	file = gtef_file_new ();
+	_gtef_file_set_use_gvfs_metadata (file, use_gvfs_metadata);
+
+	return file;
+}
+
+static void
+do_test_get_set_metadata (gboolean use_gvfs_metadata)
 {
 	GtefFile *file;
 	gchar *value;
 
-	file = gtef_file_new ();
+	file = create_file (use_gvfs_metadata);
 
 	value = gtef_file_get_metadata (file, TEST_KEY);
 	g_assert (value == NULL);
@@ -60,7 +101,16 @@ test_get_set_metadata (void)
 }
 
 static void
-test_load_save_metadata_sync (void)
+test_get_set_metadata (void)
+{
+	setup_unit_test ();
+	do_test_get_set_metadata (TRUE);
+	do_test_get_set_metadata (FALSE);
+	teardown_unit_test ();
+}
+
+static void
+do_test_load_save_metadata_sync (gboolean use_gvfs_metadata)
 {
 	GtefFile *file;
 	gchar *value;
@@ -69,7 +119,7 @@ test_load_save_metadata_sync (void)
 	GError *error = NULL;
 	gboolean ok;
 
-	file = gtef_file_new ();
+	file = create_file (use_gvfs_metadata);
 
 	/* NULL location */
 
@@ -95,9 +145,17 @@ test_load_save_metadata_sync (void)
 	gtk_source_file_set_location (GTK_SOURCE_FILE (file), location);
 
 	ok = gtef_file_save_metadata (file, NULL, &error);
-	g_assert (error != NULL); /* No such file or directory */
-	g_clear_error (&error);
-	g_assert (!ok);
+	if (use_gvfs_metadata)
+	{
+		g_assert (error != NULL); /* No such file or directory */
+		g_clear_error (&error);
+		g_assert (!ok);
+	}
+	else
+	{
+		g_assert_no_error (error);
+		g_assert (ok);
+	}
 
 	g_file_set_contents (path, "blum", -1, &error);
 	g_assert_no_error (error);
@@ -110,7 +168,7 @@ test_load_save_metadata_sync (void)
 
 	/* Load metadata */
 
-	file = gtef_file_new ();
+	file = create_file (use_gvfs_metadata);
 	gtk_source_file_set_location (GTK_SOURCE_FILE (file), location);
 
 	gtef_file_set_metadata (file, TEST_OTHER_KEY, "embrace");
@@ -146,13 +204,30 @@ test_load_save_metadata_sync (void)
 	g_assert_no_error (error);
 
 	ok = gtef_file_load_metadata (file, NULL, &error);
-	g_assert (error != NULL); /* No such file or directory */
-	g_clear_error (&error);
-	g_assert (!ok);
+	if (use_gvfs_metadata)
+	{
+		g_assert (error != NULL); /* No such file or directory */
+		g_clear_error (&error);
+		g_assert (!ok);
+	}
+	else
+	{
+		g_assert_no_error (error);
+		g_assert (ok);
+	}
 
 	g_free (path);
 	g_object_unref (location);
 	g_object_unref (file);
+}
+
+static void
+test_load_save_metadata_sync (void)
+{
+	setup_unit_test ();
+	do_test_load_save_metadata_sync (TRUE);
+	do_test_load_save_metadata_sync (FALSE);
+	teardown_unit_test ();
 }
 
 static void
@@ -213,14 +288,14 @@ save_metadata_async_cb (GObject      *source_object,
 
 /* Unit test not as complete as the sync version. */
 static void
-test_load_save_metadata_async (void)
+do_test_load_save_metadata_async (gboolean use_gvfs_metadata)
 {
 	GtefFile *file;
 	gchar *path;
 	GFile *location;
 	GError *error = NULL;
 
-	file = gtef_file_new ();
+	file = create_file (use_gvfs_metadata);
 
 	path = g_build_filename (g_get_tmp_dir (), "gtef-metadata-test-async", NULL);
 
@@ -241,6 +316,15 @@ test_load_save_metadata_async (void)
 				       NULL);
 
 	gtk_main ();
+}
+
+static void
+test_load_save_metadata_async (void)
+{
+	setup_unit_test ();
+	do_test_load_save_metadata_async (TRUE);
+	do_test_load_save_metadata_async (FALSE);
+	teardown_unit_test ();
 }
 
 gint

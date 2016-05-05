@@ -600,3 +600,17 @@ gtef_file_save_metadata_finish (GtefFile      *file,
 
 	return g_task_propagate_boolean (G_TASK (result), error);
 }
+
+/* For unit tests. */
+void
+_gtef_file_set_use_gvfs_metadata (GtefFile *file,
+				  gboolean  use_gvfs_metadata)
+{
+	GtefFilePrivate *priv;
+
+	g_return_if_fail (GTEF_IS_FILE (file));
+
+	priv = gtef_file_get_instance_private (file);
+
+	priv->use_gvfs_metadata = use_gvfs_metadata != FALSE;
+}

@@ -40,6 +40,9 @@ G_GNUC_INTERNAL
 void		_gtef_metadata_manager_set_metadata_for_location	(GFile     *location,
 									 GFileInfo *metadata);
 
+G_GNUC_INTERNAL
+void		_gtef_metadata_manager_set_unit_test_mode		(void);
+
 G_END_DECLS
 
 #endif /* GTEF_METADATA_MANAGER_H */

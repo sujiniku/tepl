@@ -33,6 +33,7 @@
 
 #include "gtef-metadata-manager.h"
 #include <libxml/xmlreader.h>
+#include <string.h>
 
 #define MAX_ITEMS 50
 
@@ -63,6 +64,14 @@ struct _GtefMetadataManager
 static gboolean gtef_metadata_manager_save (gpointer data);
 
 static GtefMetadataManager *gtef_metadata_manager = NULL;
+
+#define METADATA_PREFIX "metadata::"
+
+static gchar *
+get_metadata_attribute_key (const gchar *key)
+{
+	return g_strconcat (METADATA_PREFIX, key, NULL);
+}
 
 static void
 item_free (gpointer data)
@@ -284,118 +293,6 @@ load_values (void)
 	return TRUE;
 }
 
-gchar *
-_gtef_metadata_manager_get (GFile       *location,
-			    const gchar *key)
-{
-	Item *item;
-	gchar *value;
-	gchar *uri;
-
-	g_return_val_if_fail (G_IS_FILE (location), NULL);
-	g_return_val_if_fail (key != NULL, NULL);
-
-	uri = g_file_get_uri (location);
-
-	if (!gtef_metadata_manager->values_loaded)
-	{
-		gboolean res;
-
-		res = load_values ();
-
-		if (!res)
-		{
-			g_free (uri);
-			return NULL;
-		}
-	}
-
-	item = (Item *)g_hash_table_lookup (gtef_metadata_manager->items,
-					    uri);
-
-	g_free (uri);
-
-	if (item == NULL)
-		return NULL;
-
-	item->atime = g_get_real_time () / 1000;
-
-	if (item->values == NULL)
-		return NULL;
-
-	value = g_hash_table_lookup (item->values, key);
-
-	if (value == NULL)
-		return NULL;
-	else
-		return g_strdup (value);
-}
-
-void
-_gtef_metadata_manager_set (GFile       *location,
-			    const gchar *key,
-			    const gchar *value)
-{
-	Item *item;
-	gchar *uri;
-
-	g_return_if_fail (G_IS_FILE (location));
-	g_return_if_fail (key != NULL);
-
-	uri = g_file_get_uri (location);
-
-	if (!gtef_metadata_manager->values_loaded)
-	{
-		gboolean ok;
-
-		ok = load_values ();
-
-		if (!ok)
-		{
-			g_free (uri);
-			return;
-		}
-	}
-
-	item = (Item *)g_hash_table_lookup (gtef_metadata_manager->items,
-					    uri);
-
-	if (item == NULL)
-	{
-		item = g_new0 (Item, 1);
-
-		g_hash_table_insert (gtef_metadata_manager->items,
-				     g_strdup (uri),
-				     item);
-	}
-
-	if (item->values == NULL)
-	{
-		 item->values = g_hash_table_new_full (g_str_hash,
-				 		       g_str_equal,
-						       g_free,
-						       g_free);
-	}
-
-	if (value != NULL)
-	{
-		g_hash_table_insert (item->values,
-				     g_strdup (key),
-				     g_strdup (value));
-	}
-	else
-	{
-		g_hash_table_remove (item->values,
-				     key);
-	}
-
-	item->atime = g_get_real_time () / 1000;
-
-	g_free (uri);
-
-	gtef_metadata_manager_arm_timeout ();
-}
-
 static void
 save_values (const gchar *key, const gchar *value, xmlNodePtr parent)
 {
@@ -533,4 +430,162 @@ gtef_metadata_manager_save (gpointer data)
 	xmlFreeDoc (doc);
 
 	return FALSE;
+}
+
+static void
+foreach_key_cb (gpointer _key,
+		gpointer _value,
+		gpointer _user_data)
+{
+	const gchar *key = _key;
+	const gchar *value = _value;
+	GFileInfo *metadata = G_FILE_INFO (_user_data);
+	gchar *attribute_key;
+
+	if (key == NULL || key[0] == '\0')
+	{
+		return;
+	}
+
+	attribute_key = get_metadata_attribute_key (key);
+	g_file_info_set_attribute_string (metadata, attribute_key, value);
+	g_free (attribute_key);
+}
+
+/* Returns: (transfer full) (nullable) */
+GFileInfo *
+_gtef_metadata_manager_get_all_metadata_for_location (GFile *location)
+{
+	gchar *uri;
+	Item *item;
+	GFileInfo *metadata;
+
+	g_return_val_if_fail (G_IS_FILE (location), NULL);
+
+	if (!gtef_metadata_manager->values_loaded)
+	{
+		gboolean ok;
+
+		ok = load_values ();
+
+		if (!ok)
+		{
+			return NULL;
+		}
+	}
+
+	uri = g_file_get_uri (location);
+	item = g_hash_table_lookup (gtef_metadata_manager->items, uri);
+	g_free (uri);
+
+	if (item == NULL)
+	{
+		return NULL;
+	}
+
+	item->atime = g_get_real_time () / 1000;
+
+	if (item->values == NULL)
+	{
+		return NULL;
+	}
+
+	metadata = g_file_info_new ();
+
+	g_hash_table_foreach (item->values, foreach_key_cb, metadata);
+
+	return metadata;
+}
+
+void
+_gtef_metadata_manager_set_metadata_for_location (GFile     *location,
+						  GFileInfo *metadata)
+{
+	gchar **attributes_list;
+	gchar *uri;
+	Item *item;
+	gint i;
+
+	g_return_if_fail (G_IS_FILE (location));
+	g_return_if_fail (G_IS_FILE_INFO (metadata));
+
+	if (!gtef_metadata_manager->values_loaded)
+	{
+		gboolean ok;
+
+		ok = load_values ();
+
+		if (!ok)
+		{
+			return;
+		}
+	}
+
+	attributes_list = g_file_info_list_attributes (metadata, "metadata");
+	if (attributes_list == NULL || attributes_list[0] == NULL)
+	{
+		g_strfreev (attributes_list);
+		return;
+	}
+
+	uri = g_file_get_uri (location);
+
+	item = g_hash_table_lookup (gtef_metadata_manager->items, uri);
+
+	if (item == NULL)
+	{
+		item = g_new0 (Item, 1);
+
+		g_hash_table_insert (gtef_metadata_manager->items,
+				     g_strdup (uri),
+				     item);
+	}
+
+	if (item->values == NULL)
+	{
+		item->values = g_hash_table_new_full (g_str_hash,
+						      g_str_equal,
+						      g_free,
+						      g_free);
+	}
+
+	for (i = 0; attributes_list[i] != NULL; i++)
+	{
+		const gchar *attribute_key;
+		const gchar *key;
+		const gchar *value = NULL;
+
+		attribute_key = attributes_list[i];
+		if (!g_str_has_prefix (attribute_key, METADATA_PREFIX))
+		{
+			g_warning ("Metadata attribute key '%s' doesn't have '" METADATA_PREFIX "' prefix.",
+				   attribute_key);
+			continue;
+		}
+
+		key = attribute_key + strlen (METADATA_PREFIX);
+
+		if (g_file_info_get_attribute_type (metadata, attribute_key) == G_FILE_ATTRIBUTE_TYPE_STRING)
+		{
+			value = g_file_info_get_attribute_string (metadata, attribute_key);
+		}
+
+		if (value != NULL)
+		{
+			g_hash_table_insert (item->values,
+					     g_strdup (key),
+					     g_strdup (value));
+		}
+		else
+		{
+			g_hash_table_remove (item->values, key);
+		}
+	}
+
+	item->atime = g_get_real_time () / 1000;
+
+	g_strfreev (attributes_list);
+	g_free (uri);
+
+	gtef_metadata_manager_arm_timeout ();
 }

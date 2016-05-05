@@ -29,18 +29,16 @@
 
 G_BEGIN_DECLS
 
-void		gtef_metadata_manager_init		(const gchar *metadata_path);
+void		gtef_metadata_manager_init				(const gchar *metadata_path);
 
-void		gtef_metadata_manager_shutdown		(void);
-
-G_GNUC_INTERNAL
-gchar *		_gtef_metadata_manager_get 		(GFile       *location,
-							 const gchar *key);
+void		gtef_metadata_manager_shutdown				(void);
 
 G_GNUC_INTERNAL
-void		_gtef_metadata_manager_set		(GFile       *location,
-							 const gchar *key,
-							 const gchar *value);
+GFileInfo *	_gtef_metadata_manager_get_all_metadata_for_location	(GFile *location);
+
+G_GNUC_INTERNAL
+void		_gtef_metadata_manager_set_metadata_for_location	(GFile     *location,
+									 GFileInfo *metadata);
 
 G_END_DECLS
 

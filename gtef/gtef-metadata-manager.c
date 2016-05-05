@@ -274,16 +274,16 @@ load_values (void)
 	return TRUE;
 }
 
-/**
- * gtef_metadata_manager_get:
+/*
+ * _gtef_metadata_manager_get:
  * @location: a #GFile.
  * @key: a key.
  *
  * Gets the value associated with the specified @key for the file @location.
  */
 gchar *
-gtef_metadata_manager_get (GFile       *location,
-			   const gchar *key)
+_gtef_metadata_manager_get (GFile       *location,
+			    const gchar *key)
 {
 	Item *item;
 	gchar *value;
@@ -328,8 +328,8 @@ gtef_metadata_manager_get (GFile       *location,
 		return g_strdup (value);
 }
 
-/**
- * gtef_metadata_manager_set:
+/*
+ * _gtef_metadata_manager_set:
  * @location: a #GFile.
  * @key: a key.
  * @value: the value associated with the @key.
@@ -337,9 +337,9 @@ gtef_metadata_manager_get (GFile       *location,
  * Sets the @key to contain the given @value for the file @location.
  */
 void
-gtef_metadata_manager_set (GFile       *location,
-			   const gchar *key,
-			   const gchar *value)
+_gtef_metadata_manager_set (GFile       *location,
+			    const gchar *key,
+			    const gchar *value)
 {
 	Item *item;
 	gchar *uri;

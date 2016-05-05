@@ -33,10 +33,12 @@ void		gtef_metadata_manager_init		(const gchar *metadata_filename);
 
 void		gtef_metadata_manager_shutdown		(void);
 
-gchar *		gtef_metadata_manager_get 		(GFile       *location,
+G_GNUC_INTERNAL
+gchar *		_gtef_metadata_manager_get 		(GFile       *location,
 							 const gchar *key);
 
-void		gtef_metadata_manager_set		(GFile       *location,
+G_GNUC_INTERNAL
+void		_gtef_metadata_manager_set		(GFile       *location,
 							 const gchar *key,
 							 const gchar *value);
 

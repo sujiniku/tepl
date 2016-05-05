@@ -29,6 +29,18 @@
  * #GtefFile extends #GtkSourceFile with metadata support. You need to call
  * gtef_metadata_manager_init() and gtef_metadata_manager_shutdown() in your
  * application, in case GVfs metadata are not supported.
+ *
+ * gtef_file_get_metadata() and gtef_file_set_metadata() don't load or save the
+ * metadata on disk. They only access the metadata stored in the #GtefFile
+ * object memory. To load the metadata from disk, call gtef_file_load_metadata()
+ * or its async variant. Likewise, to save the metadata on disk, call
+ * gtef_file_save_metadata() or its async variant. When loading or saving
+ * metadata, the file at #GtkSourceFile:location, if non-%NULL, must exist on
+ * the filesystem, otherwise an error is returned.
+ *
+ * When the #GtkSourceFile:location changes, the metadata are still kept in the
+ * #GtefFile object memory. But the metadata are <emphasis>not</emphasis>
+ * automatically saved for the new location.
  */
 
 typedef struct _GtefFilePrivate GtefFilePrivate;
@@ -202,10 +214,16 @@ gtef_file_set_metadata (GtefFile    *file,
  * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
  * @error: location to a %NULL #GError, or %NULL.
  *
- * Loads synchronously the metadata from #GtkSourceFile:location.
+ * Loads synchronously the metadata from #GtkSourceFile:location. The loaded
+ * metadata values can then be accessed with gtef_file_get_metadata().
  *
  * If the metadata are loaded successfully, this function deletes all previous
  * metadata stored in the @file object memory.
+ *
+ * The file at #GtkSourceFile:location, if non-%NULL, must exist on the
+ * filesystem, otherwise an error is returned.
+ *
+ * If #GtkSourceFile:location is %NULL, %FALSE is simply returned.
  *
  * Returns: whether the metadata was loaded successfully.
  * Since: 1.0
@@ -418,6 +436,11 @@ gtef_file_load_metadata_finish (GtefFile      *file,
  * @error: location to a %NULL #GError, or %NULL.
  *
  * Saves synchronously the metadata for #GtkSourceFile:location.
+ *
+ * The file at #GtkSourceFile:location, if non-%NULL, must exist on the
+ * filesystem, otherwise an error is returned.
+ *
+ * If #GtkSourceFile:location is %NULL, %FALSE is simply returned.
  *
  * Returns: whether the metadata was saved successfully.
  * Since: 1.0

@@ -118,6 +118,11 @@ gtef_metadata_manager_arm_timeout (void)
  *
  * The @metadata_path must be different for each process. It is advised for your
  * application to rely on #GApplication process uniqueness.
+ *
+ * A good place to store the metadata is in a sub-directory of the user data
+ * directory. See g_get_user_data_dir().
+ *
+ * Since: 1.0
  */
 void
 gtef_metadata_manager_init (const gchar *metadata_path)
@@ -147,6 +152,8 @@ gtef_metadata_manager_init (const gchar *metadata_path)
  *
  * This function saves synchronously metadata if they need to be saved, and
  * frees the internal data of the metadata manager.
+ *
+ * Since: 1.0
  */
 void
 gtef_metadata_manager_shutdown (void)

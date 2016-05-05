@@ -15,6 +15,7 @@
   <chapter>
     <title>API reference</title>
     <xi:include href="xml/file.xml"/>
+    <xi:include href="xml/metadata-manager.xml"/>
   </chapter>
 
   <chapter id="object-tree">

@@ -17,3 +17,10 @@ gtef_file_save_metadata_finish
 GtefFileClass
 GTEF_TYPE_FILE
 </SECTION>
+
+<SECTION>
+<FILE>metadata-manager</FILE>
+<TITLE>GtefMetadataManager</TITLE>
+gtef_metadata_manager_init
+gtef_metadata_manager_shutdown
+</SECTION>

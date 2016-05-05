@@ -18,8 +18,16 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-/* This code comes from gedit. It permits to save/load metadata on platforms
- * that don't support GVfs metadata, like (currently) Windows.
+/**
+ * SECTION:metadata-manager
+ * @Short_description: Metadata support on platforms that don't support GVfs metadata
+ * @Title: GtefMetadataManager
+ *
+ * The metadata manager permits to save/load metadata on platforms that don't
+ * support GVfs metadata, like (at the time of writing) Windows.
+ */
+
+/* This code comes from gedit.
  * A better implementation would be to use SQLite.
  */
 
@@ -46,7 +54,7 @@ struct _GtefMetadataManager
 
 	GHashTable *items;
 
-	gchar *metadata_filename;
+	gchar *metadata_path;
 
 	/* It is true if the file has been read. */
 	guint values_loaded : 1;
@@ -87,13 +95,15 @@ gtef_metadata_manager_arm_timeout (void)
 
 /**
  * gtef_metadata_manager_init:
- * @metadata_filename: the filename where the metadata is stored.
+ * @metadata_path: the filename where the metadata is stored.
  *
  * This function initializes the metadata manager.
- * See also gtef_metadata_manager_shutdown().
+ *
+ * The @metadata_path must be different for each process. It is advised for your
+ * application to rely on #GApplication process uniqueness.
  */
 void
-gtef_metadata_manager_init (const gchar *metadata_filename)
+gtef_metadata_manager_init (const gchar *metadata_path)
 {
 	if (gtef_metadata_manager != NULL)
 	{
@@ -110,14 +120,14 @@ gtef_metadata_manager_init (const gchar *metadata_filename)
 				       g_free,
 				       item_free);
 
-	gtef_metadata_manager->metadata_filename = g_strdup (metadata_filename);
+	gtef_metadata_manager->metadata_path = g_strdup (metadata_path);
 }
 
 /**
  * gtef_metadata_manager_shutdown:
  *
- * This function frees the internal data of the metadata manager.
- * See also gtef_metadata_manager_init().
+ * This function saves synchronously metadata if they need to be saved, and
+ * frees the internal data of the metadata manager.
  */
 void
 gtef_metadata_manager_shutdown (void)
@@ -135,7 +145,7 @@ gtef_metadata_manager_shutdown (void)
 	if (gtef_metadata_manager->items != NULL)
 		g_hash_table_destroy (gtef_metadata_manager->items);
 
-	g_free (gtef_metadata_manager->metadata_filename);
+	g_free (gtef_metadata_manager->metadata_path);
 
 	g_free (gtef_metadata_manager);
 	gtef_metadata_manager = NULL;
@@ -222,18 +232,18 @@ load_values (void)
 
 	xmlKeepBlanksDefault (0);
 
-	if (gtef_metadata_manager->metadata_filename == NULL)
+	if (gtef_metadata_manager->metadata_path == NULL)
 	{
 		return FALSE;
 	}
 
 	/* TODO: avoid races */
-	if (!g_file_test (gtef_metadata_manager->metadata_filename, G_FILE_TEST_EXISTS))
+	if (!g_file_test (gtef_metadata_manager->metadata_path, G_FILE_TEST_EXISTS))
 	{
 		return TRUE;
 	}
 
-	doc = xmlParseFile (gtef_metadata_manager->metadata_filename);
+	doc = xmlParseFile (gtef_metadata_manager->metadata_path);
 
 	if (doc == NULL)
 	{
@@ -244,7 +254,7 @@ load_values (void)
 	if (cur == NULL)
 	{
 		g_message ("The metadata file '%s' is empty",
-		           g_path_get_basename (gtef_metadata_manager->metadata_filename));
+		           g_path_get_basename (gtef_metadata_manager->metadata_path));
 		xmlFreeDoc (doc);
 
 		return TRUE;
@@ -253,7 +263,7 @@ load_values (void)
 	if (xmlStrcmp (cur->name, (const xmlChar *) "metadata"))
 	{
 		g_message ("File '%s' is of the wrong type",
-		           g_path_get_basename (gtef_metadata_manager->metadata_filename));
+		           g_path_get_basename (gtef_metadata_manager->metadata_path));
 		xmlFreeDoc (doc);
 
 		return FALSE;
@@ -274,13 +284,6 @@ load_values (void)
 	return TRUE;
 }
 
-/*
- * _gtef_metadata_manager_get:
- * @location: a #GFile.
- * @key: a key.
- *
- * Gets the value associated with the specified @key for the file @location.
- */
 gchar *
 _gtef_metadata_manager_get (GFile       *location,
 			    const gchar *key)
@@ -328,14 +331,6 @@ _gtef_metadata_manager_get (GFile       *location,
 		return g_strdup (value);
 }
 
-/*
- * _gtef_metadata_manager_set:
- * @location: a #GFile.
- * @key: a key.
- * @value: the value associated with the @key.
- *
- * Sets the @key to contain the given @value for the file @location.
- */
 void
 _gtef_metadata_manager_set (GFile       *location,
 			    const gchar *key,
@@ -517,17 +512,17 @@ gtef_metadata_manager_save (gpointer data)
 			      root);
 
 	/* FIXME: lock file - Paolo */
-	if (gtef_metadata_manager->metadata_filename != NULL)
+	if (gtef_metadata_manager->metadata_path != NULL)
 	{
 		gchar *cache_dir;
 		int res;
 
 		/* make sure the cache dir exists */
-		cache_dir = g_path_get_dirname (gtef_metadata_manager->metadata_filename);
+		cache_dir = g_path_get_dirname (gtef_metadata_manager->metadata_path);
 		res = g_mkdir_with_parents (cache_dir, 0755);
 		if (res != -1)
 		{
-			xmlSaveFormatFile (gtef_metadata_manager->metadata_filename,
+			xmlSaveFormatFile (gtef_metadata_manager->metadata_path,
 			                   doc,
 			                   1);
 		}

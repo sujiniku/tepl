@@ -29,7 +29,7 @@
 
 G_BEGIN_DECLS
 
-void		gtef_metadata_manager_init		(const gchar *metadata_filename);
+void		gtef_metadata_manager_init		(const gchar *metadata_path);
 
 void		gtef_metadata_manager_shutdown		(void);
 

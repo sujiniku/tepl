@@ -17,14 +17,18 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "gtef-file.h"
+#include "gtef-metadata-manager.h"
 
 /**
  * SECTION:file
  * @Short_description: On-disk representation of a GtkSourceBuffer
  * @Title: GtefFile
  *
- * #GtefFile extends #GtkSourceFile with metadata support.
+ * #GtefFile extends #GtkSourceFile with metadata support. You need to call
+ * gtef_metadata_manager_init() and gtef_metadata_manager_shutdown() in your
+ * application, in case GVfs metadata are not supported.
  */
 
 typedef struct _GtefFilePrivate GtefFilePrivate;
@@ -33,6 +37,8 @@ struct _GtefFilePrivate
 {
 	/* Never NULL */
 	GFileInfo *metadata;
+
+	guint use_gvfs_metadata : 1;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefFile, gtef_file, GTK_SOURCE_TYPE_FILE)
@@ -44,6 +50,24 @@ static gchar *
 get_metadata_attribute_key (const gchar *key)
 {
 	return g_strconcat (METADATA_PREFIX, key, NULL);
+}
+
+static void
+print_fallback_to_metadata_manager_warning (void)
+{
+	static gboolean warning_printed = FALSE;
+
+	if (G_LIKELY (warning_printed))
+	{
+		return;
+	}
+
+	g_warning ("GVfs metadata is not supported. Fallback to GtefMetadataManager. "
+		   "Either GVfs is not correctly installed or GVfs metadata are "
+		   "not supported on this platform. In the latter case, you should "
+		   "configure Gtef with --disable-gvfs-metadata.");
+
+	warning_printed = TRUE;
 }
 
 static void
@@ -70,6 +94,12 @@ gtef_file_init (GtefFile *file)
 	GtefFilePrivate *priv = gtef_file_get_instance_private (file);
 
 	priv->metadata = g_file_info_new ();
+
+#ifdef ENABLE_GVFS_METADATA
+	priv->use_gvfs_metadata = TRUE;
+#else
+	priv->use_gvfs_metadata = FALSE;
+#endif
 }
 
 /**
@@ -201,11 +231,35 @@ gtef_file_load_metadata (GtefFile      *file,
 		return FALSE;
 	}
 
-	metadata = g_file_query_info (location,
-				      METADATA_QUERY_ATTRIBUTES,
-				      G_FILE_QUERY_INFO_NONE,
-				      cancellable,
-				      error);
+	if (priv->use_gvfs_metadata)
+	{
+		GError *my_error = NULL;
+
+		metadata = g_file_query_info (location,
+					      METADATA_QUERY_ATTRIBUTES,
+					      G_FILE_QUERY_INFO_NONE,
+					      cancellable,
+					      &my_error);
+
+		if (g_error_matches (my_error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
+		{
+			print_fallback_to_metadata_manager_warning ();
+			priv->use_gvfs_metadata = FALSE;
+
+			g_clear_error (&my_error);
+			g_clear_object (&metadata);
+		}
+		else if (my_error != NULL)
+		{
+			g_propagate_error (error, my_error);
+			my_error = NULL;
+		}
+	}
+
+	if (!priv->use_gvfs_metadata)
+	{
+		metadata = _gtef_metadata_manager_get_all_metadata_for_location (location);
+	}
 
 	if (metadata == NULL)
 	{
@@ -230,7 +284,21 @@ load_metadata_async_cb (GObject      *source_object,
 	GFileInfo *metadata;
 	GError *error = NULL;
 
+	file = g_task_get_source_object (task);
+	priv = gtef_file_get_instance_private (file);
+
 	metadata = g_file_query_info_finish (location, result, &error);
+
+	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
+	{
+		print_fallback_to_metadata_manager_warning ();
+		priv->use_gvfs_metadata = FALSE;
+
+		g_clear_error (&error);
+		g_clear_object (&metadata);
+
+		metadata = _gtef_metadata_manager_get_all_metadata_for_location (location);
+	}
 
 	if (error != NULL)
 	{
@@ -246,9 +314,6 @@ load_metadata_async_cb (GObject      *source_object,
 		g_object_unref (task);
 		return;
 	}
-
-	file = g_task_get_source_object (task);
-	priv = gtef_file_get_instance_private (file);
 
 	g_object_unref (priv->metadata);
 	priv->metadata = metadata;
@@ -269,6 +334,10 @@ load_metadata_async_cb (GObject      *source_object,
  *
  * The asynchronous version of gtef_file_load_metadata().
  *
+ * If the metadata is loaded from the metadata manager (i.e. not with GVfs),
+ * this function loads the metadata synchronously. A future version might fix
+ * this.
+ *
  * See the #GAsyncResult documentation to know how to use this function.
  *
  * Since: 1.0
@@ -280,11 +349,14 @@ gtef_file_load_metadata_async (GtefFile            *file,
 			       GAsyncReadyCallback  callback,
 			       gpointer             user_data)
 {
+	GtefFilePrivate *priv;
 	GTask *task;
 	GFile *location;
 
 	g_return_if_fail (GTEF_IS_FILE (file));
 	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
+
+	priv = gtef_file_get_instance_private (file);
 
 	task = g_task_new (file, cancellable, callback, user_data);
 
@@ -296,13 +368,24 @@ gtef_file_load_metadata_async (GtefFile            *file,
 		return;
 	}
 
-	g_file_query_info_async (location,
-				 METADATA_QUERY_ATTRIBUTES,
-				 G_FILE_QUERY_INFO_NONE,
-				 io_priority,
-				 cancellable,
-				 load_metadata_async_cb,
-				 task);
+	if (priv->use_gvfs_metadata)
+	{
+		g_file_query_info_async (location,
+					 METADATA_QUERY_ATTRIBUTES,
+					 G_FILE_QUERY_INFO_NONE,
+					 io_priority,
+					 cancellable,
+					 load_metadata_async_cb,
+					 task);
+	}
+	else
+	{
+		gboolean ok;
+
+		ok = gtef_file_load_metadata (file, cancellable, NULL);
+		g_task_return_boolean (task, ok);
+		g_object_unref (task);
+	}
 }
 
 /**
@@ -359,11 +442,40 @@ gtef_file_save_metadata (GtefFile      *file,
 		return FALSE;
 	}
 
-	return g_file_set_attributes_from_info (location,
-						priv->metadata,
-						G_FILE_QUERY_INFO_NONE,
-						cancellable,
-						error);
+	if (priv->use_gvfs_metadata)
+	{
+		GError *my_error = NULL;
+		gboolean ok;
+
+		ok = g_file_set_attributes_from_info (location,
+						      priv->metadata,
+						      G_FILE_QUERY_INFO_NONE,
+						      cancellable,
+						      &my_error);
+
+		if (g_error_matches (my_error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
+		{
+			print_fallback_to_metadata_manager_warning ();
+			priv->use_gvfs_metadata = FALSE;
+
+			g_clear_error (&my_error);
+		}
+		else if (my_error != NULL)
+		{
+			g_propagate_error (error, my_error);
+			return ok;
+		}
+		else
+		{
+			return ok;
+		}
+	}
+
+	g_assert (!priv->use_gvfs_metadata);
+
+	_gtef_metadata_manager_set_metadata_for_location (location, priv->metadata);
+
+	return TRUE;
 }
 
 static void
@@ -373,9 +485,24 @@ save_metadata_async_cb (GObject      *source_object,
 {
 	GFile *location = G_FILE (source_object);
 	GTask *task = G_TASK (user_data);
+	GtefFile *file;
+	GtefFilePrivate *priv;
 	GError *error = NULL;
 
+	file = g_task_get_source_object (task);
+	priv = gtef_file_get_instance_private (file);
+
 	g_file_set_attributes_finish (location, result, NULL, &error);
+
+	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
+	{
+		print_fallback_to_metadata_manager_warning ();
+		priv->use_gvfs_metadata = FALSE;
+
+		g_clear_error (&error);
+
+		_gtef_metadata_manager_set_metadata_for_location (location, priv->metadata);
+	}
 
 	if (error != NULL)
 	{
@@ -399,6 +526,9 @@ save_metadata_async_cb (GObject      *source_object,
  * @user_data: user data to pass to @callback.
  *
  * The asynchronous version of gtef_file_save_metadata().
+ *
+ * If the metadata is saved with the metadata manager (i.e. not with GVfs), this
+ * function saves the metadata synchronously. A future version might fix this.
  *
  * See the #GAsyncResult documentation to know how to use this function.
  *
@@ -430,13 +560,22 @@ gtef_file_save_metadata_async (GtefFile            *file,
 		return;
 	}
 
-	g_file_set_attributes_async (location,
-				     priv->metadata,
-				     G_FILE_QUERY_INFO_NONE,
-				     io_priority,
-				     cancellable,
-				     save_metadata_async_cb,
-				     task);
+	if (priv->use_gvfs_metadata)
+	{
+		g_file_set_attributes_async (location,
+					     priv->metadata,
+					     G_FILE_QUERY_INFO_NONE,
+					     io_priority,
+					     cancellable,
+					     save_metadata_async_cb,
+					     task);
+	}
+	else
+	{
+		_gtef_metadata_manager_set_metadata_for_location (location, priv->metadata);
+		g_task_return_boolean (task, TRUE);
+		g_object_unref (task);
+	}
 }
 
 /**

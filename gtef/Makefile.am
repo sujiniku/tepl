@@ -11,16 +11,16 @@ AM_CPPFLAGS =				\
 
 gtef_public_headers =			\
 	gtef.h				\
-	gtef-file.h
-
-gtef_public_c_files =			\
-	gtef-file.c
-
-gtef_private_headers =			\
+	gtef-file.h			\
 	gtef-metadata-manager.h
 
-gtef_private_c_files =			\
+gtef_public_c_files =			\
+	gtef-file.c			\
 	gtef-metadata-manager.c
+
+gtef_private_headers =
+
+gtef_private_c_files =
 
 # Helper Libtool library, so that the private functions can be used in unit
 # tests.

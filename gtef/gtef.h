@@ -23,6 +23,7 @@
 #define GTEF_H_INSIDE
 
 #include <gtef/gtef-file.h>
+#include <gtef/gtef-metadata-manager.h>
 
 #undef GTEF_H_INSIDE
 

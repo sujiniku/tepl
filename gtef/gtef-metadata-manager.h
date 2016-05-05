@@ -21,6 +21,10 @@
 #ifndef GTEF_METADATA_MANAGER_H
 #define GTEF_METADATA_MANAGER_H
 
+#if !defined (GTEF_H_INSIDE) && !defined (GTEF_COMPILATION)
+#error "Only <gtef/gtef.h> can be included directly."
+#endif
+
 #include <gio/gio.h>
 
 G_BEGIN_DECLS

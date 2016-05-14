@@ -56,17 +56,7 @@ MAINTAINERCLEANFILES =			\
 # include common portion ...
 include $(top_srcdir)/gtk-doc.make
 
-# gtk-doc.make has already a recipe for the $(DOC_MODULE)-sections.txt target.
-# So override it here.
-$(builddir)/$(DOC_MODULE)-sections.txt: Makefile $(srcdir)/gtef-sections.txt.in
-	$(AM_V_GEN) cp $(srcdir)/gtef-sections.txt.in $@
-
-EXTRA_DIST +=			\
-	gtef-docs.xml.in	\
-	gtef-sections.txt.in
-
-DISTCLEANFILES =					\
-	gtef-docs.xml					\
-	gtef-@GTEF_API_VERSION@.0-sections.txt
+EXTRA_DIST += gtef-docs.xml.in
+DISTCLEANFILES = gtef-docs.xml
 
 -include $(top_srcdir)/git.mk

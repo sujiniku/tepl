@@ -41,7 +41,11 @@ GTEF_LT_VERSION="$GTEF_LT_CURRENT:$GTEF_LT_REVISION:$GTEF_LT_AGE"
 AC_SUBST(GTEF_LT_VERSION)
 
 # API version, used for parallel installability.
-# Not used in po/, it causes a builddir != srcdir build issue.
+# Not used in:
+# - po/Makevars
+# - the docs/reference/gtef-1.0-sections.txt filename
+# Because as far as I've tested, it is not easily feasible to not hardcode the
+# API version in those places (swilmet).
 GTEF_API_VERSION=1
 AC_SUBST(GTEF_API_VERSION)
 

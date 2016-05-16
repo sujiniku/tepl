@@ -1,3 +1,4 @@
 # List of source files containing translatable strings.
+gtef/gtef-buffer.c
 gtef/gtef-file.c
 gtef/gtef-metadata-manager.c

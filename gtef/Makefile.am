@@ -11,10 +11,12 @@ AM_CPPFLAGS =				\
 
 gtef_public_headers =			\
 	gtef.h				\
+	gtef-buffer.h			\
 	gtef-file.h			\
 	gtef-metadata-manager.h
 
 gtef_public_c_files =			\
+	gtef-buffer.c			\
 	gtef-file.c			\
 	gtef-metadata-manager.c
 

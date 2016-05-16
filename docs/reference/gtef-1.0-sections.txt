@@ -1,6 +1,15 @@
 <INCLUDE>gtef/gtef.h</INCLUDE>
 
 <SECTION>
+<FILE>buffer</FILE>
+<TITLE>GtefBuffer</TITLE>
+GtefBuffer
+<SUBSECTION Standard>
+GTEF_TYPE_BUFFER
+GtefBufferClass
+</SECTION>
+
+<SECTION>
 <FILE>file</FILE>
 <TITLE>GtefFile</TITLE>
 GtefFile

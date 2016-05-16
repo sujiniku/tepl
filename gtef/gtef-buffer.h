@@ -17,15 +17,29 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GTEF_H
-#define GTEF_H
+#ifndef GTEF_BUFFER_H
+#define GTEF_BUFFER_H
 
-#define GTEF_H_INSIDE
+#if !defined (GTEF_H_INSIDE) && !defined (GTEF_COMPILATION)
+#error "Only <gtef/gtef.h> can be included directly."
+#endif
 
-#include <gtef/gtef-buffer.h>
-#include <gtef/gtef-file.h>
-#include <gtef/gtef-metadata-manager.h>
+#include <gtksourceview/gtksource.h>
 
-#undef GTEF_H_INSIDE
+G_BEGIN_DECLS
 
-#endif /* GTEF_H */
+#define GTEF_TYPE_BUFFER (gtef_buffer_get_type ())
+G_DECLARE_DERIVABLE_TYPE (GtefBuffer, gtef_buffer,
+			  GTEF, BUFFER,
+			  GtkSourceBuffer)
+
+struct _GtefBufferClass
+{
+	GtkSourceBufferClass parent_class;
+
+	gpointer padding[12];
+};
+
+G_END_DECLS
+
+#endif /* GTEF_BUFFER_H */

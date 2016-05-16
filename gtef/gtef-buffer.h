@@ -38,6 +38,9 @@ struct _GtefBufferClass
 {
 	GtkSourceBufferClass parent_class;
 
+	/* Signals */
+	void (* cursor_moved)		(GtefBuffer *buffer);
+
 	gpointer padding[12];
 };
 

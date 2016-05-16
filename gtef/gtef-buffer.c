@@ -33,6 +33,14 @@ struct _GtefBufferPrivate
 	GtefFile *file;
 };
 
+enum
+{
+	SIGNAL_CURSOR_MOVED,
+	LAST_SIGNAL
+};
+
+static guint signals[LAST_SIGNAL];
+
 G_DEFINE_TYPE_WITH_PRIVATE (GtefBuffer, gtef_buffer, GTK_SOURCE_TYPE_BUFFER)
 
 static void
@@ -46,11 +54,64 @@ gtef_buffer_dispose (GObject *object)
 }
 
 static void
+gtef_buffer_mark_set (GtkTextBuffer     *text_buffer,
+		      const GtkTextIter *location,
+		      GtkTextMark       *mark)
+{
+	GtefBuffer *buffer = GTEF_BUFFER (text_buffer);
+
+	if (GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->mark_set != NULL)
+	{
+		GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->mark_set (text_buffer, location, mark);
+	}
+
+	if (mark == gtk_text_buffer_get_insert (text_buffer))
+	{
+		g_signal_emit (buffer, signals[SIGNAL_CURSOR_MOVED], 0);
+	}
+}
+
+static void
+gtef_buffer_changed (GtkTextBuffer *buffer)
+{
+	if (GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->changed != NULL)
+	{
+		GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->changed (buffer);
+	}
+
+	g_signal_emit (buffer, signals[SIGNAL_CURSOR_MOVED], 0);
+}
+
+static void
 gtef_buffer_class_init (GtefBufferClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GtkTextBufferClass *text_buffer_class = GTK_TEXT_BUFFER_CLASS (klass);
 
 	object_class->dispose = gtef_buffer_dispose;
+
+	text_buffer_class->mark_set = gtef_buffer_mark_set;
+	text_buffer_class->changed = gtef_buffer_changed;
+
+	/**
+	 * GtefBuffer::cursor-moved:
+	 * @buffer: the #GtefBuffer emitting the signal.
+	 *
+	 * The ::cursor-moved signal is emitted when the insert mark is moved
+	 * explicitely or when the buffer changes (insert/delete).
+	 *
+	 * A typical use-case for this signal is to update the cursor position
+	 * in a statusbar.
+	 *
+	 * Since: 1.0
+	 */
+	signals[SIGNAL_CURSOR_MOVED] =
+		g_signal_new ("cursor-moved",
+			      G_TYPE_FROM_CLASS (klass),
+			      G_SIGNAL_RUN_FIRST,
+			      G_STRUCT_OFFSET (GtefBufferClass, cursor_moved),
+			      NULL, NULL, NULL,
+			      G_TYPE_NONE, 0);
 }
 
 static void

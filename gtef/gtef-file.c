@@ -23,7 +23,7 @@
 
 /**
  * SECTION:file
- * @Short_description: On-disk representation of a GtkSourceBuffer
+ * @Short_description: On-disk representation of a GtefBuffer
  * @Title: GtefFile
  *
  * #GtefFile extends #GtkSourceFile with metadata support. You need to call

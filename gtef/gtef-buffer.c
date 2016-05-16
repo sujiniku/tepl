@@ -18,6 +18,7 @@
  */
 
 #include "gtef-buffer.h"
+#include "gtef-file.h"
 
 /**
  * SECTION:buffer

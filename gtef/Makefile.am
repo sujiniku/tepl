@@ -13,7 +13,8 @@ gtef_public_headers =			\
 	gtef.h				\
 	gtef-buffer.h			\
 	gtef-file.h			\
-	gtef-metadata-manager.h
+	gtef-metadata-manager.h		\
+	gtef-types.h
 
 gtef_public_c_files =			\
 	gtef-buffer.c			\

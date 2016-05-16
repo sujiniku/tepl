@@ -4,6 +4,7 @@
 <FILE>buffer</FILE>
 <TITLE>GtefBuffer</TITLE>
 GtefBuffer
+gtef_buffer_get_file
 <SUBSECTION Standard>
 GTEF_TYPE_BUFFER
 GtefBufferClass

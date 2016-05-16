@@ -25,6 +25,7 @@
 #endif
 
 #include <gtksourceview/gtksource.h>
+#include <gtef/gtef-file.h>
 
 G_BEGIN_DECLS
 
@@ -39,6 +40,8 @@ struct _GtefBufferClass
 
 	gpointer padding[12];
 };
+
+GtefFile *		gtef_buffer_get_file			(GtefBuffer *buffer);
 
 G_END_DECLS
 

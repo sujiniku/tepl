@@ -29,7 +29,7 @@ typedef struct _GtefBufferPrivate GtefBufferPrivate;
 
 struct _GtefBufferPrivate
 {
-	gint something;
+	GtefFile *file;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefBuffer, gtef_buffer, GTK_SOURCE_TYPE_BUFFER)
@@ -37,6 +37,9 @@ G_DEFINE_TYPE_WITH_PRIVATE (GtefBuffer, gtef_buffer, GTK_SOURCE_TYPE_BUFFER)
 static void
 gtef_buffer_dispose (GObject *object)
 {
+	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (GTEF_BUFFER (object));
+
+	g_clear_object (&priv->file);
 
 	G_OBJECT_CLASS (gtef_buffer_parent_class)->dispose (object);
 }
@@ -52,4 +55,27 @@ gtef_buffer_class_init (GtefBufferClass *klass)
 static void
 gtef_buffer_init (GtefBuffer *buffer)
 {
+	GtefBufferPrivate *priv;
+
+	priv = gtef_buffer_get_instance_private (buffer);
+
+	priv->file = gtef_file_new ();
+}
+
+/**
+ * gtef_buffer_get_file:
+ * @buffer: a #GtefBuffer.
+ *
+ * Returns: (transfer none): the associated #GtefFile.
+ * Since: 1.0
+ */
+GtefFile *
+gtef_buffer_get_file (GtefBuffer *buffer)
+{
+	GtefBufferPrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), NULL);
+
+	priv = gtef_buffer_get_instance_private (buffer);
+	return priv->file;
 }

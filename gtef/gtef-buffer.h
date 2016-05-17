@@ -44,6 +44,8 @@ struct _GtefBufferClass
 	gpointer padding[12];
 };
 
+GtefBuffer *		gtef_buffer_new				(void);
+
 GtefFile *		gtef_buffer_get_file			(GtefBuffer *buffer);
 
 G_END_DECLS

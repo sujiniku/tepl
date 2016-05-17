@@ -206,6 +206,18 @@ gtef_buffer_init (GtefBuffer *buffer)
 }
 
 /**
+ * gtef_buffer_new:
+ *
+ * Returns: a new #GtefBuffer.
+ * Since: 1.0
+ */
+GtefBuffer *
+gtef_buffer_new (void)
+{
+	return g_object_new (GTEF_TYPE_BUFFER, NULL);
+}
+
+/**
  * gtef_buffer_get_file:
  * @buffer: a #GtefBuffer.
  *

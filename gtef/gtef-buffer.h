@@ -50,6 +50,10 @@ GtefFile *		gtef_buffer_get_file			(GtefBuffer *buffer);
 
 gboolean		gtef_buffer_is_untouched		(GtefBuffer *buffer);
 
+const gchar *		gtef_buffer_get_short_name		(GtefBuffer *buffer);
+
+gchar *			gtef_buffer_get_title			(GtefBuffer *buffer);
+
 G_END_DECLS
 
 #endif /* GTEF_BUFFER_H */

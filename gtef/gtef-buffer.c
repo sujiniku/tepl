@@ -361,9 +361,10 @@ gtef_buffer_init (GtefBuffer *buffer)
 
 	priv = gtef_buffer_get_instance_private (buffer);
 
+	priv->file = gtef_file_new ();
+
 	update_short_name (buffer);
 
-	priv->file = gtef_file_new ();
 	g_signal_connect_object (priv->file,
 				 "notify::location",
 				 G_CALLBACK (location_notify_cb),

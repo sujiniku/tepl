@@ -19,6 +19,7 @@
 
 #include "config.h"
 #include "gtef-file.h"
+#include <glib/gi18n-lib.h>
 #include "gtef-metadata-manager.h"
 
 /**
@@ -26,9 +27,10 @@
  * @Short_description: On-disk representation of a GtefBuffer
  * @Title: GtefFile
  *
- * #GtefFile extends #GtkSourceFile with metadata support. You need to call
- * gtef_metadata_manager_init() and gtef_metadata_manager_shutdown() in your
- * application, in case GVfs metadata are not supported.
+ * #GtefFile extends #GtkSourceFile with metadata support, among other smaller
+ * things. You need to call gtef_metadata_manager_init() and
+ * gtef_metadata_manager_shutdown() in your application, in case GVfs metadata
+ * are not supported.
  *
  * gtef_file_get_metadata() and gtef_file_set_metadata() don't load or save the
  * metadata on disk. They only access the metadata stored in the #GtefFile
@@ -59,8 +61,19 @@ struct _GtefFilePrivate
 	/* Never NULL */
 	GFileInfo *metadata;
 
+	gchar *short_name;
+
 	guint use_gvfs_metadata : 1;
 };
+
+enum
+{
+	PROP_0,
+	PROP_SHORT_NAME,
+	N_PROPERTIES
+};
+
+static GParamSpec *properties[N_PROPERTIES];
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefFile, gtef_file, GTK_SOURCE_TYPE_FILE)
 
@@ -92,11 +105,46 @@ print_fallback_to_metadata_manager_warning (void)
 }
 
 static void
+gtef_file_get_property (GObject    *object,
+			guint       prop_id,
+			GValue     *value,
+			GParamSpec *pspec)
+{
+	GtefFile *file = GTEF_FILE (object);
+
+	switch (prop_id)
+	{
+		case PROP_SHORT_NAME:
+			g_value_set_string (value, gtef_file_get_short_name (file));
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+			break;
+	}
+}
+
+static void
+gtef_file_set_property (GObject      *object,
+			guint         prop_id,
+			const GValue *value,
+			GParamSpec   *pspec)
+{
+	switch (prop_id)
+	{
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+			break;
+	}
+}
+
+static void
 gtef_file_finalize (GObject *object)
 {
 	GtefFilePrivate *priv = gtef_file_get_instance_private (GTEF_FILE (object));
 
 	g_object_unref (priv->metadata);
+	g_free (priv->short_name);
 
 	G_OBJECT_CLASS (gtef_file_parent_class)->finalize (object);
 }
@@ -106,7 +154,97 @@ gtef_file_class_init (GtefFileClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
+	object_class->get_property = gtef_file_get_property;
+	object_class->set_property = gtef_file_set_property;
 	object_class->finalize = gtef_file_finalize;
+
+	/**
+	 * GtefFile:short-name:
+	 *
+	 * The file short name. See gtef_file_get_short_name().
+	 *
+	 * Since: 1.0
+	 */
+	properties[PROP_SHORT_NAME] =
+		g_param_spec_string ("short-name",
+				     "Short Name",
+				     "",
+				     NULL,
+				     G_PARAM_READABLE |
+				     G_PARAM_STATIC_STRINGS);
+
+	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
+}
+
+static void
+query_display_name_cb (GObject      *source_object,
+		       GAsyncResult *result,
+		       gpointer      user_data)
+{
+	GFile *location = G_FILE (source_object);
+	GtefFile *file = GTEF_FILE (user_data);
+	GtefFilePrivate *priv;
+	GFileInfo *info;
+	GError *error = NULL;
+
+	priv = gtef_file_get_instance_private (file);
+
+	info = g_file_query_info_finish (location, result, &error);
+
+	if (error != NULL)
+	{
+		g_warning ("Error when querying file information: %s", error->message);
+		g_clear_error (&error);
+		goto out;
+	}
+
+	g_free (priv->short_name);
+	priv->short_name = g_strdup (g_file_info_get_display_name (info));
+
+	g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_SHORT_NAME]);
+
+out:
+	g_clear_object (&info);
+
+	/* Async operation finished */
+	g_object_unref (file);
+}
+
+static void
+update_short_name (GtefFile *file)
+{
+	GtefFilePrivate *priv;
+	GFile *location;
+
+	priv = gtef_file_get_instance_private (file);
+
+	location = gtk_source_file_get_location (GTK_SOURCE_FILE (file));
+
+	if (location == NULL)
+	{
+		g_free (priv->short_name);
+		priv->short_name = g_strdup (_("Untitled File"));
+
+		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_SHORT_NAME]);
+	}
+	else
+	{
+		g_file_query_info_async (location,
+					 G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
+					 G_FILE_QUERY_INFO_NONE,
+					 G_PRIORITY_DEFAULT,
+					 NULL,
+					 query_display_name_cb,
+					 g_object_ref (file));
+	}
+}
+
+static void
+location_notify_cb (GtefFile   *file,
+		    GParamSpec *pspec,
+		    gpointer    user_data)
+{
+	update_short_name (file);
 }
 
 static void
@@ -121,6 +259,12 @@ gtef_file_init (GtefFile *file)
 #else
 	priv->use_gvfs_metadata = FALSE;
 #endif
+
+	update_short_name (file);
+	g_signal_connect (file,
+			  "notify::location",
+			  G_CALLBACK (location_notify_cb),
+			  NULL);
 }
 
 /**
@@ -133,6 +277,28 @@ GtefFile *
 gtef_file_new (void)
 {
 	return g_object_new (GTEF_TYPE_FILE, NULL);
+}
+
+/**
+ * gtef_file_get_short_name:
+ * @file: a #GtefFile.
+ *
+ * Gets the @file short name. If the #GtkSourceFile:location isn't %NULL,
+ * returns its display-name (see #G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME).
+ * Otherwise returns "Untitled File".
+ *
+ * Returns: the @file short name.
+ * Since: 1.0
+ */
+const gchar *
+gtef_file_get_short_name (GtefFile *file)
+{
+	GtefFilePrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
+
+	priv = gtef_file_get_instance_private (file);
+	return priv->short_name;
 }
 
 /**

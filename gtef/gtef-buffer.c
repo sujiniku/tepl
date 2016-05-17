@@ -17,9 +17,7 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
 #include "gtef-buffer.h"
-#include <glib/gi18n-lib.h>
 #include "gtef-file.h"
 
 /**
@@ -33,8 +31,6 @@ typedef struct _GtefBufferPrivate GtefBufferPrivate;
 struct _GtefBufferPrivate
 {
 	GtefFile *file;
-
-	gchar *short_name;
 
 	guint n_nested_user_actions;
 	guint idle_cursor_moved_id;
@@ -106,16 +102,6 @@ gtef_buffer_dispose (GObject *object)
 	}
 
 	G_OBJECT_CLASS (gtef_buffer_parent_class)->dispose (object);
-}
-
-static void
-gtef_buffer_finalize (GObject *object)
-{
-	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (GTEF_BUFFER (object));
-
-	g_free (priv->short_name);
-
-	G_OBJECT_CLASS (gtef_buffer_parent_class)->finalize (object);
 }
 
 static gboolean
@@ -237,7 +223,6 @@ gtef_buffer_class_init (GtefBufferClass *klass)
 	object_class->get_property = gtef_buffer_get_property;
 	object_class->set_property = gtef_buffer_set_property;
 	object_class->dispose = gtef_buffer_dispose;
-	object_class->finalize = gtef_buffer_finalize;
 
 	text_buffer_class->begin_user_action = gtef_buffer_begin_user_action;
 	text_buffer_class->end_user_action = gtef_buffer_end_user_action;
@@ -284,74 +269,11 @@ gtef_buffer_class_init (GtefBufferClass *klass)
 }
 
 static void
-query_display_name_cb (GObject      *source_object,
-		       GAsyncResult *result,
-		       gpointer      user_data)
+short_name_notify_cb (GtefFile   *file,
+		      GParamSpec *pspec,
+		      GtefBuffer *buffer)
 {
-	GFile *location = G_FILE (source_object);
-	GtefBuffer *buffer = GTEF_BUFFER (user_data);
-	GtefBufferPrivate *priv;
-	GFileInfo *info;
-	GError *error = NULL;
-
-	priv = gtef_buffer_get_instance_private (buffer);
-
-	info = g_file_query_info_finish (location, result, &error);
-
-	if (error != NULL)
-	{
-		g_warning (_("Error when querying file information: %s"), error->message);
-		g_clear_error (&error);
-		goto out;
-	}
-
-	g_free (priv->short_name);
-	priv->short_name = g_strdup (g_file_info_get_display_name (info));
-
 	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TITLE]);
-
-out:
-	g_clear_object (&info);
-
-	/* Async operation finished */
-	g_object_unref (buffer);
-}
-
-static void
-update_short_name (GtefBuffer *buffer)
-{
-	GtefBufferPrivate *priv;
-	GFile *location;
-
-	priv = gtef_buffer_get_instance_private (buffer);
-
-	location = gtk_source_file_get_location (GTK_SOURCE_FILE (priv->file));
-
-	if (location == NULL)
-	{
-		g_free (priv->short_name);
-		priv->short_name = g_strdup (_("Untitled File"));
-
-		g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TITLE]);
-	}
-	else
-	{
-		g_file_query_info_async (location,
-					 G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
-					 G_FILE_QUERY_INFO_NONE,
-					 G_PRIORITY_DEFAULT,
-					 NULL,
-					 query_display_name_cb,
-					 g_object_ref (buffer));
-	}
-}
-
-static void
-location_notify_cb (GtkSourceFile *file,
-		    GParamSpec    *pspec,
-		    GtefBuffer    *buffer)
-{
-	update_short_name (buffer);
 }
 
 static void
@@ -363,11 +285,9 @@ gtef_buffer_init (GtefBuffer *buffer)
 
 	priv->file = gtef_file_new ();
 
-	update_short_name (buffer);
-
 	g_signal_connect_object (priv->file,
-				 "notify::location",
-				 G_CALLBACK (location_notify_cb),
+				 "notify::short-name",
+				 G_CALLBACK (short_name_notify_cb),
 				 buffer,
 				 0);
 }
@@ -435,33 +355,12 @@ gtef_buffer_is_untouched (GtefBuffer *buffer)
 }
 
 /**
- * gtef_buffer_get_short_name:
- * @buffer: a #GtefBuffer.
- *
- * Gets the @buffer short name. If the #GtkSourceFile:location isn't %NULL,
- * returns its display-name (see #G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME).
- * Otherwise returns "Untitled File".
- *
- * Returns: the @buffer short name.
- */
-const gchar *
-gtef_buffer_get_short_name (GtefBuffer *buffer)
-{
-	GtefBufferPrivate *priv;
-
-	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), NULL);
-
-	priv = gtef_buffer_get_instance_private (buffer);
-	return priv->short_name;
-}
-
-/**
  * gtef_buffer_get_title:
  * @buffer: a #GtefBuffer.
  *
  * Returns a title suitable for a #GtkWindow title. It contains (in that order):
  * - '*' if the buffer is modified;
- * - the short name as returned by gtef_buffer_get_short_name();
+ * - the #GtefFile:short-name;
  * - the directory path in parenthesis if the #GtkSourceFile:location isn't
  *   %NULL.
  *
@@ -474,6 +373,7 @@ gtef_buffer_get_title (GtefBuffer *buffer)
 {
 	GtefBufferPrivate *priv;
 	GFile *location;
+	const gchar *short_name;
 	gchar *title;
 
 	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), NULL);
@@ -481,10 +381,11 @@ gtef_buffer_get_title (GtefBuffer *buffer)
 	priv = gtef_buffer_get_instance_private (buffer);
 
 	location = gtk_source_file_get_location (GTK_SOURCE_FILE (priv->file));
+	short_name = gtef_file_get_short_name (priv->file);
 
 	if (location == NULL)
 	{
-		title = g_strdup (priv->short_name);
+		title = g_strdup (short_name);
 	}
 	else
 	{
@@ -497,7 +398,7 @@ gtef_buffer_get_title (GtefBuffer *buffer)
 		directory = g_file_get_parse_name (parent);
 		g_object_unref (parent);
 
-		title = g_strdup_printf ("%s (%s)", priv->short_name, directory);
+		title = g_strdup_printf ("%s (%s)", short_name, directory);
 		g_free (directory);
 	}
 

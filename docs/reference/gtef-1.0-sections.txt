@@ -7,7 +7,6 @@ GtefBuffer
 gtef_buffer_new
 gtef_buffer_get_file
 gtef_buffer_is_untouched
-gtef_buffer_get_short_name
 gtef_buffer_get_title
 <SUBSECTION Standard>
 GTEF_TYPE_BUFFER
@@ -19,6 +18,7 @@ GtefBufferClass
 <TITLE>GtefFile</TITLE>
 GtefFile
 gtef_file_new
+gtef_file_get_short_name
 gtef_file_get_metadata
 gtef_file_set_metadata
 gtef_file_load_metadata

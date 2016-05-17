@@ -31,6 +31,8 @@ typedef struct _GtefBufferPrivate GtefBufferPrivate;
 struct _GtefBufferPrivate
 {
 	GtefFile *file;
+
+	guint n_nested_user_actions;
 };
 
 enum
@@ -54,18 +56,51 @@ gtef_buffer_dispose (GObject *object)
 }
 
 static void
-gtef_buffer_mark_set (GtkTextBuffer     *text_buffer,
+gtef_buffer_begin_user_action (GtkTextBuffer *buffer)
+{
+	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (GTEF_BUFFER (buffer));
+
+	priv->n_nested_user_actions++;
+
+	if (GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->begin_user_action != NULL)
+	{
+		GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->begin_user_action (buffer);
+	}
+}
+
+static void
+gtef_buffer_end_user_action (GtkTextBuffer *buffer)
+{
+	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (GTEF_BUFFER (buffer));
+
+	if (GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->end_user_action != NULL)
+	{
+		GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->end_user_action (buffer);
+	}
+
+	g_return_if_fail (priv->n_nested_user_actions > 0);
+	priv->n_nested_user_actions--;
+
+	if (priv->n_nested_user_actions == 0)
+	{
+		g_signal_emit (buffer, signals[SIGNAL_CURSOR_MOVED], 0);
+	}
+}
+
+static void
+gtef_buffer_mark_set (GtkTextBuffer     *buffer,
 		      const GtkTextIter *location,
 		      GtkTextMark       *mark)
 {
-	GtefBuffer *buffer = GTEF_BUFFER (text_buffer);
+	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (GTEF_BUFFER (buffer));
 
 	if (GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->mark_set != NULL)
 	{
-		GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->mark_set (text_buffer, location, mark);
+		GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->mark_set (buffer, location, mark);
 	}
 
-	if (mark == gtk_text_buffer_get_insert (text_buffer))
+	if (priv->n_nested_user_actions == 0 &&
+	    mark == gtk_text_buffer_get_insert (buffer))
 	{
 		g_signal_emit (buffer, signals[SIGNAL_CURSOR_MOVED], 0);
 	}
@@ -74,12 +109,17 @@ gtef_buffer_mark_set (GtkTextBuffer     *text_buffer,
 static void
 gtef_buffer_changed (GtkTextBuffer *buffer)
 {
+	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (GTEF_BUFFER (buffer));
+
 	if (GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->changed != NULL)
 	{
 		GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->changed (buffer);
 	}
 
-	g_signal_emit (buffer, signals[SIGNAL_CURSOR_MOVED], 0);
+	if (priv->n_nested_user_actions == 0)
+	{
+		g_signal_emit (buffer, signals[SIGNAL_CURSOR_MOVED], 0);
+	}
 }
 
 static void
@@ -90,6 +130,8 @@ gtef_buffer_class_init (GtefBufferClass *klass)
 
 	object_class->dispose = gtef_buffer_dispose;
 
+	text_buffer_class->begin_user_action = gtef_buffer_begin_user_action;
+	text_buffer_class->end_user_action = gtef_buffer_end_user_action;
 	text_buffer_class->mark_set = gtef_buffer_mark_set;
 	text_buffer_class->changed = gtef_buffer_changed;
 

@@ -48,6 +48,8 @@ GtefBuffer *		gtef_buffer_new				(void);
 
 GtefFile *		gtef_buffer_get_file			(GtefBuffer *buffer);
 
+gboolean		gtef_buffer_is_untouched		(GtefBuffer *buffer);
+
 G_END_DECLS
 
 #endif /* GTEF_BUFFER_H */

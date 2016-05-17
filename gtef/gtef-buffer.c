@@ -234,3 +234,35 @@ gtef_buffer_get_file (GtefBuffer *buffer)
 	priv = gtef_buffer_get_instance_private (buffer);
 	return priv->file;
 }
+
+/**
+ * gtef_buffer_is_untouched:
+ * @buffer: a #GtefBuffer.
+ *
+ * Returns whether @buffer is untouched.
+ *
+ * This function is for example useful to know if we can re-use this buffer to
+ * load a file, instead of opening a new tab or window.
+ *
+ * For this function to return %TRUE, the @buffer must be empty, non-modified,
+ * the undo/redo #GtkSourceBuffer history must be empty, and the
+ * #GtkSourceFile:location must be %NULL.
+ *
+ * Returns: %TRUE if @buffer has not been touched, %FALSE otherwise.
+ * Since: 1.0
+ */
+gboolean
+gtef_buffer_is_untouched (GtefBuffer *buffer)
+{
+	GtefBufferPrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), FALSE);
+
+	priv = gtef_buffer_get_instance_private (buffer);
+
+	return (gtk_text_buffer_get_char_count (GTK_TEXT_BUFFER (buffer)) == 0 &&
+		!gtk_text_buffer_get_modified (GTK_TEXT_BUFFER (buffer)) &&
+		!gtk_source_buffer_can_undo (GTK_SOURCE_BUFFER (buffer)) &&
+		!gtk_source_buffer_can_redo (GTK_SOURCE_BUFFER (buffer)) &&
+		gtk_source_file_get_location (GTK_SOURCE_FILE (priv->file)) == NULL);
+}

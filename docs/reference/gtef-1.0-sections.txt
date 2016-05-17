@@ -6,6 +6,7 @@
 GtefBuffer
 gtef_buffer_new
 gtef_buffer_get_file
+gtef_buffer_is_untouched
 <SUBSECTION Standard>
 GTEF_TYPE_BUFFER
 GtefBufferClass

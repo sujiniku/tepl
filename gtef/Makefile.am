@@ -1,6 +1,7 @@
 @CODE_COVERAGE_RULES@
 
 AM_CPPFLAGS =				\
+	-DDATADIR=\""$(datadir)"\"	\
 	-DG_LOG_DOMAIN=\"Gtef\"		\
 	-DGTEF_COMPILATION		\
 	-I$(top_builddir)		\
@@ -23,7 +24,8 @@ gtef_public_c_files =			\
 
 gtef_private_headers =
 
-gtef_private_c_files =
+gtef_private_c_files =			\
+	gtef-init.c
 
 # Helper Libtool library, so that the private functions can be used in unit
 # tests.

@@ -33,6 +33,7 @@ struct _GtefBufferPrivate
 	GtefFile *file;
 
 	guint n_nested_user_actions;
+	guint idle_cursor_moved_id;
 };
 
 enum
@@ -52,7 +53,36 @@ gtef_buffer_dispose (GObject *object)
 
 	g_clear_object (&priv->file);
 
+	if (priv->idle_cursor_moved_id != 0)
+	{
+		g_source_remove (priv->idle_cursor_moved_id);
+		priv->idle_cursor_moved_id = 0;
+	}
+
 	G_OBJECT_CLASS (gtef_buffer_parent_class)->dispose (object);
+}
+
+static gboolean
+idle_cursor_moved_cb (gpointer user_data)
+{
+	GtefBuffer *buffer = GTEF_BUFFER (user_data);
+	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (buffer);
+
+	g_signal_emit (buffer, signals[SIGNAL_CURSOR_MOVED], 0);
+
+	priv->idle_cursor_moved_id = 0;
+	return G_SOURCE_REMOVE;
+}
+
+static void
+install_idle_cursor_moved (GtefBuffer *buffer)
+{
+	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (buffer);
+
+	if (priv->idle_cursor_moved_id == 0)
+	{
+		priv->idle_cursor_moved_id = g_idle_add (idle_cursor_moved_cb, buffer);
+	}
 }
 
 static void
@@ -83,7 +113,7 @@ gtef_buffer_end_user_action (GtkTextBuffer *buffer)
 
 	if (priv->n_nested_user_actions == 0)
 	{
-		g_signal_emit (buffer, signals[SIGNAL_CURSOR_MOVED], 0);
+		install_idle_cursor_moved (GTEF_BUFFER (buffer));
 	}
 }
 
@@ -102,7 +132,7 @@ gtef_buffer_mark_set (GtkTextBuffer     *buffer,
 	if (priv->n_nested_user_actions == 0 &&
 	    mark == gtk_text_buffer_get_insert (buffer))
 	{
-		g_signal_emit (buffer, signals[SIGNAL_CURSOR_MOVED], 0);
+		install_idle_cursor_moved (GTEF_BUFFER (buffer));
 	}
 }
 
@@ -118,7 +148,7 @@ gtef_buffer_changed (GtkTextBuffer *buffer)
 
 	if (priv->n_nested_user_actions == 0)
 	{
-		g_signal_emit (buffer, signals[SIGNAL_CURSOR_MOVED], 0);
+		install_idle_cursor_moved (GTEF_BUFFER (buffer));
 	}
 }
 

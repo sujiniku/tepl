@@ -193,7 +193,12 @@ query_display_name_cb (GObject      *source_object,
 
 	if (error != NULL)
 	{
-		g_warning ("Error when querying file information: %s", error->message);
+		/* TODO short-name fallback when the file doesn't exist. */
+		if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
+		{
+			g_warning ("Error when querying file information: %s", error->message);
+		}
+
 		g_clear_error (&error);
 		goto out;
 	}

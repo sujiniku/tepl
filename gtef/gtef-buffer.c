@@ -81,7 +81,16 @@ install_idle_cursor_moved (GtefBuffer *buffer)
 
 	if (priv->idle_cursor_moved_id == 0)
 	{
-		priv->idle_cursor_moved_id = g_idle_add (idle_cursor_moved_cb, buffer);
+		/* High idle priority, because after loading a big file, the
+		 * GtkTextView works in the background to compute the whole size
+		 * etc. HIGH_IDLE permits to send the signal as soon as the
+		 * content is fully loaded in the GtkTextBuffer, even if
+		 * GtkTextView has not finished.
+		 */
+		priv->idle_cursor_moved_id = g_idle_add_full (G_PRIORITY_HIGH_IDLE,
+							      idle_cursor_moved_cb,
+							      buffer,
+							      NULL);
 	}
 }
 

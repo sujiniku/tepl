@@ -19,6 +19,7 @@
 
 #include "gtef-buffer.h"
 #include "gtef-file.h"
+#include "gtef-utils.h"
 
 /**
  * SECTION:buffer
@@ -391,15 +392,18 @@ gtef_buffer_get_title (GtefBuffer *buffer)
 	{
 		GFile *parent;
 		gchar *directory;
+		gchar *directory_tilde;
 
 		parent = g_file_get_parent (location);
 		g_return_val_if_fail (parent != NULL, NULL);
 
 		directory = g_file_get_parse_name (parent);
-		g_object_unref (parent);
+		directory_tilde = _gtef_utils_replace_home_dir_with_tilde (directory);
+		title = g_strdup_printf ("%s (%s)", short_name, directory_tilde);
 
-		title = g_strdup_printf ("%s (%s)", short_name, directory);
+		g_object_unref (parent);
 		g_free (directory);
+		g_free (directory_tilde);
 	}
 
 	if (gtk_text_buffer_get_modified (GTK_TEXT_BUFFER (buffer)))

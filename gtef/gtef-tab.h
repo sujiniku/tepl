@@ -42,6 +42,9 @@ struct _GtefTabClass
 
 GtefTab *		gtef_tab_new					(GtkWidget *main_widget);
 
+void			gtef_tab_add_info_bar				(GtefTab    *tab,
+									 GtkInfoBar *info_bar);
+
 G_END_DECLS
 
 #endif /* GTEF_TAB_H */

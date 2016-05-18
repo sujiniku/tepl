@@ -29,7 +29,7 @@ typedef struct _GtefTabPrivate GtefTabPrivate;
 
 struct _GtefTabPrivate
 {
-	gint something;
+	GtkWidget *main_widget;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefTab, gtef_tab, GTK_TYPE_GRID)
@@ -37,6 +37,9 @@ G_DEFINE_TYPE_WITH_PRIVATE (GtefTab, gtef_tab, GTK_TYPE_GRID)
 static void
 gtef_tab_dispose (GObject *object)
 {
+	GtefTabPrivate *priv = gtef_tab_get_instance_private (GTEF_TAB (object));
+
+	g_clear_object (&priv->main_widget);
 
 	G_OBJECT_CLASS (gtef_tab_parent_class)->dispose (object);
 }
@@ -66,10 +69,50 @@ GtefTab *
 gtef_tab_new (GtkWidget *main_widget)
 {
 	GtefTab *tab;
+	GtefTabPrivate *priv;
 
 	g_return_val_if_fail (GTK_IS_WIDGET (main_widget), NULL);
 
 	tab = g_object_new (GTEF_TYPE_TAB, NULL);
+	priv = gtef_tab_get_instance_private (tab);
+
 	gtk_container_add (GTK_CONTAINER (tab), main_widget);
+	priv->main_widget = g_object_ref_sink (main_widget);
+
 	return tab;
+}
+
+/**
+ * gtef_tab_add_info_bar:
+ * @tab: a #GtefTab.
+ * @info_bar: a #GtkInfoBar.
+ *
+ * Attaches @info_bar to @tab, above the main widget.
+ *
+ * If several info bars are added, the first one will be at the top, the second
+ * one below the first info bar, etc. With the main widget of @tab at the
+ * bottom.
+ *
+ * Since: 1.0
+ */
+void
+gtef_tab_add_info_bar (GtefTab    *tab,
+		       GtkInfoBar *info_bar)
+{
+	GtefTabPrivate *priv;
+
+	g_return_if_fail (GTEF_IS_TAB (tab));
+	g_return_if_fail (GTK_IS_INFO_BAR (info_bar));
+
+	priv = gtef_tab_get_instance_private (tab);
+
+	gtk_grid_insert_next_to (GTK_GRID (tab),
+				 priv->main_widget,
+				 GTK_POS_TOP);
+
+	gtk_grid_attach_next_to (GTK_GRID (tab),
+				 GTK_WIDGET (info_bar),
+				 priv->main_widget,
+				 GTK_POS_TOP,
+				 1, 1);
 }

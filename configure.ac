@@ -142,6 +142,7 @@ AC_CONFIG_FILES([
 	docs/reference/Makefile
 	gtef/Makefile
 	po/Makefile.in
+	tests/Makefile
 	testsuite/Makefile
 ])
 

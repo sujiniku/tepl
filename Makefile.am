@@ -1,4 +1,4 @@
-SUBDIRS = gtef po testsuite docs
+SUBDIRS = gtef po tests testsuite docs
 
 pkgconfig_DATA = gtef-$(GTEF_API_VERSION).pc
 DISTCLEANFILES = $(pkgconfig_DATA)

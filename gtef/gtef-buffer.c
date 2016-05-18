@@ -23,7 +23,7 @@
 
 /**
  * SECTION:buffer
- * @Short_description: Subclass of GtkSourceBuffer
+ * @Short_description: Stores the text for display in a GtefView
  * @Title: GtefBuffer
  */
 

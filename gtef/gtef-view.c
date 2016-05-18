@@ -1,6 +1,11 @@
 /*
  * This file is part of Gtef, a text editor library.
  *
+ * From gedit-view.c:
+ * Copyright 1998, 1999 - Alex Roberts, Evan Lawrence
+ * Copyright 2000, 2002 - Chema Celorio, Paolo Maggi
+ * Copyright 2003-2005 - Paolo Maggi
+ *
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * This library is free software; you can redistribute it and/or modify
@@ -26,21 +31,9 @@
  * @Title: GtefView
  */
 
-typedef struct _GtefViewPrivate GtefViewPrivate;
+#define SCROLL_MARGIN 0.02
 
-struct _GtefViewPrivate
-{
-	gint something;
-};
-
-G_DEFINE_TYPE_WITH_PRIVATE (GtefView, gtef_view, GTK_SOURCE_TYPE_VIEW)
-
-static void
-gtef_view_dispose (GObject *object)
-{
-
-	G_OBJECT_CLASS (gtef_view_parent_class)->dispose (object);
-}
+G_DEFINE_TYPE (GtefView, gtef_view, GTK_SOURCE_TYPE_VIEW)
 
 static GtkTextBuffer *
 gtef_view_create_buffer (GtkTextView *view)
@@ -51,10 +44,7 @@ gtef_view_create_buffer (GtkTextView *view)
 static void
 gtef_view_class_init (GtefViewClass *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GtkTextViewClass *text_view_class = GTK_TEXT_VIEW_CLASS (klass);
-
-	object_class->dispose = gtef_view_dispose;
 
 	text_view_class->create_buffer = gtef_view_create_buffer;
 }
@@ -74,4 +64,175 @@ GtkWidget *
 gtef_view_new (void)
 {
 	return g_object_new (GTEF_TYPE_VIEW, NULL);
+}
+
+/**
+ * gtef_view_cut_clipboard:
+ * @view: a #GtefView.
+ *
+ * Cuts the clipboard and then scrolls to the cursor position.
+ *
+ * Since: 1.0
+ */
+void
+gtef_view_cut_clipboard (GtefView *view)
+{
+	GtkTextBuffer *buffer;
+	GtkClipboard *clipboard;
+
+	g_return_if_fail (GTEF_IS_VIEW (view));
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (view),
+					      GDK_SELECTION_CLIPBOARD);
+
+	gtk_text_buffer_cut_clipboard (buffer,
+				       clipboard,
+				       gtk_text_view_get_editable (GTK_TEXT_VIEW (view)));
+
+	gtk_text_view_scroll_to_mark (GTK_TEXT_VIEW (view),
+				      gtk_text_buffer_get_insert (buffer),
+				      SCROLL_MARGIN,
+				      FALSE,
+				      0.0,
+				      0.0);
+}
+
+/**
+ * gtef_view_copy_clipboard:
+ * @view: a #GtefView.
+ *
+ * Copies the clipboard.
+ *
+ * Since: 1.0
+ */
+void
+gtef_view_copy_clipboard (GtefView *view)
+{
+	GtkTextBuffer *buffer;
+	GtkClipboard *clipboard;
+
+	g_return_if_fail (GTEF_IS_VIEW (view));
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (view),
+					      GDK_SELECTION_CLIPBOARD);
+
+	gtk_text_buffer_copy_clipboard (buffer, clipboard);
+
+	/* On copy do not scroll, we are already on screen. */
+}
+
+/**
+ * gtef_view_paste_clipboard:
+ * @view: a #GtefView.
+ *
+ * Pastes the clipboard and then scrolls to the cursor position.
+ *
+ * Since: 1.0
+ */
+void
+gtef_view_paste_clipboard (GtefView *view)
+{
+	GtkTextBuffer *buffer;
+	GtkClipboard *clipboard;
+
+	g_return_if_fail (GTEF_IS_VIEW (view));
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (view),
+					      GDK_SELECTION_CLIPBOARD);
+
+	gtk_text_buffer_paste_clipboard (buffer,
+					 clipboard,
+					 NULL,
+					 gtk_text_view_get_editable (GTK_TEXT_VIEW (view)));
+
+	gtk_text_view_scroll_to_mark (GTK_TEXT_VIEW (view),
+				      gtk_text_buffer_get_insert (buffer),
+				      SCROLL_MARGIN,
+				      FALSE,
+				      0.0,
+				      0.0);
+}
+
+/**
+ * gtef_view_delete_selection:
+ * @view: a #GtefView.
+ *
+ * Deletes the text currently selected in the #GtkTextBuffer associated
+ * to the view and then scrolls to the cursor position.
+ *
+ * Since: 1.0
+ */
+void
+gtef_view_delete_selection (GtefView *view)
+{
+	GtkTextBuffer *buffer;
+
+	g_return_if_fail (GTEF_IS_VIEW (view));
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+
+	gtk_text_buffer_delete_selection (buffer,
+					  TRUE,
+					  gtk_text_view_get_editable (GTK_TEXT_VIEW (view)));
+
+	gtk_text_view_scroll_to_mark (GTK_TEXT_VIEW (view),
+				      gtk_text_buffer_get_insert (buffer),
+				      SCROLL_MARGIN,
+				      FALSE,
+				      0.0,
+				      0.0);
+}
+
+/**
+ * gtef_view_select_all:
+ * @view: a #GtefView.
+ *
+ * Selects all the text.
+ *
+ * Since: 1.0
+ */
+void
+gtef_view_select_all (GtefView *view)
+{
+	GtkTextBuffer *buffer;
+	GtkTextIter start;
+	GtkTextIter end;
+
+	g_return_if_fail (GTEF_IS_VIEW (view));
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+
+	gtk_text_buffer_get_bounds (buffer, &start, &end);
+	gtk_text_buffer_select_range (buffer, &start, &end);
+}
+
+/**
+ * gtef_view_scroll_to_cursor:
+ * @view: a #GtefView.
+ *
+ * Scrolls the @view to the cursor position.
+ *
+ * Since: 1.0
+ */
+void
+gtef_view_scroll_to_cursor (GtefView *view)
+{
+	GtkTextBuffer *buffer;
+
+	g_return_if_fail (GTEF_IS_VIEW (view));
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+
+	gtk_text_view_scroll_to_mark (GTK_TEXT_VIEW (view),
+				      gtk_text_buffer_get_insert (buffer),
+				      0.25,
+				      FALSE,
+				      0.0,
+				      0.0);
 }

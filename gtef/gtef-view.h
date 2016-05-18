@@ -42,6 +42,18 @@ struct _GtefViewClass
 
 GtkWidget *		gtef_view_new					(void);
 
+void			gtef_view_cut_clipboard				(GtefView *view);
+
+void			gtef_view_copy_clipboard			(GtefView *view);
+
+void			gtef_view_paste_clipboard			(GtefView *view);
+
+void			gtef_view_delete_selection			(GtefView *view);
+
+void			gtef_view_select_all				(GtefView *view);
+
+void			gtef_view_scroll_to_cursor			(GtefView *view);
+
 G_END_DECLS
 
 #endif /* GTEF_VIEW_H */

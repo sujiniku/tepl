@@ -62,6 +62,7 @@ struct _GtefFilePrivate
 	GFileInfo *metadata;
 
 	gchar *short_name;
+	gint untitled_number;
 
 	guint use_gvfs_metadata : 1;
 };
@@ -75,10 +76,63 @@ enum
 
 static GParamSpec *properties[N_PROPERTIES];
 
+/* The list is sorted. */
+static GSList *allocated_untitled_numbers;
+
 G_DEFINE_TYPE_WITH_PRIVATE (GtefFile, gtef_file, GTK_SOURCE_TYPE_FILE)
 
 #define METADATA_PREFIX "metadata::"
 #define METADATA_QUERY_ATTRIBUTES "metadata::*"
+
+static gint
+compare_untitled_numbers (gconstpointer a,
+			  gconstpointer b)
+{
+	gint num_a = GPOINTER_TO_INT (a);
+	gint num_b = GPOINTER_TO_INT (b);
+
+	return num_a - num_b;
+}
+
+/* Starts at 1. O(n). But n is normally always very small. */
+static gint
+allocate_first_available_untitled_number (void)
+{
+	gint num = 1;
+	GSList *l;
+
+	for (l = allocated_untitled_numbers; l != NULL; l = l->next)
+	{
+		gint cur_num = GPOINTER_TO_INT (l->data);
+
+		if (num != cur_num)
+		{
+			g_assert_cmpint (num, <, cur_num);
+			break;
+		}
+
+		num++;
+	}
+
+	g_assert (g_slist_find (allocated_untitled_numbers, GINT_TO_POINTER (num)) == NULL);
+
+	allocated_untitled_numbers = g_slist_insert_sorted (allocated_untitled_numbers,
+							    GINT_TO_POINTER (num),
+							    compare_untitled_numbers);
+
+	return num;
+}
+
+static void
+release_untitled_number (gint num)
+{
+	g_assert (g_slist_find (allocated_untitled_numbers, GINT_TO_POINTER (num)) != NULL);
+
+	allocated_untitled_numbers = g_slist_remove (allocated_untitled_numbers,
+						     GINT_TO_POINTER (num));
+
+	g_assert (g_slist_find (allocated_untitled_numbers, GINT_TO_POINTER (num)) == NULL);
+}
 
 static gchar *
 get_metadata_attribute_key (const gchar *key)
@@ -146,6 +200,11 @@ gtef_file_finalize (GObject *object)
 	g_object_unref (priv->metadata);
 	g_free (priv->short_name);
 
+	if (priv->untitled_number > 0)
+	{
+		release_untitled_number (priv->untitled_number);
+	}
+
 	G_OBJECT_CLASS (gtef_file_parent_class)->finalize (object);
 }
 
@@ -206,6 +265,12 @@ query_display_name_cb (GObject      *source_object,
 	g_free (priv->short_name);
 	priv->short_name = g_strdup (g_file_info_get_display_name (info));
 
+	if (priv->untitled_number > 0)
+	{
+		release_untitled_number (priv->untitled_number);
+		priv->untitled_number = 0;
+	}
+
 	g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_SHORT_NAME]);
 
 out:
@@ -227,8 +292,14 @@ update_short_name (GtefFile *file)
 
 	if (location == NULL)
 	{
+		if (priv->untitled_number == 0)
+		{
+			priv->untitled_number = allocate_first_available_untitled_number ();
+		}
+
 		g_free (priv->short_name);
-		priv->short_name = g_strdup (_("Untitled File"));
+		priv->short_name = g_strdup_printf (_("Untitled File %d"),
+						    priv->untitled_number);
 
 		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_SHORT_NAME]);
 	}

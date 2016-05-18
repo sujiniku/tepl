@@ -15,12 +15,14 @@ gtef_public_headers =			\
 	gtef-buffer.h			\
 	gtef-file.h			\
 	gtef-metadata-manager.h		\
-	gtef-types.h
+	gtef-types.h			\
+	gtef-view.h
 
 gtef_public_c_files =			\
 	gtef-buffer.c			\
 	gtef-file.c			\
-	gtef-metadata-manager.c
+	gtef-metadata-manager.c		\
+	gtef-view.c
 
 gtef_private_headers =			\
 	gtef-utils.h

@@ -38,3 +38,13 @@ GTEF_TYPE_FILE
 gtef_metadata_manager_init
 gtef_metadata_manager_shutdown
 </SECTION>
+
+<SECTION>
+<FILE>view</FILE>
+<TITLE>GtefView</TITLE>
+GtefView
+gtef_view_new
+<SUBSECTION Standard>
+GTEF_TYPE_VIEW
+GtefViewClass
+</SECTION>

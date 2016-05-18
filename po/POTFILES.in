@@ -3,5 +3,6 @@ gtef/gtef-buffer.c
 gtef/gtef-file.c
 gtef/gtef-init.c
 gtef/gtef-metadata-manager.c
+gtef/gtef-tab.c
 gtef/gtef-utils.c
 gtef/gtef-view.c

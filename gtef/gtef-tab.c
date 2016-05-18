@@ -17,22 +17,39 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GTEF_TYPES_H
-#define GTEF_TYPES_H
+#include "gtef-tab.h"
 
-#if !defined (GTEF_H_INSIDE) && !defined (GTEF_COMPILATION)
-#error "Only <gtef/gtef.h> can be included directly."
-#endif
+/**
+ * SECTION:tab
+ * @Short_description: Contains a GtefView with GtkInfoBars on top
+ * @Title: GtefTab
+ */
 
-#include <glib.h>
+typedef struct _GtefTabPrivate GtefTabPrivate;
 
-G_BEGIN_DECLS
+struct _GtefTabPrivate
+{
+	gint something;
+};
 
-typedef struct _GtefBuffer			GtefBuffer;
-typedef struct _GtefFile			GtefFile;
-typedef struct _GtefTab				GtefTab;
-typedef struct _GtefView			GtefView;
+G_DEFINE_TYPE_WITH_PRIVATE (GtefTab, gtef_tab, GTK_TYPE_GRID)
 
-G_END_DECLS
+static void
+gtef_tab_dispose (GObject *object)
+{
 
-#endif /* GTEF_TYPES_H */
+	G_OBJECT_CLASS (gtef_tab_parent_class)->dispose (object);
+}
+
+static void
+gtef_tab_class_init (GtefTabClass *klass)
+{
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+	object_class->dispose = gtef_tab_dispose;
+}
+
+static void
+gtef_tab_init (GtefTab *tab)
+{
+}

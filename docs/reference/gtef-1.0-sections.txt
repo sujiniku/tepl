@@ -40,6 +40,15 @@ gtef_metadata_manager_shutdown
 </SECTION>
 
 <SECTION>
+<FILE>tab</FILE>
+<TITLE>GtefTab</TITLE>
+GtefTab
+<SUBSECTION Standard>
+GTEF_TYPE_TAB
+GtefTabClass
+</SECTION>
+
+<SECTION>
 <FILE>view</FILE>
 <TITLE>GtefView</TITLE>
 GtefView

@@ -27,6 +27,7 @@
 #include <gtef/gtef-buffer.h>
 #include <gtef/gtef-file.h>
 #include <gtef/gtef-metadata-manager.h>
+#include <gtef/gtef-tab.h>
 #include <gtef/gtef-view.h>
 
 #undef GTEF_H_INSIDE

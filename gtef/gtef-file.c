@@ -361,7 +361,9 @@ gtef_file_new (void)
  *
  * Gets the @file short name. If the #GtkSourceFile:location isn't %NULL,
  * returns its display-name (see #G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME).
- * Otherwise returns "Untitled File".
+ * Otherwise returns "Untitled File N", with N the Nth untitled file of the
+ * application, starting at 1. When an untitled file is closed, its number is
+ * released and can be used by a later untitled file.
  *
  * Returns: the @file short name.
  * Since: 1.0

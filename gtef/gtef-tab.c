@@ -52,4 +52,24 @@ gtef_tab_class_init (GtefTabClass *klass)
 static void
 gtef_tab_init (GtefTab *tab)
 {
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (tab), GTK_ORIENTATION_VERTICAL);
+}
+
+/**
+ * gtef_tab_new:
+ * @main_widget: the main #GtkWidget that will be contained in the #GtefTab.
+ *
+ * Returns: a new #GtefTab.
+ * Since: 1.0
+ */
+GtefTab *
+gtef_tab_new (GtkWidget *main_widget)
+{
+	GtefTab *tab;
+
+	g_return_val_if_fail (GTK_IS_WIDGET (main_widget), NULL);
+
+	tab = g_object_new (GTEF_TYPE_TAB, NULL);
+	gtk_container_add (GTK_CONTAINER (tab), main_widget);
+	return tab;
 }

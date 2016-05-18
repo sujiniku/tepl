@@ -40,6 +40,8 @@ struct _GtefTabClass
 	gpointer padding[12];
 };
 
+GtefTab *		gtef_tab_new					(GtkWidget *main_widget);
+
 G_END_DECLS
 
 #endif /* GTEF_TAB_H */

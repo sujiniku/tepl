@@ -43,6 +43,7 @@ gtef_metadata_manager_shutdown
 <FILE>tab</FILE>
 <TITLE>GtefTab</TITLE>
 GtefTab
+gtef_tab_new
 <SUBSECTION Standard>
 GTEF_TYPE_TAB
 GtefTabClass

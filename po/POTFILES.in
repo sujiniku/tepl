@@ -3,3 +3,4 @@ gtef/gtef-buffer.c
 gtef/gtef-file.c
 gtef/gtef-init.c
 gtef/gtef-metadata-manager.c
+gtef/gtef-utils.c

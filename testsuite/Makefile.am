@@ -17,6 +17,9 @@ UNIT_TEST_PROGS =
 UNIT_TEST_PROGS += test-file
 test_file_SOURCES = test-file.c
 
+UNIT_TEST_PROGS += test-utils
+test_utils_SOURCES = test-utils.c
+
 if INSTALLED_TESTS
 insttestdir = $(libexecdir)/installed-tests/$(PACKAGE)-@GTEF_API_VERSION@
 insttest_PROGRAMS = $(UNIT_TEST_PROGS)

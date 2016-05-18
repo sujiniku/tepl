@@ -24,7 +24,8 @@ CFILE_GLOB = $(top_srcdir)/gtef/*.c
 # Header files or dirs to ignore when scanning. Use base file/dir names
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h private_code
 IGNORE_HFILES =				\
-	gtef.h
+	gtef.h				\
+	gtef-utils.h
 
 # Extra options to supply to gtkdoc-mkdb
 MKDB_OPTIONS = --xml-mode --output-format=xml

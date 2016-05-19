@@ -21,32 +21,57 @@
 #include <stdlib.h>
 
 static void
-add_info_bars (GtefTab *tab)
+info_bar_response_cb (GtkInfoBar *info_bar,
+		      gint        response_id,
+		      gpointer    user_data)
 {
-	GtkInfoBar *info_bar1;
-	GtkInfoBar *info_bar2;
+	gtk_widget_destroy (GTK_WIDGET (info_bar));
+}
+
+static void
+add_basic_info_bar_button_clicked_cb (GtkButton *button,
+				      GtefTab   *tab)
+{
+	GtkInfoBar *info_bar;
 	GtkWidget *label;
 	GtkWidget *content_area;
 
-	info_bar1 = GTK_INFO_BAR (gtk_info_bar_new ());
-	info_bar2 = GTK_INFO_BAR (gtk_info_bar_new ());
+	info_bar = GTK_INFO_BAR (gtk_info_bar_new ());
+	gtk_info_bar_set_show_close_button (info_bar, TRUE);
 
-	gtk_info_bar_set_show_close_button (info_bar1, TRUE);
-	gtk_info_bar_set_show_close_button (info_bar2, TRUE);
-
-	label = gtk_label_new ("First info bar.");
-	content_area = gtk_info_bar_get_content_area (info_bar1);
+	label = gtk_label_new ("Basic info bar.");
+	content_area = gtk_info_bar_get_content_area (info_bar);
 	gtk_container_add (GTK_CONTAINER (content_area), label);
 
-	label = gtk_label_new ("Second info bar. This is a revolution! Two info bars, wow!");
-	content_area = gtk_info_bar_get_content_area (info_bar2);
-	gtk_container_add (GTK_CONTAINER (content_area), label);
+	g_signal_connect (info_bar,
+			  "response",
+			  G_CALLBACK (info_bar_response_cb),
+			  NULL);
 
-	gtef_tab_add_info_bar (tab, info_bar1);
-	gtef_tab_add_info_bar (tab, info_bar2);
+	gtef_tab_add_info_bar (tab, info_bar);
+	gtk_widget_show_all (GTK_WIDGET (info_bar));
+}
 
-	gtk_widget_show_all (GTK_WIDGET (info_bar1));
-	gtk_widget_show_all (GTK_WIDGET (info_bar2));
+static GtkWidget *
+create_side_panel (GtefTab *tab)
+{
+	GtkGrid *vgrid;
+	GtkWidget *add_basic_info_bar_button;
+
+	vgrid = GTK_GRID (gtk_grid_new ());
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (vgrid), GTK_ORIENTATION_VERTICAL);
+	gtk_grid_set_row_spacing (vgrid, 6);
+
+	add_basic_info_bar_button = gtk_button_new_with_label ("Add basic info bar");
+	gtk_container_add (GTK_CONTAINER (vgrid), add_basic_info_bar_button);
+
+	g_signal_connect_object (add_basic_info_bar_button,
+				 "clicked",
+				 G_CALLBACK (add_basic_info_bar_button_clicked_cb),
+				 tab,
+				 0);
+
+	return GTK_WIDGET (vgrid);
 }
 
 static GtefTab *
@@ -65,11 +90,34 @@ create_tab (void)
 		      NULL);
 
 	tab = gtef_tab_new (scrolled_window);
-	add_info_bars (tab);
-
 	gtk_widget_show_all (GTK_WIDGET (tab));
 
 	return tab;
+}
+
+static GtkWidget *
+create_window_content (void)
+{
+	GtkGrid *hgrid;
+	GtefTab *tab;
+	GtkWidget *side_panel;
+
+	hgrid = GTK_GRID (gtk_grid_new ());
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (hgrid), GTK_ORIENTATION_HORIZONTAL);
+	gtk_grid_set_column_spacing (hgrid, 6);
+	g_object_set (hgrid,
+		      "margin", 6,
+		      NULL);
+
+	tab = create_tab ();
+	side_panel = create_side_panel (tab);
+
+	gtk_container_add (GTK_CONTAINER (hgrid), side_panel);
+	gtk_container_add (GTK_CONTAINER (hgrid), GTK_WIDGET (tab));
+
+	gtk_widget_show_all (GTK_WIDGET (hgrid));
+
+	return GTK_WIDGET (hgrid);
 }
 
 gint
@@ -82,16 +130,13 @@ main (gint    argc,
 
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_default_size (GTK_WINDOW (window), 800, 600);
+	gtk_container_add (GTK_CONTAINER (window), create_window_content ());
+	gtk_widget_show (window);
 
 	g_signal_connect (window,
 			  "destroy",
 			  G_CALLBACK (gtk_main_quit),
 			  NULL);
-
-	gtk_container_add (GTK_CONTAINER (window),
-			   GTK_WIDGET (create_tab ()));
-
-	gtk_widget_show (window);
 
 	gtk_main ();
 

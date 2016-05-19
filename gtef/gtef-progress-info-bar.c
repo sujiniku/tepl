@@ -106,6 +106,8 @@ _gtef_progress_info_bar_init (GtefProgressInfoBar *info_bar)
 
 	info_bar->label = GTK_LABEL (gtk_label_new (NULL));
 	gtk_widget_set_halign (GTK_WIDGET (info_bar->label), GTK_ALIGN_START);
+	gtk_label_set_line_wrap (info_bar->label, TRUE);
+	gtk_label_set_line_wrap_mode (info_bar->label, PANGO_WRAP_WORD_CHAR);
 	gtk_container_add (GTK_CONTAINER (vgrid),
 			   GTK_WIDGET (info_bar->label));
 

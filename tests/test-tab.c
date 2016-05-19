@@ -59,7 +59,12 @@ add_progress_info_bar_button_clicked_cb (GtkButton *button,
 {
 	GtefProgressInfoBar *info_bar;
 
-	info_bar = _gtef_progress_info_bar_new ("File loading...", TRUE);
+	info_bar = _gtef_progress_info_bar_new ("File loading... The full and very long path is: "
+						"/home/seb/a/very/long/path/like/this/is/beautiful"
+						"/but/is/it/correctly/wrapped/in/the/info/bar/that"
+						"/is/the/question",
+						TRUE);
+
 	_gtef_progress_info_bar_set_fraction (info_bar, 0.3);
 
 	g_signal_connect (info_bar,

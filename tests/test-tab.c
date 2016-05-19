@@ -18,6 +18,7 @@
  */
 
 #include <gtef/gtef.h>
+#include "gtef/gtef-progress-info-bar.h"
 #include <stdlib.h>
 
 static void
@@ -52,11 +53,30 @@ add_basic_info_bar_button_clicked_cb (GtkButton *button,
 	gtk_widget_show_all (GTK_WIDGET (info_bar));
 }
 
+static void
+add_progress_info_bar_button_clicked_cb (GtkButton *button,
+					 GtefTab   *tab)
+{
+	GtefProgressInfoBar *info_bar;
+
+	info_bar = _gtef_progress_info_bar_new ("File loading...", TRUE);
+	_gtef_progress_info_bar_set_fraction (info_bar, 0.3);
+
+	g_signal_connect (info_bar,
+			  "response",
+			  G_CALLBACK (info_bar_response_cb),
+			  NULL);
+
+	gtef_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
+	gtk_widget_show_all (GTK_WIDGET (info_bar));
+}
+
 static GtkWidget *
 create_side_panel (GtefTab *tab)
 {
 	GtkGrid *vgrid;
 	GtkWidget *add_basic_info_bar_button;
+	GtkWidget *add_progress_info_bar_button;
 
 	vgrid = GTK_GRID (gtk_grid_new ());
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (vgrid), GTK_ORIENTATION_VERTICAL);
@@ -68,6 +88,15 @@ create_side_panel (GtefTab *tab)
 	g_signal_connect_object (add_basic_info_bar_button,
 				 "clicked",
 				 G_CALLBACK (add_basic_info_bar_button_clicked_cb),
+				 tab,
+				 0);
+
+	add_progress_info_bar_button = gtk_button_new_with_label ("Add progress info bar");
+	gtk_container_add (GTK_CONTAINER (vgrid), add_progress_info_bar_button);
+
+	g_signal_connect_object (add_progress_info_bar_button,
+				 "clicked",
+				 G_CALLBACK (add_progress_info_bar_button_clicked_cb),
 				 tab,
 				 0);
 

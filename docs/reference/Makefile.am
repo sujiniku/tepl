@@ -25,6 +25,7 @@ CFILE_GLOB = $(top_srcdir)/gtef/*.c
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h private_code
 IGNORE_HFILES =				\
 	gtef.h				\
+	gtef-progress-info-bar.h	\
 	gtef-utils.h
 
 # Extra options to supply to gtkdoc-mkdb

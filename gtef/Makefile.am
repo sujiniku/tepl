@@ -27,10 +27,12 @@ gtef_public_c_files =			\
 	gtef-view.c
 
 gtef_private_headers =			\
+	gtef-progress-info-bar.h	\
 	gtef-utils.h
 
 gtef_private_c_files =			\
 	gtef-init.c			\
+	gtef-progress-info-bar.c	\
 	gtef-utils.c
 
 # Helper Libtool library, so that the private functions can be used in unit

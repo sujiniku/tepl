@@ -29,6 +29,19 @@ G_BEGIN_DECLS
 G_GNUC_INTERNAL
 gchar *		_gtef_utils_replace_home_dir_with_tilde		(const gchar *filename);
 
+G_GNUC_INTERNAL
+gboolean	_gtef_utils_decode_uri				(const gchar  *uri,
+								 gchar       **scheme,
+								 gchar       **user,
+								 gchar       **host,
+								 gchar       **port,
+								 gchar       **path);
+
+/* String utilities */
+
+G_GNUC_INTERNAL
+gchar *		_gtef_utils_make_valid_utf8			(const gchar *_str);
+
 G_END_DECLS
 
 #endif /* GTEF_UTILS_H */

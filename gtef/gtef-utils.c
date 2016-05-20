@@ -301,5 +301,8 @@ _gtef_utils_create_label_for_info_bar (void)
 	gtk_label_set_line_wrap (label, TRUE);
 	gtk_label_set_line_wrap_mode (label, PANGO_WRAP_WORD_CHAR);
 
+	gtk_widget_set_can_focus (GTK_WIDGET (label), TRUE);
+	gtk_label_set_selectable (label, TRUE);
+
 	return label;
 }

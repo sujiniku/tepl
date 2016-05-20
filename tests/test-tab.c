@@ -19,6 +19,7 @@
 
 #include <gtef/gtef.h>
 #include "gtef/gtef-progress-info-bar.h"
+#include "gtef/gtef-utils.h"
 #include <stdlib.h>
 
 static void
@@ -34,15 +35,17 @@ add_basic_info_bar_button_clicked_cb (GtkButton *button,
 				      GtefTab   *tab)
 {
 	GtkInfoBar *info_bar;
-	GtkWidget *label;
+	GtkLabel *label;
 	GtkWidget *content_area;
 
 	info_bar = GTK_INFO_BAR (gtk_info_bar_new ());
 	gtk_info_bar_set_show_close_button (info_bar, TRUE);
 
-	label = gtk_label_new ("Basic info bar.");
+	label = _gtef_utils_create_label_for_info_bar ();
+	gtk_label_set_text (label, "Basic info bar.");
 	content_area = gtk_info_bar_get_content_area (info_bar);
-	gtk_container_add (GTK_CONTAINER (content_area), label);
+	gtk_container_add (GTK_CONTAINER (content_area),
+			   GTK_WIDGET (label));
 
 	g_signal_connect (info_bar,
 			  "response",

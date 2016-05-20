@@ -42,6 +42,26 @@ test_replace_home_dir_with_tilde (void)
 }
 
 static void
+test_decode_uri (void)
+{
+	gchar *host;
+	gboolean ret;
+
+	/* Basic test, for what is used in Gtef (the host). */
+	ret = _gtef_utils_decode_uri ("smb://example.net/home/file.c",
+				      NULL, NULL, &host, NULL, NULL);
+	g_assert (ret);
+	g_assert_cmpstr (host, ==, "example.net");
+	g_free (host);
+
+	ret = _gtef_utils_decode_uri ("smb://154.23.201.4/home/file.c",
+				      NULL, NULL, &host, NULL, NULL);
+	g_assert (ret);
+	g_assert_cmpstr (host, ==, "154.23.201.4");
+	g_free (host);
+}
+
+static void
 test_make_valid_utf8 (void)
 {
 	gchar *result;
@@ -82,6 +102,7 @@ main (gint    argc,
 	g_test_init (&argc, &argv, NULL);
 
 	g_test_add_func ("/utils/replace-home-dir-with-tilde", test_replace_home_dir_with_tilde);
+	g_test_add_func ("/utils/decode-uri", test_decode_uri);
 	g_test_add_func ("/utils/make-valid-utf8", test_make_valid_utf8);
 
 	return g_test_run ();

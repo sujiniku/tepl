@@ -290,3 +290,16 @@ _gtef_utils_make_valid_utf8 (const gchar *_str)
 
 	return g_string_free (string, FALSE);
 }
+
+GtkLabel *
+_gtef_utils_create_label_for_info_bar (void)
+{
+	GtkLabel *label;
+
+	label = GTK_LABEL (gtk_label_new (NULL));
+	gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_START);
+	gtk_label_set_line_wrap (label, TRUE);
+	gtk_label_set_line_wrap_mode (label, PANGO_WRAP_WORD_CHAR);
+
+	return label;
+}

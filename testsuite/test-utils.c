@@ -93,6 +93,13 @@ test_make_valid_utf8 (void)
 	result = _gtef_utils_make_valid_utf8 (invalid_str);
 	g_assert_cmpstr (result, ==, "inval\357\277\275d");
 	g_free (result);
+
+	/* Several invalid bytes */
+	invalid_str = "\377nval\377d";
+	g_assert (!g_utf8_validate (invalid_str, -1, NULL));
+	result = _gtef_utils_make_valid_utf8 (invalid_str);
+	g_assert_cmpstr (result, ==, "\357\277\275nval\357\277\275d");
+	g_free (result);
 }
 
 gint

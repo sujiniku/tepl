@@ -31,8 +31,8 @@ info_bar_response_cb (GtkInfoBar *info_bar,
 }
 
 static void
-add_basic_info_bar_button_clicked_cb (GtkButton *button,
-				      GtefTab   *tab)
+basic_cb (GtkButton *button,
+	  GtefTab   *tab)
 {
 	GtkInfoBar *info_bar;
 	GtkLabel *label;
@@ -57,8 +57,8 @@ add_basic_info_bar_button_clicked_cb (GtkButton *button,
 }
 
 static void
-add_progress_info_bar_button_clicked_cb (GtkButton *button,
-					 GtefTab   *tab)
+progress_cb (GtkButton *button,
+	     GtefTab   *tab)
 {
 	GtefProgressInfoBar *info_bar;
 
@@ -83,28 +83,28 @@ static GtkWidget *
 create_side_panel (GtefTab *tab)
 {
 	GtkGrid *vgrid;
-	GtkWidget *add_basic_info_bar_button;
-	GtkWidget *add_progress_info_bar_button;
+	GtkWidget *basic;
+	GtkWidget *progress;
 
 	vgrid = GTK_GRID (gtk_grid_new ());
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (vgrid), GTK_ORIENTATION_VERTICAL);
 	gtk_grid_set_row_spacing (vgrid, 6);
 
-	add_basic_info_bar_button = gtk_button_new_with_label ("Add basic info bar");
-	gtk_container_add (GTK_CONTAINER (vgrid), add_basic_info_bar_button);
+	basic = gtk_button_new_with_label ("Basic");
+	gtk_container_add (GTK_CONTAINER (vgrid), basic);
 
-	g_signal_connect_object (add_basic_info_bar_button,
+	g_signal_connect_object (basic,
 				 "clicked",
-				 G_CALLBACK (add_basic_info_bar_button_clicked_cb),
+				 G_CALLBACK (basic_cb),
 				 tab,
 				 0);
 
-	add_progress_info_bar_button = gtk_button_new_with_label ("Add progress info bar");
-	gtk_container_add (GTK_CONTAINER (vgrid), add_progress_info_bar_button);
+	progress = gtk_button_new_with_label ("Progress");
+	gtk_container_add (GTK_CONTAINER (vgrid), progress);
 
-	g_signal_connect_object (add_progress_info_bar_button,
+	g_signal_connect_object (progress,
 				 "clicked",
-				 G_CALLBACK (add_progress_info_bar_button_clicked_cb),
+				 G_CALLBACK (progress_cb),
 				 tab,
 				 0);
 

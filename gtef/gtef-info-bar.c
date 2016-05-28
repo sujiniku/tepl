@@ -94,3 +94,31 @@ gtef_info_bar_new (void)
 {
 	return g_object_new (GTEF_TYPE_INFO_BAR, NULL);
 }
+
+/**
+ * gtef_info_bar_create_label:
+ *
+ * Utility function to create a #GtkLabel suitable for a #GtkInfoBar. The
+ * wrapping and alignment is configured. The label is also set as selectable,
+ * for example to copy an error message and search an explanation on the web.
+ *
+ * Returns: (transfer floating): a new #GtkLabel suitable for a #GtkInfoBar.
+ * Since: 1.0
+ */
+GtkLabel *
+gtef_info_bar_create_label (void)
+{
+	GtkLabel *label;
+
+	label = GTK_LABEL (gtk_label_new (NULL));
+	gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_START);
+	gtk_label_set_line_wrap (label, TRUE);
+	gtk_label_set_line_wrap_mode (label, PANGO_WRAP_WORD_CHAR);
+
+	gtk_label_set_selectable (label, TRUE);
+
+	/* FIXME really needed? We already set the label as selectable. */
+	gtk_widget_set_can_focus (GTK_WIDGET (label), TRUE);
+
+	return label;
+}

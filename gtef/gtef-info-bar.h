@@ -42,6 +42,8 @@ struct _GtefInfoBarClass
 
 GtefInfoBar *		gtef_info_bar_new				(void);
 
+GtkLabel *		gtef_info_bar_create_label			(void);
+
 G_END_DECLS
 
 #endif /* GTEF_INFO_BAR_H */

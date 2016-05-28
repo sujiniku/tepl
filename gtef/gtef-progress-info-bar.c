@@ -23,7 +23,7 @@
 #include "config.h"
 #include "gtef-progress-info-bar.h"
 #include <glib/gi18n-lib.h>
-#include "gtef-utils.h"
+#include "gtef-info-bar.h"
 
 enum
 {
@@ -105,7 +105,7 @@ _gtef_progress_info_bar_init (GtefProgressInfoBar *info_bar)
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (vgrid), GTK_ORIENTATION_VERTICAL);
 	gtk_grid_set_row_spacing (vgrid, 6);
 
-	info_bar->label = _gtef_utils_create_label_for_info_bar ();
+	info_bar->label = gtef_info_bar_create_label ();
 	gtk_container_add (GTK_CONTAINER (vgrid),
 			   GTK_WIDGET (info_bar->label));
 

@@ -37,6 +37,7 @@ GTEF_TYPE_FILE
 <TITLE>GtefInfoBar</TITLE>
 GtefInfoBar
 gtef_info_bar_new
+gtef_info_bar_create_label
 <SUBSECTION Standard>
 GTEF_TYPE_INFO_BAR
 GtefInfoBarClass

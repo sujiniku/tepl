@@ -195,7 +195,7 @@ set_info_bar_text (GtkInfoBar  *info_bar,
 
 	primary_text_escaped = g_markup_escape_text (primary_text, -1);
 	primary_markup = g_strdup_printf ("<b>%s</b>", primary_text_escaped);
-	primary_label = _gtef_utils_create_label_for_info_bar ();
+	primary_label = gtef_info_bar_create_label ();
 	gtk_label_set_markup (primary_label, primary_markup);
 	gtk_container_add (GTK_CONTAINER (vgrid),
 			   GTK_WIDGET (primary_label));
@@ -208,7 +208,7 @@ set_info_bar_text (GtkInfoBar  *info_bar,
 
 		secondary_text_escaped = g_markup_escape_text (secondary_text, -1);
 		secondary_markup = g_strdup_printf ("<small>%s</small>", secondary_text_escaped);
-		secondary_label = _gtef_utils_create_label_for_info_bar ();
+		secondary_label = gtef_info_bar_create_label ();
 		gtk_label_set_markup (secondary_label, secondary_markup);
 		gtk_container_add (GTK_CONTAINER (vgrid),
 				   GTK_WIDGET (secondary_label));

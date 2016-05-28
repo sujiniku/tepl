@@ -42,11 +42,6 @@ gboolean	_gtef_utils_decode_uri				(const gchar  *uri,
 G_GNUC_INTERNAL
 gchar *		_gtef_utils_make_valid_utf8			(const gchar *_str);
 
-/* UI utilities */
-
-G_GNUC_INTERNAL
-GtkLabel *	_gtef_utils_create_label_for_info_bar		(void);
-
 G_END_DECLS
 
 #endif /* GTEF_UTILS_H */

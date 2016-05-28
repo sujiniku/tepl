@@ -17,23 +17,31 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GTEF_TYPES_H
-#define GTEF_TYPES_H
+#ifndef GTEF_INFO_BAR_H
+#define GTEF_INFO_BAR_H
 
 #if !defined (GTEF_H_INSIDE) && !defined (GTEF_COMPILATION)
 #error "Only <gtef/gtef.h> can be included directly."
 #endif
 
-#include <glib.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
-typedef struct _GtefBuffer			GtefBuffer;
-typedef struct _GtefFile			GtefFile;
-typedef struct _GtefInfoBar			GtefInfoBar;
-typedef struct _GtefTab				GtefTab;
-typedef struct _GtefView			GtefView;
+#define GTEF_TYPE_INFO_BAR (gtef_info_bar_get_type ())
+G_DECLARE_DERIVABLE_TYPE (GtefInfoBar, gtef_info_bar,
+			  GTEF, INFO_BAR,
+			  GtkInfoBar)
+
+struct _GtefInfoBarClass
+{
+	GtkInfoBarClass parent_class;
+
+	gpointer padding[12];
+};
+
+GtefInfoBar *		gtef_info_bar_new				(void);
 
 G_END_DECLS
 
-#endif /* GTEF_TYPES_H */
+#endif /* GTEF_INFO_BAR_H */

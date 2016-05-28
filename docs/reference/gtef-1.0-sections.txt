@@ -33,6 +33,16 @@ GTEF_TYPE_FILE
 </SECTION>
 
 <SECTION>
+<FILE>info-bar</FILE>
+<TITLE>GtefInfoBar</TITLE>
+GtefInfoBar
+gtef_info_bar_new
+<SUBSECTION Standard>
+GTEF_TYPE_INFO_BAR
+GtefInfoBarClass
+</SECTION>
+
+<SECTION>
 <FILE>metadata-manager</FILE>
 <TITLE>GtefMetadataManager</TITLE>
 gtef_metadata_manager_init

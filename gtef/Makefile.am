@@ -29,13 +29,13 @@ gtef_public_c_files =			\
 	gtef-view.c
 
 gtef_private_headers =			\
-	gtef-io-error-info-bars.h	\
+	gtef-io-error-info-bar.h	\
 	gtef-progress-info-bar.h	\
 	gtef-utils.h
 
 gtef_private_c_files =			\
 	gtef-init.c			\
-	gtef-io-error-info-bars.c	\
+	gtef-io-error-info-bar.c	\
 	gtef-progress-info-bar.c	\
 	gtef-utils.c
 

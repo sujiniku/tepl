@@ -19,12 +19,78 @@
  */
 
 #include "config.h"
-#include "gtef-io-error-info-bars.h"
+#include "gtef-io-error-info-bar.h"
 #include <glib/gi18n-lib.h>
-#include "gtef-info-bar.h"
 #include "gtef-utils.h"
 
 /* Verbose error reporting for file I/O operations (load, save, etc.). */
+
+typedef struct _GtefIoErrorInfoBarPrivate GtefIoErrorInfoBarPrivate;
+
+struct _GtefIoErrorInfoBarPrivate
+{
+	GtkGrid *content_vgrid;
+};
+
+G_DEFINE_TYPE_WITH_PRIVATE (GtefIoErrorInfoBar, _gtef_io_error_info_bar, GTEF_TYPE_INFO_BAR)
+
+static void
+add_primary_text (GtefIoErrorInfoBar *info_bar,
+		  const gchar        *primary_text)
+{
+	GtefIoErrorInfoBarPrivate *priv;
+	gchar *primary_text_escaped;
+	gchar *primary_markup;
+	GtkLabel *primary_label;
+
+	priv = _gtef_io_error_info_bar_get_instance_private (info_bar);
+
+	if (primary_text == NULL)
+	{
+		return;
+	}
+
+	primary_text_escaped = g_markup_escape_text (primary_text, -1);
+	primary_markup = g_strdup_printf ("<b>%s</b>", primary_text_escaped);
+	primary_label = gtef_info_bar_create_label ();
+	gtk_label_set_markup (primary_label, primary_markup);
+
+	gtk_widget_show (GTK_WIDGET (primary_label));
+	gtk_container_add (GTK_CONTAINER (priv->content_vgrid),
+			   GTK_WIDGET (primary_label));
+
+	g_free (primary_text_escaped);
+	g_free (primary_markup);
+}
+
+static void
+add_secondary_text (GtefIoErrorInfoBar *info_bar,
+		    const gchar        *secondary_text)
+{
+	GtefIoErrorInfoBarPrivate *priv;
+	gchar *secondary_text_escaped;
+	gchar *secondary_markup;
+	GtkLabel *secondary_label;
+
+	priv = _gtef_io_error_info_bar_get_instance_private (info_bar);
+
+	if (secondary_text == NULL)
+	{
+		return;
+	}
+
+	secondary_text_escaped = g_markup_escape_text (secondary_text, -1);
+	secondary_markup = g_strdup_printf ("<small>%s</small>", secondary_text_escaped);
+	secondary_label = gtef_info_bar_create_label ();
+	gtk_label_set_markup (secondary_label, secondary_markup);
+
+	gtk_widget_show (GTK_WIDGET (secondary_label));
+	gtk_container_add (GTK_CONTAINER (priv->content_vgrid),
+			   GTK_WIDGET (secondary_label));
+
+	g_free (secondary_text_escaped);
+	g_free (secondary_markup);
+}
 
 static gboolean
 is_recoverable_error (const GError *error)
@@ -169,122 +235,82 @@ parse_error (const GError  *error,
 }
 
 static void
-set_info_bar_content (GtkInfoBar *info_bar,
-		      GtkWidget  *content)
+set_io_loading_error (GtefIoErrorInfoBar *info_bar,
+		      gboolean            recoverable_error)
 {
-	GtkWidget *content_area;
+	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), GTK_MESSAGE_ERROR);
 
-	content_area = gtk_info_bar_get_content_area (info_bar);
-	gtk_container_add (GTK_CONTAINER (content_area), content);
-}
-
-static void
-set_info_bar_text (GtkInfoBar  *info_bar,
-		   const gchar *primary_text,
-		   const gchar *secondary_text)
-{
-	GtkWidget *vgrid;
-	gchar *primary_text_escaped;
-	gchar *primary_markup;
-	GtkLabel *primary_label;
-
-	g_assert (primary_text != NULL);
-
-	vgrid = gtk_grid_new ();
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (vgrid), GTK_ORIENTATION_VERTICAL);
-
-	primary_text_escaped = g_markup_escape_text (primary_text, -1);
-	primary_markup = g_strdup_printf ("<b>%s</b>", primary_text_escaped);
-	primary_label = gtef_info_bar_create_label ();
-	gtk_label_set_markup (primary_label, primary_markup);
-	gtk_container_add (GTK_CONTAINER (vgrid),
-			   GTK_WIDGET (primary_label));
-
-	if (secondary_text != NULL)
-	{
-		gchar *secondary_text_escaped;
-		gchar *secondary_markup;
-		GtkLabel *secondary_label;
-
-		secondary_text_escaped = g_markup_escape_text (secondary_text, -1);
-		secondary_markup = g_strdup_printf ("<small>%s</small>", secondary_text_escaped);
-		secondary_label = gtef_info_bar_create_label ();
-		gtk_label_set_markup (secondary_label, secondary_markup);
-		gtk_container_add (GTK_CONTAINER (vgrid),
-				   GTK_WIDGET (secondary_label));
-
-		g_free (secondary_text_escaped);
-		g_free (secondary_markup);
-	}
-
-	gtk_widget_show_all (vgrid);
-	set_info_bar_content (info_bar, vgrid);
-
-	g_free (primary_text_escaped);
-	g_free (primary_markup);
-}
-
-static GtkInfoBar *
-create_io_loading_error_info_bar (const gchar *primary_text,
-				  const gchar *secondary_text,
-				  gboolean     recoverable_error)
-{
-	GtkInfoBar *info_bar;
-
-	info_bar = GTK_INFO_BAR (gtef_info_bar_new ());
-	gtk_info_bar_set_message_type (info_bar, GTK_MESSAGE_ERROR);
-	gtk_info_bar_add_button (info_bar, _("_Cancel"), GTK_RESPONSE_CANCEL);
+	gtk_info_bar_add_button (GTK_INFO_BAR (info_bar),
+				 _("_Cancel"),
+				 GTK_RESPONSE_CANCEL);
 
 	if (recoverable_error)
 	{
-		gtk_info_bar_add_button (info_bar, _("_Retry"), GTK_RESPONSE_OK);
+		gtk_info_bar_add_button (GTK_INFO_BAR (info_bar),
+					 _("_Retry"),
+					 GTK_RESPONSE_OK);
 	}
-
-	set_info_bar_text (info_bar, primary_text, secondary_text);
-
-	return info_bar;
 }
 
-static GtkInfoBar *
-create_conversion_error_info_bar (const gchar *primary_text,
-				  const gchar *secondary_text,
-				  gboolean     edit_anyway)
+static void
+set_conversion_error (GtefIoErrorInfoBar *info_bar,
+		      gboolean            edit_anyway)
 {
-	GtkInfoBar *info_bar;
-
-	info_bar = GTK_INFO_BAR (gtef_info_bar_new ());
-
-	gtk_info_bar_add_button (info_bar, _("_Retry"), GTK_RESPONSE_OK);
+	gtk_info_bar_add_button (GTK_INFO_BAR (info_bar),
+				 _("_Retry"),
+				 GTK_RESPONSE_OK);
 
 	if (edit_anyway)
 	{
-		gtk_info_bar_add_button (info_bar, _("Edit Any_way"), GTK_RESPONSE_YES);
-		gtk_info_bar_set_message_type (info_bar, GTK_MESSAGE_WARNING);
+		gtk_info_bar_add_button (GTK_INFO_BAR (info_bar),
+					 _("Edit Any_way"),
+					 GTK_RESPONSE_YES);
+
+		gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), GTK_MESSAGE_WARNING);
 	}
 	else
 	{
-		gtk_info_bar_set_message_type (info_bar, GTK_MESSAGE_ERROR);
+		gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), GTK_MESSAGE_ERROR);
 	}
 
-	gtk_info_bar_add_button (info_bar, _("_Cancel"), GTK_RESPONSE_CANCEL);
-
-	set_info_bar_text (info_bar, primary_text, secondary_text);
-
-	/* TODO add combobox to choose encoding. */
-
-	return info_bar;
+	gtk_info_bar_add_button (GTK_INFO_BAR (info_bar),
+				 _("_Cancel"),
+				 GTK_RESPONSE_CANCEL);
 }
 
-/*
- * _gtef_io_loading_error_info_bar_new:
- * @loader: a #GtkSourceFileLoader.
- * @error: the #GError received with @loader.
- *
- * Returns: the new #GtkInfoBar.
- */
-GtkInfoBar *
-_gtef_io_loading_error_info_bar_new (GtkSourceFileLoader *loader,
-				     const GError        *error)
+static void
+_gtef_io_error_info_bar_class_init (GtefIoErrorInfoBarClass *klass)
+{
+}
+
+static void
+_gtef_io_error_info_bar_init (GtefIoErrorInfoBar *info_bar)
+{
+	GtefIoErrorInfoBarPrivate *priv;
+	GtkWidget *content_area;
+
+	priv = _gtef_io_error_info_bar_get_instance_private (info_bar);
+
+	priv->content_vgrid = GTK_GRID (gtk_grid_new ());
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (priv->content_vgrid),
+					GTK_ORIENTATION_VERTICAL);
+	gtk_widget_show (GTK_WIDGET (priv->content_vgrid));
+
+	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar));
+	gtk_container_add (GTK_CONTAINER (content_area),
+			   GTK_WIDGET (priv->content_vgrid));
+}
+
+GtefIoErrorInfoBar *
+_gtef_io_error_info_bar_new (void)
+{
+	return g_object_new (GTEF_TYPE_IO_ERROR_INFO_BAR, NULL);
+}
+
+void
+_gtef_io_error_info_bar_set_loading_error (GtefIoErrorInfoBar  *info_bar,
+					   GtkSourceFileLoader *loader,
+					   const GError        *error)
 {
 	GFile *location;
 	const GtkSourceEncoding *encoding;
@@ -293,12 +319,13 @@ _gtef_io_loading_error_info_bar_new (GtkSourceFileLoader *loader,
 	gchar *secondary_text = NULL;
 	gboolean edit_anyway = FALSE;
 	gboolean convert_error = FALSE;
-	GtkInfoBar *info_bar;
 
-	g_return_val_if_fail (error != NULL, NULL);
-	g_return_val_if_fail (error->domain == GTK_SOURCE_FILE_LOADER_ERROR ||
-			      error->domain == G_IO_ERROR ||
-			      error->domain == G_CONVERT_ERROR, NULL);
+	g_return_if_fail (GTEF_IS_IO_ERROR_INFO_BAR (info_bar));
+	g_return_if_fail (GTK_SOURCE_IS_FILE_LOADER (loader));
+	g_return_if_fail (error != NULL);
+	g_return_if_fail (error->domain == GTK_SOURCE_FILE_LOADER_ERROR ||
+			  error->domain == G_IO_ERROR ||
+			  error->domain == G_CONVERT_ERROR);
 
 	location = gtk_source_file_loader_get_location (loader);
 	encoding = gtk_source_file_loader_get_encoding (loader);
@@ -382,20 +409,17 @@ _gtef_io_loading_error_info_bar_new (GtkSourceFileLoader *loader,
 
 	if (convert_error)
 	{
-		info_bar = create_conversion_error_info_bar (primary_text,
-							     secondary_text,
-							     edit_anyway);
+		set_conversion_error (info_bar, edit_anyway);
 	}
 	else
 	{
-		info_bar = create_io_loading_error_info_bar (primary_text,
-							     secondary_text,
-							     is_recoverable_error (error));
+		set_io_loading_error (info_bar, is_recoverable_error (error));
 	}
+
+	add_primary_text (info_bar, primary_text);
+	add_secondary_text (info_bar, secondary_text);
 
 	g_free (uri_for_display);
 	g_free (primary_text);
 	g_free (secondary_text);
-
-	return info_bar;
 }

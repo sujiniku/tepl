@@ -19,7 +19,7 @@
 
 #include <gtef/gtef.h>
 #include "gtef/gtef-progress-info-bar.h"
-#include "gtef/gtef-io-error-info-bars.h"
+#include "gtef/gtef-io-error-info-bar.h"
 #include <stdlib.h>
 
 static void
@@ -89,7 +89,7 @@ add_io_loading_error_info_bar (GtefTab *tab,
 	GtkSourceFile *file;
 	GtkSourceBuffer *buffer;
 	GtkSourceFileLoader *loader;
-	GtkInfoBar *info_bar;
+	GtefIoErrorInfoBar *info_bar;
 
 	location = g_file_new_for_path ("/home/seb/test.c");
 	file = gtk_source_file_new ();
@@ -97,14 +97,15 @@ add_io_loading_error_info_bar (GtefTab *tab,
 	buffer = gtk_source_buffer_new (NULL);
 	loader = gtk_source_file_loader_new (buffer, file);
 
-	info_bar = _gtef_io_loading_error_info_bar_new (loader, error);
+	info_bar = _gtef_io_error_info_bar_new ();
+	_gtef_io_error_info_bar_set_loading_error (info_bar, loader, error);
 
 	g_signal_connect (info_bar,
 			  "response",
 			  G_CALLBACK (info_bar_response_cb),
 			  NULL);
 
-	gtef_tab_add_info_bar (tab, info_bar);
+	gtef_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
 	gtk_widget_show (GTK_WIDGET (info_bar));
 
 	g_object_unref (location);

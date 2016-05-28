@@ -22,13 +22,14 @@
 #define GTEF_PROGRESS_INFO_BAR_H
 
 #include <gtk/gtk.h>
+#include "gtef-info-bar.h"
 
 G_BEGIN_DECLS
 
 #define GTEF_TYPE_PROGRESS_INFO_BAR (_gtef_progress_info_bar_get_type ())
 G_DECLARE_FINAL_TYPE (GtefProgressInfoBar, _gtef_progress_info_bar,
 		      GTEF, PROGRESS_INFO_BAR,
-		      GtkInfoBar)
+		      GtefInfoBar)
 
 G_GNUC_INTERNAL
 GtefProgressInfoBar *	_gtef_progress_info_bar_new			(const gchar *markup,

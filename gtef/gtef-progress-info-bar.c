@@ -23,7 +23,6 @@
 #include "config.h"
 #include "gtef-progress-info-bar.h"
 #include <glib/gi18n-lib.h>
-#include "gtef-info-bar.h"
 
 enum
 {
@@ -36,13 +35,13 @@ static GParamSpec *properties[N_PROPERTIES];
 
 struct _GtefProgressInfoBar
 {
-	GtkInfoBar parent_instance;
+	GtefInfoBar parent_instance;
 
 	GtkLabel *label;
 	GtkProgressBar *progress_bar;
 };
 
-G_DEFINE_TYPE (GtefProgressInfoBar, _gtef_progress_info_bar, GTK_TYPE_INFO_BAR)
+G_DEFINE_TYPE (GtefProgressInfoBar, _gtef_progress_info_bar, GTEF_TYPE_INFO_BAR)
 
 static void
 set_has_cancel_button (GtefProgressInfoBar *info_bar,

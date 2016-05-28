@@ -24,39 +24,14 @@
  * @Short_description: Subclass of GtkInfoBar
  * @Title: GtefInfoBar
  *
- * #GtefInfoBar is a subclass of #GtkInfoBar.
+ * #GtefInfoBar is a subclass of #GtkInfoBar with a vertical action area.
  */
 
-typedef struct _GtefInfoBarPrivate GtefInfoBarPrivate;
-
-struct _GtefInfoBarPrivate
-{
-	gint something;
-};
-
-G_DEFINE_TYPE_WITH_PRIVATE (GtefInfoBar, gtef_info_bar, GTK_TYPE_INFO_BAR)
-
-static void
-gtef_info_bar_dispose (GObject *object)
-{
-
-	G_OBJECT_CLASS (gtef_info_bar_parent_class)->dispose (object);
-}
-
-static void
-gtef_info_bar_finalize (GObject *object)
-{
-
-	G_OBJECT_CLASS (gtef_info_bar_parent_class)->finalize (object);
-}
+G_DEFINE_TYPE (GtefInfoBar, gtef_info_bar, GTK_TYPE_INFO_BAR)
 
 static void
 gtef_info_bar_class_init (GtefInfoBarClass *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	object_class->dispose = gtef_info_bar_dispose;
-	object_class->finalize = gtef_info_bar_finalize;
 }
 
 static void

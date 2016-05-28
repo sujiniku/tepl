@@ -215,6 +215,13 @@ create_tab (void)
 		      "expand", TRUE,
 		      NULL);
 
+	/* If a size request is not set to the scrolled window, adding info bars
+	 * makes the GtkWindow height to grow, probably because there is a
+	 * gtk_widget_queue_resize() which takes the natural size of the
+	 * scrolled window. Setting a size request fixes the problem.
+	 */
+	gtk_widget_set_size_request (scrolled_window, 400, 40);
+
 	tab = gtef_tab_new (scrolled_window);
 	gtk_widget_show_all (GTK_WIDGET (tab));
 

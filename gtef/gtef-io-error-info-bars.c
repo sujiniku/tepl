@@ -21,6 +21,7 @@
 #include "config.h"
 #include "gtef-io-error-info-bars.h"
 #include <glib/gi18n-lib.h>
+#include "gtef-info-bar.h"
 #include "gtef-utils.h"
 
 /* Verbose error reporting for file I/O operations (load, save, etc.). */
@@ -167,35 +168,6 @@ parse_error (const GError  *error,
 	}
 }
 
-static GtkInfoBar *
-create_info_bar (void)
-{
-	GtkInfoBar *info_bar;
-	GtkWidget *action_area;
-
-	info_bar = GTK_INFO_BAR (gtk_info_bar_new ());
-
-	/* Change the buttons orientation to be vertical.
-	 * With a small window, if 3 or more buttons are shown horizontally,
-	 * there is a ridiculous amount of space for the text. And it can get
-	 * worse since the button labels are translatable, in other languages it
-	 * can take even more place. If the buttons are packed vertically, there
-	 * is no problem.
-	 */
-	action_area = gtk_info_bar_get_action_area (info_bar);
-	if (GTK_IS_ORIENTABLE (action_area))
-	{
-		gtk_orientable_set_orientation (GTK_ORIENTABLE (action_area),
-						GTK_ORIENTATION_VERTICAL);
-	}
-	else
-	{
-		g_warning ("Failed to set vertical orientation to the GtkInfoBar action area.");
-	}
-
-	return info_bar;
-}
-
 static void
 set_info_bar_content (GtkInfoBar *info_bar,
 		      GtkWidget  *content)
@@ -259,7 +231,7 @@ create_io_loading_error_info_bar (const gchar *primary_text,
 {
 	GtkInfoBar *info_bar;
 
-	info_bar = create_info_bar ();
+	info_bar = GTK_INFO_BAR (gtef_info_bar_new ());
 	gtk_info_bar_set_message_type (info_bar, GTK_MESSAGE_ERROR);
 	gtk_info_bar_add_button (info_bar, _("_Cancel"), GTK_RESPONSE_CANCEL);
 
@@ -280,7 +252,7 @@ create_conversion_error_info_bar (const gchar *primary_text,
 {
 	GtkInfoBar *info_bar;
 
-	info_bar = create_info_bar ();
+	info_bar = GTK_INFO_BAR (gtef_info_bar_new ());
 
 	gtk_info_bar_add_button (info_bar, _("_Retry"), GTK_RESPONSE_OK);
 

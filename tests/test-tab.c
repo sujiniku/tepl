@@ -39,7 +39,7 @@ basic_cb (GtkButton *button,
 	GtkLabel *label;
 	GtkWidget *content_area;
 
-	info_bar = GTK_INFO_BAR (gtk_info_bar_new ());
+	info_bar = GTK_INFO_BAR (gtef_info_bar_new ());
 	gtk_info_bar_set_show_close_button (info_bar, TRUE);
 
 	label = _gtef_utils_create_label_for_info_bar ();

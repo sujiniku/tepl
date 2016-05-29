@@ -17,6 +17,9 @@ UNIT_TEST_PROGS =
 UNIT_TEST_PROGS += test-file
 test_file_SOURCES = test-file.c
 
+UNIT_TEST_PROGS += test-info-bar
+test_info_bar_SOURCES = test-info-bar.c
+
 UNIT_TEST_PROGS += test-utils
 test_utils_SOURCES = test-utils.c
 

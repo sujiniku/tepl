@@ -20,3 +20,7 @@ version is parallel-installable with the previous major versions. And that,
 every 6 months if needed, to improve the API incrementally. The only supported
 version is the latest one, don't expect bug or security fixes to the old major
 versions.
+
+Maybe some of the Gtef features will be moved to GtkSourceView when it's
+considered more stable. So Gtef can also be seen as an incubator for some
+GtkSourceView features.

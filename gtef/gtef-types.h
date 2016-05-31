@@ -30,6 +30,7 @@ G_BEGIN_DECLS
 
 typedef struct _GtefBuffer			GtefBuffer;
 typedef struct _GtefFile			GtefFile;
+typedef struct _GtefFileMetadata		GtefFileMetadata;
 typedef struct _GtefInfoBar			GtefInfoBar;
 typedef struct _GtefTab				GtefTab;
 typedef struct _GtefView			GtefView;

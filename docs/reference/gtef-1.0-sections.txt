@@ -18,18 +18,30 @@ GtefBufferClass
 <TITLE>GtefFile</TITLE>
 GtefFile
 gtef_file_new
+gtef_file_get_file_metadata
 gtef_file_get_short_name
-gtef_file_get_metadata
-gtef_file_set_metadata
-gtef_file_load_metadata
-gtef_file_load_metadata_async
-gtef_file_load_metadata_finish
-gtef_file_save_metadata
-gtef_file_save_metadata_async
-gtef_file_save_metadata_finish
 <SUBSECTION Standard>
 GtefFileClass
 GTEF_TYPE_FILE
+</SECTION>
+
+<SECTION>
+<FILE>file-metadata</FILE>
+<TITLE>GtefFileMetadata</TITLE>
+GtefFileMetadata
+gtef_file_metadata_new
+gtef_file_metadata_get_file
+gtef_file_metadata_get
+gtef_file_metadata_set
+gtef_file_metadata_load
+gtef_file_metadata_load_async
+gtef_file_metadata_load_finish
+gtef_file_metadata_save
+gtef_file_metadata_save_async
+gtef_file_metadata_save_finish
+<SUBSECTION Standard>
+GTEF_TYPE_FILE_METADATA
+GtefFileMetadataClass
 </SECTION>
 
 <SECTION>

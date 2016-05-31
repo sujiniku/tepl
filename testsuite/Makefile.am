@@ -14,8 +14,8 @@ noinst_PROGRAMS = $(UNIT_TEST_PROGS)
 TESTS = $(UNIT_TEST_PROGS)
 UNIT_TEST_PROGS =
 
-UNIT_TEST_PROGS += test-file
-test_file_SOURCES = test-file.c
+UNIT_TEST_PROGS += test-file-metadata
+test_file_metadata_SOURCES = test-file-metadata.c
 
 UNIT_TEST_PROGS += test-info-bar
 test_info_bar_SOURCES = test-info-bar.c

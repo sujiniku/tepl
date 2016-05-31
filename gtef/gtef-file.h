@@ -25,6 +25,7 @@
 #endif
 
 #include <gtksourceview/gtksource.h>
+#include <gtef/gtef-types.h>
 
 G_BEGIN_DECLS
 
@@ -40,48 +41,11 @@ struct _GtefFileClass
 	gpointer padding[12];
 };
 
-GtefFile *	gtef_file_new				(void);
+GtefFile *		gtef_file_new				(void);
 
-const gchar *	gtef_file_get_short_name		(GtefFile *file);
+GtefFileMetadata *	gtef_file_get_file_metadata		(GtefFile *file);
 
-gchar *		gtef_file_get_metadata			(GtefFile    *file,
-							 const gchar *key);
-
-void		gtef_file_set_metadata			(GtefFile    *file,
-							 const gchar *key,
-							 const gchar *value);
-
-gboolean	gtef_file_load_metadata			(GtefFile      *file,
-							 GCancellable  *cancellable,
-							 GError       **error);
-
-void		gtef_file_load_metadata_async		(GtefFile            *file,
-							 gint                 io_priority,
-							 GCancellable        *cancellable,
-							 GAsyncReadyCallback  callback,
-							 gpointer             user_data);
-
-gboolean	gtef_file_load_metadata_finish		(GtefFile      *file,
-							 GAsyncResult  *result,
-							 GError       **error);
-
-gboolean	gtef_file_save_metadata			(GtefFile      *file,
-							 GCancellable  *cancellable,
-							 GError       **error);
-
-void		gtef_file_save_metadata_async		(GtefFile            *file,
-							 gint                 io_priority,
-							 GCancellable        *cancellable,
-							 GAsyncReadyCallback  callback,
-							 gpointer             user_data);
-
-gboolean	gtef_file_save_metadata_finish		(GtefFile      *file,
-							 GAsyncResult  *result,
-							 GError       **error);
-
-G_GNUC_INTERNAL
-void		_gtef_file_set_use_gvfs_metadata	(GtefFile *file,
-							 gboolean  use_gvfs_metadata);
+const gchar *		gtef_file_get_short_name		(GtefFile *file);
 
 G_END_DECLS
 

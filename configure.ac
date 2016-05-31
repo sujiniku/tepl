@@ -73,6 +73,8 @@ AX_REQUIRE_DEFINED([PKG_INSTALLDIR])
 PKG_PROG_PKG_CONFIG
 PKG_INSTALLDIR
 
+AC_PATH_PROG([GLIB_MKENUMS], [glib-mkenums])
+
 # Initialize libtool
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static])

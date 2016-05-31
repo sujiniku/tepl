@@ -334,7 +334,7 @@ gtef_buffer_get_file (GtefBuffer *buffer)
  *
  * For this function to return %TRUE, the @buffer must be empty, non-modified,
  * the undo/redo #GtkSourceBuffer history must be empty, and the
- * #GtkSourceFile:location must be %NULL.
+ * #GtefFile:location must be %NULL.
  *
  * Returns: %TRUE if @buffer has not been touched, %FALSE otherwise.
  * Since: 1.0
@@ -352,7 +352,7 @@ gtef_buffer_is_untouched (GtefBuffer *buffer)
 		!gtk_text_buffer_get_modified (GTK_TEXT_BUFFER (buffer)) &&
 		!gtk_source_buffer_can_undo (GTK_SOURCE_BUFFER (buffer)) &&
 		!gtk_source_buffer_can_redo (GTK_SOURCE_BUFFER (buffer)) &&
-		gtk_source_file_get_location (GTK_SOURCE_FILE (priv->file)) == NULL);
+		gtef_file_get_location (priv->file) == NULL);
 }
 
 /**
@@ -362,7 +362,7 @@ gtef_buffer_is_untouched (GtefBuffer *buffer)
  * Returns a title suitable for a #GtkWindow title. It contains (in that order):
  * - '*' if the buffer is modified;
  * - the #GtefFile:short-name;
- * - the directory path in parenthesis if the #GtkSourceFile:location isn't
+ * - the directory path in parenthesis if the #GtefFile:location isn't
  *   %NULL.
  *
  * Returns: the @buffer title. Free the return value with g_free() when no
@@ -381,7 +381,7 @@ gtef_buffer_get_title (GtefBuffer *buffer)
 
 	priv = gtef_buffer_get_instance_private (buffer);
 
-	location = gtk_source_file_get_location (GTK_SOURCE_FILE (priv->file));
+	location = gtef_file_get_location (priv->file);
 	short_name = gtef_file_get_short_name (priv->file);
 
 	if (location == NULL)

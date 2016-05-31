@@ -17,12 +17,31 @@ GtefBufferClass
 <FILE>file</FILE>
 <TITLE>GtefFile</TITLE>
 GtefFile
+GtefNewlineType
+GTEF_NEWLINE_TYPE_DEFAULT
+GtefCompressionType
+GtefMountOperationFactory
+<SUBSECTION>
 gtef_file_new
 gtef_file_get_file_metadata
+gtef_file_get_location
+gtef_file_set_location
 gtef_file_get_short_name
+gtef_file_get_encoding
+gtef_file_get_newline_type
+gtef_file_get_compression_type
+gtef_file_check_file_on_disk
+gtef_file_is_local
+gtef_file_is_externally_modified
+gtef_file_is_deleted
+gtef_file_is_readonly
+gtef_file_set_mount_operation_factory
 <SUBSECTION Standard>
-GtefFileClass
 GTEF_TYPE_FILE
+GTEF_TYPE_NEWLINE_TYPE
+GTEF_TYPE_COMPRESSION_TYPE
+gtef_newline_type_get_type
+gtef_compression_type_get_type
 </SECTION>
 
 <SECTION>

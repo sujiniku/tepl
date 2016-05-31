@@ -37,10 +37,10 @@
  * #GtefFileMetadata object memory. To load the metadata from disk, call
  * gtef_file_metadata_load() or its async variant. Likewise, to save the
  * metadata on disk, call gtef_file_metadata_save() or its async variant. When
- * loading or saving metadata, the file at #GtkSourceFile:location, if
+ * loading or saving metadata, the file at #GtefFile:location, if
  * non-%NULL, must exist on the filesystem, otherwise an error is returned.
  *
- * When the #GtkSourceFile:location changes, the metadata are still kept in the
+ * When the #GtefFile:location changes, the metadata are still kept in the
  * #GtefFileMetadata object memory. But the metadata are
  * <emphasis>not</emphasis> automatically saved for the new location.
  */
@@ -48,7 +48,7 @@
 /* TODO Better test how it works with remote files, with various protocols.
  * For example with an ftp://... location, there can be the error "The specified
  * location is not mounted". In that case we can either propagate the error or
- * automatically call the GtkSourceFile mount operation factory method.
+ * automatically call the GtefFile mount operation factory method.
  *
  * On Linux, is the metadata supported for all GVfs backends? (the custom
  * metadata that we set). Does it fallback to the metadata manager even on
@@ -360,16 +360,16 @@ gtef_file_metadata_set (GtefFileMetadata *metadata,
  * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
  * @error: location to a %NULL #GError, or %NULL.
  *
- * Loads synchronously the metadata from #GtkSourceFile:location. The loaded
+ * Loads synchronously the metadata from #GtefFile:location. The loaded
  * metadata values can then be accessed with gtef_file_metadata_get().
  *
  * If the metadata are loaded successfully, this function deletes all previous
  * metadata stored in the @metadata object memory.
  *
- * The file at #GtkSourceFile:location, if non-%NULL, must exist on the
+ * The file at #GtefFile:location, if non-%NULL, must exist on the
  * filesystem, otherwise an error is returned.
  *
- * If #GtkSourceFile:location is %NULL, %FALSE is simply returned.
+ * If #GtefFile:location is %NULL, %FALSE is simply returned.
  *
  * Returns: whether the metadata was loaded successfully.
  * Since: 1.0
@@ -394,7 +394,7 @@ gtef_file_metadata_load (GtefFileMetadata  *metadata,
 		return FALSE;
 	}
 
-	location = gtk_source_file_get_location (GTK_SOURCE_FILE (priv->file));
+	location = gtef_file_get_location (priv->file);
 	if (location == NULL)
 	{
 		return FALSE;
@@ -536,7 +536,7 @@ gtef_file_metadata_load_async (GtefFileMetadata    *metadata,
 		return;
 	}
 
-	location = gtk_source_file_get_location (GTK_SOURCE_FILE (priv->file));
+	location = gtef_file_get_location (priv->file);
 	if (location == NULL)
 	{
 		g_task_return_boolean (task, FALSE);
@@ -593,12 +593,12 @@ gtef_file_metadata_load_finish (GtefFileMetadata  *metadata,
  * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
  * @error: location to a %NULL #GError, or %NULL.
  *
- * Saves synchronously the metadata for #GtkSourceFile:location.
+ * Saves synchronously the metadata for #GtefFile:location.
  *
- * The file at #GtkSourceFile:location, if non-%NULL, must exist on the
+ * The file at #GtefFile:location, if non-%NULL, must exist on the
  * filesystem, otherwise an error is returned.
  *
- * If #GtkSourceFile:location is %NULL, %FALSE is simply returned.
+ * If #GtefFile:location is %NULL, %FALSE is simply returned.
  *
  * Returns: whether the metadata was saved successfully.
  * Since: 1.0
@@ -622,7 +622,7 @@ gtef_file_metadata_save (GtefFileMetadata  *metadata,
 		return FALSE;
 	}
 
-	location = gtk_source_file_get_location (GTK_SOURCE_FILE (priv->file));
+	location = gtef_file_get_location (priv->file);
 	if (location == NULL)
 	{
 		return FALSE;
@@ -745,7 +745,7 @@ gtef_file_metadata_save_async (GtefFileMetadata    *metadata,
 		return;
 	}
 
-	location = gtk_source_file_get_location (GTK_SOURCE_FILE (priv->file));
+	location = gtef_file_get_location (priv->file);
 	if (location == NULL)
 	{
 		g_task_return_boolean (task, FALSE);

@@ -21,13 +21,28 @@
 #include "gtef-file.h"
 #include <glib/gi18n-lib.h>
 #include "gtef-file-metadata.h"
+#include "gtef-enum-types.h"
 
 /**
  * SECTION:file
  * @Short_description: On-disk representation of a GtefBuffer
  * @Title: GtefFile
  *
- * #GtefFile extends #GtkSourceFile.
+ * A #GtefFile object is the on-disk representation of a #GtefBuffer. #GtefFile
+ * is a fork of #GtkSourceFile.
+ */
+
+/* TODO when the FileLoader and FileSaver classes exist, add this comment to the
+ * class description.
+ *
+ * @See_also: #GtefFileLoader, #GtefFileSaver
+ *
+ * With a #GtefFile, you can create and configure a #GtefFileLoader
+ * and #GtefFileSaver which take by default the values of the
+ * #GtefFile properties (except for the file loader which auto-detect some
+ * properties). On a successful load or save operation, the #GtefFile
+ * properties are updated. If an operation fails, the #GtefFile properties
+ * have still the previous valid values.
  */
 
 typedef struct _GtefFilePrivate GtefFilePrivate;
@@ -36,13 +51,38 @@ struct _GtefFilePrivate
 {
 	GtefFileMetadata *metadata;
 
+	GFile *location;
+	const GtkSourceEncoding *encoding;
+	GtefNewlineType newline_type;
+	GtefCompressionType compression_type;
+
 	gchar *short_name;
 	gint untitled_number;
+
+	GtefMountOperationFactory mount_operation_factory;
+	gpointer mount_operation_userdata;
+	GDestroyNotify mount_operation_notify;
+
+	/* Last known modification time of 'location'. The value is updated on a
+	 * file loading or file saving.
+	 */
+	GTimeVal modification_time;
+
+	guint modification_time_set : 1;
+
+	guint externally_modified : 1;
+	guint deleted : 1;
+	guint readonly : 1;
 };
 
 enum
 {
 	PROP_0,
+	PROP_LOCATION,
+	PROP_ENCODING,
+	PROP_NEWLINE_TYPE,
+	PROP_COMPRESSION_TYPE,
+	PROP_READ_ONLY,
 	PROP_SHORT_NAME,
 	N_PROPERTIES
 };
@@ -52,7 +92,7 @@ static GParamSpec *properties[N_PROPERTIES];
 /* The list is sorted. */
 static GSList *allocated_untitled_numbers;
 
-G_DEFINE_TYPE_WITH_PRIVATE (GtefFile, gtef_file, GTK_SOURCE_TYPE_FILE)
+G_DEFINE_TYPE_WITH_PRIVATE (GtefFile, gtef_file, G_TYPE_OBJECT)
 
 static gint
 compare_untitled_numbers (gconstpointer a,
@@ -114,6 +154,26 @@ gtef_file_get_property (GObject    *object,
 
 	switch (prop_id)
 	{
+		case PROP_LOCATION:
+			g_value_set_object (value, gtef_file_get_location (file));
+			break;
+
+		case PROP_ENCODING:
+			g_value_set_boxed (value, gtef_file_get_encoding (file));
+			break;
+
+		case PROP_NEWLINE_TYPE:
+			g_value_set_enum (value, gtef_file_get_newline_type (file));
+			break;
+
+		case PROP_COMPRESSION_TYPE:
+			g_value_set_enum (value, gtef_file_get_compression_type (file));
+			break;
+
+		case PROP_READ_ONLY:
+			g_value_set_boolean (value, gtef_file_is_readonly (file));
+			break;
+
 		case PROP_SHORT_NAME:
 			g_value_set_string (value, gtef_file_get_short_name (file));
 			break;
@@ -130,8 +190,14 @@ gtef_file_set_property (GObject      *object,
 			const GValue *value,
 			GParamSpec   *pspec)
 {
+	GtefFile *file = GTEF_FILE (object);
+
 	switch (prop_id)
 	{
+		case PROP_LOCATION:
+			gtef_file_set_location (file, g_value_get_object (value));
+			break;
+
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 			break;
@@ -144,6 +210,13 @@ gtef_file_dispose (GObject *object)
 	GtefFilePrivate *priv = gtef_file_get_instance_private (GTEF_FILE (object));
 
 	g_clear_object (&priv->metadata);
+	g_clear_object (&priv->location);
+
+	if (priv->mount_operation_notify != NULL)
+	{
+		priv->mount_operation_notify (priv->mount_operation_userdata);
+		priv->mount_operation_notify = NULL;
+	}
 
 	G_OBJECT_CLASS (gtef_file_parent_class)->dispose (object);
 }
@@ -172,6 +245,86 @@ gtef_file_class_init (GtefFileClass *klass)
 	object_class->set_property = gtef_file_set_property;
 	object_class->dispose = gtef_file_dispose;
 	object_class->finalize = gtef_file_finalize;
+
+	/**
+	 * GtefFile:location:
+	 *
+	 * The location.
+	 *
+	 * Since: 1.0
+	 */
+	properties[PROP_LOCATION] =
+		g_param_spec_object ("location",
+				     "Location",
+				     "",
+				     G_TYPE_FILE,
+				     G_PARAM_READWRITE |
+				     G_PARAM_CONSTRUCT |
+				     G_PARAM_STATIC_STRINGS);
+
+	/**
+	 * GtefFile:encoding:
+	 *
+	 * The character encoding, initially %NULL. After a successful file
+	 * loading or saving operation, the encoding is non-%NULL.
+	 *
+	 * Since: 1.0
+	 */
+	properties[PROP_ENCODING] =
+		g_param_spec_boxed ("encoding",
+				    "Encoding",
+				    "",
+				    GTK_SOURCE_TYPE_ENCODING,
+				    G_PARAM_READABLE |
+				    G_PARAM_STATIC_STRINGS);
+
+	/**
+	 * GtefFile:newline-type:
+	 *
+	 * The line ending type.
+	 *
+	 * Since: 1.0
+	 */
+	properties[PROP_NEWLINE_TYPE] =
+		g_param_spec_enum ("newline-type",
+				   "Newline type",
+				   "",
+				   GTEF_TYPE_NEWLINE_TYPE,
+				   GTEF_NEWLINE_TYPE_LF,
+				   G_PARAM_READABLE |
+				   G_PARAM_STATIC_STRINGS);
+
+	/**
+	 * GtefFile:compression-type:
+	 *
+	 * The compression type.
+	 *
+	 * Since: 1.0
+	 */
+	properties[PROP_COMPRESSION_TYPE] =
+		g_param_spec_enum ("compression-type",
+				   "Compression type",
+				   "",
+				   GTEF_TYPE_COMPRESSION_TYPE,
+				   GTEF_COMPRESSION_TYPE_NONE,
+				   G_PARAM_READABLE |
+				   G_PARAM_STATIC_STRINGS);
+
+	/**
+	 * GtefFile:read-only:
+	 *
+	 * Whether the file is read-only or not. The value of this property is
+	 * not updated automatically (there is no file monitors).
+	 *
+	 * Since: 1.0
+	 */
+	properties[PROP_READ_ONLY] =
+		g_param_spec_boolean ("read-only",
+				      "Read Only",
+				      "",
+				      FALSE,
+				      G_PARAM_READABLE |
+				      G_PARAM_STATIC_STRINGS);
 
 	/**
 	 * GtefFile:short-name:
@@ -244,7 +397,7 @@ update_short_name (GtefFile *file)
 
 	priv = gtef_file_get_instance_private (file);
 
-	location = gtk_source_file_get_location (GTK_SOURCE_FILE (file));
+	location = gtef_file_get_location (file);
 
 	if (location == NULL)
 	{
@@ -272,25 +425,17 @@ update_short_name (GtefFile *file)
 }
 
 static void
-location_notify_cb (GtefFile   *file,
-		    GParamSpec *pspec,
-		    gpointer    user_data)
-{
-	update_short_name (file);
-}
-
-static void
 gtef_file_init (GtefFile *file)
 {
 	GtefFilePrivate *priv = gtef_file_get_instance_private (file);
 
 	priv->metadata = gtef_file_metadata_new (file);
 
+	priv->encoding = NULL;
+	priv->newline_type = GTEF_NEWLINE_TYPE_LF;
+	priv->compression_type = GTEF_COMPRESSION_TYPE_NONE;
+
 	update_short_name (file);
-	g_signal_connect (file,
-			  "notify::location",
-			  G_CALLBACK (location_notify_cb),
-			  NULL);
 }
 
 /**
@@ -324,10 +469,62 @@ gtef_file_get_file_metadata (GtefFile *file)
 }
 
 /**
+ * gtef_file_set_location:
+ * @file: a #GtefFile.
+ * @location: (nullable): the new #GFile, or %NULL.
+ *
+ * Sets the location.
+ *
+ * Since: 1.0
+ */
+void
+gtef_file_set_location (GtefFile *file,
+			GFile    *location)
+{
+	GtefFilePrivate *priv;
+
+	g_return_if_fail (GTEF_IS_FILE (file));
+	g_return_if_fail (location == NULL || G_IS_FILE (location));
+
+	priv = gtef_file_get_instance_private (file);
+
+	if (g_set_object (&priv->location, location))
+	{
+		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_LOCATION]);
+
+		/* The modification_time is for the old location. */
+		priv->modification_time_set = FALSE;
+
+		priv->externally_modified = FALSE;
+		priv->deleted = FALSE;
+
+		update_short_name (file);
+	}
+}
+
+/**
+ * gtef_file_get_location:
+ * @file: a #GtefFile.
+ *
+ * Returns: (transfer none): the #GFile.
+ * Since: 1.0
+ */
+GFile *
+gtef_file_get_location (GtefFile *file)
+{
+	GtefFilePrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
+
+	priv = gtef_file_get_instance_private (file);
+	return priv->location;
+}
+
+/**
  * gtef_file_get_short_name:
  * @file: a #GtefFile.
  *
- * Gets the @file short name. If the #GtkSourceFile:location isn't %NULL,
+ * Gets the @file short name. If the #GtefFile:location isn't %NULL,
  * returns its display-name (see #G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME).
  * Otherwise returns "Untitled File N", with N the Nth untitled file of the
  * application, starting at 1. When an untitled file is closed, its number is
@@ -345,4 +542,434 @@ gtef_file_get_short_name (GtefFile *file)
 
 	priv = gtef_file_get_instance_private (file);
 	return priv->short_name;
+}
+
+void
+_gtef_file_set_encoding (GtefFile                *file,
+			 const GtkSourceEncoding *encoding)
+{
+	GtefFilePrivate *priv;
+
+	g_return_if_fail (GTEF_IS_FILE (file));
+
+	priv = gtef_file_get_instance_private (file);
+
+	if (priv->encoding != encoding)
+	{
+		priv->encoding = encoding;
+		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_ENCODING]);
+	}
+}
+
+/**
+ * gtef_file_get_encoding:
+ * @file: a #GtefFile.
+ *
+ * The encoding is initially %NULL. After a successful file loading or saving
+ * operation, the encoding is non-%NULL.
+ *
+ * Returns: the character encoding.
+ * Since: 1.0
+ */
+const GtkSourceEncoding *
+gtef_file_get_encoding (GtefFile *file)
+{
+	GtefFilePrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
+
+	priv = gtef_file_get_instance_private (file);
+	return priv->encoding;
+}
+
+void
+_gtef_file_set_newline_type (GtefFile        *file,
+			     GtefNewlineType  newline_type)
+{
+	GtefFilePrivate *priv;
+
+	g_return_if_fail (GTEF_IS_FILE (file));
+
+	priv = gtef_file_get_instance_private (file);
+
+	if (priv->newline_type != newline_type)
+	{
+		priv->newline_type = newline_type;
+		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_NEWLINE_TYPE]);
+	}
+}
+
+/**
+ * gtef_file_get_newline_type:
+ * @file: a #GtefFile.
+ *
+ * Returns: the newline type.
+ * Since: 1.0
+ */
+GtefNewlineType
+gtef_file_get_newline_type (GtefFile *file)
+{
+	GtefFilePrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE (file), GTEF_NEWLINE_TYPE_DEFAULT);
+
+	priv = gtef_file_get_instance_private (file);
+	return priv->newline_type;
+}
+
+void
+_gtef_file_set_compression_type (GtefFile            *file,
+				 GtefCompressionType  compression_type)
+{
+	GtefFilePrivate *priv;
+
+	g_return_if_fail (GTEF_IS_FILE (file));
+
+	priv = gtef_file_get_instance_private (file);
+
+	if (priv->compression_type != compression_type)
+	{
+		priv->compression_type = compression_type;
+		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_COMPRESSION_TYPE]);
+	}
+}
+
+/**
+ * gtef_file_get_compression_type:
+ * @file: a #GtefFile.
+ *
+ * Returns: the compression type.
+ * Since: 1.0
+ */
+GtefCompressionType
+gtef_file_get_compression_type (GtefFile *file)
+{
+	GtefFilePrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE (file), GTEF_COMPRESSION_TYPE_NONE);
+
+	priv = gtef_file_get_instance_private (file);
+	return priv->compression_type;
+}
+
+/**
+ * gtef_file_set_mount_operation_factory:
+ * @file: a #GtefFile.
+ * @callback: (scope notified): a #GtefMountOperationFactory to call when a
+ *   #GMountOperation is needed.
+ * @user_data: (closure): the data to pass to the @callback function.
+ * @notify: (nullable): function to call on @user_data when the @callback is no
+ *   longer needed, or %NULL.
+ *
+ * Sets a #GtefMountOperationFactory function that will be called when a
+ * #GMountOperation must be created. This is useful for creating a
+ * #GtkMountOperation with the parent #GtkWindow.
+ *
+ * If a mount operation factory isn't set, g_mount_operation_new() will be
+ * called.
+ *
+ * Since: 1.0
+ */
+void
+gtef_file_set_mount_operation_factory (GtefFile                  *file,
+				       GtefMountOperationFactory  callback,
+				       gpointer                   user_data,
+				       GDestroyNotify             notify)
+{
+	GtefFilePrivate *priv;
+
+	g_return_if_fail (GTEF_IS_FILE (file));
+
+	priv = gtef_file_get_instance_private (file);
+
+	if (priv->mount_operation_notify != NULL)
+	{
+		priv->mount_operation_notify (priv->mount_operation_userdata);
+	}
+
+	priv->mount_operation_factory = callback;
+	priv->mount_operation_userdata = user_data;
+	priv->mount_operation_notify = notify;
+}
+
+GMountOperation *
+_gtef_file_create_mount_operation (GtefFile *file)
+{
+	GtefFilePrivate *priv;
+
+	if (file == NULL)
+	{
+		goto fallback;
+	}
+
+	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
+
+	priv = gtef_file_get_instance_private (file);
+
+	if (priv->mount_operation_factory != NULL)
+	{
+		return priv->mount_operation_factory (file, priv->mount_operation_userdata);
+	}
+
+fallback:
+	return g_mount_operation_new ();
+}
+
+gboolean
+_gtef_file_get_modification_time (GtefFile *file,
+				  GTimeVal *modification_time)
+{
+	GtefFilePrivate *priv;
+
+	g_return_val_if_fail (modification_time != NULL, FALSE);
+
+	if (file == NULL)
+	{
+		return FALSE;
+	}
+
+	g_return_val_if_fail (GTEF_IS_FILE (file), FALSE);
+
+	priv = gtef_file_get_instance_private (file);
+
+	if (priv->modification_time_set)
+	{
+		*modification_time = priv->modification_time;
+	}
+
+	return priv->modification_time_set;
+}
+
+void
+_gtef_file_set_modification_time (GtefFile *file,
+				  GTimeVal  modification_time)
+{
+	if (file != NULL)
+	{
+		GtefFilePrivate *priv;
+
+		g_return_if_fail (GTEF_IS_FILE (file));
+
+		priv = gtef_file_get_instance_private (file);
+
+		priv->modification_time = modification_time;
+		priv->modification_time_set = TRUE;
+	}
+}
+
+/**
+ * gtef_file_is_local:
+ * @file: a #GtefFile.
+ *
+ * Returns whether the file is local. If the #GtefFile:location is %NULL,
+ * returns %FALSE.
+ *
+ * Returns: whether the file is local.
+ * Since: 1.0
+ */
+gboolean
+gtef_file_is_local (GtefFile *file)
+{
+	GtefFilePrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE (file), FALSE);
+
+	priv = gtef_file_get_instance_private (file);
+
+	if (priv->location == NULL)
+	{
+		return FALSE;
+	}
+
+	return g_file_has_uri_scheme (priv->location, "file");
+}
+
+/**
+ * gtef_file_check_file_on_disk:
+ * @file: a #GtefFile.
+ *
+ * Checks synchronously the file on disk, to know whether the file is externally
+ * modified, or has been deleted, and whether the file is read-only.
+ *
+ * #GtefFile doesn't create a #GFileMonitor to track those properties, so
+ * this function needs to be called instead. Creating lots of #GFileMonitor's
+ * would take lots of resources.
+ *
+ * Since this function is synchronous, it is advised to call it only on local
+ * files. See gtef_file_is_local().
+ *
+ * Since: 1.0
+ */
+void
+gtef_file_check_file_on_disk (GtefFile *file)
+{
+	GtefFilePrivate *priv;
+	GFileInfo *info;
+
+	g_return_if_fail (GTEF_IS_FILE (file));
+
+	priv = gtef_file_get_instance_private (file);
+
+	if (priv->location == NULL)
+	{
+		return;
+	}
+
+	info = g_file_query_info (priv->location,
+				  G_FILE_ATTRIBUTE_TIME_MODIFIED ","
+				  G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE,
+				  G_FILE_QUERY_INFO_NONE,
+				  NULL,
+				  NULL);
+
+	if (info == NULL)
+	{
+		priv->deleted = TRUE;
+		return;
+	}
+
+	if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_TIME_MODIFIED) &&
+	    priv->modification_time_set)
+	{
+		GTimeVal timeval;
+
+		g_file_info_get_modification_time (info, &timeval);
+
+		/* Note that the modification time can even go backwards if the
+		 * user is copying over an old file.
+		 */
+		if (timeval.tv_sec != priv->modification_time.tv_sec ||
+		    timeval.tv_usec != priv->modification_time.tv_usec)
+		{
+			priv->externally_modified = TRUE;
+		}
+	}
+
+	if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE))
+	{
+		gboolean readonly;
+
+		readonly = !g_file_info_get_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE);
+
+		_gtef_file_set_readonly (file, readonly);
+	}
+
+	g_object_unref (info);
+}
+
+void
+_gtef_file_set_externally_modified (GtefFile *file,
+				    gboolean  externally_modified)
+{
+	GtefFilePrivate *priv;
+
+	g_return_if_fail (GTEF_IS_FILE (file));
+
+	priv = gtef_file_get_instance_private (file);
+
+	priv->externally_modified = externally_modified != FALSE;
+}
+
+/**
+ * gtef_file_is_externally_modified:
+ * @file: a #GtefFile.
+ *
+ * Returns whether the file is externally modified. If the
+ * #GtefFile:location is %NULL, returns %FALSE.
+ *
+ * To have an up-to-date value, you must first call
+ * gtef_file_check_file_on_disk().
+ *
+ * Returns: whether the file is externally modified.
+ * Since: 1.0
+ */
+gboolean
+gtef_file_is_externally_modified (GtefFile *file)
+{
+	GtefFilePrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE (file), FALSE);
+
+	priv = gtef_file_get_instance_private (file);
+	return priv->externally_modified;
+}
+
+void
+_gtef_file_set_deleted (GtefFile *file,
+			gboolean  deleted)
+{
+	GtefFilePrivate *priv;
+
+	g_return_if_fail (GTEF_IS_FILE (file));
+
+	priv = gtef_file_get_instance_private (file);
+
+	priv->deleted = deleted != FALSE;
+}
+
+/**
+ * gtef_file_is_deleted:
+ * @file: a #GtefFile.
+ *
+ * Returns whether the file has been deleted. If the
+ * #GtefFile:location is %NULL, returns %FALSE.
+ *
+ * To have an up-to-date value, you must first call
+ * gtef_file_check_file_on_disk().
+ *
+ * Returns: whether the file has been deleted.
+ * Since: 1.0
+ */
+gboolean
+gtef_file_is_deleted (GtefFile *file)
+{
+	GtefFilePrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE (file), FALSE);
+
+	priv = gtef_file_get_instance_private (file);
+	return priv->deleted;
+}
+
+void
+_gtef_file_set_readonly (GtefFile *file,
+			 gboolean  readonly)
+{
+	GtefFilePrivate *priv;
+
+	g_return_if_fail (GTEF_IS_FILE (file));
+
+	priv = gtef_file_get_instance_private (file);
+
+	readonly = readonly != FALSE;
+
+	if (priv->readonly != readonly)
+	{
+		priv->readonly = readonly;
+		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_READ_ONLY]);
+	}
+}
+
+/**
+ * gtef_file_is_readonly:
+ * @file: a #GtefFile.
+ *
+ * Returns whether the file is read-only. If the
+ * #GtefFile:location is %NULL, returns %FALSE.
+ *
+ * To have an up-to-date value, you must first call
+ * gtef_file_check_file_on_disk().
+ *
+ * Returns: whether the file is read-only.
+ * Since: 1.0
+ */
+gboolean
+gtef_file_is_readonly (GtefFile *file)
+{
+	GtefFilePrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE (file), FALSE);
+
+	priv = gtef_file_get_instance_private (file);
+	return priv->readonly;
 }

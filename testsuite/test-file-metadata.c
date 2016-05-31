@@ -149,7 +149,7 @@ do_test_load_save_metadata_sync (gboolean use_gvfs_metadata)
 	path = g_build_filename (g_get_tmp_dir (), "gtef-metadata-test-sync", NULL);
 	location = g_file_new_for_path (path);
 
-	gtk_source_file_set_location (GTK_SOURCE_FILE (file), location);
+	gtef_file_set_location (file, location);
 
 	ok = gtef_file_metadata_save (metadata, NULL, &error);
 	if (use_gvfs_metadata)
@@ -177,7 +177,7 @@ do_test_load_save_metadata_sync (gboolean use_gvfs_metadata)
 
 	file = create_file (use_gvfs_metadata);
 	metadata = gtef_file_get_file_metadata (file);
-	gtk_source_file_set_location (GTK_SOURCE_FILE (file), location);
+	gtef_file_set_location (file, location);
 
 	gtef_file_metadata_set (metadata, TEST_OTHER_KEY, "embrace");
 
@@ -267,7 +267,7 @@ load_metadata_async_cb (GObject      *source_object,
 	g_assert_no_error (error);
 	g_assert (ok);
 
-	location = gtk_source_file_get_location (GTK_SOURCE_FILE (file));
+	location = gtef_file_get_location (file);
 	g_file_delete (location, NULL, &error);
 	g_assert_no_error (error);
 
@@ -313,7 +313,7 @@ do_test_load_save_metadata_async (gboolean use_gvfs_metadata)
 	path = g_build_filename (g_get_tmp_dir (), "gtef-metadata-test-async", NULL);
 
 	location = g_file_new_for_path (path);
-	gtk_source_file_set_location (GTK_SOURCE_FILE (file), location);
+	gtef_file_set_location (file, location);
 	g_object_unref (location);
 
 	g_file_set_contents (path, "blum", -1, &error);
@@ -358,7 +358,7 @@ do_test_set_without_load (gboolean use_gvfs_metadata)
 	metadata = gtef_file_get_file_metadata (file);
 	path = g_build_filename (g_get_tmp_dir (), "gtef-metadata-test-set-without-load", NULL);
 	location = g_file_new_for_path (path);
-	gtk_source_file_set_location (GTK_SOURCE_FILE (file), location);
+	gtef_file_set_location (file, location);
 
 	g_file_set_contents (path, "blom", -1, &error);
 	g_assert_no_error (error);
@@ -374,7 +374,7 @@ do_test_set_without_load (gboolean use_gvfs_metadata)
 	/* Set and save another metadata, independently */
 	file = create_file (use_gvfs_metadata);
 	metadata = gtef_file_get_file_metadata (file);
-	gtk_source_file_set_location (GTK_SOURCE_FILE (file), location);
+	gtef_file_set_location (file, location);
 	gtef_file_metadata_set (metadata, TEST_OTHER_KEY, "borgir");
 	ok = gtef_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);

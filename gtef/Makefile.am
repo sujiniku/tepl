@@ -42,6 +42,12 @@ gtef_private_c_files =			\
 	gtef-progress-info-bar.c	\
 	gtef-utils.c
 
+gtef_built_public_headers =		\
+	gtef-enum-types.h
+
+gtef_built_public_c_files =		\
+	gtef-enum-types.c
+
 # Helper Libtool library, so that the private functions can be used in unit
 # tests.
 noinst_LTLIBRARIES = libgtef-core.la
@@ -51,6 +57,14 @@ libgtef_core_la_SOURCES =		\
 	$(gtef_private_headers)		\
 	$(gtef_public_c_files)		\
 	$(gtef_public_headers)
+
+nodist_libgtef_core_la_SOURCES =	\
+	$(gtef_built_public_c_files)	\
+	$(gtef_built_public_headers)
+
+BUILT_SOURCES =				\
+	$(gtef_built_public_c_files)	\
+	$(gtef_built_public_headers)
 
 libgtef_core_la_CFLAGS =		\
 	$(CODE_COVERAGE_CFLAGS)
@@ -81,8 +95,21 @@ libgtef_@GTEF_API_VERSION@_la_LDFLAGS =		\
 
 libgtef_includedir = $(includedir)/gtef-@GTEF_API_VERSION@/gtef
 libgtef_include_HEADERS = $(gtef_public_headers)
+nodist_libgtef_include_HEADERS = $(gtef_built_public_headers)
 
-CLEANFILES =
+ENUM_TYPES = $(gtef_public_headers)
+
+gtef-enum-types.h: gtef-enum-types.h.template $(ENUM_TYPES) $(GLIB_MKENUMS)
+	$(AM_V_GEN) (cd $(srcdir) && $(GLIB_MKENUMS) --template gtef-enum-types.h.template $(ENUM_TYPES)) > $@
+
+gtef-enum-types.c: gtef-enum-types.c.template $(ENUM_TYPES) $(GLIB_MKENUMS)
+	$(AM_V_GEN) (cd $(srcdir) && $(GLIB_MKENUMS) --template gtef-enum-types.c.template $(ENUM_TYPES)) > $@
+
+EXTRA_DIST =				\
+	gtef-enum-types.c.template	\
+	gtef-enum-types.h.template
+
+CLEANFILES = $(BUILT_SOURCES)
 
 if HAVE_INTROSPECTION
 -include $(INTROSPECTION_MAKEFILE)
@@ -103,7 +130,9 @@ Gtef_@GTEF_API_VERSION@_gir_SCANNERFLAGS = $(WARN_SCANNERFLAGS)
 Gtef_@GTEF_API_VERSION@_gir_LIBS = libgtef-@GTEF_API_VERSION@.la
 Gtef_@GTEF_API_VERSION@_gir_FILES =	\
 	$(gtef_public_headers)		\
-	$(gtef_public_c_files)
+	$(gtef_public_c_files)		\
+	$(gtef_built_public_headers)	\
+	$(gtef_built_public_c_files)
 
 Gtef_@GTEF_API_VERSION@_gir_INCLUDES = Gtk-3.0 GtkSource-3.0
 Gtef_@GTEF_API_VERSION@_gir_PACKAGES = gtk+-3.0 gtksourceview-3.0

@@ -15,6 +15,7 @@ gtef_public_headers =			\
 	gtef-buffer.h			\
 	gtef-file.h			\
 	gtef-file-metadata.h		\
+	gtef-file-saver.h		\
 	gtef-info-bar.h			\
 	gtef-metadata-manager.h		\
 	gtef-types.h			\
@@ -25,6 +26,7 @@ gtef_public_c_files =			\
 	gtef-buffer.c			\
 	gtef-file.c			\
 	gtef-file-metadata.c		\
+	gtef-file-saver.c		\
 	gtef-info-bar.c			\
 	gtef-metadata-manager.c		\
 	gtef-tab.c			\

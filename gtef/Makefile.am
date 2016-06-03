@@ -32,11 +32,13 @@ gtef_public_c_files =			\
 
 gtef_private_headers =			\
 	gconstructor.h			\
+	gtef-buffer-input-stream.h	\
 	gtef-io-error-info-bar.h	\
 	gtef-progress-info-bar.h	\
 	gtef-utils.h
 
 gtef_private_c_files =			\
+	gtef-buffer-input-stream.c	\
 	gtef-init.c			\
 	gtef-io-error-info-bar.c	\
 	gtef-progress-info-bar.c	\

@@ -33,6 +33,8 @@ struct _GtefBufferPrivate
 {
 	GtefFile *file;
 
+	GtkTextTag *invalid_char_tag;
+
 	guint n_nested_user_actions;
 	guint idle_cursor_moved_id;
 };
@@ -417,4 +419,108 @@ gtef_buffer_get_title (GtefBuffer *buffer)
 	}
 
 	return title;
+}
+
+static void
+update_invalid_char_tag_style (GtefBuffer *buffer)
+{
+	GtefBufferPrivate *priv;
+	GtkSourceStyleScheme *style_scheme;
+	GtkSourceStyle *style = NULL;
+
+	priv = gtef_buffer_get_instance_private (buffer);
+
+	style_scheme = gtk_source_buffer_get_style_scheme (GTK_SOURCE_BUFFER (buffer));
+
+	if (style_scheme != NULL)
+	{
+		style = gtk_source_style_scheme_get_style (style_scheme, "def:error");
+	}
+
+	gtk_source_style_apply (style, priv->invalid_char_tag);
+}
+
+static void
+style_scheme_notify_cb (GtkSourceBuffer *buffer,
+			GParamSpec      *pspec,
+			gpointer         user_data)
+{
+	update_invalid_char_tag_style (GTEF_BUFFER (buffer));
+}
+
+static void
+text_tag_set_highest_priority (GtkTextTag    *tag,
+			       GtkTextBuffer *buffer)
+{
+	GtkTextTagTable *table;
+	gint n;
+
+	table = gtk_text_buffer_get_tag_table (buffer);
+	n = gtk_text_tag_table_get_size (table);
+	gtk_text_tag_set_priority (tag, n - 1);
+}
+
+void
+_gtef_buffer_set_as_invalid_character (GtefBuffer        *buffer,
+				       const GtkTextIter *start,
+				       const GtkTextIter *end)
+{
+	GtefBufferPrivate *priv;
+
+	g_return_if_fail (GTEF_IS_BUFFER (buffer));
+	g_return_if_fail (start != NULL);
+	g_return_if_fail (end != NULL);
+
+	priv = gtef_buffer_get_instance_private (buffer);
+
+	if (priv->invalid_char_tag == NULL)
+	{
+		priv->invalid_char_tag = gtk_text_buffer_create_tag (GTK_TEXT_BUFFER (buffer),
+								     NULL,
+								     NULL);
+
+		update_invalid_char_tag_style (buffer);
+
+		g_signal_connect (buffer,
+		                  "notify::style-scheme",
+		                  G_CALLBACK (style_scheme_notify_cb),
+		                  NULL);
+	}
+
+	/* Make sure the 'error' tag has the priority over
+	 * syntax highlighting tags.
+	 */
+	text_tag_set_highest_priority (priv->invalid_char_tag,
+	                               GTK_TEXT_BUFFER (buffer));
+
+	gtk_text_buffer_apply_tag (GTK_TEXT_BUFFER (buffer),
+	                           priv->invalid_char_tag,
+	                           start,
+	                           end);
+}
+
+gboolean
+_gtef_buffer_has_invalid_chars (GtefBuffer *buffer)
+{
+	GtefBufferPrivate *priv;
+	GtkTextIter start;
+
+	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), FALSE);
+
+	priv = gtef_buffer_get_instance_private (buffer);
+
+	if (priv->invalid_char_tag == NULL)
+	{
+		return FALSE;
+	}
+
+	gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (buffer), &start);
+
+	if (gtk_text_iter_starts_tag (&start, priv->invalid_char_tag) ||
+	    gtk_text_iter_forward_to_tag_toggle (&start, priv->invalid_char_tag))
+	{
+		return TRUE;
+	}
+
+	return FALSE;
 }

@@ -52,6 +52,14 @@ gboolean		gtef_buffer_is_untouched		(GtefBuffer *buffer);
 
 gchar *			gtef_buffer_get_title			(GtefBuffer *buffer);
 
+G_GNUC_INTERNAL
+void			_gtef_buffer_set_as_invalid_character	(GtefBuffer        *buffer,
+								 const GtkTextIter *start,
+								 const GtkTextIter *end);
+
+G_GNUC_INTERNAL
+gboolean		_gtef_buffer_has_invalid_chars		(GtefBuffer *buffer);
+
 G_END_DECLS
 
 #endif /* GTEF_BUFFER_H */

@@ -52,7 +52,7 @@ AC_SUBST(GTEF_API_VERSION)
 # Dependencies
 glib_req=2.44
 gtk_req=3.20
-gtksourceview_req=3.20
+gtksourceview_req=3.21.2
 libxml_req=2.5
 
 AC_CONFIG_SRCDIR([gtef/gtef.h])

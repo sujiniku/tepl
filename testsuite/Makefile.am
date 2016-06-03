@@ -20,6 +20,9 @@ test_buffer_input_stream_SOURCES = test-buffer-input-stream.c
 UNIT_TEST_PROGS += test-file-metadata
 test_file_metadata_SOURCES = test-file-metadata.c
 
+UNIT_TEST_PROGS += test-file-saver
+test_file_saver_SOURCES = test-file-saver.c
+
 UNIT_TEST_PROGS += test-info-bar
 test_info_bar_SOURCES = test-info-bar.c
 

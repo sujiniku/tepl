@@ -19,6 +19,7 @@
 
 #include "gtef-file-loader.h"
 #include "gtef-buffer.h"
+#include "gtef-file.h"
 
 /**
  * SECTION:file-loader
@@ -37,6 +38,8 @@ struct _GtefFileLoaderPrivate
 	GtefBuffer *buffer;
 
 	GFile *location;
+
+	GTask *task;
 };
 
 enum
@@ -104,6 +107,33 @@ gtef_file_loader_set_property (GObject      *object,
 }
 
 static void
+gtef_file_loader_constructed (GObject *object)
+{
+	GtefFileLoaderPrivate *priv = gtef_file_loader_get_instance_private (GTEF_FILE_LOADER (object));
+
+	G_OBJECT_CLASS (gtef_file_loader_parent_class)->constructed (object);
+
+	if (priv->buffer != NULL &&
+	    priv->location == NULL)
+	{
+		GtefFile *file;
+
+		file = gtef_buffer_get_file (priv->buffer);
+		priv->location = gtef_file_get_location (file);
+
+		if (priv->location != NULL)
+		{
+			g_object_ref (priv->location);
+		}
+		else
+		{
+			g_warning ("GtefFileLoader: the GtefFile location is NULL. "
+				   "Call gtef_file_set_location() before creating the FileLoader.");
+		}
+	}
+}
+
+static void
 gtef_file_loader_dispose (GObject *object)
 {
 	GtefFileLoaderPrivate *priv = gtef_file_loader_get_instance_private (GTEF_FILE_LOADER (object));
@@ -116,6 +146,7 @@ gtef_file_loader_dispose (GObject *object)
 	}
 
 	g_clear_object (&priv->location);
+	g_clear_object (&priv->task);
 
 	G_OBJECT_CLASS (gtef_file_loader_parent_class)->dispose (object);
 }
@@ -127,6 +158,7 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 
 	object_class->get_property = gtef_file_loader_get_property;
 	object_class->set_property = gtef_file_loader_set_property;
+	object_class->constructed = gtef_file_loader_constructed;
 	object_class->dispose = gtef_file_loader_dispose;
 
 	/**
@@ -253,8 +285,24 @@ gtef_file_loader_load_async (GtefFileLoader      *loader,
 			     GAsyncReadyCallback  callback,
 			     gpointer             user_data)
 {
+	GtefFileLoaderPrivate *priv;
+
 	g_return_if_fail (GTEF_IS_FILE_LOADER (loader));
 	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
+
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	if (priv->task != NULL)
+	{
+		g_warning ("Several load operations in parallel with the same "
+			   "GtefFileLoader is not possible and doesn't make sense.");
+		return;
+	}
+
+	priv->task = g_task_new (loader, cancellable, callback, user_data);
+	g_task_set_priority (priv->task, io_priority);
+
+	g_task_return_boolean (priv->task, TRUE);
 }
 
 /**
@@ -273,9 +321,20 @@ gtef_file_loader_load_finish (GtefFileLoader  *loader,
 			      GAsyncResult    *result,
 			      GError         **error)
 {
+	GtefFileLoaderPrivate *priv;
+	gboolean ok;
+
 	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), FALSE);
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 	g_return_val_if_fail (g_task_is_valid (result, loader), FALSE);
 
-	return TRUE;
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	g_return_val_if_fail (G_TASK (result) == priv->task, FALSE);
+
+	ok = g_task_propagate_boolean (priv->task, error);
+
+	g_clear_object (&priv->task);
+
+	return ok;
 }

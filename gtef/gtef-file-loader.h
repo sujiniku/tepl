@@ -24,7 +24,8 @@
 #error "Only <gtef/gtef.h> can be included directly."
 #endif
 
-#include <glib-object.h>
+#include <gio/gio.h>
+#include <gtef/gtef-types.h>
 
 G_BEGIN_DECLS
 
@@ -40,7 +41,21 @@ struct _GtefFileLoaderClass
 	gpointer padding[12];
 };
 
-GtefFileLoader *	gtef_file_loader_new					(void);
+GtefFileLoader *	gtef_file_loader_new					(GtefBuffer *buffer);
+
+GtefBuffer *		gtef_file_loader_get_buffer				(GtefFileLoader *loader);
+
+GFile *			gtef_file_loader_get_location				(GtefFileLoader *loader);
+
+void			gtef_file_loader_load_async				(GtefFileLoader      *loader,
+										 gint                 io_priority,
+										 GCancellable        *cancellable,
+										 GAsyncReadyCallback  callback,
+										 gpointer             user_data);
+
+gboolean		gtef_file_loader_load_finish				(GtefFileLoader  *loader,
+										 GAsyncResult    *result,
+										 GError         **error);
 
 G_END_DECLS
 

@@ -68,6 +68,10 @@ GtefFileMetadataClass
 <TITLE>GtefFileLoader</TITLE>
 GtefFileLoader
 gtef_file_loader_new
+gtef_file_loader_get_buffer
+gtef_file_loader_get_location
+gtef_file_loader_load_async
+gtef_file_loader_load_finish
 <SUBSECTION Standard>
 GTEF_TYPE_FILE_LOADER
 GtefFileLoaderClass

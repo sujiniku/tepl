@@ -18,10 +18,11 @@
  */
 
 #include "gtef-file-loader.h"
+#include "gtef-buffer.h"
 
 /**
  * SECTION:file-loader
- * @Short_description: Load a file into a GtkSourceBuffer
+ * @Short_description: Load a file into a GtefBuffer
  * @Title: GtefFileLoader
  */
 
@@ -29,23 +30,94 @@ typedef struct _GtefFileLoaderPrivate GtefFileLoaderPrivate;
 
 struct _GtefFileLoaderPrivate
 {
-	gint something;
+	/* Weak ref to the GtefBuffer. A strong ref could create a reference
+	 * cycle in an application. For example a subclass of GtefBuffer can
+	 * have a strong ref to the FileLoader.
+	 */
+	GtefBuffer *buffer;
+
+	GFile *location;
 };
+
+enum
+{
+	PROP_0,
+	PROP_BUFFER,
+	PROP_LOCATION,
+	N_PROPERTIES
+};
+
+static GParamSpec *properties[N_PROPERTIES];
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefFileLoader, gtef_file_loader, G_TYPE_OBJECT)
 
 static void
-gtef_file_loader_dispose (GObject *object)
+gtef_file_loader_get_property (GObject    *object,
+			       guint       prop_id,
+			       GValue     *value,
+			       GParamSpec *pspec)
 {
+	GtefFileLoader *loader = GTEF_FILE_LOADER (object);
 
-	G_OBJECT_CLASS (gtef_file_loader_parent_class)->dispose (object);
+	switch (prop_id)
+	{
+		case PROP_BUFFER:
+			g_value_set_object (value, gtef_file_loader_get_buffer (loader));
+			break;
+
+		case PROP_LOCATION:
+			g_value_set_object (value, gtef_file_loader_get_location (loader));
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+			break;
+	}
 }
 
 static void
-gtef_file_loader_finalize (GObject *object)
+gtef_file_loader_set_property (GObject      *object,
+			       guint         prop_id,
+			       const GValue *value,
+			       GParamSpec   *pspec)
 {
+	GtefFileLoaderPrivate *priv = gtef_file_loader_get_instance_private (GTEF_FILE_LOADER (object));
 
-	G_OBJECT_CLASS (gtef_file_loader_parent_class)->finalize (object);
+	switch (prop_id)
+	{
+		case PROP_BUFFER:
+			g_assert (priv->buffer == NULL);
+			priv->buffer = g_value_get_object (value);
+			g_object_add_weak_pointer (G_OBJECT (priv->buffer),
+						   (gpointer *) &priv->buffer);
+			break;
+
+		case PROP_LOCATION:
+			g_assert (priv->location == NULL);
+			priv->location = g_value_dup_object (value);
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+			break;
+	}
+}
+
+static void
+gtef_file_loader_dispose (GObject *object)
+{
+	GtefFileLoaderPrivate *priv = gtef_file_loader_get_instance_private (GTEF_FILE_LOADER (object));
+
+	if (priv->buffer != NULL)
+	{
+		g_object_remove_weak_pointer (G_OBJECT (priv->buffer),
+					      (gpointer *) &priv->buffer);
+		priv->buffer = NULL;
+	}
+
+	g_clear_object (&priv->location);
+
+	G_OBJECT_CLASS (gtef_file_loader_parent_class)->dispose (object);
 }
 
 static void
@@ -53,8 +125,45 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
+	object_class->get_property = gtef_file_loader_get_property;
+	object_class->set_property = gtef_file_loader_set_property;
 	object_class->dispose = gtef_file_loader_dispose;
-	object_class->finalize = gtef_file_loader_finalize;
+
+	/**
+	 * GtefFileLoader:buffer:
+	 *
+	 * The #GtefBuffer to load the contents into. The #GtefFileLoader object
+	 * has a weak reference to the buffer.
+	 *
+	 * Since: 1.0
+	 */
+	properties[PROP_BUFFER] =
+		g_param_spec_object ("buffer",
+				     "GtefBuffer",
+				     "",
+				     GTEF_TYPE_BUFFER,
+				     G_PARAM_READWRITE |
+				     G_PARAM_CONSTRUCT_ONLY |
+				     G_PARAM_STATIC_STRINGS);
+
+	/**
+	 * GtefFileLoader:location:
+	 *
+	 * The #GFile to load. By default the location is taken from the
+	 * #GtefFile at construction time.
+	 *
+	 * Since: 1.0
+	 */
+	properties[PROP_LOCATION] =
+		g_param_spec_object ("location",
+				     "Location",
+				     "",
+				     G_TYPE_FILE,
+				     G_PARAM_READWRITE |
+				     G_PARAM_CONSTRUCT_ONLY |
+				     G_PARAM_STATIC_STRINGS);
+
+	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
 }
 
 static void
@@ -64,12 +173,109 @@ gtef_file_loader_init (GtefFileLoader *loader)
 
 /**
  * gtef_file_loader_new:
+ * @buffer: the #GtefBuffer to load the contents into.
+ *
+ * Creates a new #GtefFileLoader object. The contents is read from the #GtefFile
+ * location. If not already done, call gtef_file_set_location() before calling
+ * this constructor. The previous location is anyway not needed, because as soon
+ * as the file loading begins, the @buffer is emptied.
  *
  * Returns: a new #GtefFileLoader object.
  * Since: 1.0
  */
 GtefFileLoader *
-gtef_file_loader_new (void)
+gtef_file_loader_new (GtefBuffer *buffer)
 {
-	return g_object_new (GTEF_TYPE_FILE_LOADER, NULL);
+	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), NULL);
+
+	return g_object_new (GTEF_TYPE_FILE_LOADER,
+			     "buffer", buffer,
+			     NULL);
+}
+
+/**
+ * gtef_file_loader_get_buffer:
+ * @loader: a #GtefFileLoader.
+ *
+ * Returns: (transfer none) (nullable): the #GtefBuffer to load the contents
+ * into.
+ * Since: 1.0
+ */
+GtefBuffer *
+gtef_file_loader_get_buffer (GtefFileLoader *loader)
+{
+	GtefFileLoaderPrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), NULL);
+
+	priv = gtef_file_loader_get_instance_private (loader);
+	return priv->buffer;
+}
+
+/**
+ * gtef_file_loader_get_location:
+ * @loader: a #GtefFileLoader.
+ *
+ * Returns: (transfer none) (nullable): the #GFile to load.
+ * Since: 1.0
+ */
+GFile *
+gtef_file_loader_get_location (GtefFileLoader *loader)
+{
+	GtefFileLoaderPrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), NULL);
+
+	priv = gtef_file_loader_get_instance_private (loader);
+	return priv->location;
+}
+
+/**
+ * gtef_file_loader_load_async:
+ * @loader: a #GtefFileLoader.
+ * @io_priority: the I/O priority of the request. E.g. %G_PRIORITY_LOW,
+ *   %G_PRIORITY_DEFAULT or %G_PRIORITY_HIGH.
+ * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
+ * @callback: (scope async): a #GAsyncReadyCallback to call when the request is
+ *   satisfied.
+ * @user_data: user data to pass to @callback.
+ *
+ * Loads asynchronously the file contents into the #GtefBuffer.
+ *
+ * See the #GAsyncResult documentation to know how to use this function.
+ *
+ * Since: 1.0
+ */
+void
+gtef_file_loader_load_async (GtefFileLoader      *loader,
+			     gint                 io_priority,
+			     GCancellable        *cancellable,
+			     GAsyncReadyCallback  callback,
+			     gpointer             user_data)
+{
+	g_return_if_fail (GTEF_IS_FILE_LOADER (loader));
+	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
+}
+
+/**
+ * gtef_file_loader_load_finish:
+ * @loader: a #GtefFileLoader.
+ * @result: a #GAsyncResult.
+ * @error: a #GError, or %NULL.
+ *
+ * Finishes a file loading started with gtef_file_loader_load_async().
+ *
+ * Returns: whether the contents has been loaded successfully.
+ * Since: 1.0
+ */
+gboolean
+gtef_file_loader_load_finish (GtefFileLoader  *loader,
+			      GAsyncResult    *result,
+			      GError         **error)
+{
+	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), FALSE);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	g_return_val_if_fail (g_task_is_valid (result, loader), FALSE);
+
+	return TRUE;
 }

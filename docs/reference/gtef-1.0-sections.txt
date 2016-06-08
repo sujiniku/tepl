@@ -64,6 +64,16 @@ GtefFileMetadataClass
 </SECTION>
 
 <SECTION>
+<FILE>file-loader</FILE>
+<TITLE>GtefFileLoader</TITLE>
+GtefFileLoader
+gtef_file_loader_new
+<SUBSECTION Standard>
+GTEF_TYPE_FILE_LOADER
+GtefFileLoaderClass
+</SECTION>
+
+<SECTION>
 <FILE>file-saver</FILE>
 <TITLE>GtefFileSaver</TITLE>
 GtefFileSaver

@@ -2,6 +2,7 @@
 gtef/gtef-buffer.c
 gtef/gtef-buffer-input-stream.c
 gtef/gtef-file.c
+gtef/gtef-file-loader.c
 gtef/gtef-file-metadata.c
 gtef/gtef-info-bar.c
 gtef/gtef-init.c

@@ -27,6 +27,7 @@
 
 #include <gtef/gtef-buffer.h>
 #include <gtef/gtef-file.h>
+#include <gtef/gtef-file-loader.h>
 #include <gtef/gtef-file-metadata.h>
 #include <gtef/gtef-file-saver.h>
 #include <gtef/gtef-info-bar.h>

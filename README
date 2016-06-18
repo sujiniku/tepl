@@ -5,9 +5,10 @@ Gtef is a library that eases the development of GtkSourceView-based text
 editors and IDEs. Some of the Gtef code comes from gedit.
 
 https://wiki.gnome.org/Apps/Gedit/ReusableCode
-https://wiki.gnome.org/Projects/GtkSourceView/MdiFramework
+https://wiki.gnome.org/Projects/GtkSourceView/TdiFramework
 
-The final goal is to create an MDI framework suitable for text editors.
+The final goal is to create a Tabbed Document Interface (TDI) framework
+suitable for text editors.
 
 But the first short-term goal is to have a higher-level API to load and save a
 file. All the errors would be handled by Gtef, showing GtkInfoBars etc.

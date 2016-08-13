@@ -5,7 +5,5 @@ Gtef follows the same guidelines and code conventions as GtkSourceView:
 
     https://git.gnome.org/browse/gtksourceview/tree/HACKING
 
-FIXME update when bugzilla product created.
-The bugzilla product of Gtef is not available at:
-
-    https://bugzilla.gnome.org/page.cgi?id=browse.html&product=gtef
+To submit patches, there is no bugzilla for Gtef, so do a pull request on
+GitHub instead.

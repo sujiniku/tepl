@@ -31,6 +31,7 @@ gtef_public_c_files =			\
 	gtef-view.c
 
 gtef_private_headers =			\
+	gconstructor.h			\
 	gtef-io-error-info-bar.h	\
 	gtef-progress-info-bar.h	\
 	gtef-utils.h

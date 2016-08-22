@@ -55,6 +55,19 @@ static GParamSpec *properties[N_PROPERTIES];
 G_DEFINE_TYPE_WITH_PRIVATE (GtefFileLoader, gtef_file_loader, G_TYPE_OBJECT)
 
 static void
+empty_buffer (GtefFileLoader *loader)
+{
+	GtefFileLoaderPrivate *priv;
+
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	if (priv->buffer != NULL)
+	{
+		gtk_text_buffer_set_text (GTK_TEXT_BUFFER (priv->buffer), "", -1);
+	}
+}
+
+static void
 gtef_file_loader_get_property (GObject    *object,
 			       guint       prop_id,
 			       GValue     *value,
@@ -262,6 +275,105 @@ gtef_file_loader_get_location (GtefFileLoader *loader)
 	return priv->location;
 }
 
+static void
+load_contents_cb (GObject      *source_object,
+		  GAsyncResult *result,
+		  gpointer      user_data)
+{
+	GFile *location = G_FILE (source_object);
+	GTask *task = G_TASK (user_data);
+	GtefFileLoader *loader;
+	GtefFileLoaderPrivate *priv;
+	gchar *contents = NULL;
+	gsize length;
+	GtkTextIter start;
+	GError *error = NULL;
+
+	loader = g_task_get_source_object (task);
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	g_file_load_contents_finish (location,
+				     result,
+				     &contents,
+				     &length,
+				     NULL,
+				     &error);
+
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		goto out;
+	}
+
+	if (priv->buffer == NULL)
+	{
+		g_task_return_boolean (task, FALSE);
+		goto out;
+	}
+
+	gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (priv->buffer), &start);
+
+	gtk_text_buffer_insert (GTK_TEXT_BUFFER (priv->buffer),
+				&start,
+				contents,
+				length);
+
+	g_task_return_boolean (task, TRUE);
+
+out:
+	g_free (contents);
+}
+
+static void
+start_loading (GTask *task)
+{
+	GtefFileLoader *loader;
+	GtefFileLoaderPrivate *priv;
+
+	loader = g_task_get_source_object (task);
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	if (priv->buffer == NULL)
+	{
+		g_task_return_boolean (task, FALSE);
+		return;
+	}
+
+	gtk_source_buffer_begin_not_undoable_action (GTK_SOURCE_BUFFER (priv->buffer));
+	gtk_text_buffer_begin_user_action (GTK_TEXT_BUFFER (priv->buffer));
+
+	empty_buffer (loader);
+
+	g_file_load_contents_async (priv->location,
+				    g_task_get_cancellable (task),
+				    load_contents_cb,
+				    task);
+}
+
+static void
+finish_loading (GTask *task)
+{
+	GtefFileLoader *loader;
+	GtefFileLoaderPrivate *priv;
+	GtkTextIter start;
+
+	loader = g_task_get_source_object (task);
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	if (priv->buffer == NULL)
+	{
+		return;
+	}
+
+	gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (priv->buffer), &start);
+	gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (priv->buffer), &start);
+
+	gtk_text_buffer_end_user_action (GTK_TEXT_BUFFER (priv->buffer));
+	gtk_source_buffer_end_not_undoable_action (GTK_SOURCE_BUFFER (priv->buffer));
+
+	gtk_text_buffer_set_modified (GTK_TEXT_BUFFER (priv->buffer), FALSE);
+}
+
 /**
  * gtef_file_loader_load_async:
  * @loader: a #GtefFileLoader.
@@ -299,10 +411,12 @@ gtef_file_loader_load_async (GtefFileLoader      *loader,
 		return;
 	}
 
+	g_return_if_fail (priv->location != NULL);
+
 	priv->task = g_task_new (loader, cancellable, callback, user_data);
 	g_task_set_priority (priv->task, io_priority);
 
-	g_task_return_boolean (priv->task, TRUE);
+	start_loading (priv->task);
 }
 
 /**
@@ -331,6 +445,8 @@ gtef_file_loader_load_finish (GtefFileLoader  *loader,
 	priv = gtef_file_loader_get_instance_private (loader);
 
 	g_return_val_if_fail (G_TASK (result) == priv->task, FALSE);
+
+	finish_loading (priv->task);
 
 	ok = g_task_propagate_boolean (priv->task, error);
 

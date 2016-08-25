@@ -68,6 +68,44 @@ empty_buffer (GtefFileLoader *loader)
 }
 
 static void
+remove_trailing_newline_if_needed (GtefFileLoader *loader)
+{
+	GtefFileLoaderPrivate *priv;
+	GtkTextIter start;
+	GtkTextIter end;
+
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	if (priv->buffer == NULL)
+	{
+		return;
+	}
+
+	if (!gtk_source_buffer_get_implicit_trailing_newline (GTK_SOURCE_BUFFER (priv->buffer)))
+	{
+		return;
+	}
+
+	gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER (priv->buffer), &end);
+	start = end;
+
+	gtk_text_iter_set_line_offset (&start, 0);
+
+	if (gtk_text_iter_ends_line (&start) &&
+	    gtk_text_iter_backward_line (&start))
+	{
+		if (!gtk_text_iter_ends_line (&start))
+		{
+			gtk_text_iter_forward_to_line_end (&start);
+		}
+
+		gtk_text_buffer_delete (GTK_TEXT_BUFFER (priv->buffer),
+					&start,
+					&end);
+	}
+}
+
+static void
 gtef_file_loader_get_property (GObject    *object,
 			       guint       prop_id,
 			       GValue     *value,
@@ -317,6 +355,8 @@ load_contents_cb (GObject      *source_object,
 				&start,
 				contents,
 				length);
+
+	remove_trailing_newline_if_needed (loader);
 
 	g_task_return_boolean (task, TRUE);
 

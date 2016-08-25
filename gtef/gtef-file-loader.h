@@ -34,6 +34,21 @@ G_DECLARE_DERIVABLE_TYPE (GtefFileLoader, gtef_file_loader,
 			  GTEF, FILE_LOADER,
 			  GObject)
 
+#define GTEF_FILE_LOADER_ERROR gtef_file_loader_error_quark ()
+
+/**
+ * GtefFileLoaderError:
+ * @GTEF_FILE_LOADER_ERROR_TOO_BIG: The file is too big.
+ *
+ * An error code used with the %GTEF_FILE_LOADER_ERROR domain.
+ *
+ * Since: 1.0
+ */
+typedef enum _GtefFileLoaderError
+{
+	GTEF_FILE_LOADER_ERROR_TOO_BIG
+} GtefFileLoaderError;
+
 struct _GtefFileLoaderClass
 {
 	GObjectClass parent_class;
@@ -41,11 +56,18 @@ struct _GtefFileLoaderClass
 	gpointer padding[12];
 };
 
+GQuark			gtef_file_loader_error_quark				(void);
+
 GtefFileLoader *	gtef_file_loader_new					(GtefBuffer *buffer);
 
 GtefBuffer *		gtef_file_loader_get_buffer				(GtefFileLoader *loader);
 
 GFile *			gtef_file_loader_get_location				(GtefFileLoader *loader);
+
+gint64			gtef_file_loader_get_max_size				(GtefFileLoader *loader);
+
+void			gtef_file_loader_set_max_size				(GtefFileLoader *loader,
+										 gint64          max_size);
 
 void			gtef_file_loader_load_async				(GtefFileLoader      *loader,
 										 gint                 io_priority,

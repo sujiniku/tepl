@@ -67,14 +67,22 @@ GtefFileMetadataClass
 <FILE>file-loader</FILE>
 <TITLE>GtefFileLoader</TITLE>
 GtefFileLoader
+GTEF_FILE_LOADER_ERROR
+GtefFileLoaderError
+<SUBSECTION>
 gtef_file_loader_new
 gtef_file_loader_get_buffer
 gtef_file_loader_get_location
+gtef_file_loader_get_max_size
+gtef_file_loader_set_max_size
 gtef_file_loader_load_async
 gtef_file_loader_load_finish
 <SUBSECTION Standard>
 GTEF_TYPE_FILE_LOADER
+GTEF_TYPE_FILE_LOADER_ERROR
 GtefFileLoaderClass
+gtef_file_loader_error_get_type
+gtef_file_loader_error_quark
 </SECTION>
 
 <SECTION>

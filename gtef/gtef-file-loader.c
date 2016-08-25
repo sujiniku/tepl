@@ -17,7 +17,9 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "gtef-file-loader.h"
+#include <glib/gi18n-lib.h>
 #include "gtef-buffer.h"
 #include "gtef-file.h"
 
@@ -38,7 +40,7 @@ struct _GtefFileLoaderPrivate
 	GtefBuffer *buffer;
 
 	GFile *location;
-
+	gint64 max_size;
 	GTask *task;
 };
 
@@ -47,12 +49,28 @@ enum
 	PROP_0,
 	PROP_BUFFER,
 	PROP_LOCATION,
+	PROP_MAX_SIZE,
 	N_PROPERTIES
 };
+
+#define DEFAULT_MAX_SIZE (50 * 1000 * 1000)
 
 static GParamSpec *properties[N_PROPERTIES];
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefFileLoader, gtef_file_loader, G_TYPE_OBJECT)
+
+GQuark
+gtef_file_loader_error_quark (void)
+{
+	static GQuark quark = 0;
+
+	if (G_UNLIKELY (quark == 0))
+	{
+		quark = g_quark_from_static_string ("gtef-file-loader-error");
+	}
+
+	return quark;
+}
 
 static void
 empty_buffer (GtefFileLoader *loader)
@@ -123,6 +141,10 @@ gtef_file_loader_get_property (GObject    *object,
 			g_value_set_object (value, gtef_file_loader_get_location (loader));
 			break;
 
+		case PROP_MAX_SIZE:
+			g_value_set_int64 (value, gtef_file_loader_get_max_size (loader));
+			break;
+
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 			break;
@@ -135,7 +157,8 @@ gtef_file_loader_set_property (GObject      *object,
 			       const GValue *value,
 			       GParamSpec   *pspec)
 {
-	GtefFileLoaderPrivate *priv = gtef_file_loader_get_instance_private (GTEF_FILE_LOADER (object));
+	GtefFileLoader *loader = GTEF_FILE_LOADER (object);
+	GtefFileLoaderPrivate *priv = gtef_file_loader_get_instance_private (loader);
 
 	switch (prop_id)
 	{
@@ -149,6 +172,10 @@ gtef_file_loader_set_property (GObject      *object,
 		case PROP_LOCATION:
 			g_assert (priv->location == NULL);
 			priv->location = g_value_dup_object (value);
+			break;
+
+		case PROP_MAX_SIZE:
+			gtef_file_loader_set_max_size (loader, g_value_get_int64 (value));
 			break;
 
 		default:
@@ -246,6 +273,28 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 				     G_PARAM_CONSTRUCT_ONLY |
 				     G_PARAM_STATIC_STRINGS);
 
+	/**
+	 * GtefFileLoader:max-size:
+	 *
+	 * The maximum contents size, in bytes. Keep in mind that all the
+	 * contents is loaded in memory, and when loaded into a #GtkTextBuffer
+	 * it takes more memory than just the contents size.
+	 *
+	 * Set to -1 for unlimited size.
+	 *
+	 * Since: 1.0
+	 */
+	properties[PROP_MAX_SIZE] =
+		g_param_spec_int64 ("max-size",
+				    "Max Size",
+				    "",
+				    -1,
+				    G_MAXINT64,
+				    DEFAULT_MAX_SIZE,
+				    G_PARAM_READWRITE |
+				    G_PARAM_CONSTRUCT |
+				    G_PARAM_STATIC_STRINGS);
+
 	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
 }
 
@@ -313,6 +362,51 @@ gtef_file_loader_get_location (GtefFileLoader *loader)
 	return priv->location;
 }
 
+/**
+ * gtef_file_loader_get_max_size:
+ * @loader: a #GtefFileLoader.
+ *
+ * Returns: the maximum contents size, or -1 for unlimited.
+ * Since: 1.0
+ */
+gint64
+gtef_file_loader_get_max_size (GtefFileLoader *loader)
+{
+	GtefFileLoaderPrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), DEFAULT_MAX_SIZE);
+
+	priv = gtef_file_loader_get_instance_private (loader);
+	return priv->max_size;
+}
+
+/**
+ * gtef_file_loader_set_max_size:
+ * @loader: a #GtefFileLoader.
+ * @max_size: the new maximum size, or -1 for unlimited.
+ *
+ * Since: 1.0
+ */
+void
+gtef_file_loader_set_max_size (GtefFileLoader *loader,
+			       gint64          max_size)
+{
+	GtefFileLoaderPrivate *priv;
+
+	g_return_if_fail (GTEF_IS_FILE_LOADER (loader));
+	g_return_if_fail (max_size >= -1);
+
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	g_return_if_fail (priv->task == NULL);
+
+	if (priv->max_size != max_size)
+	{
+		priv->max_size = max_size;
+		g_object_notify_by_pspec (G_OBJECT (loader), properties[PROP_MAX_SIZE]);
+	}
+}
+
 static void
 load_contents_cb (GObject      *source_object,
 		  GAsyncResult *result,
@@ -365,6 +459,92 @@ out:
 }
 
 static void
+load_contents (GTask *task)
+{
+	GtefFileLoader *loader;
+	GtefFileLoaderPrivate *priv;
+
+	loader = g_task_get_source_object (task);
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	g_file_load_contents_async (priv->location,
+				    g_task_get_cancellable (task),
+				    load_contents_cb,
+				    task);
+}
+
+static void
+check_file_size_cb (GObject      *source_object,
+		    GAsyncResult *result,
+		    gpointer      user_data)
+{
+	GFile *location = G_FILE (source_object);
+	GTask *task = G_TASK (user_data);
+	GtefFileLoader *loader;
+	GtefFileLoaderPrivate *priv;
+	GFileInfo *info = NULL;
+	GError *error = NULL;
+
+	loader = g_task_get_source_object (task);
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	info = g_file_query_info_finish (location, result, &error);
+
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		goto out;
+	}
+
+	if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_STANDARD_SIZE))
+	{
+		goffset file_size;
+
+		file_size = g_file_info_get_size (info);
+
+		if (priv->max_size >= 0 &&
+		    file_size > priv->max_size)
+		{
+			gchar *max_size_str;
+
+			max_size_str = g_format_size (priv->max_size);
+
+			g_task_return_new_error (task,
+						 GTEF_FILE_LOADER_ERROR,
+						 GTEF_FILE_LOADER_ERROR_TOO_BIG,
+						 _("The file is too big. Maximum %s can be loaded."),
+						 max_size_str);
+
+			g_free (max_size_str);
+			goto out;
+		}
+	}
+
+	load_contents (task);
+
+out:
+	g_clear_object (&info);
+}
+
+static void
+check_file_size (GTask *task)
+{
+	GtefFileLoader *loader;
+	GtefFileLoaderPrivate *priv;
+
+	loader = g_task_get_source_object (task);
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	g_file_query_info_async (priv->location,
+				 G_FILE_ATTRIBUTE_STANDARD_SIZE,
+				 G_FILE_QUERY_INFO_NONE,
+				 g_task_get_priority (task),
+				 g_task_get_cancellable (task),
+				 check_file_size_cb,
+				 task);
+}
+
+static void
 start_loading (GTask *task)
 {
 	GtefFileLoader *loader;
@@ -384,10 +564,14 @@ start_loading (GTask *task)
 
 	empty_buffer (loader);
 
-	g_file_load_contents_async (priv->location,
-				    g_task_get_cancellable (task),
-				    load_contents_cb,
-				    task);
+	if (priv->max_size >= 0)
+	{
+		check_file_size (task);
+	}
+	else
+	{
+		load_contents (task);
+	}
 }
 
 static void

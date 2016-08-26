@@ -22,6 +22,7 @@
 
 #define DEFAULT_CONTENTS "My shiny content!"
 #define MAX_SIZE 10000
+#define CHUNK_SIZE 1024
 
 typedef struct _TestData TestData;
 struct _TestData
@@ -161,6 +162,7 @@ test_loader (const gchar *contents,
 
 	loader = gtef_file_loader_new (buffer);
 	gtef_file_loader_set_max_size (loader, max_size);
+	gtef_file_loader_set_chunk_size (loader, CHUNK_SIZE);
 
 	gtef_file_loader_load_async (loader,
 				     G_PRIORITY_DEFAULT,

@@ -30,6 +30,7 @@
  */
 
 typedef struct _GtefFileLoaderPrivate GtefFileLoaderPrivate;
+typedef struct _TaskData TaskData;
 
 struct _GtefFileLoaderPrivate
 {
@@ -41,7 +42,16 @@ struct _GtefFileLoaderPrivate
 
 	GFile *location;
 	gint64 max_size;
+	gint64 chunk_size;
 	GTask *task;
+};
+
+struct _TaskData
+{
+	GInputStream *input_stream;
+
+	/* List of GBytes*. */
+	GQueue *contents;
 };
 
 enum
@@ -50,14 +60,18 @@ enum
 	PROP_BUFFER,
 	PROP_LOCATION,
 	PROP_MAX_SIZE,
+	PROP_CHUNK_SIZE,
 	N_PROPERTIES
 };
 
 #define DEFAULT_MAX_SIZE (50 * 1000 * 1000)
+#define DEFAULT_CHUNK_SIZE (32 * 1024)
 
 static GParamSpec *properties[N_PROPERTIES];
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefFileLoader, gtef_file_loader, G_TYPE_OBJECT)
+
+static void	read_next_chunk		(GTask *task);
 
 GQuark
 gtef_file_loader_error_quark (void)
@@ -70,6 +84,37 @@ gtef_file_loader_error_quark (void)
 	}
 
 	return quark;
+}
+
+static TaskData *
+task_data_new (void)
+{
+	TaskData *task_data;
+
+	task_data = g_new0 (TaskData, 1);
+	task_data->contents = g_queue_new ();
+
+	return task_data;
+}
+
+static void
+task_data_free (gpointer data)
+{
+	TaskData *task_data = data;
+
+	if (task_data == NULL)
+	{
+		return;
+	}
+
+	g_clear_object (&task_data->input_stream);
+
+	if (task_data->contents != NULL)
+	{
+		g_queue_free_full (task_data->contents, (GDestroyNotify)g_bytes_unref);
+	}
+
+	g_free (task_data);
 }
 
 static void
@@ -145,6 +190,10 @@ gtef_file_loader_get_property (GObject    *object,
 			g_value_set_int64 (value, gtef_file_loader_get_max_size (loader));
 			break;
 
+		case PROP_CHUNK_SIZE:
+			g_value_set_int64 (value, gtef_file_loader_get_chunk_size (loader));
+			break;
+
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 			break;
@@ -176,6 +225,10 @@ gtef_file_loader_set_property (GObject      *object,
 
 		case PROP_MAX_SIZE:
 			gtef_file_loader_set_max_size (loader, g_value_get_int64 (value));
+			break;
+
+		case PROP_CHUNK_SIZE:
+			gtef_file_loader_set_chunk_size (loader, g_value_get_int64 (value));
 			break;
 
 		default:
@@ -295,6 +348,29 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 				    G_PARAM_CONSTRUCT |
 				    G_PARAM_STATIC_STRINGS);
 
+	/**
+	 * GtefFileLoader:chunk-size:
+	 *
+	 * The chunk size, in bytes. The contents is loaded chunk by chunk. It
+	 * permits to avoid allocating a too big contiguous memory area, as well
+	 * as reporting progress information after each chunk read.
+	 *
+	 * A small chunk size is better when loading a remote file with a slow
+	 * connection. For local files, the chunk size can be larger.
+	 *
+	 * Since: 1.0
+	 */
+	properties[PROP_CHUNK_SIZE] =
+		g_param_spec_int64 ("chunk-size",
+				    "Chunk Size",
+				    "",
+				    1,
+				    G_MAXINT64,
+				    DEFAULT_CHUNK_SIZE,
+				    G_PARAM_READWRITE |
+				    G_PARAM_CONSTRUCT |
+				    G_PARAM_STATIC_STRINGS);
+
 	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
 }
 
@@ -407,59 +483,189 @@ gtef_file_loader_set_max_size (GtefFileLoader *loader,
 	}
 }
 
-static void
-load_contents_cb (GObject      *source_object,
-		  GAsyncResult *result,
-		  gpointer      user_data)
+/**
+ * gtef_file_loader_get_chunk_size:
+ * @loader: a #GtefFileLoader.
+ *
+ * Returns: the chunk size.
+ * Since: 1.0
+ */
+gint64
+gtef_file_loader_get_chunk_size (GtefFileLoader *loader)
 {
-	GFile *location = G_FILE (source_object);
-	GTask *task = G_TASK (user_data);
+	GtefFileLoaderPrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), DEFAULT_CHUNK_SIZE);
+
+	priv = gtef_file_loader_get_instance_private (loader);
+	return priv->chunk_size;
+}
+
+/**
+ * gtef_file_loader_set_chunk_size:
+ * @loader: a #GtefFileLoader.
+ * @chunk_size: the new chunk size.
+ *
+ * Since: 1.0
+ */
+void
+gtef_file_loader_set_chunk_size (GtefFileLoader *loader,
+				 gint64          chunk_size)
+{
+	GtefFileLoaderPrivate *priv;
+
+	g_return_if_fail (GTEF_IS_FILE_LOADER (loader));
+	g_return_if_fail (chunk_size >= 1);
+
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	if (priv->chunk_size != chunk_size)
+	{
+		priv->chunk_size = chunk_size;
+		g_object_notify_by_pspec (G_OBJECT (loader), properties[PROP_CHUNK_SIZE]);
+	}
+}
+
+static void
+insert_contents (GTask *task)
+{
 	GtefFileLoader *loader;
 	GtefFileLoaderPrivate *priv;
-	gchar *contents = NULL;
-	gsize length;
-	GtkTextIter start;
-	GError *error = NULL;
+	TaskData *task_data;
+	GtkTextIter iter;
+	gboolean first_chunk;
 
 	loader = g_task_get_source_object (task);
 	priv = gtef_file_loader_get_instance_private (loader);
 
-	g_file_load_contents_finish (location,
-				     result,
-				     &contents,
-				     &length,
-				     NULL,
-				     &error);
-
-	if (error != NULL)
-	{
-		g_task_return_error (task, error);
-		goto out;
-	}
+	task_data = g_task_get_task_data (task);
 
 	if (priv->buffer == NULL)
 	{
 		g_task_return_boolean (task, FALSE);
-		goto out;
+		return;
 	}
 
-	gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (priv->buffer), &start);
+	gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (priv->buffer), &iter);
 
-	gtk_text_buffer_insert (GTK_TEXT_BUFFER (priv->buffer),
-				&start,
-				contents,
-				length);
+	first_chunk = TRUE;
+	while (!g_queue_is_empty (task_data->contents))
+	{
+		GBytes *chunk;
+
+		chunk = g_queue_pop_head (task_data->contents);
+
+		g_assert (chunk != NULL);
+		g_assert (g_bytes_get_size (chunk) > 0);
+
+		gtk_text_buffer_insert (GTK_TEXT_BUFFER (priv->buffer),
+					&iter,
+					g_bytes_get_data (chunk, NULL),
+					g_bytes_get_size (chunk));
+
+		if (first_chunk)
+		{
+			GtkTextIter start;
+
+			/* Keep cursor at the start, to avoid signal emissions
+			 * for each chunk.
+			 */
+			gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (priv->buffer), &start);
+			gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (priv->buffer), &start);
+
+			first_chunk = FALSE;
+		}
+
+		g_bytes_unref (chunk);
+	}
 
 	remove_trailing_newline_if_needed (loader);
 
 	g_task_return_boolean (task, TRUE);
-
-out:
-	g_free (contents);
 }
 
 static void
-load_contents (GTask *task)
+read_next_chunk_cb (GObject      *source_object,
+		    GAsyncResult *result,
+		    gpointer      user_data)
+{
+	GInputStream *input_stream = G_INPUT_STREAM (source_object);
+	GTask *task = G_TASK (user_data);
+	TaskData *task_data;
+	GBytes *chunk;
+	GError *error = NULL;
+
+	task_data = g_task_get_task_data (task);
+
+	chunk = g_input_stream_read_bytes_finish (input_stream, result, &error);
+
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		g_clear_pointer (&chunk, (GDestroyNotify)g_bytes_unref);
+		return;
+	}
+
+	if (g_bytes_get_size (chunk) > 0)
+	{
+		g_queue_push_tail (task_data->contents, chunk);
+		read_next_chunk (task);
+	}
+	else
+	{
+		/* Finished reading */
+		g_bytes_unref (chunk);
+		insert_contents (task);
+	}
+}
+
+static void
+read_next_chunk (GTask *task)
+{
+	GtefFileLoader *loader;
+	GtefFileLoaderPrivate *priv;
+	TaskData *task_data;
+
+	loader = g_task_get_source_object (task);
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	task_data = g_task_get_task_data (task);
+
+	g_input_stream_read_bytes_async (task_data->input_stream,
+					 MAX (1, priv->chunk_size),
+					 g_task_get_priority (task),
+					 g_task_get_cancellable (task),
+					 read_next_chunk_cb,
+					 task);
+}
+
+static void
+open_file_cb (GObject      *source_object,
+	      GAsyncResult *result,
+	      gpointer      user_data)
+{
+	GFile *location = G_FILE (source_object);
+	GTask *task = G_TASK (user_data);
+	TaskData *task_data;
+	GError *error = NULL;
+
+	task_data = g_task_get_task_data (task);
+
+	g_clear_object (&task_data->input_stream);
+	task_data->input_stream = G_INPUT_STREAM (g_file_read_finish (location, result, &error));
+
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		return;
+	}
+
+	/* Start reading */
+	read_next_chunk (task);
+}
+
+static void
+open_file (GTask *task)
 {
 	GtefFileLoader *loader;
 	GtefFileLoaderPrivate *priv;
@@ -467,10 +673,11 @@ load_contents (GTask *task)
 	loader = g_task_get_source_object (task);
 	priv = gtef_file_loader_get_instance_private (loader);
 
-	g_file_load_contents_async (priv->location,
-				    g_task_get_cancellable (task),
-				    load_contents_cb,
-				    task);
+	g_file_read_async (priv->location,
+			   g_task_get_priority (task),
+			   g_task_get_cancellable (task),
+			   open_file_cb,
+			   task);
 }
 
 static void
@@ -520,7 +727,7 @@ check_file_size_cb (GObject      *source_object,
 		}
 	}
 
-	load_contents (task);
+	open_file (task);
 
 out:
 	g_clear_object (&info);
@@ -570,7 +777,7 @@ start_loading (GTask *task)
 	}
 	else
 	{
-		load_contents (task);
+		open_file (task);
 	}
 }
 
@@ -622,6 +829,7 @@ gtef_file_loader_load_async (GtefFileLoader      *loader,
 			     gpointer             user_data)
 {
 	GtefFileLoaderPrivate *priv;
+	TaskData *task_data;
 
 	g_return_if_fail (GTEF_IS_FILE_LOADER (loader));
 	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
@@ -639,6 +847,9 @@ gtef_file_loader_load_async (GtefFileLoader      *loader,
 
 	priv->task = g_task_new (loader, cancellable, callback, user_data);
 	g_task_set_priority (priv->task, io_priority);
+
+	task_data = task_data_new ();
+	g_task_set_task_data (priv->task, task_data, task_data_free);
 
 	start_loading (priv->task);
 }

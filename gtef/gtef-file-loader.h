@@ -69,6 +69,11 @@ gint64			gtef_file_loader_get_max_size				(GtefFileLoader *loader);
 void			gtef_file_loader_set_max_size				(GtefFileLoader *loader,
 										 gint64          max_size);
 
+gint64			gtef_file_loader_get_chunk_size				(GtefFileLoader *loader);
+
+void			gtef_file_loader_set_chunk_size				(GtefFileLoader *loader,
+										 gint64          chunk_size);
+
 void			gtef_file_loader_load_async				(GtefFileLoader      *loader,
 										 gint                 io_priority,
 										 GCancellable        *cancellable,

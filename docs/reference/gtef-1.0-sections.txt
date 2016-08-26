@@ -75,6 +75,8 @@ gtef_file_loader_get_buffer
 gtef_file_loader_get_location
 gtef_file_loader_get_max_size
 gtef_file_loader_set_max_size
+gtef_file_loader_get_chunk_size
+gtef_file_loader_set_chunk_size
 gtef_file_loader_load_async
 gtef_file_loader_load_finish
 <SUBSECTION Standard>

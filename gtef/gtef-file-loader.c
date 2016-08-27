@@ -19,6 +19,7 @@
 
 #include "config.h"
 #include "gtef-file-loader.h"
+#include <uchardet.h>
 #include <glib/gi18n-lib.h>
 #include "gtef-buffer.h"
 #include "gtef-file.h"
@@ -52,6 +53,8 @@ struct _TaskData
 
 	/* List of GBytes*. */
 	GQueue *contents;
+
+	gchar *charset;
 };
 
 enum
@@ -107,12 +110,13 @@ task_data_free (gpointer data)
 		return;
 	}
 
-	g_clear_object (&task_data->input_stream);
-
 	if (task_data->contents != NULL)
 	{
 		g_queue_free_full (task_data->contents, (GDestroyNotify)g_bytes_unref);
 	}
+
+	g_clear_object (&task_data->input_stream);
+	g_free (task_data->charset);
 
 	g_free (task_data);
 }
@@ -585,6 +589,55 @@ insert_contents (GTask *task)
 }
 
 static void
+determine_encoding (GTask *task)
+{
+	TaskData *task_data;
+	uchardet_t ud;
+	const gchar *charset;
+	GList *l;
+
+	task_data = g_task_get_task_data (task);
+
+	ud = uchardet_new ();
+
+	for (l = task_data->contents->head; l != NULL; l = l->next)
+	{
+		GBytes *chunk = l->data;
+
+		g_assert (chunk != NULL);
+		g_assert (g_bytes_get_size (chunk) > 0);
+
+		uchardet_handle_data (ud,
+				      g_bytes_get_data (chunk, NULL),
+				      g_bytes_get_size (chunk));
+	}
+
+	uchardet_data_end (ud);
+
+	charset = uchardet_get_charset (ud);
+	if (charset != NULL && charset[0] != '\0')
+	{
+		g_free (task_data->charset);
+		task_data->charset = g_strdup (charset);
+	}
+
+	uchardet_delete (ud);
+
+	if (task_data->charset == NULL)
+	{
+		g_task_return_new_error (task,
+					 GTEF_FILE_LOADER_ERROR,
+					 GTEF_FILE_LOADER_ERROR_ENCODING_AUTO_DETECTION_FAILED,
+					 _("It is not possible to detect the character encoding automatically."));
+		return;
+	}
+
+	/* TODO convert contents */
+
+	insert_contents (task);
+}
+
+static void
 read_next_chunk_cb (GObject      *source_object,
 		    GAsyncResult *result,
 		    gpointer      user_data)
@@ -615,7 +668,7 @@ read_next_chunk_cb (GObject      *source_object,
 	{
 		/* Finished reading */
 		g_bytes_unref (chunk);
-		insert_contents (task);
+		determine_encoding (task);
 	}
 }
 

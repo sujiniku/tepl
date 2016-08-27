@@ -39,6 +39,8 @@ G_DECLARE_DERIVABLE_TYPE (GtefFileLoader, gtef_file_loader,
 /**
  * GtefFileLoaderError:
  * @GTEF_FILE_LOADER_ERROR_TOO_BIG: The file is too big.
+ * @GTEF_FILE_LOADER_ERROR_ENCODING_AUTO_DETECTION_FAILED: It is not possible to
+ *   detect the encoding automatically.
  *
  * An error code used with the %GTEF_FILE_LOADER_ERROR domain.
  *
@@ -46,7 +48,8 @@ G_DECLARE_DERIVABLE_TYPE (GtefFileLoader, gtef_file_loader,
  */
 typedef enum _GtefFileLoaderError
 {
-	GTEF_FILE_LOADER_ERROR_TOO_BIG
+	GTEF_FILE_LOADER_ERROR_TOO_BIG,
+	GTEF_FILE_LOADER_ERROR_ENCODING_AUTO_DETECTION_FAILED
 } GtefFileLoaderError;
 
 struct _GtefFileLoaderClass

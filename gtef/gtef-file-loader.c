@@ -23,6 +23,7 @@
 #include <glib/gi18n-lib.h>
 #include "gtef-buffer.h"
 #include "gtef-file.h"
+#include "gtef-encoding-converter.h"
 
 /**
  * SECTION:file-loader
@@ -531,13 +532,35 @@ gtef_file_loader_set_chunk_size (GtefFileLoader *loader,
 }
 
 static void
-insert_contents (GTask *task)
+contents_converted_cb (const gchar *str,
+		       gsize        length,
+		       gpointer     user_data)
+{
+	GTask *task = G_TASK (user_data);
+	GtefFileLoader *loader;
+	GtefFileLoaderPrivate *priv;
+	GtkTextIter end;
+	GtkTextIter start;
+
+	loader = g_task_get_source_object (task);
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER (priv->buffer), &end);
+	gtk_text_buffer_insert (GTK_TEXT_BUFFER (priv->buffer), &end, str, length);
+
+	/* Keep cursor at the start, to avoid signal emissions for each chunk. */
+	gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (priv->buffer), &start);
+	gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (priv->buffer), &start);
+}
+
+static void
+convert_and_insert_contents (GTask *task)
 {
 	GtefFileLoader *loader;
 	GtefFileLoaderPrivate *priv;
 	TaskData *task_data;
-	GtkTextIter iter;
-	gboolean first_chunk;
+	GtefEncodingConverter *converter = NULL;
+	GError *error = NULL;
 
 	loader = g_task_get_source_object (task);
 	priv = gtef_file_loader_get_instance_private (loader);
@@ -550,9 +573,23 @@ insert_contents (GTask *task)
 		return;
 	}
 
-	gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (priv->buffer), &iter);
+	converter = _gtef_encoding_converter_new ();
 
-	first_chunk = TRUE;
+	_gtef_encoding_converter_set_callback (converter,
+					       contents_converted_cb,
+					       task);
+
+	g_assert (task_data->charset != NULL);
+	_gtef_encoding_converter_open (converter,
+				       "UTF-8",
+				       task_data->charset,
+				       &error);
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		goto out;
+	}
+
 	while (!g_queue_is_empty (task_data->contents))
 	{
 		GBytes *chunk;
@@ -562,30 +599,28 @@ insert_contents (GTask *task)
 		g_assert (chunk != NULL);
 		g_assert (g_bytes_get_size (chunk) > 0);
 
-		gtk_text_buffer_insert (GTK_TEXT_BUFFER (priv->buffer),
-					&iter,
-					g_bytes_get_data (chunk, NULL),
-					g_bytes_get_size (chunk));
-
-		if (first_chunk)
-		{
-			GtkTextIter start;
-
-			/* Keep cursor at the start, to avoid signal emissions
-			 * for each chunk.
-			 */
-			gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (priv->buffer), &start);
-			gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (priv->buffer), &start);
-
-			first_chunk = FALSE;
-		}
+		_gtef_encoding_converter_feed (converter,
+					       g_bytes_get_data (chunk, NULL),
+					       g_bytes_get_size (chunk),
+					       &error);
 
 		g_bytes_unref (chunk);
+
+		if (error != NULL)
+		{
+			g_task_return_error (task, error);
+			goto out;
+		}
 	}
+
+	_gtef_encoding_converter_close (converter);
 
 	remove_trailing_newline_if_needed (loader);
 
 	g_task_return_boolean (task, TRUE);
+
+out:
+	g_clear_object (&converter);
 }
 
 static void
@@ -632,9 +667,7 @@ determine_encoding (GTask *task)
 		return;
 	}
 
-	/* TODO convert contents */
-
-	insert_contents (task);
+	convert_and_insert_contents (task);
 }
 
 static void

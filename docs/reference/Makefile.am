@@ -26,6 +26,7 @@ CFILE_GLOB = $(top_srcdir)/gtef/*.c
 IGNORE_HFILES =				\
 	gtef.h				\
 	gtef-buffer-input-stream.h	\
+	gtef-encoding-converter.h	\
 	gtef-io-error-info-bar.h	\
 	gtef-progress-info-bar.h	\
 	gtef-utils.h

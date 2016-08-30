@@ -30,6 +30,7 @@
 #include <gtef/gtef-file-loader.h>
 #include <gtef/gtef-file-metadata.h>
 #include <gtef/gtef-file-saver.h>
+#include <gtef/gtef-gutter-renderer-folds.h>
 #include <gtef/gtef-info-bar.h>
 #include <gtef/gtef-metadata-manager.h>
 #include <gtef/gtef-tab.h>

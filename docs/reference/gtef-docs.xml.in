@@ -19,6 +19,7 @@
     <xi:include href="xml/file-metadata.xml"/>
     <xi:include href="xml/file-loader.xml"/>
     <xi:include href="xml/file-saver.xml"/>
+    <xi:include href="xml/gutter-renderer-folds.xml"/>
     <xi:include href="xml/info-bar.xml"/>
     <xi:include href="xml/metadata-manager.xml"/>
     <xi:include href="xml/tab.xml"/>

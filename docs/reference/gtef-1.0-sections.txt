@@ -128,6 +128,20 @@ gtef_file_saver_flags_get_type
 </SECTION>
 
 <SECTION>
+<FILE>gutter-renderer-folds</FILE>
+<TITLE>GtefGutterRendererFolds</TITLE>
+GtefGutterRendererFolds
+GtefGutterRendererFoldsState
+gtef_gutter_renderer_folds_new
+gtef_gutter_renderer_folds_set_state
+<SUBSECTION Standard>
+GTEF_TYPE_GUTTER_RENDERER_FOLDS
+GtefGutterRendererFoldsClass
+GTEF_TYPE_GUTTER_RENDERER_FOLDS_STATE
+gtef_gutter_renderer_folds_state_get_type
+</SECTION>
+
+<SECTION>
 <FILE>info-bar</FILE>
 <TITLE>GtefInfoBar</TITLE>
 GtefInfoBar

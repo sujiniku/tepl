@@ -131,8 +131,5 @@ gtef_gutter_renderer_folds_sub_init (GtefGutterRendererFoldsSub *self)
 GtkSourceGutterRenderer *
 gtef_gutter_renderer_folds_sub_new (void)
 {
-	return g_object_new (GTEF_TYPE_GUTTER_RENDERER_FOLDS_SUB,
-			     "size", 9,
-			     "xpad", 2,
-			     NULL);
+	return g_object_new (GTEF_TYPE_GUTTER_RENDERER_FOLDS_SUB, NULL);
 }

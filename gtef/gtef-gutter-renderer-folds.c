@@ -251,9 +251,23 @@ gtef_gutter_renderer_folds_draw (GtkSourceGutterRenderer      *renderer,
 }
 
 static void
+gtef_gutter_renderer_folds_constructed (GObject *object)
+{
+	GtkSourceGutterRenderer *renderer = GTK_SOURCE_GUTTER_RENDERER (object);
+
+	G_OBJECT_CLASS (gtef_gutter_renderer_folds_parent_class)->constructed (object);
+
+	gtk_source_gutter_renderer_set_size (renderer, SQUARE_SIZE);
+	gtk_source_gutter_renderer_set_padding (renderer, 2, -1);
+}
+
+static void
 gtef_gutter_renderer_folds_class_init (GtefGutterRendererFoldsClass *klass)
 {
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GtkSourceGutterRendererClass *renderer_class = GTK_SOURCE_GUTTER_RENDERER_CLASS (klass);
+
+	object_class->constructed = gtef_gutter_renderer_folds_constructed;
 
 	renderer_class->draw = gtef_gutter_renderer_folds_draw;
 }
@@ -272,10 +286,7 @@ gtef_gutter_renderer_folds_init (GtefGutterRendererFolds *self)
 GtkSourceGutterRenderer *
 gtef_gutter_renderer_folds_new (void)
 {
-	return g_object_new (GTEF_TYPE_GUTTER_RENDERER_FOLDS,
-			     "size", SQUARE_SIZE,
-			     "xpad", 2,
-			     NULL);
+	return g_object_new (GTEF_TYPE_GUTTER_RENDERER_FOLDS, NULL);
 }
 
 /**

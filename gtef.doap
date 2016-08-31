@@ -8,7 +8,7 @@
   <shortdesc xml:lang="en">GNOME Text Editor Framework</shortdesc>
   <description>Gtef is a library that eases the development of
 GtkSourceView-based text editors and IDEs. Gtef is an acronym for “GNOME Text
-Editor Framework”. The Gtef code comes from gedit.</description>
+Editor Framework”. Some of the Gtef code comes from gedit.</description>
 
   <homepage rdf:resource="https://wiki.gnome.org/Projects/Gtef" />
   <download-page rdf:resource="https://download.gnome.org/sources/Gtef/" />

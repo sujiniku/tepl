@@ -14,6 +14,7 @@ TEST_PROGS =
 TEST_PROGS += test-gutter-renderer-folds
 test_gutter_renderer_folds_SOURCES =		\
 	gtef-gutter-renderer-folds-sub.c	\
+	gtef-gutter-renderer-folds-sub.h	\
 	test-gutter-renderer-folds.c
 
 TEST_PROGS += test-tab

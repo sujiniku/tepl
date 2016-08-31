@@ -17,16 +17,58 @@ Maybe some of the Gtef features will be moved to GtkSourceView when it's
 considered more stable. So Gtef can also be seen as an incubator for some
 GtkSourceView features.
 
-WARNING: the API/ABI is not considered stable at this point. When the 1.0
-version will be released, then Gtef can safely be used. The 1.0 version will
-hopefully be released at the same time as GNOME 3.22. After that, each time an
-API break is needed in Gtef, the major version will be bumped so that the new
-version is parallel-installable with the previous major versions. And that,
-every 6 months if needed, to improve the API incrementally. The only supported
-version is the latest one, don't expect bug or security fixes to the old major
-versions.
+The Gtef library is free software and is released under the terms of the
+GNU Lesser General Public License.
 
-Unusual dependencies
---------------------
+Warning - API/ABI stability
+---------------------------
 
-- uchardet: https://www.freedesktop.org/wiki/Software/uchardet/
+The API/ABI is not considered stable at this point. When the 1.0 version will
+be released, then Gtef can safely be used. The 1.0 version will hopefully be
+released at the same time as GNOME 3.22. After that, each time an API break is
+needed in Gtef, the major version will be bumped so that the new version is
+parallel-installable with the previous major versions. And that, every 6 months
+if needed, to improve the API incrementally. The only supported version is the
+latest one, don't expect bug or security fixes to the old major versions.
+
+Dependencies
+------------
+
+- GLib >= 2.44
+- GTK+ >= 3.20
+- GtkSourceView >= 3.21.2
+- libxml2 >= 2.5
+- uchardet
+
+Since uchardet is a fairly new library, here is the URL:
+https://www.freedesktop.org/wiki/Software/uchardet/
+
+Installation
+------------
+
+Simple install procedure:
+
+  $ ./configure
+  $ make
+  [ Become root if necessary ]
+  $ make install
+
+See the file 'INSTALL' for more detailed information.
+
+From the Git repository, the 'configure' script and the 'INSTALL' file are not
+yet generated, so you need to run 'autogen.sh' instead, which takes the same
+arguments as 'configure'.
+
+To build the latest version of Gtef plus its dependencies from Git, Jhbuild can
+be used:
+
+    https://wiki.gnome.org/Projects/Jhbuild
+
+But Gtef doesn't have yet a jhbuild module in one of the modulesets shipped by
+jhbuild. So you need to run autogen.sh manually, inside a jhbuild shell, for
+example (adjust the prefix):
+
+  $ jhbuild shell
+  $ ./autogen.sh --prefix=/path/jhbuild/prefix --disable-Werror --enable-gtk-doc --enable-vala --enable-code-coverage
+  $ make
+  $ make install

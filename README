@@ -20,6 +20,12 @@ GtkSourceView features.
 The Gtef library is free software and is released under the terms of the
 GNU Lesser General Public License.
 
+Roadmap
+-------
+
+A roadmap is available alongside the GtkSourceView roadmap:
+https://wiki.gnome.org/Projects/GtkSourceView/RoadMap
+
 Warning - API/ABI stability
 ---------------------------
 

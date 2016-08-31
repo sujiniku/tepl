@@ -1,7 +1,7 @@
 /*
  * This file is part of Gtef, a text editor library.
  *
- * Copyright 2013 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2013, 2016 - Sébastien Wilmet <swilmet@gnome.org>
  * Copyright 2016 - David Rabel <david.rabel@noresoft.com>
  *
  * Gtef is free software; you can redistribute it and/or modify it under
@@ -29,13 +29,11 @@
  * handles only the drawing, and has a flat view of the folding tree.
  */
 
-#define LINE_WIDTH	1.0
-
-/* The square size for drawing the box around the minus and plus signs. If the
- * line width is 1, the square size must be an odd number, to be able to draw
- * the sign in the middle of the square.
+/* The square size for drawing the box around the minus and plus signs. To be
+ * able to draw the sign in the middle of the square, the square size must be an
+ * odd number, since the line width is 1.0.
  */
-#define SQUARE_SIZE	9
+#define SQUARE_SIZE 9
 
 typedef struct _GtefGutterRendererFoldsPrivate GtefGutterRendererFoldsPrivate;
 
@@ -205,7 +203,7 @@ gtef_gutter_renderer_folds_draw (GtkSourceGutterRenderer      *renderer,
 
 	cairo_save (cr);
 	cairo_set_line_cap (cr, CAIRO_LINE_CAP_SQUARE);
-	cairo_set_line_width (cr, LINE_WIDTH);
+	cairo_set_line_width (cr, 1.0);
 
 	folding_state = priv->folding_state;
 

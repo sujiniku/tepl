@@ -1,8 +1,8 @@
 /*
  * This file is part of Gtef, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>,
- *                  David Rabel <david.rabel@noresoft.com>
+ * Copyright 2013, 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016 - David Rabel <david.rabel@noresoft.com>
  *
  * Gtef is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -30,17 +30,15 @@
 
 G_BEGIN_DECLS
 
-#define GTEF_TYPE_GUTTER_RENDERER_FOLDS	(gtef_gutter_renderer_folds_get_type ())
-G_DECLARE_DERIVABLE_TYPE		(GtefGutterRendererFolds,
-					 gtef_gutter_renderer_folds,
-					 GTEF, GUTTER_RENDERER_FOLDS,
-					 GtkSourceGutterRenderer)
+#define GTEF_TYPE_GUTTER_RENDERER_FOLDS (gtef_gutter_renderer_folds_get_type ())
+G_DECLARE_DERIVABLE_TYPE (GtefGutterRendererFolds, gtef_gutter_renderer_folds,
+			  GTEF, GUTTER_RENDERER_FOLDS,
+			  GtkSourceGutterRenderer)
 
 struct _GtefGutterRendererFoldsClass
 {
 	GtkSourceGutterRendererClass parent_class;
-	/* Padding to allow adding up to 12 new virtual functions without
-	* breaking ABI. */
+
 	gpointer padding[12];
 };
 
@@ -66,11 +64,11 @@ typedef enum
 	FOLDING_END		= 1 << 3
 } GtefGutterRendererFoldsState;
 
-GtkSourceGutterRenderer	*gtef_gutter_renderer_folds_new	      (void);
+GtkSourceGutterRenderer *
+		gtef_gutter_renderer_folds_new			(void);
 
-G_GNUC_INTERNAL
-void			 gtef_gutter_renderer_folds_set_state (GtefGutterRendererFolds      *self,
-							       GtefGutterRendererFoldsState  state);
+void		gtef_gutter_renderer_folds_set_state		(GtefGutterRendererFolds      *self,
+								 GtefGutterRendererFoldsState  state);
 
 G_END_DECLS
 

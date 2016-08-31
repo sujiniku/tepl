@@ -1,8 +1,8 @@
 /*
  * This file is part of Gtef, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>,
- *                  David Rabel <david.rabel@noresoft.com>
+ * Copyright 2013 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016 - David Rabel <david.rabel@noresoft.com>
  *
  * Gtef is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -34,7 +34,7 @@
  */
 #define SQUARE_SIZE	9
 
-typedef struct _GtefGutterRendererFoldsPrivate  GtefGutterRendererFoldsPrivate;
+typedef struct _GtefGutterRendererFoldsPrivate GtefGutterRendererFoldsPrivate;
 
 struct _GtefGutterRendererFoldsPrivate
 {

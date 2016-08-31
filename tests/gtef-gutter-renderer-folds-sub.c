@@ -102,10 +102,10 @@ draw (GtkSourceGutterRenderer      *renderer,
 	{
 		folding_state = FOLDING_NONE;
 	}
-	
+
 	gtef_gutter_renderer_folds_set_state (GTEF_GUTTER_RENDERER_FOLDS (renderer), folding_state);
 
-	
+
 	if (GTK_SOURCE_GUTTER_RENDERER_CLASS (gtef_gutter_renderer_folds_sub_parent_class)->draw != NULL)
 	{
 		GTK_SOURCE_GUTTER_RENDERER_CLASS (gtef_gutter_renderer_folds_sub_parent_class)->draw (renderer,

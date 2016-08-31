@@ -128,14 +128,20 @@ draw_end (cairo_t      *cr,
  * by a square. It can also contain a vertical bar, or a small horizontal bar to
  * mark a fold end, etc. The top_area and bottom_area can just contain a
  * vertical bar.
+ *
+ * Returns: %TRUE on success, %FALSE if the @cell_area is too small.
  */
-static void
+static gboolean
 split_cell_area (const GdkRectangle *cell_area,
 		 GdkRectangle       *top_area,
 		 GdkRectangle       *middle_area,
 		 GdkRectangle       *bottom_area)
 {
-	g_assert (SQUARE_SIZE <= cell_area->height);
+	if (cell_area->height < SQUARE_SIZE ||
+	    cell_area->width < SQUARE_SIZE)
+	{
+		return FALSE;
+	}
 
 	top_area->x = cell_area->x;
 	top_area->y = cell_area->y;
@@ -151,6 +157,8 @@ split_cell_area (const GdkRectangle *cell_area,
 	bottom_area->y = middle_area->y + middle_area->height;
 	bottom_area->width = cell_area->width;
 	bottom_area->height = cell_area->height - top_area->height - middle_area->height;
+
+	return TRUE;
 }
 
 static void
@@ -169,6 +177,9 @@ gtef_gutter_renderer_folds_draw (GtkSourceGutterRenderer      *renderer,
 	GdkRectangle middle_area;
 	GdkRectangle bottom_area;
 
+	self = GTEF_GUTTER_RENDERER_FOLDS (renderer);
+	priv = gtef_gutter_renderer_folds_get_instance_private (self);
+
 	/* Chain up to draw background */
 	if (GTK_SOURCE_GUTTER_RENDERER_CLASS (gtef_gutter_renderer_folds_parent_class)->draw != NULL)
 	{
@@ -181,29 +192,19 @@ gtef_gutter_renderer_folds_draw (GtkSourceGutterRenderer      *renderer,
 												  state);
 	}
 
-	/*
-	 * split_cell_area() expects SQUARE_SIZE <= cell_area->height,
-	 * so that the cell_area is big enough to contain the square.
-	 */
-	if (SQUARE_SIZE > cell_area->height)
+	if (!split_cell_area (cell_area,
+			      &top_area,
+			      &middle_area,
+			      &bottom_area))
 	{
 		return;
 	}
 
-	self = GTEF_GUTTER_RENDERER_FOLDS (renderer);
-	priv = gtef_gutter_renderer_folds_get_instance_private (self);
-
-	folding_state = priv->folding_state;
-
-	split_cell_area (cell_area,
-			 &top_area,
-			 &middle_area,
-			 &bottom_area);
-
 	cairo_save (cr);
-
 	cairo_set_line_cap (cr, CAIRO_LINE_CAP_SQUARE);
 	cairo_set_line_width (cr, LINE_WIDTH);
+
+	folding_state = priv->folding_state;
 
 	/* Top area */
 
@@ -245,7 +246,6 @@ gtef_gutter_renderer_folds_draw (GtkSourceGutterRenderer      *renderer,
 	}
 
 	cairo_stroke (cr);
-
 	cairo_restore (cr);
 }
 
@@ -266,7 +266,6 @@ gtef_gutter_renderer_folds_init (GtefGutterRendererFolds *self)
  * gtef_gutter_renderer_folds_new:
  *
  * Returns: a new #GtefGutterRendererFolds.
- *
  * Since: 1.0
  */
 GtkSourceGutterRenderer *
@@ -298,6 +297,5 @@ gtef_gutter_renderer_folds_set_state (GtefGutterRendererFolds 	   *self,
 	g_return_if_fail (GTEF_IS_GUTTER_RENDERER_FOLDS (self));
 
 	priv = gtef_gutter_renderer_folds_get_instance_private (self);
-
 	priv->folding_state = state;
 }

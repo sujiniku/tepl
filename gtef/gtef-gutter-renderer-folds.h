@@ -53,9 +53,10 @@ struct _GtefGutterRendererFoldsClass
  * @GTEF_GUTTER_RENDERER_FOLDS_STATE_END: End of fold region.
  *
  * The folding state at a certain line in the #GtkTextBuffer.
- * Some states can be combined. For example,
- * %GTEF_GUTTER_RENDERER_FOLDS_STATE_END and
- * %GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE.
+ *
+ * Since #GtefGutterRendererFolds has a flat view of the folding tree, some
+ * states can be combined; for example, %GTEF_GUTTER_RENDERER_FOLDS_STATE_END
+ * and %GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE.
  *
  * Since: 1.0
  */

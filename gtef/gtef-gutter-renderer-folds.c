@@ -24,6 +24,9 @@
  * SECTION:gutter-renderer-folds
  * @Short_description: Basic gutter renderer for code folding
  * @Title: GtefGutterRendererFolds
+ *
+ * #GtefGutterRendererFolds is a basic gutter renderer for code folding. It
+ * handles only the drawing, and has a flat view of the folding tree.
  */
 
 #define LINE_WIDTH	1.0
@@ -283,8 +286,9 @@ gtef_gutter_renderer_folds_new (void)
  * @state: a #GtefGutterRendererFoldsState.
  *
  * Sets the folding state of the next cell to be drawn.
- * It is intended to be called from a subclass' draw-method
- * before it calls its parent's draw method.
+ *
+ * This function is intended to be called from a subclass' draw method before
+ * chaining-up to its parent's draw method.
  *
  * Since: 1.0
  */

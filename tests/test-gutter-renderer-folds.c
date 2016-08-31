@@ -19,20 +19,27 @@
 
 #include "gtef-gutter-renderer-folds-sub.h"
 
-static void
-add_folding_gutter (GtkSourceView *view)
+static GtkWidget *
+create_view (void)
 {
+	GtkWidget *view;
+	GtkTextBuffer *buffer;
 	GtkSourceGutter *gutter;
 	GtkSourceGutterRenderer *renderer;
-	GtkTextBuffer *text_buffer;
 
-	text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
-	gtk_text_buffer_insert_at_cursor (text_buffer, "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19", -1);
+	view = gtef_view_new ();
 
-	gutter = gtk_source_view_get_gutter (view, GTK_TEXT_WINDOW_LEFT);
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+	gtk_text_buffer_insert_at_cursor (buffer,
+					  "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n"
+					  "11\n12\n13\n14\n15\n16\n17\n18\n19",
+					  -1);
+
+	gutter = gtk_source_view_get_gutter (GTK_SOURCE_VIEW (view), GTK_TEXT_WINDOW_LEFT);
 	renderer = gtef_gutter_renderer_folds_sub_new ();
-
 	gtk_source_gutter_insert (gutter, renderer, 0);
+
+	return view;
 }
 
 int
@@ -40,7 +47,6 @@ main (int argc, char *argv[])
 {
 	GtkWidget *window;
 	GtkWidget *scrolled_window;
-	GtkWidget *gtef_view;
 
 	gtk_init (&argc, &argv);
 
@@ -49,12 +55,8 @@ main (int argc, char *argv[])
 	g_signal_connect (window, "destroy", gtk_main_quit, NULL);
 
 	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_container_add (GTK_CONTAINER (scrolled_window), create_view ());
 	gtk_container_add (GTK_CONTAINER (window), scrolled_window);
-
-	gtef_view = gtef_view_new ();
-	gtk_container_add (GTK_CONTAINER (scrolled_window), gtef_view);
-
-	add_folding_gutter (GTK_SOURCE_VIEW (gtef_view));
 
 	gtk_widget_show_all (window);
 

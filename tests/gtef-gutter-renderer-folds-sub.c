@@ -19,23 +19,18 @@
 
 #include "gtef-gutter-renderer-folds-sub.h"
 
-G_DEFINE_TYPE(GtefGutterRendererFoldsSub,
-              gtef_gutter_renderer_folds_sub,
-              GTEF_TYPE_GUTTER_RENDERER_FOLDS)
+G_DEFINE_TYPE (GtefGutterRendererFoldsSub,
+	       gtef_gutter_renderer_folds_sub,
+	       GTEF_TYPE_GUTTER_RENDERER_FOLDS)
 
 static void
-gtef_gutter_renderer_folds_sub_init (GtefGutterRendererFoldsSub *self)
-{
-}
-
-static void
-draw (GtkSourceGutterRenderer      *renderer,
-      cairo_t                      *cr,
-      GdkRectangle                 *background_area,
-      GdkRectangle                 *cell_area,
-      GtkTextIter                  *start,
-      GtkTextIter                  *end,
-      GtkSourceGutterRendererState  state)
+gtef_gutter_renderer_folds_sub_draw (GtkSourceGutterRenderer      *renderer,
+				     cairo_t                      *cr,
+				     GdkRectangle                 *background_area,
+				     GdkRectangle                 *cell_area,
+				     GtkTextIter                  *start,
+				     GtkTextIter                  *end,
+				     GtkSourceGutterRendererState  state)
 {
 	gint line_num;
 	GtefGutterRendererFoldsState folding_state;
@@ -105,7 +100,6 @@ draw (GtkSourceGutterRenderer      *renderer,
 
 	gtef_gutter_renderer_folds_set_state (GTEF_GUTTER_RENDERER_FOLDS (renderer), folding_state);
 
-
 	if (GTK_SOURCE_GUTTER_RENDERER_CLASS (gtef_gutter_renderer_folds_sub_parent_class)->draw != NULL)
 	{
 		GTK_SOURCE_GUTTER_RENDERER_CLASS (gtef_gutter_renderer_folds_sub_parent_class)->draw (renderer,
@@ -123,7 +117,12 @@ gtef_gutter_renderer_folds_sub_class_init (GtefGutterRendererFoldsSubClass *klas
 {
 	GtkSourceGutterRendererClass *renderer_class = GTK_SOURCE_GUTTER_RENDERER_CLASS (klass);
 
-	renderer_class->draw = draw;
+	renderer_class->draw = gtef_gutter_renderer_folds_sub_draw;
+}
+
+static void
+gtef_gutter_renderer_folds_sub_init (GtefGutterRendererFoldsSub *self)
+{
 }
 
 GtkSourceGutterRenderer *

@@ -46,9 +46,9 @@ struct _GtefGutterRendererFoldsSubClass
 	GtefGutterRendererFoldsClass parent_class;
 };
 
-GType				 gtef_gutter_renderer_folds_sub_get_type		(void) G_GNUC_CONST;
+GType				gtef_gutter_renderer_folds_sub_get_type		(void) G_GNUC_CONST;
 
-GtkSourceGutterRenderer 	*gtef_gutter_renderer_folds_sub_new			(void);
+GtkSourceGutterRenderer *	gtef_gutter_renderer_folds_sub_new		(void);
 
 G_END_DECLS
 

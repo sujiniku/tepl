@@ -39,63 +39,66 @@ gtef_gutter_renderer_folds_sub_draw (GtkSourceGutterRenderer      *renderer,
 
 	if (line_num == 0)
 	{
-		folding_state = FOLDING_START_FOLDED;
+		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_START_FOLDED;
 	}
 	else if (line_num == 1)
 	{
-		folding_state = FOLDING_START_OPENED;
+		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_START_OPENED;
 	}
 	else if (line_num < 5)
 	{
-		folding_state = FOLDING_CONTINUE;
+		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
 	}
 	else if (line_num == 5)
 	{
-		folding_state = FOLDING_END;
+		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_END;
 	}
 	else if (line_num == 6)
 	{
-		folding_state = FOLDING_NONE;
+		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_NONE;
 	}
 	else if (line_num == 7)
 	{
-		folding_state = FOLDING_START_OPENED;
+		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_START_OPENED;
 	}
 	else if (line_num == 8)
 	{
-		folding_state = FOLDING_CONTINUE;
+		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
 	}
 	else if (line_num == 9)
 	{
-		folding_state = FOLDING_CONTINUE | FOLDING_START_OPENED;
+		folding_state = (GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE |
+				 GTEF_GUTTER_RENDERER_FOLDS_STATE_START_OPENED);
 	}
 	else if (line_num < 12)
 	{
-		folding_state = FOLDING_CONTINUE;
+		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
 	}
 	else if (line_num == 12)
 	{
-		folding_state = FOLDING_CONTINUE | FOLDING_END;
+		folding_state = (GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE |
+				 GTEF_GUTTER_RENDERER_FOLDS_STATE_END);
 	}
 	else if (line_num == 13)
 	{
-		folding_state = FOLDING_CONTINUE;
+		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
 	}
 	else if (line_num == 14)
 	{
-		folding_state = FOLDING_CONTINUE | FOLDING_START_FOLDED;
+		folding_state = (GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE |
+				 GTEF_GUTTER_RENDERER_FOLDS_STATE_START_FOLDED);
 	}
 	else if (line_num == 15)
 	{
-		folding_state = FOLDING_CONTINUE;
+		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
 	}
 	else if (line_num == 16)
 	{
-		folding_state = FOLDING_END;
+		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_END;
 	}
 	else
 	{
-		folding_state = FOLDING_NONE;
+		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_NONE;
 	}
 
 	gtef_gutter_renderer_folds_set_state (GTEF_GUTTER_RENDERER_FOLDS (renderer), folding_state);

@@ -208,30 +208,30 @@ gtef_gutter_renderer_folds_draw (GtkSourceGutterRenderer      *renderer,
 
 	/* Top area */
 
-	if (folding_state & FOLDING_CONTINUE ||
-	    folding_state & FOLDING_END)
+	if (folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE ||
+	    folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_END)
 	{
 		draw_vertical_line (cr, &top_area);
 	}
 
 	/* Middle area */
 
-	if (folding_state & FOLDING_START_FOLDED)
+	if (folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_START_FOLDED)
 	{
 		draw_sign (cr, &middle_area, TRUE);
 	}
-	else if (folding_state & FOLDING_START_OPENED)
+	else if (folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_START_OPENED)
 	{
 		draw_sign (cr, &middle_area, FALSE);
 	}
 	else
 	{
-		if (folding_state & FOLDING_CONTINUE)
+		if (folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE)
 		{
 			draw_vertical_line (cr, &middle_area);
 		}
 
-		if (folding_state & FOLDING_END)
+		if (folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_END)
 		{
 			draw_end (cr, &middle_area);
 		}
@@ -239,8 +239,8 @@ gtef_gutter_renderer_folds_draw (GtkSourceGutterRenderer      *renderer,
 
 	/* Bottom area */
 
-	if (folding_state & FOLDING_START_OPENED ||
-	    folding_state & FOLDING_CONTINUE)
+	if (folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_START_OPENED ||
+	    folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE)
 	{
 		draw_vertical_line (cr, &bottom_area);
 	}

@@ -44,24 +44,28 @@ struct _GtefGutterRendererFoldsClass
 
 /**
  * GtefGutterRendererFoldsState:
- * @FOLDING_NONE: No code folding here.
- * @FOLDING_START_FOLDED: Start of currently folded fold region.
- * @FOLDING_START_OPENED: Start of currently opened fold region.
- * @FOLDING_CONTINUE: Fold region continues.
- * @FOLDING_END: End of fold region.
+ * @GTEF_GUTTER_RENDERER_FOLDS_STATE_NONE: No code folding here.
+ * @GTEF_GUTTER_RENDERER_FOLDS_STATE_START_FOLDED: Start of currently folded
+ *   fold region.
+ * @GTEF_GUTTER_RENDERER_FOLDS_STATE_START_OPENED: Start of currently opened
+ *   fold region.
+ * @GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE: Fold region continues.
+ * @GTEF_GUTTER_RENDERER_FOLDS_STATE_END: End of fold region.
  *
- * The folding state at a certain line in the text buffer.
- * Some states can be combined. For example, %FOLDING_END and %FOLDING_CONTINUE.
+ * The folding state at a certain line in the #GtkTextBuffer.
+ * Some states can be combined. For example,
+ * %GTEF_GUTTER_RENDERER_FOLDS_STATE_END and
+ * %GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE.
  *
  * Since: 1.0
  */
 typedef enum
 {
-	FOLDING_NONE		= 0,
-	FOLDING_START_FOLDED	= 1 << 0,
-	FOLDING_START_OPENED	= 1 << 1,
-	FOLDING_CONTINUE	= 1 << 2,
-	FOLDING_END		= 1 << 3
+	GTEF_GUTTER_RENDERER_FOLDS_STATE_NONE		= 0,
+	GTEF_GUTTER_RENDERER_FOLDS_STATE_START_FOLDED	= 1 << 0,
+	GTEF_GUTTER_RENDERER_FOLDS_STATE_START_OPENED	= 1 << 1,
+	GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE	= 1 << 2,
+	GTEF_GUTTER_RENDERER_FOLDS_STATE_END		= 1 << 3
 } GtefGutterRendererFoldsState;
 
 GtkSourceGutterRenderer *

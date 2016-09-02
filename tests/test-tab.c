@@ -219,6 +219,9 @@ create_tab (void)
 	 * makes the GtkWindow height to grow, probably because there is a
 	 * gtk_widget_queue_resize() which takes the natural size of the
 	 * scrolled window. Setting a size request fixes the problem.
+	 * FIXME: some app authors will probably forget to do it, so it would be
+	 * better if the Gtef framework handles it, by being aware that the
+	 * GtefTab contains a scrolled window.
 	 */
 	gtk_widget_set_size_request (scrolled_window, 400, 40);
 

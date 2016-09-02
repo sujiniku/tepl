@@ -12,19 +12,35 @@
     <releaseinfo>for Gtef &package_version;</releaseinfo>
   </bookinfo>
 
-  <chapter>
+  <part>
     <title>API reference</title>
-    <xi:include href="xml/buffer.xml"/>
-    <xi:include href="xml/file.xml"/>
-    <xi:include href="xml/file-metadata.xml"/>
-    <xi:include href="xml/file-loader.xml"/>
-    <xi:include href="xml/file-saver.xml"/>
-    <xi:include href="xml/gutter-renderer-folds.xml"/>
-    <xi:include href="xml/info-bar.xml"/>
-    <xi:include href="xml/metadata-manager.xml"/>
-    <xi:include href="xml/tab.xml"/>
-    <xi:include href="xml/view.xml"/>
-  </chapter>
+
+    <chapter>
+      <title>Main Classes</title>
+      <xi:include href="xml/buffer.xml"/>
+      <xi:include href="xml/view.xml"/>
+    </chapter>
+
+    <chapter>
+      <title>Tab</title>
+      <xi:include href="xml/tab.xml"/>
+      <xi:include href="xml/info-bar.xml"/>
+    </chapter>
+
+    <chapter>
+      <title>File Loading and Saving</title>
+      <xi:include href="xml/file.xml"/>
+      <xi:include href="xml/file-loader.xml"/>
+      <xi:include href="xml/file-saver.xml"/>
+      <xi:include href="xml/file-metadata.xml"/>
+      <xi:include href="xml/metadata-manager.xml"/>
+    </chapter>
+
+    <chapter>
+      <title>Code Folding</title>
+      <xi:include href="xml/gutter-renderer-folds.xml"/>
+    </chapter>
+  </part>
 
   <chapter id="object-tree">
     <title>Object Hierarchy</title>

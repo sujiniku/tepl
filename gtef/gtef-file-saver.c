@@ -40,7 +40,8 @@
  * handling. If an error occurs, you can reconfigure the saver and relaunch the
  * operation with gtef_file_saver_save_async().
  *
- * #GtefFileSaver is a non-modified fork of #GtkSourceFileSaver.
+ * #GtefFileSaver is a non-modified fork of #GtkSourceFileSaver. See the
+ * description of #GtefFile for more background on why a fork was needed.
  */
 
 /* The code has been written initially in gedit (GeditDocumentSaver).

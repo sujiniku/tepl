@@ -29,6 +29,9 @@
  * SECTION:view
  * @Short_description: Widget that displays a GtefBuffer
  * @Title: GtefView
+ *
+ * #GtefView is a subclass of #GtkSourceView, to add more features useful for a
+ * text editor.
  */
 
 #define SCROLL_MARGIN 0.02

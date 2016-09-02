@@ -27,15 +27,9 @@
  * SECTION:file
  * @Short_description: On-disk representation of a GtefBuffer
  * @Title: GtefFile
+ * @See_also: #GtefFileLoader, #GtefFileSaver, #GtefFileMetadata
  *
- * A #GtefFile object is the on-disk representation of a #GtefBuffer. #GtefFile
- * is a fork of #GtkSourceFile.
- */
-
-/* TODO when the FileLoader and FileSaver classes exist, add this comment to the
- * class description.
- *
- * @See_also: #GtefFileLoader, #GtefFileSaver
+ * A #GtefFile object is the on-disk representation of a #GtefBuffer.
  *
  * With a #GtefFile, you can create and configure a #GtefFileLoader
  * and #GtefFileSaver which take by default the values of the
@@ -43,6 +37,13 @@
  * properties). On a successful load or save operation, the #GtefFile
  * properties are updated. If an operation fails, the #GtefFile properties
  * have still the previous valid values.
+ *
+ * #GtefFile is a fork of #GtkSourceFile. #GtefFileLoader is a new
+ * implementation for file loading, but it needs to call private functions of
+ * #GtefFile in order to update its properties. So it was not possible for
+ * #GtefFileLoader to use #GtkSourceFile. So the whole file loading and saving
+ * API of GtkSourceView has been forked; hopefully the new implementation will
+ * be folded back to GtkSourceView in a later version.
  */
 
 typedef struct _GtefFilePrivate GtefFilePrivate;

@@ -29,6 +29,10 @@
  * SECTION:file-loader
  * @Short_description: Load a file into a GtefBuffer
  * @Title: GtefFileLoader
+ *
+ * #GtefFileLoader is not a fork of #GtkSourceFileLoader, it is a new
+ * implementation based on
+ * [uchardet](https://www.freedesktop.org/wiki/Software/uchardet/).
  */
 
 typedef struct _GtefFileLoaderPrivate GtefFileLoaderPrivate;

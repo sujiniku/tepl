@@ -25,6 +25,12 @@
  * SECTION:buffer
  * @Short_description: Stores the text for display in a GtefView
  * @Title: GtefBuffer
+ *
+ * #GtefBuffer is a subclass of #GtkSourceBuffer, to add more features useful
+ * for a text editor.
+ *
+ * It also adds an association to a #GtefFile that can be retrieved with
+ * gtef_buffer_get_file(). The association cannot change.
  */
 
 typedef struct _GtefBufferPrivate GtefBufferPrivate;
@@ -310,6 +316,9 @@ gtef_buffer_new (void)
 /**
  * gtef_buffer_get_file:
  * @buffer: a #GtefBuffer.
+ *
+ * Returns the #GtefFile of @buffer. The returned object is guaranteed to be the
+ * same for the lifetime of @buffer.
  *
  * Returns: (transfer none): the associated #GtefFile.
  * Since: 1.0

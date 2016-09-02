@@ -32,13 +32,13 @@
  * call gtef_metadata_manager_init() and gtef_metadata_manager_shutdown() in
  * your application, in case GVfs metadata are not supported.
  *
- * gtef_file_metadata_get() and gtef_file_metadata_set() don't load or save the
- * metadata on disk. They only access the metadata stored in the
- * #GtefFileMetadata object memory. To load the metadata from disk, call
+ * The gtef_file_metadata_get() and gtef_file_metadata_set() functions don't
+ * load or save the metadata on disk. They only access the metadata stored in
+ * the #GtefFileMetadata object memory. To load the metadata from disk, call
  * gtef_file_metadata_load() or its async variant. Likewise, to save the
  * metadata on disk, call gtef_file_metadata_save() or its async variant. When
- * loading or saving metadata, the file at #GtefFile:location, if
- * non-%NULL, must exist on the filesystem, otherwise an error is returned.
+ * loading or saving metadata, the file at #GtefFile:location, if non-%NULL,
+ * must exist on the filesystem, otherwise an error is returned.
  *
  * When the #GtefFile:location changes, the metadata are still kept in the
  * #GtefFileMetadata object memory. But the metadata are

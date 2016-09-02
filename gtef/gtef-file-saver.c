@@ -39,10 +39,11 @@
  * A file saver should be used only for one save operation, including errors
  * handling. If an error occurs, you can reconfigure the saver and relaunch the
  * operation with gtef_file_saver_save_async().
+ *
+ * #GtefFileSaver is a non-modified fork of #GtkSourceFileSaver.
  */
 
-/* Code coming from GtkSourceView.
- * The code has been written initially in gedit (GeditDocumentSaver).
+/* The code has been written initially in gedit (GeditDocumentSaver).
  * It uses a GtefBufferInputStream as input, create converter(s) if needed
  * for the encoding and the compression, and write the contents to a
  * GOutputStream (the file).

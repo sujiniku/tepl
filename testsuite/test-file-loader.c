@@ -160,7 +160,7 @@ test_loader (const gchar *contents,
 			      expected_error_domain,
 			      expected_error_code);
 
-	loader = gtef_file_loader_new (buffer);
+	loader = gtef_file_loader_new (buffer, file);
 	gtef_file_loader_set_max_size (loader, max_size);
 	gtef_file_loader_set_chunk_size (loader, CHUNK_SIZE);
 

@@ -46,6 +46,12 @@ struct _GtefFileLoaderPrivate
 	 */
 	GtefBuffer *buffer;
 
+	/* Weak ref to the GtefFile. A strong ref could create a reference
+	 * cycle in an application. For example a subclass of GtefFile can
+	 * have a strong ref to the FileLoader.
+	 */
+	GtefFile *file;
+
 	GFile *location;
 	gint64 max_size;
 	gint64 chunk_size;
@@ -66,6 +72,7 @@ enum
 {
 	PROP_0,
 	PROP_BUFFER,
+	PROP_FILE,
 	PROP_LOCATION,
 	PROP_MAX_SIZE,
 	PROP_CHUNK_SIZE,
@@ -191,6 +198,10 @@ gtef_file_loader_get_property (GObject    *object,
 			g_value_set_object (value, gtef_file_loader_get_buffer (loader));
 			break;
 
+		case PROP_FILE:
+			g_value_set_object (value, gtef_file_loader_get_file (loader));
+			break;
+
 		case PROP_LOCATION:
 			g_value_set_object (value, gtef_file_loader_get_location (loader));
 			break;
@@ -227,6 +238,13 @@ gtef_file_loader_set_property (GObject      *object,
 						   (gpointer *) &priv->buffer);
 			break;
 
+		case PROP_FILE:
+			g_assert (priv->file == NULL);
+			priv->file = g_value_get_object (value);
+			g_object_add_weak_pointer (G_OBJECT (priv->file),
+						   (gpointer *) &priv->file);
+			break;
+
 		case PROP_LOCATION:
 			g_assert (priv->location == NULL);
 			priv->location = g_value_dup_object (value);
@@ -253,13 +271,10 @@ gtef_file_loader_constructed (GObject *object)
 
 	G_OBJECT_CLASS (gtef_file_loader_parent_class)->constructed (object);
 
-	if (priv->buffer != NULL &&
+	if (priv->file != NULL &&
 	    priv->location == NULL)
 	{
-		GtefFile *file;
-
-		file = gtef_buffer_get_file (priv->buffer);
-		priv->location = gtef_file_get_location (file);
+		priv->location = gtef_file_get_location (priv->file);
 
 		if (priv->location != NULL)
 		{
@@ -283,6 +298,13 @@ gtef_file_loader_dispose (GObject *object)
 		g_object_remove_weak_pointer (G_OBJECT (priv->buffer),
 					      (gpointer *) &priv->buffer);
 		priv->buffer = NULL;
+	}
+
+	if (priv->file != NULL)
+	{
+		g_object_remove_weak_pointer (G_OBJECT (priv->file),
+					      (gpointer *) &priv->file);
+		priv->file = NULL;
 	}
 
 	g_clear_object (&priv->location);
@@ -314,6 +336,23 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 				     "GtefBuffer",
 				     "",
 				     GTEF_TYPE_BUFFER,
+				     G_PARAM_READWRITE |
+				     G_PARAM_CONSTRUCT_ONLY |
+				     G_PARAM_STATIC_STRINGS);
+
+	/**
+	 * GtefFileLoader:file:
+	 *
+	 * The #GtefFile. The #GtefFileLoader object has a weak
+	 * reference to the file.
+	 *
+	 * Since: 1.0
+	 */
+	properties[PROP_FILE] =
+		g_param_spec_object ("file",
+				     "GtefFile",
+				     "",
+				     GTEF_TYPE_FILE,
 				     G_PARAM_READWRITE |
 				     G_PARAM_CONSTRUCT_ONLY |
 				     G_PARAM_STATIC_STRINGS);
@@ -391,22 +430,30 @@ gtef_file_loader_init (GtefFileLoader *loader)
 /**
  * gtef_file_loader_new:
  * @buffer: the #GtefBuffer to load the contents into.
+ * @file: the #GtefFile.
  *
  * Creates a new #GtefFileLoader object. The contents is read from the #GtefFile
- * location. If not already done, call gtef_file_set_location() before calling
- * this constructor. The previous location is anyway not needed, because as soon
- * as the file loading begins, the @buffer is emptied.
+ * location.
+ *
+ * If not already done, call gtef_file_set_location() before calling this
+ * constructor. The previous location is anyway not needed, because as soon as
+ * the file loading begins, the @buffer is emptied. Setting the #GtefFile
+ * location directly permits to update the UI, to display the good location when
+ * the file is loading.
  *
  * Returns: a new #GtefFileLoader object.
  * Since: 1.0
  */
 GtefFileLoader *
-gtef_file_loader_new (GtefBuffer *buffer)
+gtef_file_loader_new (GtefBuffer *buffer,
+		      GtefFile   *file)
 {
 	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), NULL);
+	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
 
 	return g_object_new (GTEF_TYPE_FILE_LOADER,
 			     "buffer", buffer,
+			     "file", file,
 			     NULL);
 }
 
@@ -427,6 +474,24 @@ gtef_file_loader_get_buffer (GtefFileLoader *loader)
 
 	priv = gtef_file_loader_get_instance_private (loader);
 	return priv->buffer;
+}
+
+/**
+ * gtef_file_loader_get_file:
+ * @loader: a #GtefFileLoader.
+ *
+ * Returns: (transfer none) (nullable): the #GtefFile.
+ * Since: 1.0
+ */
+GtefFile *
+gtef_file_loader_get_file (GtefFileLoader *loader)
+{
+	GtefFileLoaderPrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), NULL);
+
+	priv = gtef_file_loader_get_instance_private (loader);
+	return priv->file;
 }
 
 /**

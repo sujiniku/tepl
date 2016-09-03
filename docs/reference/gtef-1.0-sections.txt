@@ -72,6 +72,7 @@ GtefFileLoaderError
 <SUBSECTION>
 gtef_file_loader_new
 gtef_file_loader_get_buffer
+gtef_file_loader_get_file
 gtef_file_loader_get_location
 gtef_file_loader_get_max_size
 gtef_file_loader_set_max_size

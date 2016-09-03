@@ -61,9 +61,12 @@ struct _GtefFileLoaderClass
 
 GQuark			gtef_file_loader_error_quark				(void);
 
-GtefFileLoader *	gtef_file_loader_new					(GtefBuffer *buffer);
+GtefFileLoader *	gtef_file_loader_new					(GtefBuffer *buffer,
+										 GtefFile   *file);
 
 GtefBuffer *		gtef_file_loader_get_buffer				(GtefFileLoader *loader);
+
+GtefFile *		gtef_file_loader_get_file				(GtefFileLoader *loader);
 
 GFile *			gtef_file_loader_get_location				(GtefFileLoader *loader);
 

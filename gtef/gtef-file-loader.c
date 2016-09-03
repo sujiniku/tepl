@@ -800,6 +800,17 @@ read_next_chunk_cb (GObject      *source_object,
 	if (task_data->progress_cb != NULL &&
 	    task_data->total_size > 0)
 	{
+		/* It can happen, for example when another process changes the
+		 * file we are currently reading (race condition).
+		 * FIXME: It would maybe be better to report an error, or check
+		 * at the end of the file loading if the file was not modified
+		 * since the beginning of the file loading.
+		 */
+		if (task_data->total_size < task_data->total_bytes_read)
+		{
+			task_data->total_size = task_data->total_bytes_read;
+		}
+
 		task_data->progress_cb (task_data->total_bytes_read,
 					task_data->total_size,
 					task_data->progress_cb_data);

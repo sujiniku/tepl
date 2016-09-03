@@ -166,7 +166,8 @@ test_loader (const gchar *contents,
 
 	gtef_file_loader_load_async (loader,
 				     G_PRIORITY_DEFAULT,
-				     NULL,
+				     NULL, /* cancellable */
+				     NULL, NULL, NULL, /* progress */
 				     load_cb,
 				     data);
 

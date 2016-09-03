@@ -62,6 +62,16 @@ struct _TaskData
 {
 	GInputStream *input_stream;
 
+	/* TODO report progress also when determining encoding, and when
+	 * converting and inserting the contents.
+	 */
+	GFileProgressCallback progress_cb;
+	gpointer progress_cb_data;
+	GDestroyNotify progress_cb_notify;
+
+	goffset total_bytes_read;
+	goffset total_size;
+
 	/* List of GBytes*. */
 	GQueue *contents;
 
@@ -125,6 +135,11 @@ task_data_free (gpointer data)
 	if (task_data->contents != NULL)
 	{
 		g_queue_free_full (task_data->contents, (GDestroyNotify)g_bytes_unref);
+	}
+
+	if (task_data->progress_cb_notify != NULL)
+	{
+		task_data->progress_cb_notify (task_data->progress_cb_data);
 	}
 
 	g_clear_object (&task_data->input_stream);
@@ -748,6 +763,7 @@ read_next_chunk_cb (GObject      *source_object,
 	GTask *task = G_TASK (user_data);
 	TaskData *task_data;
 	GBytes *chunk;
+	gsize chunk_size;
 	GError *error = NULL;
 
 	task_data = g_task_get_task_data (task);
@@ -761,16 +777,32 @@ read_next_chunk_cb (GObject      *source_object,
 		return;
 	}
 
-	if (g_bytes_get_size (chunk) > 0)
-	{
-		g_queue_push_tail (task_data->contents, chunk);
-		read_next_chunk (task);
-	}
-	else
+	chunk_size = g_bytes_get_size (chunk);
+
+	if (chunk_size == 0)
 	{
 		/* Finished reading */
 		g_bytes_unref (chunk);
 		determine_encoding (task);
+		return;
+	}
+
+	g_queue_push_tail (task_data->contents, chunk);
+	task_data->total_bytes_read += chunk_size;
+
+	/* Read next chunk before calling the progress_cb, because the
+	 * progress_cb can take some time. If for some reason the progress_cb
+	 * takes more time than reading the next chunk, the ordering will still
+	 * be good, with the main event loop.
+	 */
+	read_next_chunk (task);
+
+	if (task_data->progress_cb != NULL &&
+	    task_data->total_size > 0)
+	{
+		task_data->progress_cb (task_data->total_bytes_read,
+					task_data->total_size,
+					task_data->progress_cb_data);
 	}
 }
 
@@ -836,16 +868,19 @@ open_file (GTask *task)
 }
 
 static void
-check_file_size_cb (GObject      *source_object,
-		    GAsyncResult *result,
-		    gpointer      user_data)
+get_file_size_cb (GObject      *source_object,
+		  GAsyncResult *result,
+		  gpointer      user_data)
 {
 	GFile *location = G_FILE (source_object);
 	GTask *task = G_TASK (user_data);
+	TaskData *task_data;
 	GtefFileLoader *loader;
 	GtefFileLoaderPrivate *priv;
 	GFileInfo *info = NULL;
 	GError *error = NULL;
+
+	task_data = g_task_get_task_data (task);
 
 	loader = g_task_get_source_object (task);
 	priv = gtef_file_loader_get_instance_private (loader);
@@ -860,12 +895,10 @@ check_file_size_cb (GObject      *source_object,
 
 	if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_STANDARD_SIZE))
 	{
-		goffset file_size;
-
-		file_size = g_file_info_get_size (info);
+		task_data->total_size = g_file_info_get_size (info);
 
 		if (priv->max_size >= 0 &&
-		    file_size > priv->max_size)
+		    task_data->total_size > priv->max_size)
 		{
 			gchar *max_size_str;
 
@@ -889,7 +922,7 @@ out:
 }
 
 static void
-check_file_size (GTask *task)
+get_file_size (GTask *task)
 {
 	GtefFileLoader *loader;
 	GtefFileLoaderPrivate *priv;
@@ -902,7 +935,7 @@ check_file_size (GTask *task)
 				 G_FILE_QUERY_INFO_NONE,
 				 g_task_get_priority (task),
 				 g_task_get_cancellable (task),
-				 check_file_size_cb,
+				 get_file_size_cb,
 				 task);
 }
 
@@ -926,14 +959,7 @@ start_loading (GTask *task)
 
 	empty_buffer (loader);
 
-	if (priv->max_size >= 0)
-	{
-		check_file_size (task);
-	}
-	else
-	{
-		open_file (task);
-	}
+	get_file_size (task);
 }
 
 static void
@@ -966,6 +992,12 @@ finish_loading (GTask *task)
  * @io_priority: the I/O priority of the request. E.g. %G_PRIORITY_LOW,
  *   %G_PRIORITY_DEFAULT or %G_PRIORITY_HIGH.
  * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
+ * @progress_callback: (scope notified) (nullable): function to call back with
+ *   progress information, or %NULL if progress information is not needed.
+ * @progress_callback_data: (closure): user data to pass to @progress_callback.
+ * @progress_callback_notify: (nullable): function to call on
+ *   @progress_callback_data when the @progress_callback is no longer needed, or
+ *   %NULL.
  * @callback: (scope async): a #GAsyncReadyCallback to call when the request is
  *   satisfied.
  * @user_data: user data to pass to @callback.
@@ -976,12 +1008,19 @@ finish_loading (GTask *task)
  *
  * Since: 1.0
  */
+
+/* The GDestroyNotify is needed, currently the following bug is not fixed:
+ * https://bugzilla.gnome.org/show_bug.cgi?id=616044
+ */
 void
-gtef_file_loader_load_async (GtefFileLoader      *loader,
-			     gint                 io_priority,
-			     GCancellable        *cancellable,
-			     GAsyncReadyCallback  callback,
-			     gpointer             user_data)
+gtef_file_loader_load_async (GtefFileLoader        *loader,
+			     gint                   io_priority,
+			     GCancellable          *cancellable,
+			     GFileProgressCallback  progress_callback,
+			     gpointer               progress_callback_data,
+			     GDestroyNotify         progress_callback_notify,
+			     GAsyncReadyCallback    callback,
+			     gpointer               user_data)
 {
 	GtefFileLoaderPrivate *priv;
 	TaskData *task_data;
@@ -1005,6 +1044,10 @@ gtef_file_loader_load_async (GtefFileLoader      *loader,
 
 	task_data = task_data_new ();
 	g_task_set_task_data (priv->task, task_data, task_data_free);
+
+	task_data->progress_cb = progress_callback;
+	task_data->progress_cb_data = progress_callback_data;
+	task_data->progress_cb_notify = progress_callback_notify;
 
 	start_loading (priv->task);
 }

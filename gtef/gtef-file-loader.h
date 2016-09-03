@@ -80,11 +80,14 @@ gint64			gtef_file_loader_get_chunk_size				(GtefFileLoader *loader);
 void			gtef_file_loader_set_chunk_size				(GtefFileLoader *loader,
 										 gint64          chunk_size);
 
-void			gtef_file_loader_load_async				(GtefFileLoader      *loader,
-										 gint                 io_priority,
-										 GCancellable        *cancellable,
-										 GAsyncReadyCallback  callback,
-										 gpointer             user_data);
+void			gtef_file_loader_load_async				(GtefFileLoader        *loader,
+										 gint                   io_priority,
+										 GCancellable          *cancellable,
+										 GFileProgressCallback  progress_callback,
+										 gpointer               progress_callback_data,
+										 GDestroyNotify         progress_callback_notify,
+										 GAsyncReadyCallback    callback,
+										 gpointer               user_data);
 
 gboolean		gtef_file_loader_load_finish				(GtefFileLoader  *loader,
 										 GAsyncResult    *result,

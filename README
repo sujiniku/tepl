@@ -78,3 +78,8 @@ example (adjust the prefix):
   $ ./autogen.sh --prefix=/path/jhbuild/prefix --disable-Werror --enable-gtk-doc --enable-vala --enable-code-coverage
   $ make
   $ make install
+
+Applications that use Gtef
+--------------------------
+
+- gCSVedit: http://gcsvedit.sourceforge.net/

@@ -76,6 +76,8 @@ struct _TaskData
 	GQueue *contents;
 
 	gchar *charset;
+
+	guint tried_mount : 1;
 };
 
 enum
@@ -96,6 +98,8 @@ static GParamSpec *properties[N_PROPERTIES];
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefFileLoader, gtef_file_loader, G_TYPE_OBJECT)
 
+/* Prototypes */
+static void	get_file_size		(GTask *task);
 static void	read_next_chunk		(GTask *task);
 
 GQuark
@@ -879,6 +883,55 @@ open_file (GTask *task)
 }
 
 static void
+mount_cb (GObject      *source_object,
+	  GAsyncResult *result,
+	  gpointer      user_data)
+{
+	GFile *location = G_FILE (source_object);
+	GTask *task = G_TASK (user_data);
+	GError *error = NULL;
+
+	g_file_mount_enclosing_volume_finish (location, result, &error);
+
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+	}
+	else
+	{
+		/* Try again the previous operation. */
+		get_file_size (task);
+	}
+}
+
+static void
+recover_not_mounted (GTask *task)
+{
+	GtefFileLoader *loader;
+	GtefFileLoaderPrivate *priv;
+	TaskData *task_data;
+	GMountOperation *mount_operation;
+
+	loader = g_task_get_source_object (task);
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	task_data = g_task_get_task_data (task);
+
+	mount_operation = _gtef_file_create_mount_operation (priv->file);
+
+	task_data->tried_mount = TRUE;
+
+	g_file_mount_enclosing_volume (priv->location,
+				       G_MOUNT_MOUNT_NONE,
+				       mount_operation,
+				       g_task_get_cancellable (task),
+				       mount_cb,
+				       task);
+
+	g_object_unref (mount_operation);
+}
+
+static void
 get_file_size_cb (GObject      *source_object,
 		  GAsyncResult *result,
 		  gpointer      user_data)
@@ -900,7 +953,17 @@ get_file_size_cb (GObject      *source_object,
 
 	if (error != NULL)
 	{
-		g_task_return_error (task, error);
+		if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_MOUNTED) &&
+		    !task_data->tried_mount)
+		{
+			recover_not_mounted (task);
+			g_error_free (error);
+		}
+		else
+		{
+			g_task_return_error (task, error);
+		}
+
 		goto out;
 	}
 

@@ -37,6 +37,9 @@ gboolean	_gtef_utils_decode_uri				(const gchar  *uri,
 								 gchar       **port,
 								 gchar       **path);
 
+G_GNUC_INTERNAL
+gchar *		_gtef_utils_get_fallback_basename_for_display	(GFile *location);
+
 /* String utilities */
 
 G_GNUC_INTERNAL

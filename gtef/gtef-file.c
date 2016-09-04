@@ -21,6 +21,7 @@
 #include "gtef-file.h"
 #include <glib/gi18n-lib.h>
 #include "gtef-file-metadata.h"
+#include "gtef-utils.h"
 #include "gtef-enum-types.h"
 
 /**
@@ -362,18 +363,24 @@ query_display_name_cb (GObject      *source_object,
 
 	if (error != NULL)
 	{
-		/* TODO short-name fallback when the file doesn't exist. */
-		if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
-		{
-			g_warning ("Error when querying file information: %s", error->message);
-		}
-
+		/* Ignore error, because there is no GError to report it. The
+		 * same error will probably occur when the user will load or
+		 * save the file, and in that case the FileLoader or FileSaver
+		 * can report a GError which can be displayed at an appropriate
+		 * place in the UI.
+		 *
+		 * Instead, use a fallback short-name.
+		 */
 		g_clear_error (&error);
-		goto out;
-	}
 
-	g_free (priv->short_name);
-	priv->short_name = g_strdup (g_file_info_get_display_name (info));
+		g_free (priv->short_name);
+		priv->short_name = _gtef_utils_get_fallback_basename_for_display (location);
+	}
+	else
+	{
+		g_free (priv->short_name);
+		priv->short_name = g_strdup (g_file_info_get_display_name (info));
+	}
 
 	if (priv->untitled_number > 0)
 	{
@@ -383,7 +390,6 @@ query_display_name_cb (GObject      *source_object,
 
 	g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_SHORT_NAME]);
 
-out:
 	g_clear_object (&info);
 
 	/* Async operation finished */

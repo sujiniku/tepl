@@ -22,8 +22,10 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "gtef-utils.h"
 #include <string.h>
+#include <glib/gi18n-lib.h>
 
 /*
  * _gtef_utils_replace_home_dir_with_tilde:
@@ -239,6 +241,80 @@ _gtef_utils_decode_uri (const gchar  *uri,
 		*path = g_uri_unescape_segment (hier_part_start, hier_part_end, "/");
 
 	return TRUE;
+}
+
+/**
+ * _gtef_utils_get_fallback_basename_for_display:
+ * @location: a #GFile.
+ *
+ * If querying the %G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME fails, this function
+ * can be used as a fallback.
+ *
+ * Returns: (transfer full): the @location's basename suitable for display.
+ */
+gchar *
+_gtef_utils_get_fallback_basename_for_display (GFile *location)
+{
+	gchar *name;
+	gchar *uri;
+	gchar *hn = NULL;
+	gchar *hn_utf8 = NULL;
+
+	g_return_val_if_fail (G_IS_FILE (location), NULL);
+
+	/* Local file */
+	if (g_file_has_uri_scheme (location, "file"))
+	{
+		gchar *local_path;
+
+		local_path = g_file_get_path (location);
+		name = g_filename_display_basename (local_path);
+		g_free (local_path);
+
+		return name;
+	}
+
+	uri = g_file_get_uri (location);
+
+	/* For remote files with a parent (so not just http://foo.com) or remote
+	 * file for which the decoding of the hostname fails, use the parse_name
+	 * and take basename of that.
+	 */
+	if (g_file_has_parent (location, NULL) ||
+	    !_gtef_utils_decode_uri (uri, NULL, NULL, &hn, NULL, NULL))
+	{
+		gchar *parse_name;
+		gchar *base;
+
+		parse_name = g_file_get_parse_name (location);
+		base = g_filename_display_basename (parse_name);
+		name = g_uri_unescape_string (base, NULL);
+
+		g_free (base);
+		g_free (parse_name);
+
+		goto out;
+	}
+
+	/* Display '/ on <host>' using the decoded host. */
+	if (hn != NULL)
+	{
+		hn_utf8 = _gtef_utils_make_valid_utf8 (hn);
+	}
+	else
+	{
+		/* we should never get here */
+		hn_utf8 = g_strdup ("?");
+	}
+
+	/* Translators: '/ on <remote-share>' */
+	name = g_strdup_printf (_("/ on %s"), hn_utf8);
+
+out:
+	g_free (uri);
+	g_free (hn);
+	g_free (hn_utf8);
+	return name;
 }
 
 gchar *

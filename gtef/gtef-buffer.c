@@ -406,6 +406,10 @@ gtef_buffer_get_title (GtefBuffer *buffer)
 		gchar *directory_tilde;
 
 		parent = g_file_get_parent (location);
+
+		/* FIXME: parent can be NULL, apparently. See the implementation
+		 * of _gtef_utils_get_fallback_basename_for_display().
+		 */
 		g_return_val_if_fail (parent != NULL, NULL);
 
 		directory = g_file_get_parse_name (parent);

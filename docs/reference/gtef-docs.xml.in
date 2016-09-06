@@ -38,6 +38,7 @@
 
     <chapter>
       <title>Code Folding</title>
+      <xi:include href="xml/fold-region.xml"/>
       <xi:include href="xml/gutter-renderer-folds.xml"/>
     </chapter>
   </part>

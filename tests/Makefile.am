@@ -11,6 +11,9 @@ LDADD = $(top_builddir)/gtef/libgtef-core.la	\
 noinst_PROGRAMS = $(TEST_PROGS)
 TEST_PROGS =
 
+TEST_PROGS += test-fold-region
+test_fold_region_SOURCES = test-fold-region.c
+
 TEST_PROGS += test-gutter-renderer-folds
 test_gutter_renderer_folds_SOURCES =		\
 	gtef-gutter-renderer-folds-sub.c	\

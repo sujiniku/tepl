@@ -17,6 +17,7 @@ gtef_public_headers =			\
 	gtef-file-loader.h		\
 	gtef-file-metadata.h		\
 	gtef-file-saver.h		\
+	gtef-fold-region.h		\
 	gtef-gutter-renderer-folds.h	\
 	gtef-info-bar.h			\
 	gtef-metadata-manager.h		\
@@ -30,6 +31,7 @@ gtef_public_c_files =			\
 	gtef-file-loader.c		\
 	gtef-file-metadata.c		\
 	gtef-file-saver.c		\
+	gtef-fold-region.c		\
 	gtef-gutter-renderer-folds.c	\
 	gtef-info-bar.c			\
 	gtef-metadata-manager.c		\

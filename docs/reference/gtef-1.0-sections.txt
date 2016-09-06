@@ -129,6 +129,21 @@ gtef_file_saver_flags_get_type
 </SECTION>
 
 <SECTION>
+<FILE>fold-region</FILE>
+<TITLE>GtefFoldRegion</TITLE>
+GtefFoldRegion
+gtef_fold_region_new
+gtef_fold_region_get_buffer
+gtef_fold_region_get_folded
+gtef_fold_region_set_folded
+gtef_fold_region_get_bounds
+gtef_fold_region_set_bounds
+<SUBSECTION Standard>
+GTEF_TYPE_FOLD_REGION
+GtefFoldRegionClass
+</SECTION>
+
+<SECTION>
 <FILE>gutter-renderer-folds</FILE>
 <TITLE>GtefGutterRendererFolds</TITLE>
 GtefGutterRendererFolds

@@ -43,14 +43,17 @@ struct _GtefFoldRegionPrivate
 	GtkTextTag *tag;
 	GtkTextMark *start;
 	GtkTextMark *end;
+
+	/* FIXME: use tag != NULL to know if the region is folded.
+	 * Here, the state is stored redundently, which is bad because there is
+	 * a risk that they get out of sync.
+	 */
 	guint folded : 1;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE (GtefFoldRegion,
-			    gtef_fold_region,
-			    G_TYPE_OBJECT)
-
 static GParamSpec *properties[N_PROPERTIES];
+
+G_DEFINE_TYPE_WITH_PRIVATE (GtefFoldRegion, gtef_fold_region, G_TYPE_OBJECT)
 
 static void
 gtef_fold_region_get_property (GObject    *object,
@@ -105,27 +108,35 @@ gtef_fold_region_set_property (GObject       *object,
 }
 
 static void
-gtef_fold_region_finalize (GObject *object)
+gtef_fold_region_dispose (GObject *object)
 {
 	GtefFoldRegion *fold_region = GTEF_FOLD_REGION (object);
 	GtefFoldRegionPrivate *priv = gtef_fold_region_get_instance_private (fold_region);
 
-	if (priv->buffer != NULL && priv->start != NULL)
-	{
-		gtk_text_buffer_delete_mark (priv->buffer, priv->start);
-	}
-	if (priv->buffer != NULL && priv->end != NULL)
-	{
-		gtk_text_buffer_delete_mark (priv->buffer, priv->end);
-	}
-
 	if (priv->buffer != NULL)
 	{
+		if (priv->start != NULL)
+		{
+			gtk_text_buffer_delete_mark (priv->buffer, priv->start);
+			priv->start = NULL;
+		}
+		if (priv->end != NULL)
+		{
+			gtk_text_buffer_delete_mark (priv->buffer, priv->end);
+			priv->end = NULL;
+		}
+
+		/* FIXME: remove the tag. */
+
 		g_object_remove_weak_pointer (G_OBJECT (priv->buffer),
 					      (gpointer *) &priv->buffer);
+		priv->buffer = NULL;
 	}
 
-	G_OBJECT_CLASS (gtef_fold_region_parent_class)->finalize (object);
+	priv->start = NULL;
+	priv->end = NULL;
+
+	G_OBJECT_CLASS (gtef_fold_region_parent_class)->dispose (object);
 }
 
 static void
@@ -133,45 +144,48 @@ gtef_fold_region_class_init (GtefFoldRegionClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->finalize = gtef_fold_region_finalize;
 	object_class->get_property = gtef_fold_region_get_property;
 	object_class->set_property = gtef_fold_region_set_property;
+	object_class->dispose = gtef_fold_region_dispose;
 
 	/**
 	 * GtefFoldRegion:buffer:
 	 *
-	 * The #GtefFoldRegion's #GtkTextBuffer.
+	 * The #GtkTextBuffer where the fold region is applied. The
+	 * #GtefFoldRegion object has a weak reference to the buffer.
 	 *
 	 * Since: 1.0
 	 */
-	properties[PROP_BUFFER] = g_param_spec_object ("buffer",
-						       "Text Buffer",
-						       "",
-						       GTK_TYPE_TEXT_BUFFER,
-						       G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+	properties[PROP_BUFFER] =
+		g_param_spec_object ("buffer",
+				     "Text Buffer",
+				     "",
+				     GTK_TYPE_TEXT_BUFFER,
+				     G_PARAM_READWRITE |
+				     G_PARAM_CONSTRUCT_ONLY |
+				     G_PARAM_STATIC_STRINGS);
 
 	/**
 	 * GtefFoldRegion:folded:
 	 *
-	 * A #gboolean determining, if the #GtefFoldRegion is folded or not.
+	 * Whether the #GtefFoldRegion is folded or not.
 	 *
 	 * Since: 1.0
 	 */
-	properties[PROP_FOLDED] = g_param_spec_boolean ("folded",
-							"Folded",
-							"",
-							FALSE,
-							G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+	properties[PROP_FOLDED] =
+		g_param_spec_boolean ("folded",
+				      "Folded",
+				      "",
+				      FALSE,
+				      G_PARAM_READWRITE |
+				      G_PARAM_STATIC_STRINGS);
 
-	g_object_class_install_properties (object_class,
-	                                   N_PROPERTIES,
-	                                   properties);
+	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
 }
 
 static void
 gtef_fold_region_init (GtefFoldRegion *fold_region)
 {
-
 }
 
 /**
@@ -189,6 +203,7 @@ gtef_fold_region_new (GtkTextBuffer     *buffer,
                       const GtkTextIter *end)
 {
 	GtefFoldRegion * fold_region;
+
 	g_return_val_if_fail (GTK_IS_TEXT_BUFFER (buffer), NULL);
 	g_return_val_if_fail (start != NULL, NULL);
 	g_return_val_if_fail (end != NULL, NULL);
@@ -206,10 +221,8 @@ gtef_fold_region_new (GtkTextBuffer     *buffer,
  * gtef_fold_region_get_buffer:
  * @fold_region: a #GtefFoldRegion.
  *
- * Gets the #GtefFoldRegion's corresponding #GtkTextBuffer.
- *
- * Returns: (transfer none): the #GtefFoldRegion's corresponding #GtkTextBuffer.
- *
+ * Returns: (transfer none) (nullable): the #GtkTextBuffer where the fold region
+ *   is applied.
  * Since: 1.0
  */
 GtkTextBuffer *
@@ -217,7 +230,7 @@ gtef_fold_region_get_buffer (GtefFoldRegion *fold_region)
 {
 	GtefFoldRegionPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FOLD_REGION (fold_region), FALSE);
+	g_return_val_if_fail (GTEF_IS_FOLD_REGION (fold_region), NULL);
 
 	priv = gtef_fold_region_get_instance_private (fold_region);
 
@@ -228,10 +241,7 @@ gtef_fold_region_get_buffer (GtefFoldRegion *fold_region)
  * gtef_fold_region_get_folded:
  * @fold_region: a #GtefFoldRegion.
  *
- * Gets the #GtefFoldRegion's #GtefFoldRegion:folded property.
- *
- * Returns: %TRUE if the #GtefFoldRegion is folded, %FALSE if not or if @fold_region is not a #GtefFoldRegion.
- *
+ * Returns: whether the #GtefFoldRegion is folded.
  * Since: 1.0
  */
 gboolean
@@ -249,9 +259,9 @@ gtef_fold_region_get_folded (GtefFoldRegion *fold_region)
 /**
  * gtef_fold_region_set_folded:
  * @fold_region: a #GtefFoldRegion.
- * @folded: a #gboolean.
+ * @folded: the new value.
  *
- * Sets the #GtefFoldRegion's #GtefFoldRegion:folded property.
+ * Folds or unfolds the region.
  *
  * Since: 1.0
  */
@@ -259,52 +269,61 @@ void
 gtef_fold_region_set_folded (GtefFoldRegion *fold_region,
 			     gboolean        folded)
 {
-	GtefFoldRegionPrivate *priv = gtef_fold_region_get_instance_private (fold_region);
+	GtefFoldRegionPrivate *priv;
+
+	g_return_if_fail (GTEF_IS_FOLD_REGION (fold_region));
+
+	priv = gtef_fold_region_get_instance_private (fold_region);
 
 	folded = folded != FALSE;
 
-	if (folded != priv->folded)
+	if (priv->folded == folded)
 	{
-		priv->folded = folded;
-
-		if (priv->buffer != NULL)
-		{
-			GtkTextTagTable *tag_table;
-			GtkTextIter start;
-			GtkTextIter end;
-
-			gtk_text_buffer_get_iter_at_mark (priv->buffer,
-							  &start,
-							  priv->start);
-
-			gtk_text_buffer_get_iter_at_mark (priv->buffer,
-							  &end,
-							  priv->end);
-
-			gtk_text_iter_forward_line (&start);
-			gtk_text_iter_forward_line (&end);
-
-			if (folded)
-			{
-				priv->tag = gtk_text_buffer_create_tag (priv->buffer,
-									NULL,
-									"invisible",
-									TRUE,
-									NULL);
-				gtk_text_buffer_apply_tag (priv->buffer,
-							   priv->tag,
-							   &start,
-							   &end);
-			}
-			else
-			{
-				tag_table = gtk_text_buffer_get_tag_table (priv->buffer);
-				gtk_text_tag_table_remove (tag_table, priv->tag);
-			}
-		}
-
-		g_object_notify_by_pspec (G_OBJECT (fold_region), properties[PROP_FOLDED]);
+		return;
 	}
+
+	priv->folded = folded;
+
+	if (priv->buffer != NULL)
+	{
+		GtkTextTagTable *tag_table;
+		GtkTextIter start;
+		GtkTextIter end;
+
+		gtk_text_buffer_get_iter_at_mark (priv->buffer,
+						  &start,
+						  priv->start);
+
+		gtk_text_buffer_get_iter_at_mark (priv->buffer,
+						  &end,
+						  priv->end);
+
+		gtk_text_iter_forward_line (&start);
+		gtk_text_iter_forward_line (&end);
+
+		if (folded)
+		{
+			/* FIXME: own a ref to the tag. */
+			priv->tag = gtk_text_buffer_create_tag (priv->buffer,
+								NULL,
+								"invisible", TRUE,
+								NULL);
+
+			gtk_text_buffer_apply_tag (priv->buffer,
+						   priv->tag,
+						   &start,
+						   &end);
+		}
+		else
+		{
+			tag_table = gtk_text_buffer_get_tag_table (priv->buffer);
+			gtk_text_tag_table_remove (tag_table, priv->tag);
+
+			/* FIXME unref the tag and set to NULL */
+		}
+	}
+
+	g_object_notify_by_pspec (G_OBJECT (fold_region), properties[PROP_FOLDED]);
 }
 
 /**
@@ -316,7 +335,6 @@ gtef_fold_region_set_folded (GtefFoldRegion *fold_region,
  * Obtains iterators pointing to the start and end of the #GtefFoldRegion.
  *
  * Returns: %TRUE on success, %FALSE otherwise.
- *
  * Since: 1.0
  */
 gboolean
@@ -371,31 +389,36 @@ gtef_fold_region_set_bounds (GtefFoldRegion    *fold_region,
 	g_return_if_fail (end != NULL);
 	g_return_if_fail (gtk_text_iter_get_line (start) < gtk_text_iter_get_line (end));
 
+	priv = gtef_fold_region_get_instance_private (fold_region);
+
+	if (priv->buffer == NULL)
+	{
+		return;
+	}
+
+	/* FIXME: use start and end directly. */
 	start_iter = *start;
 	end_iter = *end;
 
-	priv = gtef_fold_region_get_instance_private (fold_region);
-
-	if (priv->buffer != NULL)
+	if (priv->start != NULL)
 	{
-		if (priv->start != NULL)
-		{
-			gtk_text_buffer_move_mark (priv->buffer, priv->start, &start_iter);
-		}
-		else
-		{
-			priv->start = gtk_text_mark_new (NULL, FALSE);
-			gtk_text_buffer_add_mark (priv->buffer, priv->start, &start_iter);
-		}
-
-		if (priv->end != NULL)
-		{
-			gtk_text_buffer_move_mark (priv->buffer, priv->end, &end_iter);
-		}
-		else
-		{
-			priv->end = gtk_text_mark_new (NULL, TRUE);
-			gtk_text_buffer_add_mark (priv->buffer, priv->end, &end_iter);
-		}
+		gtk_text_buffer_move_mark (priv->buffer, priv->start, &start_iter);
 	}
+	else
+	{
+		priv->start = gtk_text_mark_new (NULL, FALSE);
+		gtk_text_buffer_add_mark (priv->buffer, priv->start, &start_iter);
+	}
+
+	if (priv->end != NULL)
+	{
+		gtk_text_buffer_move_mark (priv->buffer, priv->end, &end_iter);
+	}
+	else
+	{
+		priv->end = gtk_text_mark_new (NULL, TRUE);
+		gtk_text_buffer_add_mark (priv->buffer, priv->end, &end_iter);
+	}
+
+	/* FIXME: update tag if applied. */
 }

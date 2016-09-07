@@ -26,7 +26,7 @@
  *
  * #GtefFoldRegion represents a region in a #GtkTextBuffer that can be folded.
  */
- 
+
 enum
 {
 	PROP_0,

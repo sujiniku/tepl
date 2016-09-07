@@ -19,6 +19,11 @@
 
 #include <gtef/gtef.h>
 
+/* FIXME: a new file at testsuite/ with unit tests would be better.
+ * Use gtk_text_iter functions to see if the invisible region is correctly
+ * skipped.
+ */
+
 static GtkWidget *
 create_view (void)
 {
@@ -36,13 +41,12 @@ create_view (void)
 	gtk_text_buffer_get_iter_at_line (buffer, &start_iter, 1);
 	gtk_text_buffer_get_iter_at_line (buffer, &end_iter, 3);
 
+	/* FIXME: fold_region must be unreffed on exit. */
 	fold_region = gtef_fold_region_new (buffer,
 	                                    &start_iter,
 	                                    &end_iter);
 
-	g_object_set (G_OBJECT (fold_region),
-		      "folded", TRUE,
-		      NULL);
+	gtef_fold_region_set_folded (fold_region, TRUE);
 
 	return view;
 }

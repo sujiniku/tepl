@@ -81,7 +81,7 @@ test_get_fallback_basename_for_display (void)
 
 	location = g_file_new_for_uri ("https://example.net");
 	basename = _gtef_utils_get_fallback_basename_for_display (location);
-	g_assert_cmpstr (basename, ==, "/ on example.net");
+	g_assert_cmpstr (basename, ==, "https://example.net");
 	g_object_unref (location);
 	g_free (basename);
 }

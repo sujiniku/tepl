@@ -84,6 +84,12 @@ test_get_fallback_basename_for_display (void)
 	g_assert_cmpstr (basename, ==, "https://example.net");
 	g_object_unref (location);
 	g_free (basename);
+
+	location = g_file_new_for_uri ("https://bugzilla.gnome.org/page.cgi?id=browse.html&product=gtksourceview");
+	basename = _gtef_utils_get_fallback_basename_for_display (location);
+	g_assert_cmpstr (basename, ==, "page.cgi?id=browse.html&product=gtksourceview");
+	g_object_unref (location);
+	g_free (basename);
 }
 
 static void

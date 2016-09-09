@@ -395,7 +395,8 @@ gtef_buffer_get_title (GtefBuffer *buffer)
 	location = gtef_file_get_location (priv->file);
 	short_name = gtef_file_get_short_name (priv->file);
 
-	if (location == NULL)
+	if (location == NULL ||
+	    !g_file_has_parent (location, NULL))
 	{
 		title = g_strdup (short_name);
 	}
@@ -406,14 +407,9 @@ gtef_buffer_get_title (GtefBuffer *buffer)
 		gchar *directory_tilde;
 
 		parent = g_file_get_parent (location);
-
-		/* FIXME: parent can be NULL, apparently. See the implementation
-		 * of _gtef_utils_get_fallback_basename_for_display().
-		 */
-		g_return_val_if_fail (parent != NULL, NULL);
-
 		directory = g_file_get_parse_name (parent);
 		directory_tilde = _gtef_utils_replace_home_dir_with_tilde (directory);
+
 		title = g_strdup_printf ("%s (%s)", short_name, directory_tilde);
 
 		g_object_unref (parent);

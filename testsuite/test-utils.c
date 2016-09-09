@@ -62,6 +62,31 @@ test_decode_uri (void)
 }
 
 static void
+test_get_fallback_basename_for_display (void)
+{
+	GFile *location;
+	gchar *basename;
+
+	location = g_file_new_for_path ("/home/seb/blom");
+	basename = _gtef_utils_get_fallback_basename_for_display (location);
+	g_assert_cmpstr (basename, ==, "blom");
+	g_object_unref (location);
+	g_free (basename);
+
+	location = g_file_new_for_uri ("ssh://swilmet@example.net/home/swilmet/bloum");
+	basename = _gtef_utils_get_fallback_basename_for_display (location);
+	g_assert_cmpstr (basename, ==, "bloum");
+	g_object_unref (location);
+	g_free (basename);
+
+	location = g_file_new_for_uri ("https://example.net");
+	basename = _gtef_utils_get_fallback_basename_for_display (location);
+	g_assert_cmpstr (basename, ==, "/ on example.net");
+	g_object_unref (location);
+	g_free (basename);
+}
+
+static void
 test_make_valid_utf8 (void)
 {
 	gchar *result;
@@ -110,6 +135,7 @@ main (gint    argc,
 
 	g_test_add_func ("/utils/replace-home-dir-with-tilde", test_replace_home_dir_with_tilde);
 	g_test_add_func ("/utils/decode-uri", test_decode_uri);
+	g_test_add_func ("/utils/get-fallback-basename-for-display", test_get_fallback_basename_for_display);
 	g_test_add_func ("/utils/make-valid-utf8", test_make_valid_utf8);
 
 	return g_test_run ();

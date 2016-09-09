@@ -399,14 +399,9 @@ query_display_name_cb (GObject      *source_object,
 static void
 update_short_name (GtefFile *file)
 {
-	GtefFilePrivate *priv;
-	GFile *location;
+	GtefFilePrivate *priv = gtef_file_get_instance_private (file);
 
-	priv = gtef_file_get_instance_private (file);
-
-	location = gtef_file_get_location (file);
-
-	if (location == NULL)
+	if (priv->location == NULL)
 	{
 		if (priv->untitled_number == 0)
 		{
@@ -418,17 +413,36 @@ update_short_name (GtefFile *file)
 						    priv->untitled_number);
 
 		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_SHORT_NAME]);
+		return;
 	}
-	else
+
+	/* Special case for URIs like "https://example.net". Querying the
+	 * display-name for those URIs return "/", which can be confused with
+	 * the local root directory.
+	 */
+	if (!g_file_has_uri_scheme (priv->location, "file") &&
+	    !g_file_has_parent (priv->location, NULL))
 	{
-		g_file_query_info_async (location,
-					 G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
-					 G_FILE_QUERY_INFO_NONE,
-					 G_PRIORITY_DEFAULT,
-					 NULL,
-					 query_display_name_cb,
-					 g_object_ref (file));
+		g_free (priv->short_name);
+		priv->short_name = _gtef_utils_get_fallback_basename_for_display (priv->location);
+
+		if (priv->untitled_number > 0)
+		{
+			release_untitled_number (priv->untitled_number);
+			priv->untitled_number = 0;
+		}
+
+		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_SHORT_NAME]);
+		return;
 	}
+
+	g_file_query_info_async (priv->location,
+				 G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
+				 G_FILE_QUERY_INFO_NONE,
+				 G_PRIORITY_DEFAULT,
+				 NULL,
+				 query_display_name_cb,
+				 g_object_ref (file));
 }
 
 static void

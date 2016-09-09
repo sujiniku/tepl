@@ -889,7 +889,12 @@ mount_cb (GObject      *source_object,
 {
 	GFile *location = G_FILE (source_object);
 	GTask *task = G_TASK (user_data);
+	GtefFileLoader *loader;
+	GtefFileLoaderPrivate *priv;
 	GError *error = NULL;
+
+	loader = g_task_get_source_object (task);
+	priv = gtef_file_loader_get_instance_private (loader);
 
 	g_file_mount_enclosing_volume_finish (location, result, &error);
 
@@ -899,6 +904,11 @@ mount_cb (GObject      *source_object,
 	}
 	else
 	{
+		if (priv->file != NULL)
+		{
+			_gtef_file_set_mounted (priv->file);
+		}
+
 		/* Try again the previous operation. */
 		get_file_size (task);
 	}

@@ -722,6 +722,16 @@ fallback:
 	return g_mount_operation_new ();
 }
 
+/* Notify @file that its location has been mounted. */
+void
+_gtef_file_set_mounted (GtefFile *file)
+{
+	g_return_if_fail (GTEF_IS_FILE (file));
+
+	/* Querying the display-name should work now. */
+	update_short_name (file);
+}
+
 gboolean
 _gtef_file_get_modification_time (GtefFile *file,
 				  GTimeVal *modification_time)

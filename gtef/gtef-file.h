@@ -144,6 +144,9 @@ G_GNUC_INTERNAL
 GMountOperation *	_gtef_file_create_mount_operation	(GtefFile *file);
 
 G_GNUC_INTERNAL
+void			_gtef_file_set_mounted			(GtefFile *file);
+
+G_GNUC_INTERNAL
 gboolean		_gtef_file_get_modification_time	(GtefFile *file,
 								 GTimeVal *modification_time);
 

@@ -26,6 +26,9 @@ test_file_metadata_SOURCES = test-file-metadata.c
 UNIT_TEST_PROGS += test-file-saver
 test_file_saver_SOURCES = test-file-saver.c
 
+UNIT_TEST_PROGS += test-fold-region
+test_fold_region_SOURCES = test-fold-region.c
+
 UNIT_TEST_PROGS += test-info-bar
 test_info_bar_SOURCES = test-info-bar.c
 

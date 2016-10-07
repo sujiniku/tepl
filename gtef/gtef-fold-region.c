@@ -48,6 +48,9 @@ struct _GtefFoldRegionPrivate
 	GtkTextTagTable *tag_table;
 	GtkTextTag *tag;
 
+	/* FIXME rename to start_mark and end_mark, and when start/end are
+	 * GtkTextIters: start_iter, end_iter.
+	 */
 	GtkTextMark *start;
 	GtkTextMark *end;
 };
@@ -240,7 +243,7 @@ gtef_fold_region_new (GtkTextBuffer     *buffer,
                       const GtkTextIter *start,
                       const GtkTextIter *end)
 {
-	GtefFoldRegion * fold_region;
+	GtefFoldRegion *fold_region;
 
 	g_return_val_if_fail (GTK_IS_TEXT_BUFFER (buffer), NULL);
 	g_return_val_if_fail (start != NULL, NULL);
@@ -313,6 +316,11 @@ gtef_fold_region_set_folded (GtefFoldRegion *fold_region,
 
 	priv = gtef_fold_region_get_instance_private (fold_region);
 
+	if (priv->buffer == NULL)
+	{
+		return;
+	}
+
 	folded = folded != FALSE;
 
 	if (folded == gtef_fold_region_get_folded (fold_region))
@@ -322,35 +330,35 @@ gtef_fold_region_set_folded (GtefFoldRegion *fold_region,
 
 	if (folded)
 	{
-		if (priv->buffer != NULL)
-		{
-			GtkTextIter start;
-			GtkTextIter end;
+		GtkTextIter start;
+		GtkTextIter end;
 
-			gtk_text_buffer_get_iter_at_mark (priv->buffer,
-							  &start,
-							  priv->start);
+		gtk_text_buffer_get_iter_at_mark (priv->buffer,
+						  &start,
+						  priv->start);
 
-			gtk_text_buffer_get_iter_at_mark (priv->buffer,
-							  &end,
-							  priv->end);
+		gtk_text_buffer_get_iter_at_mark (priv->buffer,
+						  &end,
+						  priv->end);
 
-			gtk_text_iter_forward_line (&start);
-			gtk_text_iter_forward_line (&end);
+		gtk_text_iter_forward_line (&start);
+		gtk_text_iter_forward_line (&end);
 
-			create_tag (fold_region);
+		/* FIXME instead of create_tag(), it should be apply_tag(), that
+		 * creates the tag and applies it to the buffer. So that
+		 * apply_tag() and destroy_tag() are symmetric.
+		 */
+		create_tag (fold_region);
 
-			gtk_text_buffer_apply_tag (priv->buffer,
-						   priv->tag,
-						   &start,
-						   &end);
-		}
+		gtk_text_buffer_apply_tag (priv->buffer,
+					   priv->tag,
+					   &start,
+					   &end);
 	}
 	else
 	{
 		destroy_tag (fold_region);
 	}
-
 
 	g_object_notify_by_pspec (G_OBJECT (fold_region), properties[PROP_FOLDED]);
 }
@@ -379,19 +387,22 @@ gtef_fold_region_get_bounds (GtefFoldRegion *fold_region,
 
 	priv = gtef_fold_region_get_instance_private (fold_region);
 
-	if (priv->buffer != NULL)
+	if (priv->buffer == NULL)
 	{
-		gtk_text_buffer_get_iter_at_mark (priv->buffer,
-						  start,
-						  priv->start);
-
-		gtk_text_buffer_get_iter_at_mark (priv->buffer,
-						  end,
-						  priv->end);
-		return TRUE;
+		return FALSE;
 	}
 
-	return FALSE;
+	/* FIXME what if set_bounds() has not already been called?
+	 * It can happen if g_object_new() is called by an application.
+	 */
+	gtk_text_buffer_get_iter_at_mark (priv->buffer,
+					  start,
+					  priv->start);
+
+	gtk_text_buffer_get_iter_at_mark (priv->buffer,
+					  end,
+					  priv->end);
+	return TRUE;
 }
 
 /**
@@ -428,6 +439,11 @@ gtef_fold_region_set_bounds (GtefFoldRegion    *fold_region,
 	if (priv->tag != NULL &&
 	    priv->tag_table != NULL)
 	{
+		/* FIXME: update tag after setting priv->start_mark and
+		 * end_mark.
+		 * And with the function apply_tag(), it'll avoid code
+		 * duplication.
+		 */
 		destroy_tag (fold_region);
 		create_tag (fold_region);
 
@@ -446,6 +462,9 @@ gtef_fold_region_set_bounds (GtefFoldRegion    *fold_region,
 	}
 	else
 	{
+		/* FIXME: use gtk_text_buffer_create_mark(), here there is a
+		 * reference leak.
+		 */
 		priv->start = gtk_text_mark_new (NULL, FALSE);
 		gtk_text_buffer_add_mark (priv->buffer, priv->start, start);
 	}

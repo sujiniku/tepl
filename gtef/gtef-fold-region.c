@@ -48,11 +48,8 @@ struct _GtefFoldRegionPrivate
 	GtkTextTagTable *tag_table;
 	GtkTextTag *tag;
 
-	/* FIXME rename to start_mark and end_mark, and when start/end are
-	 * GtkTextIters: start_iter, end_iter.
-	 */
-	GtkTextMark *start;
-	GtkTextMark *end;
+	GtkTextMark *start_mark;
+	GtkTextMark *end_mark;
 };
 
 static GParamSpec *properties[N_PROPERTIES];
@@ -69,8 +66,8 @@ apply_tag (GtefFoldRegion *fold_region)
 
 	g_assert (priv->tag == NULL);
 	g_assert (priv->tag_table == NULL);
-	g_assert (priv->start != NULL);
-	g_assert (priv->end != NULL);
+	g_assert (priv->start_mark != NULL);
+	g_assert (priv->end_mark != NULL);
 	g_assert (priv->buffer != NULL);
 
 	priv->tag = gtk_text_buffer_create_tag (priv->buffer,
@@ -82,11 +79,11 @@ apply_tag (GtefFoldRegion *fold_region)
 
 	gtk_text_buffer_get_iter_at_mark (priv->buffer,
 					  &start_iter,
-					  priv->start);
+					  priv->start_mark);
 
 	gtk_text_buffer_get_iter_at_mark (priv->buffer,
 					  &end_iter,
-					  priv->end);
+					  priv->end_mark);
 
 	gtk_text_iter_forward_line (&start_iter);
 	gtk_text_iter_forward_line (&end_iter);
@@ -180,15 +177,15 @@ gtef_fold_region_dispose (GObject *object)
 
 	if (priv->buffer != NULL)
 	{
-		if (priv->start != NULL)
+		if (priv->start_mark != NULL)
 		{
-			gtk_text_buffer_delete_mark (priv->buffer, priv->start);
-			priv->start = NULL;
+			gtk_text_buffer_delete_mark (priv->buffer, priv->start_mark);
+			priv->start_mark = NULL;
 		}
-		if (priv->end != NULL)
+		if (priv->end_mark != NULL)
 		{
-			gtk_text_buffer_delete_mark (priv->buffer, priv->end);
-			priv->end = NULL;
+			gtk_text_buffer_delete_mark (priv->buffer, priv->end_mark);
+			priv->end_mark = NULL;
 		}
 
 		g_object_remove_weak_pointer (G_OBJECT (priv->buffer),
@@ -196,8 +193,8 @@ gtef_fold_region_dispose (GObject *object)
 		priv->buffer = NULL;
 	}
 
-	priv->start = NULL;
-	priv->end = NULL;
+	priv->start_mark = NULL;
+	priv->end_mark = NULL;
 
 	G_OBJECT_CLASS (gtef_fold_region_parent_class)->dispose (object);
 }
@@ -262,20 +259,20 @@ gtef_fold_region_init (GtefFoldRegion *fold_region)
  */
 GtefFoldRegion *
 gtef_fold_region_new (GtkTextBuffer     *buffer,
-                      const GtkTextIter *start,
-                      const GtkTextIter *end)
+                      const GtkTextIter *start_iter,
+                      const GtkTextIter *end_iter)
 {
 	GtefFoldRegion *fold_region;
 
 	g_return_val_if_fail (GTK_IS_TEXT_BUFFER (buffer), NULL);
-	g_return_val_if_fail (start != NULL, NULL);
-	g_return_val_if_fail (end != NULL, NULL);
+	g_return_val_if_fail (start_iter != NULL, NULL);
+	g_return_val_if_fail (end_iter != NULL, NULL);
 
 	fold_region = g_object_new (GTEF_TYPE_FOLD_REGION,
 				    "buffer", buffer,
 				    NULL);
 
-	gtef_fold_region_set_bounds (fold_region, start, end);
+	gtef_fold_region_set_bounds (fold_region, start_iter, end_iter);
 
 	return fold_region;
 }
@@ -375,14 +372,14 @@ gtef_fold_region_set_folded (GtefFoldRegion *fold_region,
  */
 gboolean
 gtef_fold_region_get_bounds (GtefFoldRegion *fold_region,
-			     GtkTextIter    *start,
-			     GtkTextIter    *end)
+			     GtkTextIter    *start_iter,
+			     GtkTextIter    *end_iter)
 {
 	GtefFoldRegionPrivate *priv;
 
 	g_return_val_if_fail (GTEF_IS_FOLD_REGION (fold_region), FALSE);
-	g_return_val_if_fail (start != NULL, FALSE);
-	g_return_val_if_fail (end != NULL, FALSE);
+	g_return_val_if_fail (start_iter != NULL, FALSE);
+	g_return_val_if_fail (end_iter != NULL, FALSE);
 
 	priv = gtef_fold_region_get_instance_private (fold_region);
 
@@ -395,12 +392,12 @@ gtef_fold_region_get_bounds (GtefFoldRegion *fold_region,
 	 * It can happen if g_object_new() is called by an application.
 	 */
 	gtk_text_buffer_get_iter_at_mark (priv->buffer,
-					  start,
-					  priv->start);
+					  start_iter,
+					  priv->start_mark);
 
 	gtk_text_buffer_get_iter_at_mark (priv->buffer,
-					  end,
-					  priv->end);
+					  end_iter,
+					  priv->end_mark);
 	return TRUE;
 }
 
@@ -416,15 +413,15 @@ gtef_fold_region_get_bounds (GtefFoldRegion *fold_region,
  */
 void
 gtef_fold_region_set_bounds (GtefFoldRegion    *fold_region,
-			     const GtkTextIter *start,
-			     const GtkTextIter *end)
+			     const GtkTextIter *start_iter,
+			     const GtkTextIter *end_iter)
 {
 	GtefFoldRegionPrivate *priv;
 
 	g_return_if_fail (GTEF_IS_FOLD_REGION (fold_region));
-	g_return_if_fail (start != NULL);
-	g_return_if_fail (end != NULL);
-	g_return_if_fail (gtk_text_iter_get_line (start) < gtk_text_iter_get_line (end));
+	g_return_if_fail (start_iter != NULL);
+	g_return_if_fail (end_iter != NULL);
+	g_return_if_fail (gtk_text_iter_get_line (start_iter) < gtk_text_iter_get_line (end_iter));
 
 	priv = gtef_fold_region_get_instance_private (fold_region);
 
@@ -433,27 +430,27 @@ gtef_fold_region_set_bounds (GtefFoldRegion    *fold_region,
 		return;
 	}
 
-	if (priv->start != NULL)
+	if (priv->start_mark != NULL)
 	{
-		gtk_text_buffer_move_mark (priv->buffer, priv->start, start);
+		gtk_text_buffer_move_mark (priv->buffer, priv->start_mark, start_iter);
 	}
 	else
 	{
 		/* FIXME: use gtk_text_buffer_create_mark(), here there is a
 		 * reference leak.
 		 */
-		priv->start = gtk_text_mark_new (NULL, FALSE);
-		gtk_text_buffer_add_mark (priv->buffer, priv->start, start);
+		priv->start_mark = gtk_text_mark_new (NULL, FALSE);
+		gtk_text_buffer_add_mark (priv->buffer, priv->start_mark, start_iter);
 	}
 
-	if (priv->end != NULL)
+	if (priv->end_mark != NULL)
 	{
-		gtk_text_buffer_move_mark (priv->buffer, priv->end, end);
+		gtk_text_buffer_move_mark (priv->buffer, priv->end_mark, end_iter);
 	}
 	else
 	{
-		priv->end = gtk_text_mark_new (NULL, TRUE);
-		gtk_text_buffer_add_mark (priv->buffer, priv->end, end);
+		priv->end_mark = gtk_text_mark_new (NULL, TRUE);
+		gtk_text_buffer_add_mark (priv->buffer, priv->end_mark, end_iter);
 	}
 
 	if (priv->tag != NULL &&

@@ -60,7 +60,6 @@ static void
 apply_tag (GtefFoldRegion *fold_region)
 {
 	GtefFoldRegionPrivate *priv = gtef_fold_region_get_instance_private (fold_region);
-
 	GtkTextIter start_iter;
 	GtkTextIter end_iter;
 

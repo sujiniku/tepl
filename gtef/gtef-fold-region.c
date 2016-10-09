@@ -340,6 +340,11 @@ gtef_fold_region_set_folded (GtefFoldRegion *fold_region,
 		return;
 	}
 
+	if (priv->start_mark == NULL || priv->end_mark == NULL)
+	{
+		return;
+	}
+
 	folded = folded != FALSE;
 
 	if (folded == gtef_fold_region_get_folded (fold_region))

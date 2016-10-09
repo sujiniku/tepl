@@ -77,6 +77,9 @@ apply_tag (GtefFoldRegion *fold_region)
 
 	priv->tag_table = gtk_text_buffer_get_tag_table (priv->buffer);
 
+	g_object_ref (priv->tag);
+	g_object_ref (priv->tag_table);
+
 	gtk_text_buffer_get_iter_at_mark (priv->buffer,
 					  &start_iter,
 					  priv->start_mark);
@@ -92,9 +95,6 @@ apply_tag (GtefFoldRegion *fold_region)
 				   priv->tag,
 				   &start_iter,
 				   &end_iter);
-
-	g_object_ref (priv->tag);
-	g_object_ref (priv->tag_table);
 }
 
 static void

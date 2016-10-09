@@ -19,11 +19,6 @@
 
 #include <gtef/gtef.h>
 
-/* FIXME: a new file at testsuite/ with unit tests would be better.
- * Use gtk_text_iter functions to see if the invisible region is correctly
- * skipped.
- */
-
 static GtkWidget *
 create_view (void)
 {

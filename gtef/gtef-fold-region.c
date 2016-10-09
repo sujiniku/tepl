@@ -438,11 +438,7 @@ gtef_fold_region_set_bounds (GtefFoldRegion    *fold_region,
 	}
 	else
 	{
-		/* FIXME: use gtk_text_buffer_create_mark(), here there is a
-		 * reference leak.
-		 */
-		priv->start_mark = gtk_text_mark_new (NULL, FALSE);
-		gtk_text_buffer_add_mark (priv->buffer, priv->start_mark, start_iter);
+		priv->start_mark = gtk_text_buffer_create_mark (priv->buffer, NULL, start_iter, FALSE);
 	}
 
 	if (priv->end_mark != NULL)
@@ -451,8 +447,7 @@ gtef_fold_region_set_bounds (GtefFoldRegion    *fold_region,
 	}
 	else
 	{
-		priv->end_mark = gtk_text_mark_new (NULL, TRUE);
-		gtk_text_buffer_add_mark (priv->buffer, priv->end_mark, end_iter);
+		priv->end_mark = gtk_text_buffer_create_mark (priv->buffer, NULL, end_iter, TRUE);
 	}
 
 	if (priv->tag != NULL &&

@@ -388,9 +388,11 @@ gtef_fold_region_get_bounds (GtefFoldRegion *fold_region,
 		return FALSE;
 	}
 
-	/* FIXME what if set_bounds() has not already been called?
-	 * It can happen if g_object_new() is called by an application.
-	 */
+	if (priv->start_mark == NULL || priv->end_mark == NULL)
+	{
+		return FALSE;
+	}
+
 	gtk_text_buffer_get_iter_at_mark (priv->buffer,
 					  start_iter,
 					  priv->start_mark);

@@ -383,6 +383,30 @@ test_overlapping_regions (void)
 	g_object_unref (buffer);
 }
 
+static void
+test_call_other_methods_before_set_bounds (void)
+{
+	GtkTextBuffer *buffer;
+	GtefFoldRegion *fold_region;
+	GtkTextIter start_iter;
+	GtkTextIter end_iter;
+
+	buffer = test_create_and_fill_buffer (6);
+
+	fold_region = g_object_new (GTEF_TYPE_FOLD_REGION,
+				    "buffer", buffer,
+				    NULL);
+
+	gtef_fold_region_set_folded (fold_region, TRUE);
+	gtef_fold_region_set_folded (fold_region, FALSE);
+	gtef_fold_region_get_folded (fold_region);
+	gtef_fold_region_get_buffer (fold_region);
+	gtef_fold_region_get_bounds (fold_region, &start_iter, &end_iter);
+
+	g_object_unref (fold_region);
+	g_object_unref (buffer);
+}
+
 gint
 main (gint    argc,
       gchar **argv)
@@ -402,6 +426,7 @@ main (gint    argc,
 	g_test_add_func ("/fold-region/double_fold", test_double_fold);
 	g_test_add_func ("/fold-region/double_unfold", test_double_unfold);
 	g_test_add_func ("/fold-region/overlapping_regions", test_overlapping_regions);
+	g_test_add_func ("/fold-region/call_other_methods_before_set_bounds", test_call_other_methods_before_set_bounds);
 
 	return g_test_run ();
 }

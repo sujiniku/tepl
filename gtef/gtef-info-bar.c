@@ -89,11 +89,7 @@ gtef_info_bar_create_label (void)
 	gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_START);
 	gtk_label_set_line_wrap (label, TRUE);
 	gtk_label_set_line_wrap_mode (label, PANGO_WRAP_WORD_CHAR);
-
 	gtk_label_set_selectable (label, TRUE);
-
-	/* FIXME really needed? We already set the label as selectable. */
-	gtk_widget_set_can_focus (GTK_WIDGET (label), TRUE);
 
 	return label;
 }

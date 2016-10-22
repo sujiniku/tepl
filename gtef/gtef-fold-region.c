@@ -436,20 +436,13 @@ gtef_fold_region_set_bounds (GtefFoldRegion    *fold_region,
 		return;
 	}
 
-	/* FIXME: set better gravity. start_mark should always be before
-	 * end_mark. But currently, if the [start,end] text is deleted and then
-	 * text is inserted at start==end, then start_mark will be after
-	 * end_mark.
-	 * The best is to apply the same gravities as the GtkTextTag.
-	 */
-
 	if (priv->start_mark != NULL)
 	{
 		gtk_text_buffer_move_mark (priv->buffer, priv->start_mark, start);
 	}
 	else
 	{
-		priv->start_mark = gtk_text_buffer_create_mark (priv->buffer, NULL, start, FALSE);
+		priv->start_mark = gtk_text_buffer_create_mark (priv->buffer, NULL, start, TRUE);
 	}
 
 	if (priv->end_mark != NULL)
@@ -458,7 +451,7 @@ gtef_fold_region_set_bounds (GtefFoldRegion    *fold_region,
 	}
 	else
 	{
-		priv->end_mark = gtk_text_buffer_create_mark (priv->buffer, NULL, end, TRUE);
+		priv->end_mark = gtk_text_buffer_create_mark (priv->buffer, NULL, end, FALSE);
 	}
 
 	if (priv->tag != NULL &&

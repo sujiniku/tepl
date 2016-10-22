@@ -430,6 +430,39 @@ gtef_buffer_get_title (GtefBuffer *buffer)
 	return title;
 }
 
+/**
+ * gtef_buffer_get_selection_type:
+ * @buffer: a #GtefBuffer.
+ *
+ * Returns: the current #GtefSelectionType.
+ * Since: 1.0
+ */
+GtefSelectionType
+gtef_buffer_get_selection_type (GtefBuffer *buffer)
+{
+	GtkTextIter start;
+	GtkTextIter end;
+	gint start_line;
+	gint end_line;
+
+	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), GTEF_SELECTION_TYPE_NO_SELECTION);
+
+	if (!gtk_text_buffer_get_selection_bounds (GTK_TEXT_BUFFER (buffer), &start, &end))
+	{
+		return GTEF_SELECTION_TYPE_NO_SELECTION;
+	}
+
+	start_line = gtk_text_iter_get_line (&start);
+	end_line = gtk_text_iter_get_line (&end);
+
+	if (start_line == end_line)
+	{
+		return GTEF_SELECTION_TYPE_ON_SAME_LINE;
+	}
+
+	return GTEF_SELECTION_TYPE_MULTIPLE_LINES;
+}
+
 static void
 update_invalid_char_tag_style (GtefBuffer *buffer)
 {

@@ -44,6 +44,22 @@ struct _GtefBufferClass
 	gpointer padding[12];
 };
 
+/**
+ * GtefSelectionType:
+ * @GTEF_SELECTION_TYPE_NO_SELECTION: No selection.
+ * @GTEF_SELECTION_TYPE_ON_SAME_LINE: The start and end selection bounds are on
+ *   the same line.
+ * @GTEF_SELECTION_TYPE_MULTIPLE_LINES: The selection spans multiple lines.
+ *
+ * Since: 1.0
+ */
+typedef enum _GtefSelectionType
+{
+	GTEF_SELECTION_TYPE_NO_SELECTION,
+	GTEF_SELECTION_TYPE_ON_SAME_LINE,
+	GTEF_SELECTION_TYPE_MULTIPLE_LINES
+} GtefSelectionType;
+
 GtefBuffer *		gtef_buffer_new				(void);
 
 GtefFile *		gtef_buffer_get_file			(GtefBuffer *buffer);
@@ -51,6 +67,8 @@ GtefFile *		gtef_buffer_get_file			(GtefBuffer *buffer);
 gboolean		gtef_buffer_is_untouched		(GtefBuffer *buffer);
 
 gchar *			gtef_buffer_get_title			(GtefBuffer *buffer);
+
+GtefSelectionType	gtef_buffer_get_selection_type		(GtefBuffer *buffer);
 
 G_GNUC_INTERNAL
 void			_gtef_buffer_set_as_invalid_character	(GtefBuffer        *buffer,

@@ -4,13 +4,17 @@
 <FILE>buffer</FILE>
 <TITLE>GtefBuffer</TITLE>
 GtefBuffer
+GtefSelectionType
 gtef_buffer_new
 gtef_buffer_get_file
 gtef_buffer_is_untouched
 gtef_buffer_get_title
+gtef_buffer_get_selection_type
 <SUBSECTION Standard>
 GTEF_TYPE_BUFFER
 GtefBufferClass
+GTEF_TYPE_SELECTION_TYPE
+gtef_selection_type_get_type
 </SECTION>
 
 <SECTION>

@@ -31,8 +31,8 @@ https://wiki.gnome.org/Projects/GtkSourceView/RoadMap
 Warning - API/ABI stability
 ---------------------------
 
-Gtef uses the same versioning *scheme* as GNOME and GTK+, but not the same
-version *numbers* at the same time. The package version has the form
+Gtef uses the same versioning *scheme* as GNOME, but not the same version
+*numbers* at the same time. The package version has the form
 'major.minor.micro'. If 'minor' is an even number, it means that it is a stable
 version and that API/ABI stability is guaranteed, and that it is
 backward-compatible with previous stable minor versions that have the same

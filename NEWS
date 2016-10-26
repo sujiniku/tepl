@@ -1,0 +1,19 @@
+News in 1.0.0, 2016-10-26
+-------------------------
+
+This is the first version of Gtef.
+
+File loading and saving:
+* Save and load file metadata. If GVfs is not available, there is a fallback
+  implementation with an XML file (used e.g. on Windows).
+* A new file loader based on uchardet (implementation not completely finished).
+
+Starting the framework:
+* GtefBuffer, a subclass of GtkSourceBuffer with additional features.
+* GtefView, a subclass of GtkSourceView with additional features.
+* GtefTab, contains a GtefView with GtkInfoBars on top.
+* GtefInfoBar, a subclass of GtkInfoBar.
+
+Starting code folding:
+* GtefGutterRendererFolds, a basic gutter renderer for code folding.
+* GtefFoldRegion, a foldable region in a GtkTextBuffer.

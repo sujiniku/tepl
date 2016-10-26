@@ -33,6 +33,8 @@
  * #GtefFileLoader is not a fork of #GtkSourceFileLoader, it is a new
  * implementation based on
  * [uchardet](https://www.freedesktop.org/wiki/Software/uchardet/).
+ *
+ * But the implementation is not yet finished.
  */
 
 typedef struct _GtefFileLoaderPrivate GtefFileLoaderPrivate;

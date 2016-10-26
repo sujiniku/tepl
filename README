@@ -29,13 +29,23 @@ https://wiki.gnome.org/Projects/GtkSourceView/RoadMap
 Warning - API/ABI stability
 ---------------------------
 
-The API/ABI is not considered stable at this point. When the 1.0 version will
-be released, then Gtef can safely be used. The 1.0 version will be released a
-bit later than GNOME 3.22, when it's ready. After that, each time an API break
-is needed in Gtef, the major version will be bumped so that the new version is
-parallel-installable with the previous major versions. And that, every 6 months
-if needed, to improve the API incrementally. The only supported version is the
-latest one, don't expect bug or security fixes to the old major versions.
+Gtef uses the same versioning *scheme* as GNOME and GTK+, but not the same
+version *numbers* at the same time. The package version has the form
+'major.minor.micro'. If 'minor' is an even number, it means that it is a stable
+version and that API/ABI stability is guaranteed, and that it is
+backward-compatible with previous stable minor versions that have the same
+major version (e.g. 1.2.x is backward-compatible with 1.0.x). When a new major
+version is released, it means that the API or ABI is not backward-compatible
+with previous major versions. Different major versions can be installed in
+parallel.
+
+To learn more about the GNOME versioning scheme:
+https://developer.gnome.org/programming-guidelines/stable/versioning.html.en
+
+Gtef contains more experimental APIs than GtkSourceView, sometimes even
+unfinished features. It means that - if needed - new major versions are
+released every 6 months, breaking the API to improve and design it
+incrementally.
 
 Dependencies
 ------------

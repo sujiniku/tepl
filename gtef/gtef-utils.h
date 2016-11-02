@@ -45,6 +45,11 @@ gchar *		_gtef_utils_get_fallback_basename_for_display	(GFile *location);
 G_GNUC_INTERNAL
 gchar *		_gtef_utils_make_valid_utf8			(const gchar *_str);
 
+/* Widget utilities */
+
+void		gtef_utils_menu_item_set_icon_name		(GtkMenuItem *item,
+								 const gchar *icon_name);
+
 G_END_DECLS
 
 #endif /* GTEF_UTILS_H */

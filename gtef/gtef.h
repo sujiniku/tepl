@@ -35,6 +35,7 @@
 #include <gtef/gtef-info-bar.h>
 #include <gtef/gtef-metadata-manager.h>
 #include <gtef/gtef-tab.h>
+#include <gtef/gtef-utils.h>
 #include <gtef/gtef-view.h>
 
 #undef GTEF_H_INSIDE

@@ -28,8 +28,7 @@ IGNORE_HFILES =				\
 	gtef-buffer-input-stream.h	\
 	gtef-encoding-converter.h	\
 	gtef-io-error-info-bar.h	\
-	gtef-progress-info-bar.h	\
-	gtef-utils.h
+	gtef-progress-info-bar.h
 
 # Extra options to supply to gtkdoc-mkdb
 MKDB_OPTIONS = --xml-mode --output-format=xml

@@ -191,6 +191,12 @@ GtefTabClass
 </SECTION>
 
 <SECTION>
+<FILE>utils</FILE>
+<TITLE>GtefUtils</TITLE>
+gtef_utils_menu_item_set_icon_name
+</SECTION>
+
+<SECTION>
 <FILE>view</FILE>
 <TITLE>GtefView</TITLE>
 GtefView

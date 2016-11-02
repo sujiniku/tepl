@@ -27,6 +27,14 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 
+/**
+ * SECTION:utils
+ * @title: GtefUtils
+ * @short_description: Utilities functions
+ *
+ * Utilities functions.
+ */
+
 /*
  * _gtef_utils_replace_home_dir_with_tilde:
  * @filename: the filename.
@@ -337,6 +345,15 @@ _gtef_utils_make_valid_utf8 (const gchar *_str)
 	return g_string_free (string, FALSE);
 }
 
+/**
+ * gtef_utils_menu_item_set_icon_name:
+ * @item: a #GtkMenuItem.
+ * @icon_name: an icon name.
+ *
+ * Sets an icon to a #GtkMenuItem.
+ *
+ * Since: 1.2
+ */
 /* Based on gtk_model_menu_item_set_icon() from gtkmodelmenuitem.c (private
  * GTK+ class).
  * Copyright 2011, 2013 Canonical Limited

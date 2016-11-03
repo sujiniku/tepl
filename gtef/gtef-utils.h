@@ -44,11 +44,6 @@ gboolean	_gtef_utils_decode_uri				(const gchar  *uri,
 G_GNUC_INTERNAL
 gchar *		_gtef_utils_get_fallback_basename_for_display	(GFile *location);
 
-/* String utilities */
-
-G_GNUC_INTERNAL
-gchar *		_gtef_utils_make_valid_utf8			(const gchar *_str);
-
 /* Widget utilities */
 
 void		gtef_utils_menu_item_set_icon_name		(GtkMenuItem *item,

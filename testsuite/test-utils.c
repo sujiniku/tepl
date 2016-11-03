@@ -92,47 +92,6 @@ test_get_fallback_basename_for_display (void)
 	g_free (basename);
 }
 
-static void
-test_make_valid_utf8 (void)
-{
-	gchar *result;
-	const gchar *invalid_str;
-
-	/* Empty */
-	result = _gtef_utils_make_valid_utf8 ("");
-	g_assert_cmpstr (result, ==, "");
-	g_free (result);
-
-	/* Ascii */
-	result = _gtef_utils_make_valid_utf8 ("valid");
-	g_assert_cmpstr (result, ==, "valid");
-	g_free (result);
-
-	/* Multi-byte char: Modifier Letter Apostrophe U+02BC */
-	result = _gtef_utils_make_valid_utf8 ("doesn\xCA\xBCt");
-	g_assert_cmpstr (result, ==, "doesn\xCA\xBCt");
-	g_free (result);
-
-	/* Invalid byte: \xFF
-	 *
-	 * \xFF in a string gives a warning with GCC. But GCC is not (yet?)
-	 * smart enough for octal values. If a warning appears in the future,
-	 * we'll need to find another trick.
-	 */
-	invalid_str = "inval\377d";
-	g_assert (!g_utf8_validate (invalid_str, -1, NULL));
-	result = _gtef_utils_make_valid_utf8 (invalid_str);
-	g_assert_cmpstr (result, ==, "inval\357\277\275d");
-	g_free (result);
-
-	/* Several invalid bytes */
-	invalid_str = "\377nval\377d";
-	g_assert (!g_utf8_validate (invalid_str, -1, NULL));
-	result = _gtef_utils_make_valid_utf8 (invalid_str);
-	g_assert_cmpstr (result, ==, "\357\277\275nval\357\277\275d");
-	g_free (result);
-}
-
 gint
 main (gint    argc,
       gchar **argv)
@@ -142,7 +101,6 @@ main (gint    argc,
 	g_test_add_func ("/utils/replace-home-dir-with-tilde", test_replace_home_dir_with_tilde);
 	g_test_add_func ("/utils/decode-uri", test_decode_uri);
 	g_test_add_func ("/utils/get-fallback-basename-for-display", test_get_fallback_basename_for_display);
-	g_test_add_func ("/utils/make-valid-utf8", test_make_valid_utf8);
 
 	return g_test_run ();
 }

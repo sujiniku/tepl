@@ -295,56 +295,6 @@ _gtef_utils_get_fallback_basename_for_display (GFile *location)
 	return basename;
 }
 
-gchar *
-_gtef_utils_make_valid_utf8 (const gchar *_str)
-{
-	const gchar *remainder;
-	gint remaining_bytes;
-	gint valid_bytes;
-	GString *string = NULL;
-
-	g_return_val_if_fail (_str != NULL, NULL);
-
-	remainder = _str;
-	remaining_bytes = strlen (_str);
-
-	while (remaining_bytes != 0)
-	{
-		const gchar *invalid;
-
-		if (g_utf8_validate (remainder, remaining_bytes, &invalid))
-		{
-			break;
-		}
-
-		valid_bytes = invalid - remainder;
-
-		if (string == NULL)
-		{
-			string = g_string_sized_new (remaining_bytes);
-		}
-
-		g_string_append_len (string, remainder, valid_bytes);
-
-		/* Append U+FFFD REPLACEMENT CHARACTER. */
-		g_string_append (string, "\357\277\275");
-
-		remaining_bytes -= valid_bytes + 1;
-		remainder = invalid + 1;
-	}
-
-	if (string == NULL)
-	{
-		return g_strdup (_str);
-	}
-
-	g_string_append (string, remainder);
-
-	g_assert (g_utf8_validate (string->str, -1, NULL));
-
-	return g_string_free (string, FALSE);
-}
-
 /**
  * gtef_utils_menu_item_set_icon_name:
  * @item: a #GtkMenuItem.

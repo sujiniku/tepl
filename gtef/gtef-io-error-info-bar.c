@@ -200,7 +200,7 @@ parse_error (const GError  *error,
 		{
 			gchar *host_utf8;
 
-			host_utf8 = _gtef_utils_make_valid_utf8 (host);
+			host_utf8 = g_utf8_make_valid (host);
 
 			/* Translators: %s is a hostname. */
 			*secondary_text = g_strdup_printf (_("Host “%s” could not be found. Please check that "

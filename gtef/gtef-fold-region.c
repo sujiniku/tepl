@@ -25,6 +25,11 @@
  * @Title: GtefFoldRegion
  *
  * #GtefFoldRegion represents a region in a #GtkTextBuffer that can be folded.
+ *
+ * When a region is being folded, a #GtkTextTag with the #GtkTextTag:invisible
+ * property is applied to the folded region. The actual start and end position
+ * of this #GtkTextTag is respectively at the next new line after the start and
+ * end position of the bounds handed over to gtef_fold_region_set_bounds().
  */
 
 enum

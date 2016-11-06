@@ -94,7 +94,7 @@ jhbuild. So you need to run autogen.sh manually, inside a jhbuild shell, for
 example (adjust the prefix):
 
   $ jhbuild shell
-  $ ./autogen.sh --prefix=/path/jhbuild/prefix --disable-Werror --enable-gtk-doc --enable-vala --enable-code-coverage
+  $ ./autogen.sh --prefix=/path/jhbuild/prefix --disable-Werror --enable-gtk-doc --enable-vala
   $ make
   $ make install
 

@@ -310,6 +310,35 @@ gtef_info_bar_add_secondary_message (GtefInfoBar *info_bar,
 }
 
 /**
+ * gtef_info_bar_add_content_widget:
+ * @info_bar: a #GtefInfoBar.
+ * @content: a #GtkWidget.
+ *
+ * Adds @content to @info_bar.
+ *
+ * #GtefInfoBar has an internal container, to be able to add the icon and add
+ * primary or secondary messages. The internal container is added to the content
+ * area, as returned by gtk_info_bar_get_content_area(). So if you use a
+ * #GtefInfoBar and you need to add a custom #GtkWidget, it is better to use
+ * this function instead of adding the #GtkWidget directly to the content area.
+ *
+ * Since: 1.2
+ */
+void
+gtef_info_bar_add_content_widget (GtefInfoBar *info_bar,
+				  GtkWidget   *content)
+{
+	GtefInfoBarPrivate *priv;
+
+	g_return_if_fail (GTEF_IS_INFO_BAR (info_bar));
+	g_return_if_fail (GTK_IS_WIDGET (content));
+
+	priv = gtef_info_bar_get_instance_private (info_bar);
+
+	gtk_container_add (GTK_CONTAINER (priv->content_vgrid), content);
+}
+
+/**
  * gtef_info_bar_add_close_button:
  * @info_bar: a #GtefInfoBar.
  *

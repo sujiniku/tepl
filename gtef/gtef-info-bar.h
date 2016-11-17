@@ -54,6 +54,9 @@ void			gtef_info_bar_add_primary_message		(GtefInfoBar *info_bar,
 void			gtef_info_bar_add_secondary_message		(GtefInfoBar *info_bar,
 									 const gchar *secondary_msg);
 
+void			gtef_info_bar_add_content_widget		(GtefInfoBar *info_bar,
+									 GtkWidget   *content);
+
 void			gtef_info_bar_add_close_button			(GtefInfoBar *info_bar);
 
 GtkLabel *		gtef_info_bar_create_label			(void);

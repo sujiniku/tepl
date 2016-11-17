@@ -35,10 +35,15 @@ basic_cb (GtkButton *button,
 	  GtefTab   *tab)
 {
 	GtefInfoBar *info_bar;
+	GtkWidget *entry;
 
 	info_bar = gtef_info_bar_new_simple (GTK_MESSAGE_WARNING,
 					     "Primary message.",
 					     "Secondary message.");
+
+	entry = gtk_entry_new ();
+	gtk_widget_show (entry);
+	gtef_info_bar_add_content_widget (info_bar, entry);
 
 	gtef_info_bar_add_close_button (info_bar);
 

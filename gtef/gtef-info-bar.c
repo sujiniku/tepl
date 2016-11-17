@@ -107,6 +107,41 @@ gtef_info_bar_new (void)
 	return g_object_new (GTEF_TYPE_INFO_BAR, NULL);
 }
 
+/**
+ * gtef_info_bar_new_simple:
+ * @msg_type: the message type.
+ * @primary_msg: the primary message.
+ * @secondary_msg: (nullable): the secondary message, or %NULL.
+ *
+ * Creates a new #GtefInfoBar with an icon (depending on @msg_type), a primary
+ * message and a secondary message.
+ *
+ * Returns: a new #GtefInfoBar.
+ * Since: 1.2
+ */
+GtefInfoBar *
+gtef_info_bar_new_simple (GtkMessageType  msg_type,
+			  const gchar    *primary_msg,
+			  const gchar    *secondary_msg)
+{
+	GtefInfoBar *info_bar;
+
+	g_return_val_if_fail (primary_msg != NULL, NULL);
+
+	info_bar = gtef_info_bar_new ();
+
+	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), msg_type);
+	gtef_info_bar_add_icon (info_bar);
+	gtef_info_bar_add_primary_message (info_bar, primary_msg);
+
+	if (secondary_msg != NULL)
+	{
+		gtef_info_bar_add_secondary_message (info_bar, secondary_msg);
+	}
+
+	return info_bar;
+}
+
 static const gchar *
 get_icon_name (GtefInfoBar *info_bar)
 {

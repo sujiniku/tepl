@@ -42,6 +42,10 @@ struct _GtefInfoBarClass
 
 GtefInfoBar *		gtef_info_bar_new				(void);
 
+GtefInfoBar *		gtef_info_bar_new_simple			(GtkMessageType  msg_type,
+									 const gchar    *primary_msg,
+									 const gchar    *secondary_msg);
+
 void			gtef_info_bar_add_icon				(GtefInfoBar *info_bar);
 
 void			gtef_info_bar_add_primary_message		(GtefInfoBar *info_bar,

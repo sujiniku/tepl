@@ -34,27 +34,20 @@ static void
 basic_cb (GtkButton *button,
 	  GtefTab   *tab)
 {
-	GtkInfoBar *info_bar;
-	GtkLabel *label;
-	GtkWidget *content_area;
+	GtefInfoBar *info_bar;
 
-	info_bar = GTK_INFO_BAR (gtef_info_bar_new ());
-	gtk_info_bar_set_show_close_button (info_bar, TRUE);
+	info_bar = gtef_info_bar_new_simple (GTK_MESSAGE_WARNING,
+					     "Primary message.",
+					     "Secondary message.");
 
-	label = gtef_info_bar_create_label ();
-	gtk_label_set_text (label, "Basic info bar.");
-	gtk_widget_show (GTK_WIDGET (label));
-
-	content_area = gtk_info_bar_get_content_area (info_bar);
-	gtk_container_add (GTK_CONTAINER (content_area),
-			   GTK_WIDGET (label));
+	gtk_info_bar_set_show_close_button (GTK_INFO_BAR (info_bar), TRUE);
 
 	g_signal_connect (info_bar,
 			  "response",
 			  G_CALLBACK (info_bar_response_cb),
 			  NULL);
 
-	gtef_tab_add_info_bar (tab, info_bar);
+	gtef_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
 	gtk_widget_show (GTK_WIDGET (info_bar));
 }
 

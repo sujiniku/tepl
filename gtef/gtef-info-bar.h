@@ -42,6 +42,12 @@ struct _GtefInfoBarClass
 
 GtefInfoBar *		gtef_info_bar_new				(void);
 
+void			gtef_info_bar_add_primary_message		(GtefInfoBar *info_bar,
+									 const gchar *primary_msg);
+
+void			gtef_info_bar_add_secondary_message		(GtefInfoBar *info_bar,
+									 const gchar *secondary_msg);
+
 GtkLabel *		gtef_info_bar_create_label			(void);
 
 G_END_DECLS

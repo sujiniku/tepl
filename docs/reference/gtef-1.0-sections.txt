@@ -170,6 +170,7 @@ gtef_info_bar_new_simple
 gtef_info_bar_add_icon
 gtef_info_bar_add_primary_message
 gtef_info_bar_add_secondary_message
+gtef_info_bar_add_close_button
 gtef_info_bar_create_label
 <SUBSECTION Standard>
 GTEF_TYPE_INFO_BAR

@@ -37,13 +37,41 @@ struct _GtefInfoBarPrivate
 
 	/* Contains primary/secondary messages. */
 	GtkGrid *content_vgrid;
+
+	guint close_button_added : 1;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefInfoBar, gtef_info_bar, GTK_TYPE_INFO_BAR)
 
 static void
+gtef_info_bar_response (GtkInfoBar *gtk_info_bar,
+			gint        response_id)
+{
+	GtefInfoBar *info_bar = GTEF_INFO_BAR (gtk_info_bar);
+	GtefInfoBarPrivate *priv = gtef_info_bar_get_instance_private (info_bar);
+
+	if (response_id == GTK_RESPONSE_CLOSE &&
+	    priv->close_button_added)
+	{
+		gtk_widget_destroy (GTK_WIDGET (info_bar));
+
+		/* No need to chain up, the widget is destroyed. */
+		return;
+	}
+
+	if (GTK_INFO_BAR_CLASS (gtef_info_bar_parent_class)->response != NULL)
+	{
+		GTK_INFO_BAR_CLASS (gtef_info_bar_parent_class)->response (gtk_info_bar,
+									   response_id);
+	}
+}
+
+static void
 gtef_info_bar_class_init (GtefInfoBarClass *klass)
 {
+	GtkInfoBarClass *info_bar_class = GTK_INFO_BAR_CLASS (klass);
+
+	info_bar_class->response = gtef_info_bar_response;
 }
 
 static void
@@ -279,6 +307,30 @@ gtef_info_bar_add_secondary_message (GtefInfoBar *info_bar,
 	gtk_widget_show (GTK_WIDGET (secondary_label));
 	gtk_container_add (GTK_CONTAINER (priv->content_vgrid),
 			   GTK_WIDGET (secondary_label));
+}
+
+/**
+ * gtef_info_bar_add_close_button:
+ * @info_bar: a #GtefInfoBar.
+ *
+ * Calls gtk_info_bar_set_show_close_button(), and additionnally closes the
+ * @info_bar when the #GtkInfoBar::response signal is received with the
+ * @response_id %GTK_RESPONSE_CLOSE.
+ *
+ * Since: 1.2
+ */
+void
+gtef_info_bar_add_close_button (GtefInfoBar *info_bar)
+{
+	GtefInfoBarPrivate *priv;
+
+	g_return_if_fail (GTEF_IS_INFO_BAR (info_bar));
+
+	priv = gtef_info_bar_get_instance_private (info_bar);
+
+	gtk_info_bar_set_show_close_button (GTK_INFO_BAR (info_bar), TRUE);
+
+	priv->close_button_added = TRUE;
 }
 
 /**

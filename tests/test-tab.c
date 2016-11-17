@@ -40,12 +40,7 @@ basic_cb (GtkButton *button,
 					     "Primary message.",
 					     "Secondary message.");
 
-	gtk_info_bar_set_show_close_button (GTK_INFO_BAR (info_bar), TRUE);
-
-	g_signal_connect (info_bar,
-			  "response",
-			  G_CALLBACK (info_bar_response_cb),
-			  NULL);
+	gtef_info_bar_add_close_button (info_bar);
 
 	gtef_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
 	gtk_widget_show (GTK_WIDGET (info_bar));

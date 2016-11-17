@@ -166,6 +166,7 @@ gtef_gutter_renderer_folds_state_get_type
 <TITLE>GtefInfoBar</TITLE>
 GtefInfoBar
 gtef_info_bar_new
+gtef_info_bar_add_icon
 gtef_info_bar_add_primary_message
 gtef_info_bar_add_secondary_message
 gtef_info_bar_create_label

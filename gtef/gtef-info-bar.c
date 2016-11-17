@@ -32,6 +32,10 @@ typedef struct _GtefInfoBarPrivate GtefInfoBarPrivate;
 
 struct _GtefInfoBarPrivate
 {
+	/* Left: icon. Right: content_vgrid. */
+	GtkGrid *content_hgrid;
+
+	/* Contains primary/secondary messages. */
 	GtkGrid *content_vgrid;
 };
 
@@ -69,14 +73,25 @@ gtef_info_bar_init (GtefInfoBar *info_bar)
 		g_warning ("Failed to set vertical orientation to the GtkInfoBar action area.");
 	}
 
+	/* hgrid */
+	priv->content_hgrid = GTK_GRID (gtk_grid_new ());
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (priv->content_hgrid),
+					GTK_ORIENTATION_HORIZONTAL);
+	gtk_grid_set_column_spacing (priv->content_hgrid, 16);
+	gtk_widget_show (GTK_WIDGET (priv->content_hgrid));
+
+	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar));
+	gtk_container_add (GTK_CONTAINER (content_area),
+			   GTK_WIDGET (priv->content_hgrid));
+
+	/* vgrid */
 	priv->content_vgrid = GTK_GRID (gtk_grid_new ());
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (priv->content_vgrid),
 					GTK_ORIENTATION_VERTICAL);
 	gtk_grid_set_row_spacing (priv->content_vgrid, 6);
 	gtk_widget_show (GTK_WIDGET (priv->content_vgrid));
 
-	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar));
-	gtk_container_add (GTK_CONTAINER (content_area),
+	gtk_container_add (GTK_CONTAINER (priv->content_hgrid),
 			   GTK_WIDGET (priv->content_vgrid));
 }
 
@@ -90,6 +105,77 @@ GtefInfoBar *
 gtef_info_bar_new (void)
 {
 	return g_object_new (GTEF_TYPE_INFO_BAR, NULL);
+}
+
+static const gchar *
+get_icon_name (GtefInfoBar *info_bar)
+{
+	GtkMessageType msg_type;
+
+	msg_type = gtk_info_bar_get_message_type (GTK_INFO_BAR (info_bar));
+
+	switch (msg_type)
+	{
+		case GTK_MESSAGE_INFO:
+			return "dialog-information";
+
+		case GTK_MESSAGE_WARNING:
+			return "dialog-warning";
+
+		case GTK_MESSAGE_QUESTION:
+			return "dialog-question";
+
+		case GTK_MESSAGE_ERROR:
+			return "dialog-error";
+
+		case GTK_MESSAGE_OTHER:
+		default:
+			/* No icon */
+			break;
+	}
+
+	return NULL;
+}
+
+/**
+ * gtef_info_bar_add_icon:
+ * @info_bar: a #GtefInfoBar.
+ *
+ * Adds an icon on the left, determined by the message type. So before calling
+ * this function, gtk_info_bar_set_message_type() must have been called.
+ *
+ * The icon is not updated when the message type changes. Another #GtefInfoBar
+ * must be created in that case.
+ *
+ * Since: 1.2
+ */
+void
+gtef_info_bar_add_icon (GtefInfoBar *info_bar)
+{
+	GtefInfoBarPrivate *priv;
+	const gchar *icon_name;
+	GtkWidget *image;
+
+	g_return_if_fail (GTEF_IS_INFO_BAR (info_bar));
+
+	priv = gtef_info_bar_get_instance_private (info_bar);
+
+	icon_name = get_icon_name (info_bar);
+	if (icon_name == NULL)
+	{
+		return;
+	}
+
+	image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_DIALOG);
+	gtk_widget_set_valign (image, GTK_ALIGN_START);
+	gtk_widget_show (image);
+
+	gtk_grid_attach_next_to (priv->content_hgrid,
+				 image,
+				 GTK_WIDGET (priv->content_vgrid),
+				 GTK_POS_LEFT,
+				 1,
+				 1);
 }
 
 /**

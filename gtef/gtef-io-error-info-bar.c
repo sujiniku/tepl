@@ -25,72 +25,7 @@
 
 /* Verbose error reporting for file I/O operations (load, save, etc.). */
 
-typedef struct _GtefIoErrorInfoBarPrivate GtefIoErrorInfoBarPrivate;
-
-struct _GtefIoErrorInfoBarPrivate
-{
-	GtkGrid *content_vgrid;
-};
-
-G_DEFINE_TYPE_WITH_PRIVATE (GtefIoErrorInfoBar, _gtef_io_error_info_bar, GTEF_TYPE_INFO_BAR)
-
-static void
-add_primary_text (GtefIoErrorInfoBar *info_bar,
-		  const gchar        *primary_text)
-{
-	GtefIoErrorInfoBarPrivate *priv;
-	gchar *primary_text_escaped;
-	gchar *primary_markup;
-	GtkLabel *primary_label;
-
-	priv = _gtef_io_error_info_bar_get_instance_private (info_bar);
-
-	if (primary_text == NULL)
-	{
-		return;
-	}
-
-	primary_text_escaped = g_markup_escape_text (primary_text, -1);
-	primary_markup = g_strdup_printf ("<b>%s</b>", primary_text_escaped);
-	primary_label = gtef_info_bar_create_label ();
-	gtk_label_set_markup (primary_label, primary_markup);
-
-	gtk_widget_show (GTK_WIDGET (primary_label));
-	gtk_container_add (GTK_CONTAINER (priv->content_vgrid),
-			   GTK_WIDGET (primary_label));
-
-	g_free (primary_text_escaped);
-	g_free (primary_markup);
-}
-
-static void
-add_secondary_text (GtefIoErrorInfoBar *info_bar,
-		    const gchar        *secondary_text)
-{
-	GtefIoErrorInfoBarPrivate *priv;
-	gchar *secondary_text_escaped;
-	gchar *secondary_markup;
-	GtkLabel *secondary_label;
-
-	priv = _gtef_io_error_info_bar_get_instance_private (info_bar);
-
-	if (secondary_text == NULL)
-	{
-		return;
-	}
-
-	secondary_text_escaped = g_markup_escape_text (secondary_text, -1);
-	secondary_markup = g_strdup_printf ("<small>%s</small>", secondary_text_escaped);
-	secondary_label = gtef_info_bar_create_label ();
-	gtk_label_set_markup (secondary_label, secondary_markup);
-
-	gtk_widget_show (GTK_WIDGET (secondary_label));
-	gtk_container_add (GTK_CONTAINER (priv->content_vgrid),
-			   GTK_WIDGET (secondary_label));
-
-	g_free (secondary_text_escaped);
-	g_free (secondary_markup);
-}
+G_DEFINE_TYPE (GtefIoErrorInfoBar, _gtef_io_error_info_bar, GTEF_TYPE_INFO_BAR)
 
 static gboolean
 is_recoverable_error (const GError *error)
@@ -286,19 +221,6 @@ _gtef_io_error_info_bar_class_init (GtefIoErrorInfoBarClass *klass)
 static void
 _gtef_io_error_info_bar_init (GtefIoErrorInfoBar *info_bar)
 {
-	GtefIoErrorInfoBarPrivate *priv;
-	GtkWidget *content_area;
-
-	priv = _gtef_io_error_info_bar_get_instance_private (info_bar);
-
-	priv->content_vgrid = GTK_GRID (gtk_grid_new ());
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (priv->content_vgrid),
-					GTK_ORIENTATION_VERTICAL);
-	gtk_widget_show (GTK_WIDGET (priv->content_vgrid));
-
-	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar));
-	gtk_container_add (GTK_CONTAINER (content_area),
-			   GTK_WIDGET (priv->content_vgrid));
 }
 
 GtefIoErrorInfoBar *
@@ -416,8 +338,14 @@ _gtef_io_error_info_bar_set_loading_error (GtefIoErrorInfoBar  *info_bar,
 		set_io_loading_error (info_bar, is_recoverable_error (error));
 	}
 
-	add_primary_text (info_bar, primary_text);
-	add_secondary_text (info_bar, secondary_text);
+	gtef_info_bar_add_primary_message (GTEF_INFO_BAR (info_bar),
+					   primary_text);
+
+	if (secondary_text != NULL)
+	{
+		gtef_info_bar_add_secondary_message (GTEF_INFO_BAR (info_bar),
+						     secondary_text);
+	}
 
 	g_free (uri_for_display);
 	g_free (primary_text);

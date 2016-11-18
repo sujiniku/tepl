@@ -69,6 +69,30 @@ static guint signals[N_SIGNALS];
 G_DEFINE_TYPE_WITH_PRIVATE (GtefBuffer, gtef_buffer, GTK_SOURCE_TYPE_BUFFER)
 
 static void
+update_invalid_char_tag_style (GtefBuffer *buffer)
+{
+	GtefBufferPrivate *priv;
+	GtkSourceStyleScheme *style_scheme;
+	GtkSourceStyle *style = NULL;
+
+	priv = gtef_buffer_get_instance_private (buffer);
+
+	if (priv->invalid_char_tag == NULL)
+	{
+		return;
+	}
+
+	style_scheme = gtk_source_buffer_get_style_scheme (GTK_SOURCE_BUFFER (buffer));
+
+	if (style_scheme != NULL)
+	{
+		style = gtk_source_style_scheme_get_style (style_scheme, "def:error");
+	}
+
+	gtk_source_style_apply (style, priv->invalid_char_tag);
+}
+
+static void
 gtef_buffer_get_property (GObject    *object,
 			  guint       prop_id,
 			  GValue     *value,
@@ -320,6 +344,16 @@ short_name_notify_cb (GtefFile   *file,
 }
 
 static void
+style_scheme_notify_cb (GtkSourceBuffer *buffer,
+			GParamSpec      *pspec,
+			gpointer         user_data)
+{
+	update_invalid_char_tag_style (GTEF_BUFFER (buffer));
+
+	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_GTEF_STYLE_SCHEME_ID]);
+}
+
+static void
 gtef_buffer_init (GtefBuffer *buffer)
 {
 	GtefBufferPrivate *priv;
@@ -333,6 +367,11 @@ gtef_buffer_init (GtefBuffer *buffer)
 				 G_CALLBACK (short_name_notify_cb),
 				 buffer,
 				 0);
+
+	g_signal_connect (buffer,
+			  "notify::style-scheme",
+			  G_CALLBACK (style_scheme_notify_cb),
+			  NULL);
 }
 
 /**
@@ -553,33 +592,6 @@ gtef_buffer_get_selection_type (GtefBuffer *buffer)
 }
 
 static void
-update_invalid_char_tag_style (GtefBuffer *buffer)
-{
-	GtefBufferPrivate *priv;
-	GtkSourceStyleScheme *style_scheme;
-	GtkSourceStyle *style = NULL;
-
-	priv = gtef_buffer_get_instance_private (buffer);
-
-	style_scheme = gtk_source_buffer_get_style_scheme (GTK_SOURCE_BUFFER (buffer));
-
-	if (style_scheme != NULL)
-	{
-		style = gtk_source_style_scheme_get_style (style_scheme, "def:error");
-	}
-
-	gtk_source_style_apply (style, priv->invalid_char_tag);
-}
-
-static void
-style_scheme_notify_cb (GtkSourceBuffer *buffer,
-			GParamSpec      *pspec,
-			gpointer         user_data)
-{
-	update_invalid_char_tag_style (GTEF_BUFFER (buffer));
-}
-
-static void
 text_tag_set_highest_priority (GtkTextTag    *tag,
 			       GtkTextBuffer *buffer)
 {
@@ -611,11 +623,6 @@ _gtef_buffer_set_as_invalid_character (GtefBuffer        *buffer,
 								     NULL);
 
 		update_invalid_char_tag_style (buffer);
-
-		g_signal_connect (buffer,
-		                  "notify::style-scheme",
-		                  G_CALLBACK (style_scheme_notify_cb),
-		                  NULL);
 	}
 
 	/* Make sure the 'error' tag has the priority over

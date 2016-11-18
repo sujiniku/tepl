@@ -135,6 +135,7 @@ AC_CONFIG_FILES([
 	Makefile
 	docs/Makefile
 	docs/reference/gtef-docs.xml
+	docs/reference/intro.xml
 	docs/reference/Makefile
 	gtef/Makefile
 	po/Makefile.in

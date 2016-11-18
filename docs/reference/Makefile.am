@@ -38,7 +38,8 @@ HTML_IMAGES =
 
 # Extra XML files that are included by $(DOC_MAIN_SGML_FILE)
 content_files =			\
-	api-breaks.xml
+	api-breaks.xml		\
+	intro.xml
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS =
@@ -58,7 +59,12 @@ MAINTAINERCLEANFILES =			\
 # include common portion ...
 include $(top_srcdir)/gtk-doc.make
 
-EXTRA_DIST += gtef-docs.xml.in
-DISTCLEANFILES = gtef-docs.xml
+EXTRA_DIST +=			\
+	gtef-docs.xml.in	\
+	intro.xml.in
+
+DISTCLEANFILES =		\
+	gtef-docs.xml		\
+	intro.xml
 
 -include $(top_srcdir)/git.mk

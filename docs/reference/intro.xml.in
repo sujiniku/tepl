@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+ <!ENTITY % local.common.attrib "xmlns:xi CDATA #FIXED 'http://www.w3.org/2003/XInclude'">
+ <!ENTITY % gtkdocentities SYSTEM "xml/gtkdocentities.ent">
+ %gtkdocentities;
+]>
+
+<part>
+  <title>Introduction</title>
+
+  <para>
+    Gtef is a library that eases the development of GtkSourceView-based text
+    editors and IDEs. Gtef is an acronym for “GNOME Text Editor Framework”. Some
+    of the Gtef code comes from gedit.
+  </para>
+
+  <para>
+    See <ulink url="https://github.com/swilmet/gtef">Gtef on GitHub</ulink>.
+  </para>
+
+  <para>
+    Gtef @GTEF_API_VERSION@ depends on GTK+ 3 and GtkSourceView 3.
+  </para>
+
+  <refsect1>
+    <title>pkg-config name</title>
+    <para>
+      For Gtef @GTEF_API_VERSION@, the pkg-config name is:
+      <code>gtef-@GTEF_API_VERSION@</code>
+    </para>
+    <para>
+      To compile a program that uses Gtef @GTEF_API_VERSION@, you
+      can for example use the following command:
+    </para>
+    <para>
+      <code>$ gcc hello.c `pkg-config --cflags --libs gtef-@GTEF_API_VERSION@` -o hello</code>
+    </para>
+  </refsect1>
+</part>

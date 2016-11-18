@@ -54,7 +54,7 @@ enum
 
 enum
 {
-	SIGNAL_CURSOR_MOVED,
+	SIGNAL_GTEF_CURSOR_MOVED,
 	N_SIGNALS
 };
 
@@ -119,7 +119,7 @@ idle_cursor_moved_cb (gpointer user_data)
 	GtefBuffer *buffer = GTEF_BUFFER (user_data);
 	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (buffer);
 
-	g_signal_emit (buffer, signals[SIGNAL_CURSOR_MOVED], 0);
+	g_signal_emit (buffer, signals[SIGNAL_GTEF_CURSOR_MOVED], 0);
 
 	priv->idle_cursor_moved_id = 0;
 	return G_SOURCE_REMOVE;
@@ -257,22 +257,22 @@ gtef_buffer_class_init (GtefBufferClass *klass)
 	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
 
 	/**
-	 * GtefBuffer::cursor-moved:
+	 * GtefBuffer::gtef-cursor-moved:
 	 * @buffer: the #GtefBuffer emitting the signal.
 	 *
-	 * The ::cursor-moved signal is emitted when the insert mark is moved
-	 * explicitely or when the buffer changes (insert/delete).
+	 * The ::gtef-cursor-moved signal is emitted when the insert mark is
+	 * moved explicitely or when the buffer changes (insert/delete).
 	 *
 	 * A typical use-case for this signal is to update the cursor position
 	 * in a statusbar.
 	 *
-	 * Since: 1.0
+	 * Since: 2.0
 	 */
-	signals[SIGNAL_CURSOR_MOVED] =
-		g_signal_new ("cursor-moved",
+	signals[SIGNAL_GTEF_CURSOR_MOVED] =
+		g_signal_new ("gtef-cursor-moved",
 			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_FIRST,
-			      G_STRUCT_OFFSET (GtefBufferClass, cursor_moved),
+			      G_STRUCT_OFFSET (GtefBufferClass, gtef_cursor_moved),
 			      NULL, NULL, NULL,
 			      G_TYPE_NONE, 0);
 }

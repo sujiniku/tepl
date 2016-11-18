@@ -31,6 +31,10 @@
  *
  * It also adds an association to a #GtefFile that can be retrieved with
  * gtef_buffer_get_file(). The association cannot change.
+ *
+ * The properties and signals have the gtef namespace, to avoid potential
+ * conflicts in the future if the property or signal is moved to
+ * #GtkSourceBuffer.
  */
 
 typedef struct _GtefBufferPrivate GtefBufferPrivate;

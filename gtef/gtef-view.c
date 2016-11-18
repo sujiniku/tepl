@@ -239,3 +239,53 @@ gtef_view_scroll_to_cursor (GtefView *view)
 				      0.0,
 				      0.0);
 }
+
+/**
+ * gtef_view_select_lines:
+ * @view: a #GtefView.
+ * @start_line: start of the region to select.
+ * @end_line: end of the region to select.
+ *
+ * Selects the lines between @start_line and @end_line included, counting from
+ * zero. And then scrolls to the cursor.
+ *
+ * Possible use-case: line numbers coming from a compilation output, to go to
+ * the place where a warning or error occurred.
+ *
+ * Since: 2.0
+ */
+void
+gtef_view_select_lines (GtefView *view,
+			gint      start_line,
+			gint      end_line)
+{
+	GtkTextBuffer *buffer;
+	GtkTextIter start_iter;
+	GtkTextIter end_iter;
+
+	g_return_if_fail (GTEF_IS_VIEW (view));
+
+	if (end_line < start_line)
+	{
+		gint start_line_copy;
+
+		/* Swap start_line and end_line */
+		start_line_copy = start_line;
+		start_line = end_line;
+		end_line = start_line_copy;
+	}
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+
+	gtk_text_buffer_get_iter_at_line (buffer, &start_iter, start_line);
+	gtk_text_buffer_get_iter_at_line (buffer, &end_iter, end_line);
+
+	if (!gtk_text_iter_ends_line (&end_iter))
+	{
+		gtk_text_iter_forward_to_line_end (&end_iter);
+	}
+
+	gtk_text_buffer_select_range (buffer, &start_iter, &end_iter);
+
+	gtef_view_scroll_to_cursor (view);
+}

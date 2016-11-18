@@ -48,7 +48,7 @@ struct _GtefBufferPrivate
 enum
 {
 	PROP_0,
-	PROP_TITLE,
+	PROP_GTEF_TITLE,
 	N_PROPERTIES
 };
 
@@ -73,7 +73,7 @@ gtef_buffer_get_property (GObject    *object,
 
 	switch (prop_id)
 	{
-		case PROP_TITLE:
+		case PROP_GTEF_TITLE:
 			g_value_take_string (value, gtef_buffer_get_title (buffer));
 			break;
 
@@ -220,7 +220,7 @@ gtef_buffer_modified_changed (GtkTextBuffer *buffer)
 		GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->modified_changed (buffer);
 	}
 
-	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TITLE]);
+	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_GTEF_TITLE]);
 }
 
 static void
@@ -240,15 +240,15 @@ gtef_buffer_class_init (GtefBufferClass *klass)
 	text_buffer_class->modified_changed = gtef_buffer_modified_changed;
 
 	/**
-	 * GtefBuffer:title:
+	 * GtefBuffer:gtef-title:
 	 *
 	 * The buffer title. See gtef_buffer_get_title().
 	 *
-	 * Since: 1.0
+	 * Since: 2.0
 	 */
-	properties[PROP_TITLE] =
-		g_param_spec_string ("title",
-				     "Title",
+	properties[PROP_GTEF_TITLE] =
+		g_param_spec_string ("gtef-title",
+				     "Gtef Title",
 				     "",
 				     NULL,
 				     G_PARAM_READABLE |
@@ -282,7 +282,7 @@ short_name_notify_cb (GtefFile   *file,
 		      GParamSpec *pspec,
 		      GtefBuffer *buffer)
 {
-	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TITLE]);
+	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_GTEF_TITLE]);
 }
 
 static void

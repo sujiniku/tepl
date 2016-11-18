@@ -13,7 +13,7 @@
   </bookinfo>
 
   <part>
-    <title>API reference</title>
+    <title>API Reference</title>
 
     <chapter>
       <title>Main Classes</title>
@@ -50,23 +50,27 @@
 
   <xi:include href="api-breaks.xml"/>
 
-  <chapter id="object-tree">
-    <title>Object Hierarchy</title>
-    <xi:include href="xml/tree_index.sgml"/>
-  </chapter>
+  <part>
+    <title>Annexes</title>
 
-  <xi:include href="xml/annotation-glossary.xml"><xi:fallback /></xi:include>
+    <chapter id="object-tree">
+      <title>Object Hierarchy</title>
+      <xi:include href="xml/tree_index.sgml"/>
+    </chapter>
 
-  <index id="api-index-full">
-    <title>Index of all symbols</title>
-    <xi:include href="xml/api-index-full.xml"><xi:fallback /></xi:include>
-  </index>
-  <index id="api-index-1-0" role="1.0">
-    <title>Index of new symbols in 1.0</title>
-    <xi:include href="xml/api-index-1.0.xml"><xi:fallback /></xi:include>
-  </index>
-  <index id="api-index-2-0" role="2.0">
-    <title>Index of new symbols in 2.0</title>
-    <xi:include href="xml/api-index-2.0.xml"><xi:fallback /></xi:include>
-  </index>
+    <xi:include href="xml/annotation-glossary.xml"><xi:fallback /></xi:include>
+
+    <index id="api-index-full">
+      <title>Index of all symbols</title>
+      <xi:include href="xml/api-index-full.xml"><xi:fallback /></xi:include>
+    </index>
+    <index id="api-index-1-0" role="1.0">
+      <title>Index of new symbols in 1.0</title>
+      <xi:include href="xml/api-index-1.0.xml"><xi:fallback /></xi:include>
+    </index>
+    <index id="api-index-2-0" role="2.0">
+      <title>Index of new symbols in 2.0</title>
+      <xi:include href="xml/api-index-2.0.xml"><xi:fallback /></xi:include>
+    </index>
+  </part>
 </book>

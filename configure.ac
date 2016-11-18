@@ -7,9 +7,9 @@ m4_define(gtef_package_version, 1.99.0)
 
 AC_INIT([gtef],
 	[gtef_package_version],
-	[https://bugzilla.gnome.org/enter_bug.cgi?product=gtef],
+	[https://github.com/swilmet/gtef/issues],
 	[gtef],
-	[https://wiki.gnome.org/Projects/gtef])
+	[https://github.com/swilmet/gtef])
 
 AX_REQUIRE_DEFINED([AX_IS_RELEASE])
 AX_IS_RELEASE([git-directory])

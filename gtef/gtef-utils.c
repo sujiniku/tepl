@@ -302,7 +302,7 @@ _gtef_utils_get_fallback_basename_for_display (GFile *location)
  *
  * Sets an icon to a #GtkMenuItem.
  *
- * Since: 1.2
+ * Since: 2.0
  */
 /* Based on gtk_model_menu_item_set_icon() from gtkmodelmenuitem.c (private
  * GTK+ class).

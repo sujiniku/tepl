@@ -145,7 +145,7 @@ gtef_info_bar_new (void)
  * message and a secondary message.
  *
  * Returns: a new #GtefInfoBar.
- * Since: 1.2
+ * Since: 2.0
  */
 GtefInfoBar *
 gtef_info_bar_new_simple (GtkMessageType  msg_type,
@@ -210,7 +210,7 @@ get_icon_name (GtefInfoBar *info_bar)
  * The icon is not updated when the message type changes. Another #GtefInfoBar
  * must be created in that case.
  *
- * Since: 1.2
+ * Since: 2.0
  */
 void
 gtef_info_bar_add_icon (GtefInfoBar *info_bar)
@@ -247,7 +247,7 @@ gtef_info_bar_add_icon (GtefInfoBar *info_bar)
  * @primary_msg: a primary message.
  *
  * Adds a primary message.
- * Since: 1.2
+ * Since: 2.0
  */
 void
 gtef_info_bar_add_primary_message (GtefInfoBar *info_bar,
@@ -281,7 +281,7 @@ gtef_info_bar_add_primary_message (GtefInfoBar *info_bar,
  * @secondary_msg: a secondary message.
  *
  * Adds a secondary message.
- * Since: 1.2
+ * Since: 2.0
  */
 void
 gtef_info_bar_add_secondary_message (GtefInfoBar *info_bar,
@@ -322,7 +322,7 @@ gtef_info_bar_add_secondary_message (GtefInfoBar *info_bar,
  * #GtefInfoBar and you need to add a custom #GtkWidget, it is better to use
  * this function instead of adding the #GtkWidget directly to the content area.
  *
- * Since: 1.2
+ * Since: 2.0
  */
 void
 gtef_info_bar_add_content_widget (GtefInfoBar *info_bar,
@@ -346,7 +346,7 @@ gtef_info_bar_add_content_widget (GtefInfoBar *info_bar,
  * @info_bar when the #GtkInfoBar::response signal is received with the
  * @response_id %GTK_RESPONSE_CLOSE.
  *
- * Since: 1.2
+ * Since: 2.0
  */
 void
 gtef_info_bar_add_close_button (GtefInfoBar *info_bar)

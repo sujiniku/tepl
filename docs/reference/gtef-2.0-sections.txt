@@ -215,6 +215,8 @@ gtef_view_paste_clipboard
 gtef_view_delete_selection
 gtef_view_select_all
 gtef_view_scroll_to_cursor
+gtef_view_goto_line
+gtef_view_goto_line_offset
 gtef_view_select_lines
 <SUBSECTION Standard>
 GTEF_TYPE_VIEW

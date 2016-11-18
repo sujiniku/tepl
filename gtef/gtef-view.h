@@ -54,6 +54,13 @@ void			gtef_view_select_all				(GtefView *view);
 
 void			gtef_view_scroll_to_cursor			(GtefView *view);
 
+gboolean		gtef_view_goto_line				(GtefView *view,
+									 gint      line);
+
+gboolean		gtef_view_goto_line_offset			(GtefView *view,
+									 gint      line,
+									 gint      line_offset);
+
 void			gtef_view_select_lines				(GtefView *view,
 									 gint      start_line,
 									 gint      end_line);

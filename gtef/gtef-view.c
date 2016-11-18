@@ -241,6 +241,79 @@ gtef_view_scroll_to_cursor (GtefView *view)
 }
 
 /**
+ * gtef_view_goto_line:
+ * @view: a #GtefView.
+ * @line: a line number, counting from 0.
+ *
+ * Places the cursor at the position returned by
+ * gtk_text_buffer_get_iter_at_line(), and scrolls to that position.
+ *
+ * Returns: %TRUE if the cursor has been moved exactly to @line, %FALSE if that
+ *   line didn't exist.
+ * Since: 2.0
+ */
+gboolean
+gtef_view_goto_line (GtefView *view,
+		     gint      line)
+{
+	GtkTextBuffer *buffer;
+	GtkTextIter iter;
+	gboolean line_exists;
+
+	g_return_val_if_fail (GTEF_IS_VIEW (view), FALSE);
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+
+	gtk_text_buffer_get_iter_at_line (buffer, &iter, line);
+	line_exists = gtk_text_iter_get_line (&iter) == line;
+
+	gtk_text_buffer_place_cursor (buffer, &iter);
+	gtef_view_scroll_to_cursor (view);
+
+	return line_exists;
+}
+
+/**
+ * gtef_view_goto_line_offset:
+ * @view: a #GtefView.
+ * @line: a line number, counting from 0.
+ * @line_offset: the line offset, in characters (not bytes).
+ *
+ * Places the cursor at the position returned by
+ * gtk_text_buffer_get_iter_at_line_offset(), and scrolls to that position.
+ *
+ * Returns: %TRUE if the cursor has been moved exactly to @line and
+ *   @line_offset, %FALSE if that position didn't exist.
+ * Since: 2.0
+ */
+gboolean
+gtef_view_goto_line_offset (GtefView *view,
+			    gint      line,
+			    gint      line_offset)
+{
+	GtkTextBuffer *buffer;
+	GtkTextIter iter;
+	gboolean pos_exists;
+
+	g_return_val_if_fail (GTEF_IS_VIEW (view), FALSE);
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+
+	gtk_text_buffer_get_iter_at_line_offset (buffer,
+						 &iter,
+						 line,
+						 line_offset);
+
+	pos_exists = (gtk_text_iter_get_line (&iter) == line &&
+		      gtk_text_iter_get_line_offset (&iter) == line_offset);
+
+	gtk_text_buffer_place_cursor (buffer, &iter);
+	gtef_view_scroll_to_cursor (view);
+
+	return pos_exists;
+}
+
+/**
  * gtef_view_select_lines:
  * @view: a #GtefView.
  * @start_line: start of the region to select.

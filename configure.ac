@@ -46,7 +46,7 @@ AC_SUBST(GTEF_LT_VERSION)
 # - the docs/reference/gtef-1.0-sections.txt filename
 # Because as far as I've tested, it is not easily feasible to not hardcode the
 # API version in those places (swilmet).
-GTEF_API_VERSION=1
+GTEF_API_VERSION=2
 AC_SUBST(GTEF_API_VERSION)
 
 # Dependencies

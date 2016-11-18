@@ -68,6 +68,11 @@ gboolean		gtef_buffer_is_untouched		(GtefBuffer *buffer);
 
 gchar *			gtef_buffer_get_title			(GtefBuffer *buffer);
 
+gchar *			gtef_buffer_get_style_scheme_id		(GtefBuffer *buffer);
+
+void			gtef_buffer_set_style_scheme_id		(GtefBuffer  *buffer,
+								 const gchar *style_scheme_id);
+
 GtefSelectionType	gtef_buffer_get_selection_type		(GtefBuffer *buffer);
 
 G_GNUC_INTERNAL

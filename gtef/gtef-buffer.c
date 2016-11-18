@@ -53,6 +53,7 @@ enum
 {
 	PROP_0,
 	PROP_GTEF_TITLE,
+	PROP_GTEF_STYLE_SCHEME_ID,
 	N_PROPERTIES
 };
 
@@ -81,6 +82,10 @@ gtef_buffer_get_property (GObject    *object,
 			g_value_take_string (value, gtef_buffer_get_title (buffer));
 			break;
 
+		case PROP_GTEF_STYLE_SCHEME_ID:
+			g_value_take_string (value, gtef_buffer_get_style_scheme_id (buffer));
+			break;
+
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 			break;
@@ -93,8 +98,14 @@ gtef_buffer_set_property (GObject      *object,
 			  const GValue *value,
 			  GParamSpec   *pspec)
 {
+	GtefBuffer *buffer = GTEF_BUFFER (object);
+
 	switch (prop_id)
 	{
+		case PROP_GTEF_STYLE_SCHEME_ID:
+			gtef_buffer_set_style_scheme_id (buffer, g_value_get_string (value));
+			break;
+
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 			break;
@@ -256,6 +267,25 @@ gtef_buffer_class_init (GtefBufferClass *klass)
 				     "",
 				     NULL,
 				     G_PARAM_READABLE |
+				     G_PARAM_STATIC_STRINGS);
+
+	/**
+	 * GtefBuffer:gtef-style-scheme-id:
+	 *
+	 * The #GtkSourceBuffer:style-scheme ID, as a string. This property is
+	 * useful for binding it to a #GSettings key.
+	 *
+	 * When the #GtkSourceBuffer:style-scheme is %NULL,
+	 * #GtefBuffer:gtef-style-scheme-id contains the empty string.
+	 *
+	 * Since: 2.0
+	 */
+	properties[PROP_GTEF_STYLE_SCHEME_ID] =
+		g_param_spec_string ("gtef-style-scheme-id",
+				     "Gtef Style Scheme ID",
+				     "",
+				     "",
+				     G_PARAM_READWRITE |
 				     G_PARAM_STATIC_STRINGS);
 
 	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
@@ -432,6 +462,61 @@ gtef_buffer_get_title (GtefBuffer *buffer)
 	}
 
 	return title;
+}
+
+/**
+ * gtef_buffer_get_style_scheme_id:
+ * @buffer: a #GtefBuffer.
+ *
+ * Returns: the #GtefBuffer:gtef-style-scheme-id. Free with g_free().
+ * Since: 2.0
+ */
+gchar *
+gtef_buffer_get_style_scheme_id (GtefBuffer *buffer)
+{
+	GtkSourceStyleScheme *style_scheme;
+	const gchar *id;
+
+	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), g_strdup (""));
+
+	style_scheme = gtk_source_buffer_get_style_scheme (GTK_SOURCE_BUFFER (buffer));
+
+	if (style_scheme == NULL)
+	{
+		return g_strdup ("");
+	}
+
+	id = gtk_source_style_scheme_get_id (style_scheme);
+
+	return id != NULL ? g_strdup (id) : g_strdup ("");
+}
+
+/**
+ * gtef_buffer_set_style_scheme_id:
+ * @buffer: a #GtefBuffer.
+ * @style_scheme_id: the new value.
+ *
+ * Sets the #GtefBuffer:gtef-style-scheme-id property.
+ *
+ * The #GtkSourceStyleScheme is taken from the default
+ * #GtkSourceStyleSchemeManager as returned by
+ * gtk_source_style_scheme_manager_get_default().
+ *
+ * Since: 2.0
+ */
+void
+gtef_buffer_set_style_scheme_id (GtefBuffer  *buffer,
+				 const gchar *style_scheme_id)
+{
+	GtkSourceStyleSchemeManager *manager;
+	GtkSourceStyleScheme *style_scheme;
+
+	g_return_if_fail (GTEF_IS_BUFFER (buffer));
+	g_return_if_fail (style_scheme_id != NULL);
+
+	manager = gtk_source_style_scheme_manager_get_default ();
+	style_scheme = gtk_source_style_scheme_manager_get_scheme (manager, style_scheme_id);
+	gtk_source_buffer_set_style_scheme (GTK_SOURCE_BUFFER (buffer), style_scheme);
 }
 
 /**

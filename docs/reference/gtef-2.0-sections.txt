@@ -9,6 +9,8 @@ gtef_buffer_new
 gtef_buffer_get_file
 gtef_buffer_is_untouched
 gtef_buffer_get_title
+gtef_buffer_get_style_scheme_id
+gtef_buffer_set_style_scheme_id
 gtef_buffer_get_selection_type
 <SUBSECTION Standard>
 GTEF_TYPE_BUFFER

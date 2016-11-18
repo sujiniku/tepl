@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.64)
 
 # Package version of the form 'major.minor.micro'.
-m4_define(gtef_package_version, 1.1.1)
+m4_define(gtef_package_version, 1.99.0)
 
 AC_INIT([gtef],
 	[gtef_package_version],

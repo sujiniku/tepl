@@ -181,6 +181,12 @@ GtefInfoBarClass
 </SECTION>
 
 <SECTION>
+<FILE>iter</FILE>
+<TITLE>GtefIter</TITLE>
+gtef_iter_get_line_indentation
+</SECTION>
+
+<SECTION>
 <FILE>metadata-manager</FILE>
 <TITLE>GtefMetadataManager</TITLE>
 gtef_metadata_manager_init

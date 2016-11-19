@@ -17,28 +17,19 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GTEF_H
-#define GTEF_H
+#ifndef GTEF_ITER_H
+#define GTEF_ITER_H
 
-#define GTEF_H_INSIDE
+#if !defined (GTEF_H_INSIDE) && !defined (GTEF_COMPILATION)
+#error "Only <gtef/gtef.h> can be included directly."
+#endif
 
-#include <gtef/gtef-types.h>
-#include <gtef/gtef-enum-types.h>
+#include <gtk/gtk.h>
 
-#include <gtef/gtef-buffer.h>
-#include <gtef/gtef-file.h>
-#include <gtef/gtef-file-loader.h>
-#include <gtef/gtef-file-metadata.h>
-#include <gtef/gtef-file-saver.h>
-#include <gtef/gtef-fold-region.h>
-#include <gtef/gtef-gutter-renderer-folds.h>
-#include <gtef/gtef-info-bar.h>
-#include <gtef/gtef-iter.h>
-#include <gtef/gtef-metadata-manager.h>
-#include <gtef/gtef-tab.h>
-#include <gtef/gtef-utils.h>
-#include <gtef/gtef-view.h>
+G_BEGIN_DECLS
 
-#undef GTEF_H_INSIDE
+gchar *		gtef_iter_get_line_indentation		(const GtkTextIter *iter);
 
-#endif /* GTEF_H */
+G_END_DECLS
+
+#endif /* GTEF_ITER_H */

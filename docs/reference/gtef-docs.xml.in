@@ -46,6 +46,7 @@
 
     <chapter>
       <title>Other</title>
+      <xi:include href="xml/iter.xml"/>
       <xi:include href="xml/utils.xml"/>
     </chapter>
   </part>

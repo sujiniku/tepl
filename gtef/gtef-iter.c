@@ -63,7 +63,7 @@ get_leading_spaces_end_boundary (const GtkTextIter *iter,
  * Gets the indentation, as a string, of the line at @iter. @iter can be
  * anywhere in the line.
  *
- * Possible use-case: to implement an action that inserts some text in the
+ * Possible use-case: to implement an action that inserts some text in a
  * #GtkTextBuffer. If the text to insert spans multiple lines, it is usually
  * desired to keep the same indentation level.
  *

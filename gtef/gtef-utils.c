@@ -30,9 +30,9 @@
 /**
  * SECTION:utils
  * @title: GtefUtils
- * @short_description: Utilities functions
+ * @short_description: Utility functions
  *
- * Utilities functions.
+ * Utility functions.
  */
 
 /*

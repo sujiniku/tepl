@@ -27,6 +27,7 @@ IGNORE_HFILES =				\
 	gtef.h				\
 	gtef-buffer-input-stream.h	\
 	gtef-encoding-converter.h	\
+	gtef-file-content-loader.h	\
 	gtef-io-error-info-bar.h	\
 	gtef-progress-info-bar.h
 

@@ -46,12 +46,14 @@ gtef_private_headers =			\
 	gconstructor.h			\
 	gtef-buffer-input-stream.h	\
 	gtef-encoding-converter.h	\
+	gtef-file-content-loader.h	\
 	gtef-io-error-info-bar.h	\
 	gtef-progress-info-bar.h
 
 gtef_private_c_files =			\
 	gtef-buffer-input-stream.c	\
 	gtef-encoding-converter.c	\
+	gtef-file-content-loader.c	\
 	gtef-init.c			\
 	gtef-io-error-info-bar.c	\
 	gtef-progress-info-bar.c

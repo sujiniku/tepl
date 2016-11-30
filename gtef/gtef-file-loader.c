@@ -91,9 +91,6 @@ enum
 	N_PROPERTIES
 };
 
-#define DEFAULT_MAX_SIZE (50 * 1000 * 1000)
-#define DEFAULT_CHUNK_SIZE (8 * 1024)
-
 static GParamSpec *properties[N_PROPERTIES];
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefFileLoader, gtef_file_loader, G_TYPE_OBJECT)
@@ -410,7 +407,7 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 				    "",
 				    -1,
 				    G_MAXINT64,
-				    DEFAULT_MAX_SIZE,
+				    GTEF_FILE_CONTENT_LOADER_DEFAULT_MAX_SIZE,
 				    G_PARAM_READWRITE |
 				    G_PARAM_CONSTRUCT |
 				    G_PARAM_STATIC_STRINGS);
@@ -433,7 +430,7 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 				    "",
 				    1,
 				    G_MAXINT64,
-				    DEFAULT_CHUNK_SIZE,
+				    GTEF_FILE_CONTENT_LOADER_DEFAULT_CHUNK_SIZE,
 				    G_PARAM_READWRITE |
 				    G_PARAM_CONSTRUCT |
 				    G_PARAM_STATIC_STRINGS);
@@ -543,7 +540,8 @@ gtef_file_loader_get_max_size (GtefFileLoader *loader)
 {
 	GtefFileLoaderPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), DEFAULT_MAX_SIZE);
+	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader),
+			      GTEF_FILE_CONTENT_LOADER_DEFAULT_MAX_SIZE);
 
 	priv = gtef_file_loader_get_instance_private (loader);
 	return priv->max_size;
@@ -588,7 +586,8 @@ gtef_file_loader_get_chunk_size (GtefFileLoader *loader)
 {
 	GtefFileLoaderPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), DEFAULT_CHUNK_SIZE);
+	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader),
+			      GTEF_FILE_CONTENT_LOADER_DEFAULT_CHUNK_SIZE);
 
 	priv = gtef_file_loader_get_instance_private (loader);
 	return priv->chunk_size;

@@ -66,14 +66,14 @@ struct _TaskData
 	GtefFileContentLoader *content_loader;
 
 	/* TODO report progress also when determining encoding, and when
-	 * converting and inserting the contents.
+	 * converting and inserting the content.
 	 */
 	GFileProgressCallback progress_cb;
 	gpointer progress_cb_data;
 	GDestroyNotify progress_cb_notify;
 
 	/* List of GBytes*. Should never be NULL. */
-	GQueue *contents;
+	GQueue *content;
 
 	gchar *charset;
 
@@ -117,7 +117,7 @@ task_data_new (void)
 	TaskData *task_data;
 
 	task_data = g_new0 (TaskData, 1);
-	task_data->contents = g_queue_new ();
+	task_data->content = g_queue_new ();
 
 	return task_data;
 }
@@ -139,9 +139,9 @@ task_data_free (gpointer data)
 		task_data->progress_cb_notify (task_data->progress_cb_data);
 	}
 
-	if (task_data->contents != NULL)
+	if (task_data->content != NULL)
 	{
-		g_queue_free_full (task_data->contents, (GDestroyNotify)g_bytes_unref);
+		g_queue_free_full (task_data->content, (GDestroyNotify)g_bytes_unref);
 	}
 
 	g_free (task_data->charset);
@@ -342,7 +342,7 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 	/**
 	 * GtefFileLoader:buffer:
 	 *
-	 * The #GtefBuffer to load the contents into. The #GtefFileLoader object
+	 * The #GtefBuffer to load the content into. The #GtefFileLoader object
 	 * has a weak reference to the buffer.
 	 *
 	 * Since: 1.0
@@ -393,9 +393,9 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 	/**
 	 * GtefFileLoader:max-size:
 	 *
-	 * The maximum contents size, in bytes. Keep in mind that all the
-	 * contents is loaded in memory, and when loaded into a #GtkTextBuffer
-	 * it takes more memory than just the contents size.
+	 * The maximum content size, in bytes. Keep in mind that all the
+	 * content is loaded in memory, and when loaded into a #GtkTextBuffer
+	 * it takes more memory than just the content size.
 	 *
 	 * Set to -1 for unlimited size.
 	 *
@@ -415,7 +415,7 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 	/**
 	 * GtefFileLoader:chunk-size:
 	 *
-	 * The chunk size, in bytes. The contents is loaded chunk by chunk. It
+	 * The chunk size, in bytes. The content is loaded chunk by chunk. It
 	 * permits to avoid allocating a too big contiguous memory area, as well
 	 * as reporting progress information after each chunk read.
 	 *
@@ -445,10 +445,10 @@ gtef_file_loader_init (GtefFileLoader *loader)
 
 /**
  * gtef_file_loader_new:
- * @buffer: the #GtefBuffer to load the contents into.
+ * @buffer: the #GtefBuffer to load the content into.
  * @file: the #GtefFile.
  *
- * Creates a new #GtefFileLoader object. The contents is read from the #GtefFile
+ * Creates a new #GtefFileLoader object. The content is read from the #GtefFile
  * location.
  *
  * If not already done, call gtef_file_set_location() before calling this
@@ -477,7 +477,7 @@ gtef_file_loader_new (GtefBuffer *buffer,
  * gtef_file_loader_get_buffer:
  * @loader: a #GtefFileLoader.
  *
- * Returns: (transfer none) (nullable): the #GtefBuffer to load the contents
+ * Returns: (transfer none) (nullable): the #GtefBuffer to load the content
  * into.
  * Since: 1.0
  */
@@ -532,7 +532,7 @@ gtef_file_loader_get_location (GtefFileLoader *loader)
  * gtef_file_loader_get_max_size:
  * @loader: a #GtefFileLoader.
  *
- * Returns: the maximum contents size, or -1 for unlimited.
+ * Returns: the maximum content size, or -1 for unlimited.
  * Since: 1.0
  */
 gint64
@@ -635,9 +635,9 @@ gtef_file_loader_set_chunk_size (GtefFileLoader *loader,
 }
 
 static void
-contents_converted_cb (const gchar *str,
-		       gsize        length,
-		       gpointer     user_data)
+content_converted_cb (const gchar *str,
+		      gsize        length,
+		      gpointer     user_data)
 {
 	GTask *task = G_TASK (user_data);
 	GtefFileLoader *loader;
@@ -657,7 +657,7 @@ contents_converted_cb (const gchar *str,
 }
 
 static void
-convert_and_insert_contents (GTask *task)
+convert_and_insert_content (GTask *task)
 {
 	GtefFileLoader *loader;
 	GtefFileLoaderPrivate *priv;
@@ -679,7 +679,7 @@ convert_and_insert_contents (GTask *task)
 	converter = _gtef_encoding_converter_new ();
 
 	_gtef_encoding_converter_set_callback (converter,
-					       contents_converted_cb,
+					       content_converted_cb,
 					       task);
 
 	g_assert (task_data->charset != NULL);
@@ -693,11 +693,11 @@ convert_and_insert_contents (GTask *task)
 		goto out;
 	}
 
-	while (!g_queue_is_empty (task_data->contents))
+	while (!g_queue_is_empty (task_data->content))
 	{
 		GBytes *chunk;
 
-		chunk = g_queue_pop_head (task_data->contents);
+		chunk = g_queue_pop_head (task_data->content);
 
 		g_assert (chunk != NULL);
 		g_assert (g_bytes_get_size (chunk) > 0);
@@ -738,7 +738,7 @@ determine_encoding (GTask *task)
 
 	ud = uchardet_new ();
 
-	for (l = task_data->contents->head; l != NULL; l = l->next)
+	for (l = task_data->content->head; l != NULL; l = l->next)
 	{
 		GBytes *chunk = l->data;
 
@@ -770,7 +770,7 @@ determine_encoding (GTask *task)
 		return;
 	}
 
-	convert_and_insert_contents (task);
+	convert_and_insert_content (task);
 }
 
 static void
@@ -844,15 +844,15 @@ load_content_cb (GObject      *source_object,
 
 	task_data = g_task_get_task_data (task);
 
-	if (task_data->contents != NULL)
+	if (task_data->content != NULL)
 	{
-		g_queue_free_full (task_data->contents, (GDestroyNotify)g_bytes_unref);
-		task_data->contents = NULL;
+		g_queue_free_full (task_data->content, (GDestroyNotify)g_bytes_unref);
+		task_data->content = NULL;
 	}
 
 	_gtef_file_content_loader_load_finish (content_loader,
 					       result,
-					       &task_data->contents,
+					       &task_data->content,
 					       &error);
 
 	if (error != NULL)
@@ -969,7 +969,7 @@ finish_loading (GTask *task)
  *   satisfied.
  * @user_data: user data to pass to @callback.
  *
- * Loads asynchronously the file contents into the #GtefBuffer.
+ * Loads asynchronously the file content into the #GtefBuffer.
  *
  * See the #GAsyncResult documentation to know how to use this function.
  *
@@ -1027,7 +1027,7 @@ gtef_file_loader_load_async (GtefFileLoader        *loader,
  *
  * Finishes a file loading started with gtef_file_loader_load_async().
  *
- * Returns: whether the contents has been loaded successfully.
+ * Returns: whether the content has been loaded successfully.
  * Since: 1.0
  */
 gboolean

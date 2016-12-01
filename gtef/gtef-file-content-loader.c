@@ -233,6 +233,20 @@ read_next_chunk (GTask *task)
 	loader = g_task_get_source_object (task);
 	task_data = g_task_get_task_data (task);
 
+	/* GIO provides several functions to read content from a GInputStream or
+	 * a GFile. Here we want to report progress information, mainly in case
+	 * the content comes from a remote file (with potentially a slow
+	 * connection). Reading a local file should be fast enough to not need a
+	 * progress bar. Anyway, for our use case, it seems that
+	 * g_input_stream_read_async() is better than
+	 * g_input_stream_read_all_async(): we can suppose that if the
+	 * connection is slow, after a certain time read_async() will return
+	 * earlier than read_all_async(). And the documentation says that
+	 * g_input_stream_read_bytes() is like g_input_stream_read(). And having
+	 * a GBytes is more convenient in our case. At the end of the day, I
+	 * don't know if it makes a big difference, so it's better to favor
+	 * simple code.
+	 */
 	g_input_stream_read_bytes_async (task_data->input_stream,
 					 MAX (1, loader->priv->chunk_size),
 					 g_task_get_priority (task),

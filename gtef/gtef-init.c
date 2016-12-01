@@ -28,6 +28,8 @@
 #include "gconstructor.h"
 
 #ifdef G_OS_WIN32
+#include <windef.h>
+
 static HMODULE gtef_dll;
 #endif
 

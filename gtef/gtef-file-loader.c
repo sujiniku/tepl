@@ -65,15 +65,15 @@ struct _TaskData
 {
 	GtefFileContentLoader *content_loader;
 
+	/* List of GBytes*. Should never be NULL. */
+	GQueue *content;
+
 	/* TODO report progress also when determining encoding, and when
 	 * converting and inserting the content.
 	 */
 	GFileProgressCallback progress_cb;
 	gpointer progress_cb_data;
 	GDestroyNotify progress_cb_notify;
-
-	/* List of GBytes*. Should never be NULL. */
-	GQueue *content;
 
 	gchar *charset;
 
@@ -134,18 +134,17 @@ task_data_free (gpointer data)
 
 	g_clear_object (&task_data->content_loader);
 
-	if (task_data->progress_cb_notify != NULL)
-	{
-		task_data->progress_cb_notify (task_data->progress_cb_data);
-	}
-
 	if (task_data->content != NULL)
 	{
 		g_queue_free_full (task_data->content, (GDestroyNotify)g_bytes_unref);
 	}
 
-	g_free (task_data->charset);
+	if (task_data->progress_cb_notify != NULL)
+	{
+		task_data->progress_cb_notify (task_data->progress_cb_data);
+	}
 
+	g_free (task_data->charset);
 	g_free (task_data);
 }
 
@@ -871,6 +870,7 @@ load_content_cb (GObject      *source_object,
 	else
 	{
 		/* Finished reading, next operation. */
+		g_clear_object (&task_data->content_loader);
 		determine_encoding (task);
 	}
 }

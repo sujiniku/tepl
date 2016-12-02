@@ -256,50 +256,11 @@ read_next_chunk (GTask *task)
 }
 
 static void
-open_file_cb (GObject      *source_object,
-	      GAsyncResult *result,
-	      gpointer      user_data)
+check_file_size_cb (GObject      *source_object,
+		    GAsyncResult *result,
+		    gpointer      user_data)
 {
-	GFile *location = G_FILE (source_object);
-	GTask *task = G_TASK (user_data);
-	TaskData *task_data;
-	GError *error = NULL;
-
-	task_data = g_task_get_task_data (task);
-
-	g_assert (task_data->file_input_stream == NULL);
-	task_data->file_input_stream = g_file_read_finish (location, result, &error);
-
-	if (error != NULL)
-	{
-		g_task_return_error (task, error);
-		return;
-	}
-
-	/* Start reading */
-	read_next_chunk (task);
-}
-
-static void
-open_file (GTask *task)
-{
-	GtefFileContentLoader *loader;
-
-	loader = g_task_get_source_object (task);
-
-	g_file_read_async (loader->priv->location,
-			   g_task_get_priority (task),
-			   g_task_get_cancellable (task),
-			   open_file_cb,
-			   task);
-}
-
-static void
-get_file_size_cb (GObject      *source_object,
-		  GAsyncResult *result,
-		  gpointer      user_data)
-{
-	GFile *location = G_FILE (source_object);
+	GFileInputStream *file_input_stream = G_FILE_INPUT_STREAM (source_object);
 	GTask *task = G_TASK (user_data);
 	TaskData *task_data;
 	GtefFileContentLoader *loader;
@@ -309,7 +270,7 @@ get_file_size_cb (GObject      *source_object,
 	task_data = g_task_get_task_data (task);
 	loader = g_task_get_source_object (task);
 
-	info = g_file_query_info_finish (location, result, &error);
+	info = g_file_input_stream_query_info_finish (file_input_stream, result, &error);
 
 	if (error != NULL)
 	{
@@ -339,26 +300,69 @@ get_file_size_cb (GObject      *source_object,
 		}
 	}
 
-	open_file (task);
+	/* Start reading */
+	read_next_chunk (task);
 
 out:
 	g_clear_object (&info);
 }
 
 static void
-get_file_size (GTask *task)
+check_file_size (GTask *task)
+{
+	TaskData *task_data;
+
+	task_data = g_task_get_task_data (task);
+
+	/* Query info on the GFileInputStream, not the GFile. We can suppose
+	 * that we avoid potential races that way. If we query the info on the
+	 * GFile, then the file is modified by another program, then we open the
+	 * GFile to have the GFileInputStream, we would have a race condition.
+	 */
+	g_file_input_stream_query_info_async (task_data->file_input_stream,
+					      G_FILE_ATTRIBUTE_STANDARD_SIZE,
+					      g_task_get_priority (task),
+					      g_task_get_cancellable (task),
+					      check_file_size_cb,
+					      task);
+}
+
+static void
+open_file_cb (GObject      *source_object,
+	      GAsyncResult *result,
+	      gpointer      user_data)
+{
+	GFile *location = G_FILE (source_object);
+	GTask *task = G_TASK (user_data);
+	TaskData *task_data;
+	GError *error = NULL;
+
+	task_data = g_task_get_task_data (task);
+
+	g_assert (task_data->file_input_stream == NULL);
+	task_data->file_input_stream = g_file_read_finish (location, result, &error);
+
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		return;
+	}
+
+	check_file_size (task);
+}
+
+static void
+open_file (GTask *task)
 {
 	GtefFileContentLoader *loader;
 
 	loader = g_task_get_source_object (task);
 
-	g_file_query_info_async (loader->priv->location,
-				 G_FILE_ATTRIBUTE_STANDARD_SIZE,
-				 G_FILE_QUERY_INFO_NONE,
-				 g_task_get_priority (task),
-				 g_task_get_cancellable (task),
-				 get_file_size_cb,
-				 task);
+	g_file_read_async (loader->priv->location,
+			   g_task_get_priority (task),
+			   g_task_get_cancellable (task),
+			   open_file_cb,
+			   task);
 }
 
 /*
@@ -415,7 +419,7 @@ _gtef_file_content_loader_load_async (GtefFileContentLoader *loader,
 	task_data->progress_cb_data = progress_callback_data;
 	task_data->progress_cb_notify = progress_callback_notify;
 
-	get_file_size (loader->priv->task);
+	open_file (loader->priv->task);
 }
 
 /*

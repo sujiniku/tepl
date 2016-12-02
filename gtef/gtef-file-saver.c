@@ -837,7 +837,6 @@ begin_write (GTask *task)
 {
 	GtefFileSaver *saver;
 	gboolean create_backup;
-	gboolean save_as = FALSE;
 	const gchar *etag;
 
 	saver = g_task_get_source_object (task);
@@ -849,22 +848,7 @@ begin_write (GTask *task)
 	       g_print ("Make backup: %s\n", create_backup ? "yes" : "no");
 	});
 
-	if (saver->priv->file != NULL)
-	{
-		GFile *prev_location;
-
-		prev_location = gtef_file_get_location (saver->priv->file);
-
-		/* Don't check for externally modified for a "save as" operation,
-		 * because the user has normally accepted to overwrite the file if it
-		 * already exists.
-		 */
-		save_as = (prev_location == NULL ||
-			   !g_file_equal (prev_location, saver->priv->location));
-	}
-
-	if (saver->priv->flags & GTEF_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME ||
-	    save_as)
+	if (saver->priv->flags & GTEF_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME)
 	{
 		etag = NULL;
 	}
@@ -986,6 +970,9 @@ gtef_file_saver_new (GtefBuffer *buffer,
  * #GtefFile:location property. If an error occurs, the previous valid
  * location is still available in #GtefFile.
  *
+ * This constructor adds %GTEF_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME to the
+ * #GtefFileSaver:flags property.
+ *
  * This constructor is suitable for a "save as" operation, or for saving a new
  * buffer for the first time.
  *
@@ -1005,6 +992,7 @@ gtef_file_saver_new_with_target (GtefBuffer *buffer,
 			     "buffer", buffer,
 			     "file", file,
 			     "location", target_location,
+			     "flags", GTEF_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME,
 			     NULL);
 }
 

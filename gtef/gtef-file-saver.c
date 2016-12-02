@@ -58,8 +58,6 @@
 
 #define WRITE_CHUNK_SIZE 8192
 
-#define QUERY_ATTRIBUTES G_FILE_ATTRIBUTE_TIME_MODIFIED
-
 enum
 {
 	PROP_0,
@@ -99,17 +97,17 @@ struct _GtefFileSaverPrivate
 typedef struct _TaskData TaskData;
 struct _TaskData
 {
-	/* The output_stream contains the required converter(s) for the encoding
-	 * and the compression type.
-	 * The two streams cannot be spliced directly, because:
+	GFileOutputStream *file_output_stream;
+
+	/* The output_stream contains the file_output_stream, plus the required
+	 * converter(s) for the encoding and the compression type.
+	 * input_stream and output_stream cannot be spliced directly, because:
 	 * (1) We need to call the progress callback.
 	 * (2) Sync methods must be used for the input stream, and async
 	 *     methods for the output stream.
 	 */
 	GtefBufferInputStream *input_stream;
 	GOutputStream *output_stream;
-
-	GFileInfo *info;
 
 	goffset total_size;
 	GFileProgressCallback progress_cb;
@@ -151,9 +149,9 @@ task_data_free (gpointer data)
 		return;
 	}
 
+	g_clear_object (&task_data->file_output_stream);
 	g_clear_object (&task_data->input_stream);
 	g_clear_object (&task_data->output_stream);
-	g_clear_object (&task_data->info);
 	g_clear_error (&task_data->error);
 
 	if (task_data->progress_cb_notify != NULL)
@@ -542,52 +540,17 @@ cancel_output_stream (GTask *task)
  */
 
 static void
-query_info_cb (GObject      *source_object,
-	       GAsyncResult *result,
-	       gpointer      user_data)
-{
-	GFile *location = G_FILE (source_object);
-	GTask *task = G_TASK (user_data);
-	TaskData *task_data;
-	GError *error = NULL;
-
-	DEBUG ({
-	       g_print ("Finished query info on file\n");
-	});
-
-	task_data = g_task_get_task_data (task);
-
-	g_clear_object (&task_data->info);
-	task_data->info = g_file_query_info_finish (location, result, &error);
-
-	if (error != NULL)
-	{
-		DEBUG ({
-		       g_print ("Query info failed: %s\n", error->message);
-		});
-
-		g_task_return_error (task, error);
-		return;
-	}
-
-	g_task_return_boolean (task, TRUE);
-}
-
-static void
 close_output_stream_cb (GObject      *source_object,
 			GAsyncResult *result,
 			gpointer      user_data)
 {
 	GOutputStream *output_stream = G_OUTPUT_STREAM (source_object);
 	GTask *task = G_TASK (user_data);
-	GtefFileSaver *saver;
 	GError *error = NULL;
 
 	DEBUG ({
 	       g_print ("%s\n", G_STRFUNC);
 	});
-
-	saver = g_task_get_source_object (task);
 
 	g_output_stream_close_finish (output_stream, result, &error);
 
@@ -601,21 +564,8 @@ close_output_stream_cb (GObject      *source_object,
 		return;
 	}
 
-	/* Get the file info: note we cannot use
-	 * g_file_output_stream_query_info_async() since it is not able to get
-	 * the modification time.
-	 */
-	DEBUG ({
-	       g_print ("Query info on file\n");
-	});
-
-	g_file_query_info_async (saver->priv->location,
-			         QUERY_ATTRIBUTES,
-			         G_FILE_QUERY_INFO_NONE,
-				 g_task_get_priority (task),
-				 g_task_get_cancellable (task),
-			         query_info_cb,
-			         task);
+	/* Finished! */
+	g_task_return_boolean (task, TRUE);
 }
 
 static void
@@ -785,7 +735,6 @@ replace_file_cb (GObject      *source_object,
 	GTask *task = G_TASK (user_data);
 	GtefFileSaver *saver;
 	TaskData *task_data;
-	GFileOutputStream *file_output_stream;
 	GOutputStream *output_stream;
 	GError *error = NULL;
 
@@ -796,12 +745,22 @@ replace_file_cb (GObject      *source_object,
 	saver = g_task_get_source_object (task);
 	task_data = g_task_get_task_data (task);
 
-	file_output_stream = g_file_replace_finish (location, result, &error);
+	g_clear_object (&task_data->file_output_stream);
+	task_data->file_output_stream = g_file_replace_finish (location, result, &error);
 
 	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_MOUNTED) &&
 	    !task_data->tried_mount)
 	{
 		recover_not_mounted (task);
+		g_error_free (error);
+		return;
+	}
+	else if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_WRONG_ETAG))
+	{
+		g_task_return_new_error (task,
+					 GTEF_FILE_SAVER_ERROR,
+					 GTEF_FILE_SAVER_ERROR_EXTERNALLY_MODIFIED,
+					 _("The file is externally modified."));
 		g_error_free (error);
 		return;
 	}
@@ -825,15 +784,15 @@ replace_file_cb (GObject      *source_object,
 
 		compressor = g_zlib_compressor_new (G_ZLIB_COMPRESSOR_FORMAT_GZIP, -1);
 
-		output_stream = g_converter_output_stream_new (G_OUTPUT_STREAM (file_output_stream),
+		output_stream = g_converter_output_stream_new (G_OUTPUT_STREAM (task_data->file_output_stream),
 							       G_CONVERTER (compressor));
 
 		g_object_unref (compressor);
-		g_object_unref (file_output_stream);
 	}
 	else
 	{
-		output_stream = G_OUTPUT_STREAM (file_output_stream);
+		output_stream = G_OUTPUT_STREAM (task_data->file_output_stream);
+		g_object_ref (output_stream);
 	}
 
 	/* FIXME: manage converter error? */
@@ -878,6 +837,8 @@ begin_write (GTask *task)
 {
 	GtefFileSaver *saver;
 	gboolean create_backup;
+	gboolean save_as = FALSE;
+	const gchar *etag;
 
 	saver = g_task_get_source_object (task);
 
@@ -887,100 +848,6 @@ begin_write (GTask *task)
 	       g_print ("Start replacing file contents\n");
 	       g_print ("Make backup: %s\n", create_backup ? "yes" : "no");
 	});
-
-	g_file_replace_async (saver->priv->location,
-			      NULL,
-			      create_backup,
-			      G_FILE_CREATE_NONE,
-			      g_task_get_priority (task),
-			      g_task_get_cancellable (task),
-			      replace_file_cb,
-			      task);
-}
-
-static void
-check_externally_modified_cb (GObject      *source_object,
-			      GAsyncResult *result,
-			      gpointer      user_data)
-{
-	GFile *location = G_FILE (source_object);
-	GTask *task = G_TASK (user_data);
-	GtefFileSaver *saver;
-	TaskData *task_data;
-	GFileInfo *info;
-	GTimeVal old_mtime;
-	GTimeVal cur_mtime;
-	GError *error = NULL;
-
-	DEBUG ({
-	       g_print ("%s\n", G_STRFUNC);
-	});
-
-	saver = g_task_get_source_object (task);
-	task_data = g_task_get_task_data (task);
-
-	info = g_file_query_info_finish (location, result, &error);
-
-	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_MOUNTED) &&
-	    !task_data->tried_mount)
-	{
-		recover_not_mounted (task);
-		g_error_free (error);
-		return;
-	}
-
-	/* It's perfectly fine if the file doesn't exist yet. */
-	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
-	{
-		g_clear_error (&error);
-	}
-	else if (error != NULL)
-	{
-		DEBUG ({
-		       g_print ("Check externally modified failed: %s\n", error->message);
-		});
-
-		g_task_return_error (task, error);
-		return;
-	}
-
-	if (_gtef_file_get_modification_time (saver->priv->file, &old_mtime) &&
-	    info != NULL &&
-	    g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_TIME_MODIFIED))
-	{
-		g_file_info_get_modification_time (info, &cur_mtime);
-
-		if (old_mtime.tv_sec != cur_mtime.tv_sec ||
-		    old_mtime.tv_usec != cur_mtime.tv_usec)
-		{
-			DEBUG ({
-			       g_print ("The file is externally modified\n");
-			});
-
-			g_task_return_new_error (task,
-						 GTEF_FILE_SAVER_ERROR,
-						 GTEF_FILE_SAVER_ERROR_EXTERNALLY_MODIFIED,
-						 _("The file is externally modified."));
-			g_object_unref (info);
-			return;
-		}
-	}
-
-	begin_write (task);
-
-	if (info != NULL)
-	{
-		g_object_unref (info);
-	}
-}
-
-static void
-check_externally_modified (GTask *task)
-{
-	GtefFileSaver *saver;
-	gboolean save_as = FALSE;
-
-	saver = g_task_get_source_object (task);
 
 	if (saver->priv->file != NULL)
 	{
@@ -999,21 +866,21 @@ check_externally_modified (GTask *task)
 	if (saver->priv->flags & GTEF_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME ||
 	    save_as)
 	{
-		begin_write (task);
-		return;
+		etag = NULL;
+	}
+	else
+	{
+		etag = _gtef_file_get_etag (saver->priv->file);
 	}
 
-	DEBUG ({
-	       g_print ("Check externally modified\n");
-	});
-
-	g_file_query_info_async (saver->priv->location,
-			         G_FILE_ATTRIBUTE_TIME_MODIFIED,
-			         G_FILE_QUERY_INFO_NONE,
-				 g_task_get_priority (task),
-				 g_task_get_cancellable (task),
-			         check_externally_modified_cb,
-			         task);
+	g_file_replace_async (saver->priv->location,
+			      etag,
+			      create_backup,
+			      G_FILE_CREATE_NONE,
+			      g_task_get_priority (task),
+			      g_task_get_cancellable (task),
+			      replace_file_cb,
+			      task);
 }
 
 static void
@@ -1037,7 +904,7 @@ mount_cb (GObject      *source_object,
 		return;
 	}
 
-	check_externally_modified (task);
+	begin_write (task);
 }
 
 static void
@@ -1430,7 +1297,7 @@ gtef_file_saver_save_async (GtefFileSaver         *saver,
 								 saver->priv->newline_type,
 								 implicit_trailing_newline);
 
-	check_externally_modified (saver->priv->task);
+	begin_write (saver->priv->task);
 }
 
 /**
@@ -1467,6 +1334,7 @@ gtef_file_saver_save_finish (GtefFileSaver  *saver,
 	if (ok && saver->priv->file != NULL)
 	{
 		TaskData *task_data;
+		gchar *new_etag;
 
 		gtef_file_set_location (saver->priv->file,
 					saver->priv->location);
@@ -1485,14 +1353,9 @@ gtef_file_saver_save_finish (GtefFileSaver  *saver,
 		_gtef_file_set_readonly (saver->priv->file, FALSE);
 
 		task_data = g_task_get_task_data (G_TASK (result));
-
-		if (g_file_info_has_attribute (task_data->info, G_FILE_ATTRIBUTE_TIME_MODIFIED))
-		{
-			GTimeVal modification_time;
-
-			g_file_info_get_modification_time (task_data->info, &modification_time);
-			_gtef_file_set_modification_time (saver->priv->file, modification_time);
-		}
+		new_etag = g_file_output_stream_get_etag (task_data->file_output_stream);
+		_gtef_file_set_etag (saver->priv->file, new_etag);
+		g_free (new_etag);
 	}
 
 	if (ok && saver->priv->source_buffer != NULL)

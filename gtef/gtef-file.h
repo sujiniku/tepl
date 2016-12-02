@@ -147,12 +147,11 @@ G_GNUC_INTERNAL
 void			_gtef_file_set_mounted			(GtefFile *file);
 
 G_GNUC_INTERNAL
-gboolean		_gtef_file_get_modification_time	(GtefFile *file,
-								 GTimeVal *modification_time);
+const gchar *		_gtef_file_get_etag			(GtefFile *file);
 
 G_GNUC_INTERNAL
-void			_gtef_file_set_modification_time	(GtefFile *file,
-								 GTimeVal  modification_time);
+void			_gtef_file_set_etag			(GtefFile    *file,
+								 const gchar *etag);
 
 G_GNUC_INTERNAL
 void			_gtef_file_set_externally_modified	(GtefFile *file,

@@ -65,12 +65,10 @@ struct _GtefFilePrivate
 	gpointer mount_operation_userdata;
 	GDestroyNotify mount_operation_notify;
 
-	/* Last known modification time of 'location'. The value is updated on a
-	 * file loading or file saving.
+	/* Last known entity tag of 'location'. The value is updated on a file
+	 * loading or file saving.
 	 */
-	GTimeVal modification_time;
-
-	guint modification_time_set : 1;
+	gchar *etag;
 
 	guint externally_modified : 1;
 	guint deleted : 1;
@@ -229,6 +227,7 @@ gtef_file_finalize (GObject *object)
 	GtefFilePrivate *priv = gtef_file_get_instance_private (GTEF_FILE (object));
 
 	g_free (priv->short_name);
+	g_free (priv->etag);
 
 	if (priv->untitled_number > 0)
 	{
@@ -513,8 +512,9 @@ gtef_file_set_location (GtefFile *file,
 	{
 		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_LOCATION]);
 
-		/* The modification_time is for the old location. */
-		priv->modification_time_set = FALSE;
+		/* The etag is for the old location. */
+		g_free (priv->etag);
+		priv->etag = NULL;
 
 		priv->externally_modified = FALSE;
 		priv->deleted = FALSE;
@@ -746,46 +746,39 @@ _gtef_file_set_mounted (GtefFile *file)
 	update_short_name (file);
 }
 
-gboolean
-_gtef_file_get_modification_time (GtefFile *file,
-				  GTimeVal *modification_time)
+const gchar *
+_gtef_file_get_etag (GtefFile *file)
 {
 	GtefFilePrivate *priv;
 
-	g_return_val_if_fail (modification_time != NULL, FALSE);
-
 	if (file == NULL)
 	{
-		return FALSE;
+		return NULL;
 	}
 
-	g_return_val_if_fail (GTEF_IS_FILE (file), FALSE);
+	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
 
 	priv = gtef_file_get_instance_private (file);
-
-	if (priv->modification_time_set)
-	{
-		*modification_time = priv->modification_time;
-	}
-
-	return priv->modification_time_set;
+	return priv->etag;
 }
 
 void
-_gtef_file_set_modification_time (GtefFile *file,
-				  GTimeVal  modification_time)
+_gtef_file_set_etag (GtefFile    *file,
+		     const gchar *etag)
 {
-	if (file != NULL)
+	GtefFilePrivate *priv;
+
+	if (file == NULL)
 	{
-		GtefFilePrivate *priv;
-
-		g_return_if_fail (GTEF_IS_FILE (file));
-
-		priv = gtef_file_get_instance_private (file);
-
-		priv->modification_time = modification_time;
-		priv->modification_time_set = TRUE;
+		return;
 	}
+
+	g_return_if_fail (GTEF_IS_FILE (file));
+
+	priv = gtef_file_get_instance_private (file);
+
+	g_free (priv->etag);
+	priv->etag = g_strdup (etag);
 }
 
 /**
@@ -847,7 +840,7 @@ gtef_file_check_file_on_disk (GtefFile *file)
 	}
 
 	info = g_file_query_info (priv->location,
-				  G_FILE_ATTRIBUTE_TIME_MODIFIED ","
+				  G_FILE_ATTRIBUTE_ETAG_VALUE ","
 				  G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE,
 				  G_FILE_QUERY_INFO_NONE,
 				  NULL,
@@ -859,18 +852,14 @@ gtef_file_check_file_on_disk (GtefFile *file)
 		return;
 	}
 
-	if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_TIME_MODIFIED) &&
-	    priv->modification_time_set)
+	if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_ETAG_VALUE) &&
+	    priv->etag != NULL)
 	{
-		GTimeVal timeval;
+		const gchar *etag;
 
-		g_file_info_get_modification_time (info, &timeval);
+		etag = g_file_info_get_etag (info);
 
-		/* Note that the modification time can even go backwards if the
-		 * user is copying over an old file.
-		 */
-		if (timeval.tv_sec != priv->modification_time.tv_sec ||
-		    timeval.tv_usec != priv->modification_time.tv_usec)
+		if (g_strcmp0 (priv->etag, etag) != 0)
 		{
 			priv->externally_modified = TRUE;
 		}

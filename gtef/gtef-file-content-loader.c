@@ -40,6 +40,8 @@ struct _GtefFileContentLoaderPrivate
 
 struct _TaskData
 {
+	GFileInfo *info;
+
 	GFileInputStream *file_input_stream;
 
 	GFileProgressCallback progress_cb;
@@ -79,6 +81,7 @@ task_data_free (gpointer data)
 		return;
 	}
 
+	g_clear_object (&task_data->info);
 	g_clear_object (&task_data->file_input_stream);
 
 	if (task_data->progress_cb_notify != NULL)
@@ -256,31 +259,17 @@ read_next_chunk (GTask *task)
 }
 
 static void
-check_file_size_cb (GObject      *source_object,
-		    GAsyncResult *result,
-		    gpointer      user_data)
+check_file_size (GTask *task)
 {
-	GFileInputStream *file_input_stream = G_FILE_INPUT_STREAM (source_object);
-	GTask *task = G_TASK (user_data);
 	TaskData *task_data;
 	GtefFileContentLoader *loader;
-	GFileInfo *info = NULL;
-	GError *error = NULL;
 
 	task_data = g_task_get_task_data (task);
 	loader = g_task_get_source_object (task);
 
-	info = g_file_input_stream_query_info_finish (file_input_stream, result, &error);
-
-	if (error != NULL)
+	if (g_file_info_has_attribute (task_data->info, G_FILE_ATTRIBUTE_STANDARD_SIZE))
 	{
-		g_task_return_error (task, error);
-		goto out;
-	}
-
-	if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_STANDARD_SIZE))
-	{
-		task_data->total_size = g_file_info_get_size (info);
+		task_data->total_size = g_file_info_get_size (task_data->info);
 
 		if (loader->priv->max_size >= 0 &&
 		    task_data->total_size > loader->priv->max_size)
@@ -296,19 +285,40 @@ check_file_size_cb (GObject      *source_object,
 						 max_size_str);
 
 			g_free (max_size_str);
-			goto out;
+			return;
 		}
 	}
 
 	/* Start reading */
 	read_next_chunk (task);
-
-out:
-	g_clear_object (&info);
 }
 
 static void
-check_file_size (GTask *task)
+query_info_cb (GObject      *source_object,
+	       GAsyncResult *result,
+	       gpointer      user_data)
+{
+	GFileInputStream *file_input_stream = G_FILE_INPUT_STREAM (source_object);
+	GTask *task = G_TASK (user_data);
+	TaskData *task_data;
+	GError *error = NULL;
+
+	task_data = g_task_get_task_data (task);
+
+	g_clear_object (&task_data->info);
+	task_data->info = g_file_input_stream_query_info_finish (file_input_stream, result, &error);
+
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		return;
+	}
+
+	check_file_size (task);
+}
+
+static void
+query_info (GTask *task)
 {
 	TaskData *task_data;
 
@@ -323,7 +333,7 @@ check_file_size (GTask *task)
 					      G_FILE_ATTRIBUTE_STANDARD_SIZE,
 					      g_task_get_priority (task),
 					      g_task_get_cancellable (task),
-					      check_file_size_cb,
+					      query_info_cb,
 					      task);
 }
 
@@ -348,7 +358,7 @@ open_file_cb (GObject      *source_object,
 		return;
 	}
 
-	check_file_size (task);
+	query_info (task);
 }
 
 static void

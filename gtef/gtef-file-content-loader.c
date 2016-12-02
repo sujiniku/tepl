@@ -40,7 +40,7 @@ struct _GtefFileContentLoaderPrivate
 
 struct _TaskData
 {
-	GInputStream *input_stream;
+	GFileInputStream *file_input_stream;
 
 	GFileProgressCallback progress_cb;
 	gpointer progress_cb_data;
@@ -79,7 +79,7 @@ task_data_free (gpointer data)
 		return;
 	}
 
-	g_clear_object (&task_data->input_stream);
+	g_clear_object (&task_data->file_input_stream);
 
 	if (task_data->progress_cb_notify != NULL)
 	{
@@ -247,7 +247,7 @@ read_next_chunk (GTask *task)
 	 * don't know if it makes a big difference, so it's better to favor
 	 * simple code.
 	 */
-	g_input_stream_read_bytes_async (task_data->input_stream,
+	g_input_stream_read_bytes_async (G_INPUT_STREAM (task_data->file_input_stream),
 					 MAX (1, loader->priv->chunk_size),
 					 g_task_get_priority (task),
 					 g_task_get_cancellable (task),
@@ -267,8 +267,8 @@ open_file_cb (GObject      *source_object,
 
 	task_data = g_task_get_task_data (task);
 
-	g_assert (task_data->input_stream == NULL);
-	task_data->input_stream = G_INPUT_STREAM (g_file_read_finish (location, result, &error));
+	g_assert (task_data->file_input_stream == NULL);
+	task_data->file_input_stream = g_file_read_finish (location, result, &error);
 
 	if (error != NULL)
 	{

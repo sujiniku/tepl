@@ -18,11 +18,17 @@
  */
 
 #include <string.h>
+#include <sys/stat.h>
 #include <gtef/gtef.h>
 
 #define DEFAULT_CONTENTS "My shiny content!"
 #define MAX_SIZE 10000
 #define CHUNK_SIZE 1024
+
+/* linux/bsd has it. others such as Solaris, do not */
+#ifndef ACCESSPERMS
+#define ACCESSPERMS (S_IRWXU|S_IRWXG|S_IRWXO)
+#endif
 
 typedef struct _TestData TestData;
 struct _TestData
@@ -251,6 +257,171 @@ test_max_size (void)
 	g_free (contents);
 }
 
+#ifndef G_OS_WIN32
+static GFile *
+create_writable_file (void)
+{
+	gchar *path;
+	GFile *location;
+	GError *error = NULL;
+
+	path = g_build_filename (g_get_tmp_dir (), "gtef-test-file-loader", NULL);
+	location = g_file_new_for_path (path);
+
+	g_file_delete (location, NULL, NULL);
+
+	g_file_set_contents (path, "\n", -1, &error);
+	g_assert_no_error (error);
+
+	g_free (path);
+	return location;
+}
+
+static void
+check_permissions (GFile *location,
+		   guint  permissions)
+{
+	GError *error = NULL;
+	GFileInfo *info;
+
+	info = g_file_query_info (location,
+	                          G_FILE_ATTRIBUTE_UNIX_MODE,
+	                          G_FILE_QUERY_INFO_NONE,
+	                          NULL,
+	                          &error);
+
+	g_assert_no_error (error);
+
+	g_assert_cmpint (permissions,
+	                 ==,
+	                 g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_MODE) & ACCESSPERMS);
+
+	g_object_unref (info);
+}
+
+static GFile *
+create_file_with_permissions (guint permissions)
+{
+	gchar *path;
+	GFile *location;
+	GFileInfo *info;
+	guint mode;
+	GError *error = NULL;
+
+	path = g_build_filename (g_get_tmp_dir (), "gtef-test-file-loader", NULL);
+	location = g_file_new_for_path (path);
+
+	g_file_delete (location, NULL, NULL);
+
+	g_file_set_contents (path, "\n", -1, &error);
+	g_assert_no_error (error);
+
+	info = g_file_query_info (location,
+				  G_FILE_ATTRIBUTE_UNIX_MODE,
+				  G_FILE_QUERY_INFO_NONE,
+				  NULL,
+				  &error);
+	g_assert_no_error (error);
+
+	mode = g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_MODE);
+	g_object_unref (info);
+
+	g_file_set_attribute_uint32 (location,
+				     G_FILE_ATTRIBUTE_UNIX_MODE,
+				     (mode & ~ACCESSPERMS) | permissions,
+				     G_FILE_QUERY_INFO_NONE,
+				     NULL,
+				     &error);
+	g_assert_no_error (error);
+
+	check_permissions (location, permissions);
+
+	g_free (path);
+	return location;
+}
+
+static void
+check_readonly_cb (GObject      *source_object,
+		   GAsyncResult *result,
+		   gpointer      user_data)
+{
+	GtefFileLoader *loader = GTEF_FILE_LOADER (source_object);
+	gboolean expected_readonly = GPOINTER_TO_INT (user_data);
+	GtefFile *file;
+	gboolean readonly;
+	GError *error = NULL;
+
+	gtef_file_loader_load_finish (loader, result, &error);
+	g_assert_no_error (error);
+
+	file = gtef_file_loader_get_file (loader);
+	readonly = gtef_file_is_readonly (file);
+	g_assert_cmpint (readonly, ==, expected_readonly);
+
+	gtk_main_quit ();
+}
+
+static void
+check_readonly (GFile    *location,
+		gboolean  expected_readonly)
+{
+	GtefBuffer *buffer;
+	GtefFile *file;
+	GtefFileLoader *loader;
+
+	buffer = gtef_buffer_new ();
+	file = gtef_buffer_get_file (buffer);
+
+	gtef_file_set_location (file, location);
+	loader = gtef_file_loader_new (buffer, file);
+
+	gtef_file_loader_load_async (loader,
+				     G_PRIORITY_DEFAULT,
+				     NULL,
+				     NULL, NULL, NULL,
+				     check_readonly_cb,
+				     GINT_TO_POINTER (expected_readonly));
+
+	gtk_main ();
+
+	g_object_unref (buffer);
+	g_object_unref (loader);
+}
+
+static void
+test_readonly (void)
+{
+	GFile *location;
+
+	/* Writable */
+	location = create_writable_file ();
+	check_readonly (location, FALSE);
+	g_object_unref (location);
+
+	location = create_file_with_permissions (0600);
+	check_readonly (location, FALSE);
+	g_object_unref (location);
+
+	/* Read only */
+	location = create_file_with_permissions (0400);
+	check_readonly (location, TRUE);
+	g_object_unref (location);
+
+	location = create_file_with_permissions (0440);
+	check_readonly (location, TRUE);
+	g_object_unref (location);
+
+	location = create_file_with_permissions (0444);
+	check_readonly (location, TRUE);
+	g_object_unref (location);
+
+	/* Read and execute */
+	location = create_file_with_permissions (0500);
+	check_readonly (location, TRUE);
+	g_object_unref (location);
+}
+#endif /* !G_OS_WIN32 */
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -259,6 +430,10 @@ main (gint   argc,
 
 	g_test_add_func ("/file-loader/implicit-trailing-newline", test_implicit_trailing_newline);
 	g_test_add_func ("/file-loader/max-size", test_max_size);
+
+#ifndef G_OS_WIN32
+	g_test_add_func ("/file-loader/readonly", test_readonly);
+#endif
 
 	return g_test_run ();
 }

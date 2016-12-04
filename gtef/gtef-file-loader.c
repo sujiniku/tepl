@@ -1032,6 +1032,9 @@ gtef_file_loader_load_finish (GtefFileLoader  *loader,
 
 	if (ok && priv->file != NULL)
 	{
+		TaskData *task_data;
+		gboolean readonly;
+
 		/* TODO set encoding */
 		/* TODO set newline type */
 
@@ -1040,7 +1043,10 @@ gtef_file_loader_load_finish (GtefFileLoader  *loader,
 		_gtef_file_set_deleted (priv->file, FALSE);
 
 		/* TODO set etag */
-		/* TODO set readonly */
+
+		task_data = g_task_get_task_data (priv->task);
+		readonly = _gtef_file_content_loader_get_readonly (task_data->content_loader);
+		_gtef_file_set_readonly (priv->file, readonly);
 	}
 
 	g_clear_object (&priv->task);

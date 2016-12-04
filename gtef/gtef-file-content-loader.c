@@ -376,7 +376,8 @@ query_info (GTask *task)
 	 * GFile to have the GFileInputStream, we would have a race condition.
 	 */
 	g_file_input_stream_query_info_async (task_data->file_input_stream,
-					      G_FILE_ATTRIBUTE_STANDARD_SIZE,
+					      G_FILE_ATTRIBUTE_STANDARD_SIZE ","
+					      G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE,
 					      g_task_get_priority (task),
 					      g_task_get_cancellable (task),
 					      query_info_cb,
@@ -525,4 +526,19 @@ _gtef_file_content_loader_get_content (GtefFileContentLoader *loader)
 	}
 
 	return loader->priv->content;
+}
+
+gboolean
+_gtef_file_content_loader_get_readonly (GtefFileContentLoader *loader)
+{
+	g_return_val_if_fail (GTEF_IS_FILE_CONTENT_LOADER (loader), FALSE);
+	g_return_val_if_fail (loader->priv->info != NULL, FALSE);
+
+	if (g_file_info_has_attribute (loader->priv->info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE))
+	{
+		return !g_file_info_get_attribute_boolean (loader->priv->info,
+							   G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE);
+	}
+
+	return FALSE;
 }

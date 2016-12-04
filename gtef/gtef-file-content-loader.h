@@ -86,6 +86,9 @@ G_GNUC_INTERNAL
 GQueue *		_gtef_file_content_loader_get_content		(GtefFileContentLoader *loader);
 
 G_GNUC_INTERNAL
+const gchar *		_gtef_file_content_loader_get_etag		(GtefFileContentLoader *loader);
+
+G_GNUC_INTERNAL
 gboolean		_gtef_file_content_loader_get_readonly		(GtefFileContentLoader *loader);
 
 G_END_DECLS

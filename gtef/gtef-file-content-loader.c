@@ -377,6 +377,7 @@ query_info (GTask *task)
 	 */
 	g_file_input_stream_query_info_async (task_data->file_input_stream,
 					      G_FILE_ATTRIBUTE_STANDARD_SIZE ","
+					      G_FILE_ATTRIBUTE_ETAG_VALUE ","
 					      G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE,
 					      g_task_get_priority (task),
 					      g_task_get_cancellable (task),
@@ -526,6 +527,20 @@ _gtef_file_content_loader_get_content (GtefFileContentLoader *loader)
 	}
 
 	return loader->priv->content;
+}
+
+const gchar *
+_gtef_file_content_loader_get_etag (GtefFileContentLoader *loader)
+{
+	g_return_val_if_fail (GTEF_IS_FILE_CONTENT_LOADER (loader), NULL);
+	g_return_val_if_fail (loader->priv->info != NULL, NULL);
+
+	if (g_file_info_has_attribute (loader->priv->info, G_FILE_ATTRIBUTE_ETAG_VALUE))
+	{
+		return g_file_info_get_etag (loader->priv->info);
+	}
+
+	return NULL;
 }
 
 gboolean

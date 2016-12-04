@@ -874,11 +874,14 @@ mount_cb (GObject      *source_object,
 {
 	GFile *location = G_FILE (source_object);
 	GTask *task = G_TASK (user_data);
+	GtefFileSaver *saver;
 	GError *error = NULL;
 
 	DEBUG ({
 	       g_print ("%s\n", G_STRFUNC);
 	});
+
+	saver = g_task_get_source_object (task);
 
 	g_file_mount_enclosing_volume_finish (location, result, &error);
 
@@ -886,6 +889,11 @@ mount_cb (GObject      *source_object,
 	{
 		g_task_return_error (task, error);
 		return;
+	}
+
+	if (saver->priv->file != NULL)
+	{
+		_gtef_file_set_mounted (saver->priv->file);
 	}
 
 	begin_write (task);

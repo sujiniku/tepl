@@ -65,9 +65,6 @@ struct _TaskData
 {
 	GtefFileContentLoader *content_loader;
 
-	/* List of GBytes*. Should never be NULL. */
-	GQueue *content;
-
 	/* TODO report progress also when determining encoding, and when
 	 * converting and inserting the content.
 	 */
@@ -114,12 +111,7 @@ gtef_file_loader_error_quark (void)
 static TaskData *
 task_data_new (void)
 {
-	TaskData *task_data;
-
-	task_data = g_new0 (TaskData, 1);
-	task_data->content = g_queue_new ();
-
-	return task_data;
+	return g_new0 (TaskData, 1);
 }
 
 static void
@@ -133,11 +125,6 @@ task_data_free (gpointer data)
 	}
 
 	g_clear_object (&task_data->content_loader);
-
-	if (task_data->content != NULL)
-	{
-		g_queue_free_full (task_data->content, (GDestroyNotify)g_bytes_unref);
-	}
 
 	if (task_data->progress_cb_notify != NULL)
 	{
@@ -662,6 +649,8 @@ convert_and_insert_content (GTask *task)
 	GtefFileLoaderPrivate *priv;
 	TaskData *task_data;
 	GtefEncodingConverter *converter = NULL;
+	GQueue *content;
+	GList *l;
 	GError *error = NULL;
 
 	loader = g_task_get_source_object (task);
@@ -692,11 +681,11 @@ convert_and_insert_content (GTask *task)
 		goto out;
 	}
 
-	while (!g_queue_is_empty (task_data->content))
-	{
-		GBytes *chunk;
+	content = _gtef_file_content_loader_get_content (task_data->content_loader);
 
-		chunk = g_queue_pop_head (task_data->content);
+	for (l = content->head; l != NULL; l = l->next)
+	{
+		GBytes *chunk = l->data;
 
 		g_assert (chunk != NULL);
 		g_assert (g_bytes_get_size (chunk) > 0);
@@ -705,8 +694,6 @@ convert_and_insert_content (GTask *task)
 					       g_bytes_get_data (chunk, NULL),
 					       g_bytes_get_size (chunk),
 					       &error);
-
-		g_bytes_unref (chunk);
 
 		if (error != NULL)
 		{
@@ -731,13 +718,16 @@ determine_encoding (GTask *task)
 	TaskData *task_data;
 	uchardet_t ud;
 	const gchar *charset;
+	GQueue *content;
 	GList *l;
 
 	task_data = g_task_get_task_data (task);
 
 	ud = uchardet_new ();
 
-	for (l = task_data->content->head; l != NULL; l = l->next)
+	content = _gtef_file_content_loader_get_content (task_data->content_loader);
+
+	for (l = content->head; l != NULL; l = l->next)
 	{
 		GBytes *chunk = l->data;
 
@@ -843,16 +833,7 @@ load_content_cb (GObject      *source_object,
 
 	task_data = g_task_get_task_data (task);
 
-	if (task_data->content != NULL)
-	{
-		g_queue_free_full (task_data->content, (GDestroyNotify)g_bytes_unref);
-		task_data->content = NULL;
-	}
-
-	_gtef_file_content_loader_load_finish (content_loader,
-					       result,
-					       &task_data->content,
-					       &error);
+	_gtef_file_content_loader_load_finish (content_loader, result, &error);
 
 	if (error != NULL)
 	{
@@ -870,7 +851,6 @@ load_content_cb (GObject      *source_object,
 	else
 	{
 		/* Finished reading, next operation. */
-		g_clear_object (&task_data->content_loader);
 		determine_encoding (task);
 	}
 }

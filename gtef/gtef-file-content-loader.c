@@ -486,12 +486,9 @@ _gtef_file_content_loader_load_async (GtefFileContentLoader *loader,
  * _gtef_file_content_loader_load_finish:
  * @loader: a #GtefFileContentLoader.
  * @result: a #GAsyncResult.
- * @content: (out) (element-type GBytes): the content.
  * @error: a #GError, or %NULL.
  *
  * Finishes a file loading started with _gtef_file_content_loader_load_async().
- *
- * On error, @content is set to %NULL.
  *
  * If the file is too big, the %GTEF_FILE_LOADER_ERROR_TOO_BIG error is
  * returned.
@@ -501,7 +498,6 @@ _gtef_file_content_loader_load_async (GtefFileContentLoader *loader,
 gboolean
 _gtef_file_content_loader_load_finish (GtefFileContentLoader  *loader,
 				       GAsyncResult           *result,
-				       GQueue                **content,
 				       GError                **error)
 {
 	gboolean ok;
@@ -509,24 +505,26 @@ _gtef_file_content_loader_load_finish (GtefFileContentLoader  *loader,
 	g_return_val_if_fail (GTEF_IS_FILE_CONTENT_LOADER (loader), FALSE);
 	g_return_val_if_fail (g_task_is_valid (result, loader), FALSE);
 	g_return_val_if_fail (G_TASK (result) == loader->priv->task, FALSE);
-	g_return_val_if_fail (content != NULL, FALSE);
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
-
-	*content = NULL;
 
 	ok = g_task_propagate_boolean (loader->priv->task, error);
 
-	if (ok)
-	{
-		*content = loader->priv->content;
-		loader->priv->content = NULL;
-	}
-
-	if (*content == NULL)
-	{
-		*content = g_queue_new ();
-	}
-
 	g_clear_object (&loader->priv->task);
 	return ok;
+}
+
+/* Returns: (transfer none) (element-type GBytes): the content that has been
+ * loaded by the last load operation on @loader.
+ */
+GQueue *
+_gtef_file_content_loader_get_content (GtefFileContentLoader *loader)
+{
+	g_return_val_if_fail (GTEF_IS_FILE_CONTENT_LOADER (loader), NULL);
+
+	if (loader->priv->content == NULL)
+	{
+		loader->priv->content = g_queue_new ();
+	}
+
+	return loader->priv->content;
 }

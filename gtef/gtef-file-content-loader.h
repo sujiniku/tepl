@@ -80,8 +80,10 @@ void			_gtef_file_content_loader_load_async		(GtefFileContentLoader *loader,
 G_GNUC_INTERNAL
 gboolean		_gtef_file_content_loader_load_finish		(GtefFileContentLoader  *loader,
 									 GAsyncResult           *result,
-									 GQueue                **content,
 									 GError                **error);
+
+G_GNUC_INTERNAL
+GQueue *		_gtef_file_content_loader_get_content		(GtefFileContentLoader *loader);
 
 G_END_DECLS
 

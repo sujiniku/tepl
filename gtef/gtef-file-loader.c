@@ -1030,6 +1030,19 @@ gtef_file_loader_load_finish (GtefFileLoader  *loader,
 
 	ok = g_task_propagate_boolean (priv->task, error);
 
+	if (ok && priv->file != NULL)
+	{
+		/* TODO set encoding */
+		/* TODO set newline type */
+
+		_gtef_file_set_compression_type (priv->file, GTEF_COMPRESSION_TYPE_NONE);
+		_gtef_file_set_externally_modified (priv->file, FALSE);
+		_gtef_file_set_deleted (priv->file, FALSE);
+
+		/* TODO set etag */
+		/* TODO set readonly */
+	}
+
 	g_clear_object (&priv->task);
 
 	return ok;

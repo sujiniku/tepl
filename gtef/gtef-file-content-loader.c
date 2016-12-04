@@ -165,6 +165,41 @@ _gtef_file_content_loader_set_chunk_size (GtefFileContentLoader *loader,
 }
 
 static void
+close_input_stream_cb (GObject      *source_object,
+		       GAsyncResult *result,
+		       gpointer      user_data)
+{
+	GInputStream *input_stream = G_INPUT_STREAM (source_object);
+	GTask *task = G_TASK (user_data);
+	GError *error = NULL;
+
+	g_input_stream_close_finish (input_stream, result, &error);
+
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		return;
+	}
+
+	/* Finished! */
+	g_task_return_boolean (task, TRUE);
+}
+
+static void
+close_input_stream (GTask *task)
+{
+	TaskData *task_data;
+
+	task_data = g_task_get_task_data (task);
+
+	g_input_stream_close_async (G_INPUT_STREAM (task_data->file_input_stream),
+				    g_task_get_priority (task),
+				    g_task_get_cancellable (task),
+				    close_input_stream_cb,
+				    task);
+}
+
+static void
 read_next_chunk_cb (GObject      *source_object,
 		    GAsyncResult *result,
 		    gpointer      user_data)
@@ -192,7 +227,7 @@ read_next_chunk_cb (GObject      *source_object,
 	if (chunk_size == 0)
 	{
 		/* Finished reading */
-		g_task_return_boolean (task, TRUE);
+		close_input_stream (task);
 		g_bytes_unref (chunk);
 		return;
 	}

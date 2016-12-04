@@ -33,9 +33,14 @@ typedef struct _TaskData TaskData;
 struct _GtefFileContentLoaderPrivate
 {
 	GFile *location;
+
 	gint64 max_size;
 	gint64 chunk_size;
+
 	GTask *task;
+
+	/* List of GBytes*. */
+	GQueue *content;
 };
 
 struct _TaskData
@@ -50,9 +55,6 @@ struct _TaskData
 
 	goffset total_bytes_read;
 	goffset total_size;
-
-	/* List of GBytes*. */
-	GQueue *content;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefFileContentLoader, _gtef_file_content_loader, G_TYPE_OBJECT)
@@ -63,12 +65,7 @@ static void read_next_chunk (GTask *task);
 static TaskData *
 task_data_new (void)
 {
-	TaskData *task_data;
-
-	task_data = g_new0 (TaskData, 1);
-	task_data->content = g_queue_new ();
-
-	return task_data;
+	return g_new0 (TaskData, 1);
 }
 
 static void
@@ -89,11 +86,6 @@ task_data_free (gpointer data)
 		task_data->progress_cb_notify (task_data->progress_cb_data);
 	}
 
-	if (task_data->content != NULL)
-	{
-		g_queue_free_full (task_data->content, (GDestroyNotify)g_bytes_unref);
-	}
-
 	g_free (task_data);
 }
 
@@ -109,11 +101,25 @@ _gtef_file_content_loader_dispose (GObject *object)
 }
 
 static void
+_gtef_file_content_loader_finalize (GObject *object)
+{
+	GtefFileContentLoader *loader = GTEF_FILE_CONTENT_LOADER (object);
+
+	if (loader->priv->content != NULL)
+	{
+		g_queue_free_full (loader->priv->content, (GDestroyNotify)g_bytes_unref);
+	}
+
+	G_OBJECT_CLASS (_gtef_file_content_loader_parent_class)->finalize (object);
+}
+
+static void
 _gtef_file_content_loader_class_init (GtefFileContentLoaderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	object_class->dispose = _gtef_file_content_loader_dispose;
+	object_class->finalize = _gtef_file_content_loader_finalize;
 }
 
 static void
@@ -206,11 +212,13 @@ read_next_chunk_cb (GObject      *source_object,
 {
 	GInputStream *input_stream = G_INPUT_STREAM (source_object);
 	GTask *task = G_TASK (user_data);
+	GtefFileContentLoader *loader;
 	TaskData *task_data;
 	GBytes *chunk;
 	gsize chunk_size;
 	GError *error = NULL;
 
+	loader = g_task_get_source_object (task);
 	task_data = g_task_get_task_data (task);
 
 	chunk = g_input_stream_read_bytes_finish (input_stream, result, &error);
@@ -232,7 +240,7 @@ read_next_chunk_cb (GObject      *source_object,
 		return;
 	}
 
-	g_queue_push_tail (task_data->content, chunk);
+	g_queue_push_tail (loader->priv->content, chunk);
 	task_data->total_bytes_read += chunk_size;
 
 	/* Read next chunk before calling the progress_cb, because the
@@ -464,6 +472,13 @@ _gtef_file_content_loader_load_async (GtefFileContentLoader *loader,
 	task_data->progress_cb_data = progress_callback_data;
 	task_data->progress_cb_notify = progress_callback_notify;
 
+	if (loader->priv->content != NULL)
+	{
+		g_queue_free_full (loader->priv->content, (GDestroyNotify)g_bytes_unref);
+	}
+
+	loader->priv->content = g_queue_new ();
+
 	open_file (loader->priv->task);
 }
 
@@ -503,11 +518,8 @@ _gtef_file_content_loader_load_finish (GtefFileContentLoader  *loader,
 
 	if (ok)
 	{
-		TaskData *task_data;
-
-		task_data = g_task_get_task_data (loader->priv->task);
-		*content = task_data->content;
-		task_data->content = NULL;
+		*content = loader->priv->content;
+		loader->priv->content = NULL;
 	}
 
 	if (*content == NULL)

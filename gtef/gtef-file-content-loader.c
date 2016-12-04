@@ -513,7 +513,10 @@ _gtef_file_content_loader_load_finish (GtefFileContentLoader  *loader,
 	return ok;
 }
 
-/* Returns: (transfer none) (element-type GBytes): the content that has been
+/*
+ * Should be called only after a successful load operation.
+ *
+ * Returns: (transfer none) (element-type GBytes): the content that has been
  * loaded by the last load operation on @loader.
  */
 GQueue *
@@ -529,6 +532,7 @@ _gtef_file_content_loader_get_content (GtefFileContentLoader *loader)
 	return loader->priv->content;
 }
 
+/* Should be called only after a successful load operation. */
 const gchar *
 _gtef_file_content_loader_get_etag (GtefFileContentLoader *loader)
 {
@@ -543,6 +547,7 @@ _gtef_file_content_loader_get_etag (GtefFileContentLoader *loader)
 	return NULL;
 }
 
+/* Should be called only after a successful load operation. */
 gboolean
 _gtef_file_content_loader_get_readonly (GtefFileContentLoader *loader)
 {

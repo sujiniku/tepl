@@ -40,6 +40,7 @@ struct _GtefFileContentLoaderPrivate
 	GTask *task;
 
 	GFileInfo *info;
+	gchar *etag;
 
 	/* List of GBytes*. */
 	GQueue *content;
@@ -93,6 +94,9 @@ reset (GtefFileContentLoader *loader)
 {
 	g_clear_object (&loader->priv->task);
 	g_clear_object (&loader->priv->info);
+
+	g_free (loader->priv->etag);
+	loader->priv->etag = NULL;
 
 	if (loader->priv->content != NULL)
 	{
@@ -340,11 +344,11 @@ check_file_size (GTask *task)
 }
 
 static void
-query_info_cb (GObject      *source_object,
-	       GAsyncResult *result,
-	       gpointer      user_data)
+query_info_on_location_cb (GObject      *source_object,
+			   GAsyncResult *result,
+			   gpointer      user_data)
 {
-	GFileInputStream *file_input_stream = G_FILE_INPUT_STREAM (source_object);
+	GFile *location = G_FILE (source_object);
 	GTask *task = G_TASK (user_data);
 	GtefFileContentLoader *loader;
 	GError *error = NULL;
@@ -352,7 +356,7 @@ query_info_cb (GObject      *source_object,
 	loader = g_task_get_source_object (task);
 
 	g_clear_object (&loader->priv->info);
-	loader->priv->info = g_file_input_stream_query_info_finish (file_input_stream, result, &error);
+	loader->priv->info = g_file_query_info_finish (location, result, &error);
 
 	if (error != NULL)
 	{
@@ -364,24 +368,74 @@ query_info_cb (GObject      *source_object,
 }
 
 static void
-query_info (GTask *task)
+query_info_on_location (GTask *task)
+{
+	GtefFileContentLoader *loader;
+
+	loader = g_task_get_source_object (task);
+
+	/* At least G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE cannot be queried from the
+	 * GFileInputStream. Normally querying from the GFile always works (in
+	 * normal conditions).
+	 */
+	g_file_query_info_async (loader->priv->location,
+				 G_FILE_ATTRIBUTE_STANDARD_SIZE ","
+				 G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE,
+				 G_FILE_QUERY_INFO_NONE,
+				 g_task_get_priority (task),
+				 g_task_get_cancellable (task),
+				 query_info_on_location_cb,
+				 task);
+}
+
+static void
+query_info_on_file_input_stream_cb (GObject      *source_object,
+				    GAsyncResult *result,
+				    gpointer      user_data)
+{
+	GFileInputStream *file_input_stream = G_FILE_INPUT_STREAM (source_object);
+	GTask *task = G_TASK (user_data);
+	GtefFileContentLoader *loader;
+	GFileInfo *info;
+	GError *error = NULL;
+
+	loader = g_task_get_source_object (task);
+
+	info = g_file_input_stream_query_info_finish (file_input_stream, result, &error);
+
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		g_clear_object (&info);
+		return;
+	}
+
+	if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_ETAG_VALUE))
+	{
+		g_free (loader->priv->etag);
+		loader->priv->etag = g_strdup (g_file_info_get_etag (info));
+	}
+
+	query_info_on_location (task);
+	g_object_unref (info);
+}
+
+static void
+query_info_on_file_input_stream (GTask *task)
 {
 	TaskData *task_data;
 
 	task_data = g_task_get_task_data (task);
 
-	/* Query info on the GFileInputStream, not the GFile. We can suppose
-	 * that we avoid potential races that way. If we query the info on the
-	 * GFile, then the file is modified by another program, then we open the
-	 * GFile to have the GFileInputStream, we would have a race condition.
+	/* See the docs of g_file_replace(), it is apparently better to query
+	 * the etag on the GFileInputStream. Maybe to avoid a race condition if
+	 * another program modifies the file while we are reading it.
 	 */
 	g_file_input_stream_query_info_async (task_data->file_input_stream,
-					      G_FILE_ATTRIBUTE_STANDARD_SIZE ","
-					      G_FILE_ATTRIBUTE_ETAG_VALUE ","
-					      G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE,
+					      G_FILE_ATTRIBUTE_ETAG_VALUE,
 					      g_task_get_priority (task),
 					      g_task_get_cancellable (task),
-					      query_info_cb,
+					      query_info_on_file_input_stream_cb,
 					      task);
 }
 
@@ -406,7 +460,7 @@ open_file_cb (GObject      *source_object,
 		return;
 	}
 
-	query_info (task);
+	query_info_on_file_input_stream (task);
 }
 
 static void
@@ -537,14 +591,8 @@ const gchar *
 _gtef_file_content_loader_get_etag (GtefFileContentLoader *loader)
 {
 	g_return_val_if_fail (GTEF_IS_FILE_CONTENT_LOADER (loader), NULL);
-	g_return_val_if_fail (loader->priv->info != NULL, NULL);
 
-	if (g_file_info_has_attribute (loader->priv->info, G_FILE_ATTRIBUTE_ETAG_VALUE))
-	{
-		return g_file_info_get_etag (loader->priv->info);
-	}
-
-	return NULL;
+	return loader->priv->etag;
 }
 
 /* Should be called only after a successful load operation. */

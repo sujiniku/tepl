@@ -183,7 +183,7 @@ test_externally_modified (void)
 	/* Modify externally and then save.
 	 * Sleep one second to force the timestamp/etag to change.
 	 */
-	usleep (1000000);
+	sleep (1);
 	g_file_set_contents (path, "b", -1, &error);
 	g_assert_no_error (error);
 	gtef_file_check_file_on_disk (file);
@@ -195,7 +195,7 @@ test_externally_modified (void)
 	g_assert (!gtef_file_is_externally_modified (file));
 
 	/* Modify externally and then load */
-	usleep (1000000);
+	sleep (1);
 	g_file_set_contents (path, "c", -1, &error);
 	g_assert_no_error (error);
 	gtef_file_check_file_on_disk (file);
@@ -207,7 +207,7 @@ test_externally_modified (void)
 	g_assert (!gtef_file_is_externally_modified (file));
 
 	/* Modify externally and then save as */
-	usleep (1000000);
+	sleep (1);
 	g_file_set_contents (path, "d", -1, &error);
 	g_assert_no_error (error);
 	gtef_file_check_file_on_disk (file);
@@ -225,7 +225,7 @@ test_externally_modified (void)
 	g_assert (!gtef_file_is_externally_modified (file));
 
 	/* Modify externally and then save as to same location */
-	usleep (1000000);
+	sleep (1);
 	g_file_set_contents (new_path, "f", -1, &error);
 	g_assert_no_error (error);
 	gtef_file_check_file_on_disk (file);

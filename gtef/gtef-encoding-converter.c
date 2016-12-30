@@ -43,6 +43,13 @@ struct _GtefEncodingConverterPrivate
 {
 	GIConv conv;
 
+	/* - outbuf_size is the full size of outbuf (if outbuf is non-NULL),
+	 *   *including* the additional byte to nul-terminate the string.
+	 * - The following condition must be met:
+	 *   0 <= outbytes_left < outbuf_size
+	 *   In other words, outbytes_left *doesn't include* the byte to
+	 *   nul-terminate the string.
+	 */
 	gchar *outbuf;
 	gint64 outbuf_size;
 	gsize outbytes_left;
@@ -71,11 +78,21 @@ typedef enum _Result
 } Result;
 
 /* 1 MB */
-#define DEFAULT_OUTBUF_SIZE (1024 * 1024 - 1)
+#define DEFAULT_OUTBUF_SIZE (1024 * 1024)
+
+/* One byte of data, one byte to nul-terminate the string. */
+#define MIN_OUTBUF_SIZE 2
 
 static GParamSpec *properties[N_PROPERTIES];
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefEncodingConverter, _gtef_encoding_converter, G_TYPE_OBJECT)
+
+static void
+check_invariants (GtefEncodingConverter *converter)
+{
+	g_assert_cmpint (converter->priv->outbuf_size, >=, MIN_OUTBUF_SIZE);
+	g_assert_cmpint (converter->priv->outbytes_left, <, converter->priv->outbuf_size);
+}
 
 static gboolean
 is_opened (GtefEncodingConverter *converter)
@@ -83,13 +100,27 @@ is_opened (GtefEncodingConverter *converter)
 	return converter->priv->conv != (GIConv)-1;
 }
 
+static gboolean
+outbuf_is_empty (GtefEncodingConverter *converter)
+{
+	check_invariants (converter);
+
+	return (converter->priv->outbuf == NULL ||
+		(gint64)converter->priv->outbytes_left == (converter->priv->outbuf_size - 1));
+}
+
+static gsize
+get_outbuf_used_length (GtefEncodingConverter *converter)
+{
+	check_invariants (converter);
+
+	return (converter->priv->outbuf_size - 1) - converter->priv->outbytes_left;
+}
+
 static void
 flush_outbuf (GtefEncodingConverter *converter)
 {
-	g_assert_cmpint (converter->priv->outbytes_left, <=, converter->priv->outbuf_size);
-
-	if (converter->priv->outbuf == NULL ||
-	    (gint64)converter->priv->outbytes_left == converter->priv->outbuf_size)
+	if (outbuf_is_empty (converter))
 	{
 		return;
 	}
@@ -98,7 +129,7 @@ flush_outbuf (GtefEncodingConverter *converter)
 	{
 		gsize length;
 
-		length = converter->priv->outbuf_size - converter->priv->outbytes_left;
+		length = get_outbuf_used_length (converter);
 		converter->priv->outbuf[length] = '\0';
 
 		converter->priv->callback (converter->priv->outbuf,
@@ -106,7 +137,7 @@ flush_outbuf (GtefEncodingConverter *converter)
 					   converter->priv->callback_user_data);
 	}
 
-	converter->priv->outbytes_left = converter->priv->outbuf_size;
+	converter->priv->outbytes_left = (converter->priv->outbuf_size - 1);
 }
 
 static void
@@ -195,7 +226,7 @@ _gtef_encoding_converter_class_init (GtefEncodingConverterClass *klass)
 		g_param_spec_int64 ("buffer-size",
 				    "Buffer Size",
 				    "",
-				    1,
+				    MIN_OUTBUF_SIZE,
 				    G_MAXINT64,
 				    DEFAULT_OUTBUF_SIZE,
 				    G_PARAM_READWRITE |
@@ -216,7 +247,7 @@ _gtef_encoding_converter_init (GtefEncodingConverter *converter)
 GtefEncodingConverter *
 _gtef_encoding_converter_new (gint64 buffer_size)
 {
-	g_return_val_if_fail (buffer_size == -1 || buffer_size >= 1, NULL);
+	g_return_val_if_fail (buffer_size == -1 || buffer_size >= MIN_OUTBUF_SIZE, NULL);
 
 	if (buffer_size == -1)
 	{
@@ -288,11 +319,10 @@ _gtef_encoding_converter_open (GtefEncodingConverter  *converter,
 
 	if (converter->priv->outbuf == NULL)
 	{
-		/* +1, so we are able to nul-terminate the string. */
-		converter->priv->outbuf = g_malloc (converter->priv->outbuf_size + 1);
+		converter->priv->outbuf = g_malloc (converter->priv->outbuf_size);
 	}
 
-	converter->priv->outbytes_left = converter->priv->outbuf_size;
+	converter->priv->outbytes_left = (converter->priv->outbuf_size - 1);
 
 	return TRUE;
 }
@@ -308,8 +338,7 @@ read_inbuf (GtefEncodingConverter  *converter,
 		gchar *outbuf;
 		gsize iconv_ret;
 
-		g_assert_cmpint (converter->priv->outbytes_left, <=, converter->priv->outbuf_size);
-		outbuf = converter->priv->outbuf + converter->priv->outbuf_size - converter->priv->outbytes_left;
+		outbuf = converter->priv->outbuf + get_outbuf_used_length (converter);
 
 		iconv_ret = g_iconv (converter->priv->conv,
 				     inbuf,

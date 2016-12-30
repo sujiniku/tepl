@@ -82,13 +82,15 @@ BUILT_SOURCES =				\
 	$(gtef_built_public_c_files)	\
 	$(gtef_built_public_headers)
 
-libgtef_core_la_CFLAGS =		\
+libgtef_core_la_CFLAGS =	\
 	$(CODE_COVERAGE_CFLAGS)
 
-libgtef_core_la_LDFLAGS =		\
-	-no-undefined			\
-	$(WARN_LDFLAGS)			\
-	$(CODE_COVERAGE_LDFLAGS)
+libgtef_core_la_LDFLAGS =	\
+	-no-undefined		\
+	$(WARN_LDFLAGS)
+
+libgtef_core_la_LIBADD =	\
+	$(CODE_COVERAGE_LIBS)
 
 # The real library.
 lib_LTLIBRARIES = libgtef-@GTEF_API_VERSION@.la
@@ -99,15 +101,11 @@ libgtef_@GTEF_API_VERSION@_la_LIBADD =	\
 	libgtef-core.la			\
 	$(DEP_LIBS)
 
-libgtef_@GTEF_API_VERSION@_la_CFLAGS =	\
-	$(CODE_COVERAGE_CFLAGS)
-
 libgtef_@GTEF_API_VERSION@_la_LDFLAGS =		\
 	-version-info $(GTEF_LT_VERSION)	\
 	-no-undefined				\
 	-export-symbols-regex "^gtef_.*"	\
-	$(WARN_LDFLAGS)				\
-	$(CODE_COVERAGE_LDFLAGS)
+	$(WARN_LDFLAGS)
 
 libgtef_includedir = $(includedir)/gtef-@GTEF_API_VERSION@/gtef
 libgtef_include_HEADERS = $(gtef_public_headers)

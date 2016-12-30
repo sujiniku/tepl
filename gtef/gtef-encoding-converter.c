@@ -35,8 +35,8 @@
  * - the output string doesn't end in-between a multi-byte character, while a
  *   passed-in chunk can.
  * - the output string is nul-terminated.
- * - this object can have a bigger buffer, so the callback can be called less
- *   often (which might or might not be a good thing).
+ * - the buffer size of this object can be adjusted, to control how often the
+ *   callback is called.
  */
 
 struct _GtefEncodingConverterPrivate
@@ -44,6 +44,7 @@ struct _GtefEncodingConverterPrivate
 	GIConv conv;
 
 	gchar *outbuf;
+	gint64 outbuf_size;
 	gsize outbytes_left;
 
 	GtefEncodingConversionCallback callback;
@@ -55,6 +56,13 @@ struct _GtefEncodingConverterPrivate
 	GString *remaining_inbuf;
 };
 
+enum
+{
+	PROP_0,
+	PROP_BUFFER_SIZE,
+	N_PROPERTIES
+};
+
 typedef enum _Result
 {
 	RESULT_OK,
@@ -63,7 +71,9 @@ typedef enum _Result
 } Result;
 
 /* 1 MB */
-#define OUTBUF_SIZE (1024 * 1024 - 1)
+#define DEFAULT_OUTBUF_SIZE (1024 * 1024 - 1)
+
+static GParamSpec *properties[N_PROPERTIES];
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefEncodingConverter, _gtef_encoding_converter, G_TYPE_OBJECT)
 
@@ -76,10 +86,10 @@ is_opened (GtefEncodingConverter *converter)
 static void
 flush_outbuf (GtefEncodingConverter *converter)
 {
-	g_assert_cmpint (converter->priv->outbytes_left, <=, OUTBUF_SIZE);
+	g_assert_cmpint (converter->priv->outbytes_left, <=, converter->priv->outbuf_size);
 
 	if (converter->priv->outbuf == NULL ||
-	    converter->priv->outbytes_left == OUTBUF_SIZE)
+	    (gint64)converter->priv->outbytes_left == converter->priv->outbuf_size)
 	{
 		return;
 	}
@@ -88,7 +98,7 @@ flush_outbuf (GtefEncodingConverter *converter)
 	{
 		gsize length;
 
-		length = OUTBUF_SIZE - converter->priv->outbytes_left;
+		length = converter->priv->outbuf_size - converter->priv->outbytes_left;
 		converter->priv->outbuf[length] = '\0';
 
 		converter->priv->callback (converter->priv->outbuf,
@@ -96,7 +106,7 @@ flush_outbuf (GtefEncodingConverter *converter)
 					   converter->priv->callback_user_data);
 	}
 
-	converter->priv->outbytes_left = OUTBUF_SIZE;
+	converter->priv->outbytes_left = converter->priv->outbuf_size;
 }
 
 static void
@@ -116,6 +126,46 @@ close_conv (GtefEncodingConverter *converter)
 }
 
 static void
+_gtef_encoding_converter_get_property (GObject    *object,
+				       guint       prop_id,
+				       GValue     *value,
+				       GParamSpec *pspec)
+{
+	GtefEncodingConverter *converter = GTEF_ENCODING_CONVERTER (object);
+
+	switch (prop_id)
+	{
+		case PROP_BUFFER_SIZE:
+			g_value_set_int64 (value, _gtef_encoding_converter_get_buffer_size (converter));
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+			break;
+	}
+}
+
+static void
+_gtef_encoding_converter_set_property (GObject      *object,
+				       guint         prop_id,
+				       const GValue *value,
+				       GParamSpec   *pspec)
+{
+	GtefEncodingConverter *converter = GTEF_ENCODING_CONVERTER (object);
+
+	switch (prop_id)
+	{
+		case PROP_BUFFER_SIZE:
+			converter->priv->outbuf_size = g_value_get_int64 (value);
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+			break;
+	}
+}
+
+static void
 _gtef_encoding_converter_finalize (GObject *object)
 {
 	GtefEncodingConverter *converter = GTEF_ENCODING_CONVERTER (object);
@@ -131,7 +181,28 @@ _gtef_encoding_converter_class_init (GtefEncodingConverterClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
+	object_class->get_property = _gtef_encoding_converter_get_property;
+	object_class->set_property = _gtef_encoding_converter_set_property;
 	object_class->finalize = _gtef_encoding_converter_finalize;
+
+	/**
+	 * GtefEncodingConverter:buffer-size:
+	 *
+	 * The buffer size, in bytes. When the buffer is full, the callback is
+	 * called to empty the buffer.
+	 */
+	properties[PROP_BUFFER_SIZE] =
+		g_param_spec_int64 ("buffer-size",
+				    "Buffer Size",
+				    "",
+				    1,
+				    G_MAXINT64,
+				    DEFAULT_OUTBUF_SIZE,
+				    G_PARAM_READWRITE |
+				    G_PARAM_CONSTRUCT_ONLY |
+				    G_PARAM_STATIC_STRINGS);
+
+	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
 }
 
 static void
@@ -143,9 +214,26 @@ _gtef_encoding_converter_init (GtefEncodingConverter *converter)
 }
 
 GtefEncodingConverter *
-_gtef_encoding_converter_new (void)
+_gtef_encoding_converter_new (gint64 buffer_size)
 {
-	return g_object_new (GTEF_TYPE_ENCODING_CONVERTER, NULL);
+	g_return_val_if_fail (buffer_size == -1 || buffer_size >= 1, NULL);
+
+	if (buffer_size == -1)
+	{
+		buffer_size = DEFAULT_OUTBUF_SIZE;
+	}
+
+	return g_object_new (GTEF_TYPE_ENCODING_CONVERTER,
+			     "buffer-size", buffer_size,
+			     NULL);
+}
+
+gint64
+_gtef_encoding_converter_get_buffer_size (GtefEncodingConverter *converter)
+{
+	g_return_val_if_fail (GTEF_IS_ENCODING_CONVERTER (converter), 0);
+
+	return converter->priv->outbuf_size;
 }
 
 void
@@ -201,10 +289,10 @@ _gtef_encoding_converter_open (GtefEncodingConverter  *converter,
 	if (converter->priv->outbuf == NULL)
 	{
 		/* +1, so we are able to nul-terminate the string. */
-		converter->priv->outbuf = g_malloc (OUTBUF_SIZE + 1);
+		converter->priv->outbuf = g_malloc (converter->priv->outbuf_size + 1);
 	}
 
-	converter->priv->outbytes_left = OUTBUF_SIZE;
+	converter->priv->outbytes_left = converter->priv->outbuf_size;
 
 	return TRUE;
 }
@@ -220,8 +308,8 @@ read_inbuf (GtefEncodingConverter  *converter,
 		gchar *outbuf;
 		gsize iconv_ret;
 
-		g_assert_cmpint (converter->priv->outbytes_left, <=, OUTBUF_SIZE);
-		outbuf = converter->priv->outbuf + OUTBUF_SIZE - converter->priv->outbytes_left;
+		g_assert_cmpint (converter->priv->outbytes_left, <=, converter->priv->outbuf_size);
+		outbuf = converter->priv->outbuf + converter->priv->outbuf_size - converter->priv->outbytes_left;
 
 		iconv_ret = g_iconv (converter->priv->conv,
 				     inbuf,

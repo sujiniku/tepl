@@ -664,7 +664,7 @@ convert_and_insert_content (GTask *task)
 		return;
 	}
 
-	converter = _gtef_encoding_converter_new ();
+	converter = _gtef_encoding_converter_new (-1);
 
 	_gtef_encoding_converter_set_callback (converter,
 					       content_converted_cb,

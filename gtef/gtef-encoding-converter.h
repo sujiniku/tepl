@@ -58,31 +58,34 @@ typedef void (*GtefEncodingConversionCallback) (const gchar *str,
 						gpointer     user_data);
 
 G_GNUC_INTERNAL
-GType		_gtef_encoding_converter_get_type	(void);
+GType		_gtef_encoding_converter_get_type		(void);
 
 G_GNUC_INTERNAL
 GtefEncodingConverter *
-		_gtef_encoding_converter_new		(void);
+		_gtef_encoding_converter_new			(gint64 buffer_size);
 
 G_GNUC_INTERNAL
-void		_gtef_encoding_converter_set_callback	(GtefEncodingConverter          *converter,
-							 GtefEncodingConversionCallback  callback,
-							 gpointer                        user_data);
+gint64		_gtef_encoding_converter_get_buffer_size	(GtefEncodingConverter *converter);
 
 G_GNUC_INTERNAL
-gboolean	_gtef_encoding_converter_open		(GtefEncodingConverter  *converter,
-							 const gchar            *to_codeset,
-							 const gchar            *from_codeset,
-							 GError                **error);
+void		_gtef_encoding_converter_set_callback		(GtefEncodingConverter          *converter,
+								 GtefEncodingConversionCallback  callback,
+								 gpointer                        user_data);
 
 G_GNUC_INTERNAL
-gboolean	_gtef_encoding_converter_feed		(GtefEncodingConverter  *converter,
-							 const gchar            *chunk,
-							 gssize                  size,
-							 GError                **error);
+gboolean	_gtef_encoding_converter_open			(GtefEncodingConverter  *converter,
+								 const gchar            *to_codeset,
+								 const gchar            *from_codeset,
+								 GError                **error);
 
 G_GNUC_INTERNAL
-void		_gtef_encoding_converter_close		(GtefEncodingConverter *converter);
+gboolean	_gtef_encoding_converter_feed			(GtefEncodingConverter  *converter,
+								 const gchar            *chunk,
+								 gssize                  size,
+								 GError                **error);
+
+G_GNUC_INTERNAL
+void		_gtef_encoding_converter_close			(GtefEncodingConverter *converter);
 
 G_END_DECLS
 

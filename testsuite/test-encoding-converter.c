@@ -18,6 +18,7 @@
  */
 
 #include "gtef/gtef-encoding-converter.h"
+#include <gio/gio.h> /* For G_IO_ERROR */
 
 static void
 converter_cb (const gchar *str,
@@ -265,6 +266,30 @@ test_incomplete_input (void)
 	g_object_unref (converter);
 }
 
+static void
+test_invalid_sequence (void)
+{
+	GtefEncodingConverter *converter;
+	GError *error = NULL;
+
+	converter = _gtef_encoding_converter_new (-1);
+
+	_gtef_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
+	g_assert_no_error (error);
+
+	/* \251 is the second byte of "é". */
+	_gtef_encoding_converter_feed (converter,
+				       "Hello S\251bastien.",
+				       -1,
+				       &error);
+
+	g_assert (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_INVALID_DATA));
+	g_clear_error (&error);
+
+	_gtef_encoding_converter_close (converter);
+	g_object_unref (converter);
+}
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -275,6 +300,7 @@ main (gint   argc,
 	g_test_add_func ("/encoding-converter/UTF-8-to-UTF-8", test_utf8_to_utf8);
 	g_test_add_func ("/encoding-converter/buffer-full", test_buffer_full);
 	g_test_add_func ("/encoding-converter/incomplete-input", test_incomplete_input);
+	g_test_add_func ("/encoding-converter/invalid-sequence", test_invalid_sequence);
 
 	return g_test_run ();
 }

@@ -413,6 +413,7 @@ handle_remaining_inbuf (GtefEncodingConverter  *converter,
 		gboolean my_result;
 
 		g_string_append_len (converter->priv->remaining_inbuf, *inbuf, 1);
+		(*inbuf)++;
 		(*inbytes_left)--;
 
 		my_inbuf = converter->priv->remaining_inbuf->str;

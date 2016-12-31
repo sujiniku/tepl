@@ -154,6 +154,117 @@ test_buffer_full (void)
 	g_object_unref (converter);
 }
 
+static void
+test_incomplete_input (void)
+{
+	GtefEncodingConverter *converter;
+	GQueue *received_output;
+	GQueue *expected_output;
+	GError *error = NULL;
+
+	converter = _gtef_encoding_converter_new (-1);
+
+	/* Split a 2-byte character */
+	received_output = g_queue_new ();
+	_gtef_encoding_converter_set_callback (converter, converter_cb, received_output);
+
+	_gtef_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
+	g_assert_no_error (error);
+
+	_gtef_encoding_converter_feed (converter, "Hello S\303", -1, &error);
+	g_assert_no_error (error);
+	_gtef_encoding_converter_feed (converter, "\251bastien.", -1, &error);
+	g_assert_no_error (error);
+
+	_gtef_encoding_converter_close (converter);
+
+	expected_output = g_queue_new ();
+	g_queue_push_tail (expected_output, g_strdup ("Hello S\303\251bastien."));
+
+	compare_outputs (received_output, expected_output);
+
+	g_queue_free_full (received_output, g_free);
+	g_queue_free_full (expected_output, g_free);
+	received_output = NULL;
+	expected_output = NULL;
+
+	/* Split the 3-byte character ẞ: [1, 2] */
+	received_output = g_queue_new ();
+	_gtef_encoding_converter_set_callback (converter, converter_cb, received_output);
+
+	_gtef_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
+	g_assert_no_error (error);
+
+	_gtef_encoding_converter_feed (converter, "\341", -1, &error);
+	g_assert_no_error (error);
+	_gtef_encoding_converter_feed (converter, "\272\236", -1, &error);
+	g_assert_no_error (error);
+
+	_gtef_encoding_converter_close (converter);
+
+	expected_output = g_queue_new ();
+	g_queue_push_tail (expected_output, g_strdup ("\341\272\236"));
+
+	compare_outputs (received_output, expected_output);
+
+	g_queue_free_full (received_output, g_free);
+	g_queue_free_full (expected_output, g_free);
+	received_output = NULL;
+	expected_output = NULL;
+
+	/* Split the 3-byte character ẞ: [2, 1] */
+	received_output = g_queue_new ();
+	_gtef_encoding_converter_set_callback (converter, converter_cb, received_output);
+
+	_gtef_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
+	g_assert_no_error (error);
+
+	_gtef_encoding_converter_feed (converter, "\341\272", -1, &error);
+	g_assert_no_error (error);
+	_gtef_encoding_converter_feed (converter, "\236", -1, &error);
+	g_assert_no_error (error);
+
+	_gtef_encoding_converter_close (converter);
+
+	expected_output = g_queue_new ();
+	g_queue_push_tail (expected_output, g_strdup ("\341\272\236"));
+
+	compare_outputs (received_output, expected_output);
+
+	g_queue_free_full (received_output, g_free);
+	g_queue_free_full (expected_output, g_free);
+	received_output = NULL;
+	expected_output = NULL;
+
+	/* Split the 3-byte character ẞ: [1, 1, 1] */
+	received_output = g_queue_new ();
+	_gtef_encoding_converter_set_callback (converter, converter_cb, received_output);
+
+	_gtef_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
+	g_assert_no_error (error);
+
+	_gtef_encoding_converter_feed (converter, "\341", -1, &error);
+	g_assert_no_error (error);
+	_gtef_encoding_converter_feed (converter, "\272", -1, &error);
+	g_assert_no_error (error);
+	_gtef_encoding_converter_feed (converter, "\236", -1, &error);
+	g_assert_no_error (error);
+
+	_gtef_encoding_converter_close (converter);
+
+	expected_output = g_queue_new ();
+	g_queue_push_tail (expected_output, g_strdup ("\341\272\236"));
+
+	compare_outputs (received_output, expected_output);
+
+	g_queue_free_full (received_output, g_free);
+	g_queue_free_full (expected_output, g_free);
+	received_output = NULL;
+	expected_output = NULL;
+
+	g_object_unref (converter);
+}
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -163,6 +274,7 @@ main (gint   argc,
 	g_test_add_func ("/encoding-converter/ISO-8859-15-to-UTF-8", test_iso_8859_15_to_utf8);
 	g_test_add_func ("/encoding-converter/UTF-8-to-UTF-8", test_utf8_to_utf8);
 	g_test_add_func ("/encoding-converter/buffer-full", test_buffer_full);
+	g_test_add_func ("/encoding-converter/incomplete-input", test_incomplete_input);
 
 	return g_test_run ();
 }

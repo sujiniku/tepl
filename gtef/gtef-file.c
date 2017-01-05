@@ -852,6 +852,8 @@ gtef_file_check_file_on_disk (GtefFile *file)
 		return;
 	}
 
+	priv->deleted = FALSE;
+
 	if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_ETAG_VALUE) &&
 	    priv->etag != NULL)
 	{

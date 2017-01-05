@@ -1,7 +1,7 @@
 /*
  * This file is part of Gtef, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Gtef is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -59,6 +59,8 @@ struct _GtefFileLoaderPrivate
 	gint64 max_size;
 	gint64 chunk_size;
 	GTask *task;
+
+	GtefNewlineType detected_newline_type;
 };
 
 struct _TaskData
@@ -145,6 +147,55 @@ empty_buffer (GtefFileLoader *loader)
 	if (priv->buffer != NULL)
 	{
 		gtk_text_buffer_set_text (GTK_TEXT_BUFFER (priv->buffer), "", -1);
+	}
+}
+
+static void
+detect_newline_type (GtefFileLoader *loader)
+{
+	GtefFileLoaderPrivate *priv;
+	GtkTextIter iter;
+	gunichar first_char;
+
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	if (priv->buffer == NULL)
+	{
+		priv->detected_newline_type = GTEF_NEWLINE_TYPE_DEFAULT;
+		return;
+	}
+
+	gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (priv->buffer), &iter);
+	if (!gtk_text_iter_ends_line (&iter))
+	{
+		gtk_text_iter_forward_to_line_end (&iter);
+	}
+
+	first_char = gtk_text_iter_get_char (&iter);
+
+	if (first_char == '\n')
+	{
+		priv->detected_newline_type = GTEF_NEWLINE_TYPE_LF;
+	}
+	else if (first_char == '\r')
+	{
+		gunichar second_char;
+
+		gtk_text_iter_forward_char (&iter);
+		second_char = gtk_text_iter_get_char (&iter);
+
+		if (second_char == '\n')
+		{
+			priv->detected_newline_type = GTEF_NEWLINE_TYPE_CR_LF;
+		}
+		else
+		{
+			priv->detected_newline_type = GTEF_NEWLINE_TYPE_CR;
+		}
+	}
+	else
+	{
+		priv->detected_newline_type = GTEF_NEWLINE_TYPE_DEFAULT;
 	}
 }
 
@@ -704,6 +755,10 @@ convert_and_insert_content (GTask *task)
 
 	_gtef_encoding_converter_close (converter);
 
+	/* The order is important here: if the buffer contains only one line, we
+	 * must remove the trailing newline *after* detecting the newline type.
+	 */
+	detect_newline_type (loader);
 	remove_trailing_newline_if_needed (loader);
 
 	g_task_return_boolean (task, TRUE);
@@ -1039,8 +1094,8 @@ gtef_file_loader_load_finish (GtefFileLoader  *loader,
 		task_data = g_task_get_task_data (priv->task);
 
 		/* TODO set encoding */
-		/* TODO set newline type */
 
+		_gtef_file_set_newline_type (priv->file, priv->detected_newline_type);
 		_gtef_file_set_compression_type (priv->file, GTEF_COMPRESSION_TYPE_NONE);
 		_gtef_file_set_externally_modified (priv->file, FALSE);
 		_gtef_file_set_deleted (priv->file, FALSE);

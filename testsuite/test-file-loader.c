@@ -1,7 +1,7 @@
 /*
  * This file is part of Gtef, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Gtef is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -36,12 +36,14 @@ struct _TestData
 	gchar *expected_buffer_content;
 	GQuark expected_error_domain;
 	gint expected_error_code;
+	GtefNewlineType expected_newline_type;
 };
 
 static TestData *
-test_data_new (const gchar *expected_buffer_content,
-	       GQuark       expected_error_domain,
-	       gint         expected_error_code)
+test_data_new (const gchar     *expected_buffer_content,
+	       GQuark           expected_error_domain,
+	       gint             expected_error_code,
+	       GtefNewlineType  expected_newline_type)
 {
 	TestData *data;
 
@@ -51,6 +53,7 @@ test_data_new (const gchar *expected_buffer_content,
 	data->expected_buffer_content = g_strdup (expected_buffer_content);
 	data->expected_error_domain = expected_error_domain;
 	data->expected_error_code = expected_error_code;
+	data->expected_newline_type = expected_newline_type;
 
 	return data;
 }
@@ -112,6 +115,7 @@ load_cb (GObject      *source_object,
 		file = gtef_file_loader_get_file (loader);
 
 		g_assert_cmpint (gtef_file_get_compression_type (file), ==, GTEF_COMPRESSION_TYPE_NONE);
+		g_assert_cmpint (gtef_file_get_newline_type (file), ==, data->expected_newline_type);
 		g_assert (!gtef_file_is_externally_modified (file));
 		g_assert (!gtef_file_is_deleted (file));
 	}
@@ -141,12 +145,13 @@ load_cb (GObject      *source_object,
 }
 
 static void
-test_loader (const gchar *contents,
-	     const gchar *expected_buffer_content,
-	     GQuark       expected_error_domain,
-	     gint         expected_error_code,
-	     gboolean     implicit_trailing_newline,
-	     gint64       max_size)
+test_loader (const gchar     *contents,
+	     const gchar     *expected_buffer_content,
+	     GQuark           expected_error_domain,
+	     gint             expected_error_code,
+	     GtefNewlineType  expected_newline_type,
+	     gboolean         implicit_trailing_newline,
+	     gint64           max_size)
 {
 	GtefBuffer *buffer;
 	GtefFile *file;
@@ -172,7 +177,8 @@ test_loader (const gchar *contents,
 
 	data = test_data_new (expected_buffer_content,
 			      expected_error_domain,
-			      expected_error_code);
+			      expected_error_code,
+			      expected_newline_type);
 
 	loader = gtef_file_loader_new (buffer, file);
 	gtef_file_loader_set_max_size (loader, max_size);
@@ -194,29 +200,31 @@ test_loader (const gchar *contents,
 }
 
 static void
-test_loader_implicit_trailing_newline (const gchar *contents,
-				       const gchar *expected_buffer_content,
-				       gboolean     implicit_trailing_newline)
+test_loader_newlines (gboolean         implicit_trailing_newline,
+		      const gchar     *contents,
+		      const gchar     *expected_buffer_content,
+		      GtefNewlineType  expected_newline_type)
 {
 	test_loader (contents,
 		     expected_buffer_content,
 		     0, 0,
+		     expected_newline_type,
 		     implicit_trailing_newline,
 		     MAX_SIZE);
 }
 
 static void
-test_implicit_trailing_newline (void)
+test_newlines (void)
 {
-	test_loader_implicit_trailing_newline (DEFAULT_CONTENTS, DEFAULT_CONTENTS, TRUE);
-	test_loader_implicit_trailing_newline (DEFAULT_CONTENTS "\n", DEFAULT_CONTENTS, TRUE);
-	test_loader_implicit_trailing_newline (DEFAULT_CONTENTS "\r", DEFAULT_CONTENTS, TRUE);
-	test_loader_implicit_trailing_newline (DEFAULT_CONTENTS "\r\n", DEFAULT_CONTENTS, TRUE);
+	test_loader_newlines (TRUE, DEFAULT_CONTENTS, DEFAULT_CONTENTS, GTEF_NEWLINE_TYPE_DEFAULT);
+	test_loader_newlines (TRUE, DEFAULT_CONTENTS "\n", DEFAULT_CONTENTS, GTEF_NEWLINE_TYPE_LF);
+	test_loader_newlines (TRUE, DEFAULT_CONTENTS "\r", DEFAULT_CONTENTS, GTEF_NEWLINE_TYPE_CR);
+	test_loader_newlines (TRUE, DEFAULT_CONTENTS "\r\n", DEFAULT_CONTENTS, GTEF_NEWLINE_TYPE_CR_LF);
 
-	test_loader_implicit_trailing_newline (DEFAULT_CONTENTS, DEFAULT_CONTENTS, FALSE);
-	test_loader_implicit_trailing_newline (DEFAULT_CONTENTS "\n", DEFAULT_CONTENTS "\n", FALSE);
-	test_loader_implicit_trailing_newline (DEFAULT_CONTENTS "\r", DEFAULT_CONTENTS "\r", FALSE);
-	test_loader_implicit_trailing_newline (DEFAULT_CONTENTS "\r\n", DEFAULT_CONTENTS "\r\n", FALSE);
+	test_loader_newlines (FALSE, DEFAULT_CONTENTS, DEFAULT_CONTENTS, GTEF_NEWLINE_TYPE_DEFAULT);
+	test_loader_newlines (FALSE, DEFAULT_CONTENTS "\n", DEFAULT_CONTENTS "\n", GTEF_NEWLINE_TYPE_LF);
+	test_loader_newlines (FALSE, DEFAULT_CONTENTS "\r", DEFAULT_CONTENTS "\r", GTEF_NEWLINE_TYPE_CR);
+	test_loader_newlines (FALSE, DEFAULT_CONTENTS "\r\n", DEFAULT_CONTENTS "\r\n", GTEF_NEWLINE_TYPE_CR_LF);
 }
 
 static gchar *
@@ -247,13 +255,14 @@ test_max_size (void)
 	contents = generate_contents (MAX_SIZE + 10);
 
 	/* Unlimited */
-	test_loader (contents, contents, 0, 0, FALSE, -1);
+	test_loader (contents, contents, 0, 0, GTEF_NEWLINE_TYPE_LF, FALSE, -1);
 
 	/* Too big */
 	test_loader (contents,
 		     "",
 		     GTEF_FILE_LOADER_ERROR,
 		     GTEF_FILE_LOADER_ERROR_TOO_BIG,
+		     GTEF_NEWLINE_TYPE_LF,
 		     FALSE,
 		     MAX_SIZE);
 
@@ -261,7 +270,7 @@ test_max_size (void)
 
 	/* Exactly max size */
 	contents = generate_contents (MAX_SIZE);
-	test_loader (contents, contents, 0, 0, FALSE, MAX_SIZE);
+	test_loader (contents, contents, 0, 0, GTEF_NEWLINE_TYPE_LF, FALSE, MAX_SIZE);
 	g_free (contents);
 }
 
@@ -436,7 +445,7 @@ main (gint   argc,
 {
 	gtk_test_init (&argc, &argv);
 
-	g_test_add_func ("/file-loader/implicit-trailing-newline", test_implicit_trailing_newline);
+	g_test_add_func ("/file-loader/newlines", test_newlines);
 	g_test_add_func ("/file-loader/max-size", test_max_size);
 
 #ifndef G_OS_WIN32

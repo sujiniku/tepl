@@ -77,6 +77,13 @@ struct _TaskData
 	gchar *charset;
 
 	guint tried_mount : 1;
+
+	/* Whether the next char to insert in the GtkTextBuffer is a carriage
+	 * return. If it is followed by a newline, the \r\n must be inserted in
+	 * one block, because of a bug in GtkTextBuffer:
+	 * https://bugzilla.gnome.org/show_bug.cgi?id=631468
+	 */
+	guint insert_carriage_return : 1;
 };
 
 enum
@@ -677,6 +684,22 @@ gtef_file_loader_set_chunk_size (GtefFileLoader *loader,
 }
 
 static void
+insert_content (GtkTextBuffer *buffer,
+		const gchar   *str,
+		gsize          length)
+{
+	GtkTextIter end;
+	GtkTextIter start;
+
+	gtk_text_buffer_get_end_iter (buffer, &end);
+	gtk_text_buffer_insert (buffer, &end, str, length);
+
+	/* Keep cursor at the start, to avoid signal emissions for each chunk. */
+	gtk_text_buffer_get_start_iter (buffer, &start);
+	gtk_text_buffer_place_cursor (buffer, &start);
+}
+
+static void
 content_converted_cb (const gchar *str,
 		      gsize        length,
 		      gpointer     user_data)
@@ -684,18 +707,56 @@ content_converted_cb (const gchar *str,
 	GTask *task = G_TASK (user_data);
 	GtefFileLoader *loader;
 	GtefFileLoaderPrivate *priv;
-	GtkTextIter end;
-	GtkTextIter start;
+	TaskData *task_data;
+	gchar *my_str;
+	gsize my_length;
 
 	loader = g_task_get_source_object (task);
 	priv = gtef_file_loader_get_instance_private (loader);
 
-	gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER (priv->buffer), &end);
-	gtk_text_buffer_insert (GTK_TEXT_BUFFER (priv->buffer), &end, str, length);
+	task_data = g_task_get_task_data (task);
 
-	/* Keep cursor at the start, to avoid signal emissions for each chunk. */
-	gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (priv->buffer), &start);
-	gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (priv->buffer), &start);
+	/* I normally know what I'm doing. */
+	my_str = (gchar *) str;
+	my_length = length;
+
+	/* Insert \r\n in one block. */
+	if (task_data->insert_carriage_return)
+	{
+		if (my_str[0] == '\n')
+		{
+			g_assert (my_length > 0);
+
+			insert_content (GTK_TEXT_BUFFER (priv->buffer), "\r\n", 2);
+			my_str++;
+			my_length--;
+		}
+		else
+		{
+			insert_content (GTK_TEXT_BUFFER (priv->buffer), "\r", 1);
+		}
+
+		task_data->insert_carriage_return = FALSE;
+	}
+
+	if (my_length == 0)
+	{
+		return;
+	}
+
+	if (my_str[my_length - 1] == '\r')
+	{
+		my_str[my_length - 1] = '\0';
+		my_length--;
+
+		/* Insert \r the next time. */
+		task_data->insert_carriage_return = TRUE;
+	}
+
+	if (my_length != 0)
+	{
+		insert_content (GTK_TEXT_BUFFER (priv->buffer), my_str, my_length);
+	}
 }
 
 static void
@@ -759,6 +820,12 @@ convert_and_insert_content (GTask *task)
 	}
 
 	_gtef_encoding_converter_close (converter);
+
+	if (task_data->insert_carriage_return)
+	{
+		insert_content (GTK_TEXT_BUFFER (priv->buffer), "\r", 1);
+		task_data->insert_carriage_return = FALSE;
+	}
 
 	/* The order is important here: if the buffer contains only one line, we
 	 * must remove the trailing newline *after* detecting the newline type.

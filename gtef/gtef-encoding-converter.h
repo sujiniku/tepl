@@ -52,6 +52,11 @@ struct _GtefEncodingConverterClass
  * @str: nul-terminated converted contents.
  * @length: length of @str, without the terminating nul-byte.
  * @user_data: user data set when the callback was connected.
+ *
+ * @str must not be freed, it is owned by the #GtefEncodingConverter. But to
+ * avoid re-allocation, @str can be modified if needed, for example to set a
+ * nul-byte at a different place; as long as you modify and access @str inside
+ * its [0, @length] bounds.
  */
 typedef void (*GtefEncodingConversionCallback) (const gchar *str,
 						gsize        length,

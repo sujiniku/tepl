@@ -37,13 +37,17 @@ struct _TestData
 	GQuark expected_error_domain;
 	gint expected_error_code;
 	GtefNewlineType expected_newline_type;
+
+	/* Can be -1 to disable checking the number of lines in the buffer. */
+	gint expected_line_count;
 };
 
 static TestData *
 test_data_new (const gchar     *expected_buffer_content,
 	       GQuark           expected_error_domain,
 	       gint             expected_error_code,
-	       GtefNewlineType  expected_newline_type)
+	       GtefNewlineType  expected_newline_type,
+	       gint             expected_line_count)
 {
 	TestData *data;
 
@@ -54,6 +58,7 @@ test_data_new (const gchar     *expected_buffer_content,
 	data->expected_error_domain = expected_error_domain;
 	data->expected_error_code = expected_error_code;
 	data->expected_newline_type = expected_newline_type;
+	data->expected_line_count = expected_line_count;
 
 	return data;
 }
@@ -106,6 +111,8 @@ load_cb (GObject      *source_object,
 
 	gtef_file_loader_load_finish (loader, result, &error);
 
+	buffer = GTK_TEXT_BUFFER (gtef_file_loader_get_buffer (loader));
+
 	if (data->expected_error_domain == 0)
 	{
 		GtefFile *file;
@@ -119,6 +126,14 @@ load_cb (GObject      *source_object,
 		g_assert_cmpint (gtef_file_get_newline_type (file), ==, data->expected_newline_type);
 		g_assert (!gtef_file_is_externally_modified (file));
 		g_assert (!gtef_file_is_deleted (file));
+
+		if (data->expected_line_count != -1)
+		{
+			gint line_count;
+
+			line_count = gtk_text_buffer_get_line_count (buffer);
+			g_assert_cmpint (line_count, ==, data->expected_line_count);
+		}
 	}
 	else
 	{
@@ -128,7 +143,6 @@ load_cb (GObject      *source_object,
 		g_clear_error (&error);
 	}
 
-	buffer = GTK_TEXT_BUFFER (gtef_file_loader_get_buffer (loader));
 	gtk_text_buffer_get_bounds (buffer, &start, &end);
 	buffer_contents = gtk_text_buffer_get_text (buffer, &start, &end, TRUE);
 	g_assert_cmpstr (buffer_contents, ==, data->expected_buffer_content);
@@ -151,6 +165,7 @@ test_loader (const gchar     *contents,
 	     GQuark           expected_error_domain,
 	     gint             expected_error_code,
 	     GtefNewlineType  expected_newline_type,
+	     gint             expected_line_count,
 	     gboolean         implicit_trailing_newline,
 	     gint64           max_size)
 {
@@ -179,7 +194,8 @@ test_loader (const gchar     *contents,
 	data = test_data_new (expected_buffer_content,
 			      expected_error_domain,
 			      expected_error_code,
-			      expected_newline_type);
+			      expected_newline_type,
+			      expected_line_count);
 
 	loader = gtef_file_loader_new (buffer, file);
 	gtef_file_loader_set_max_size (loader, max_size);
@@ -210,6 +226,7 @@ test_loader_newlines (gboolean         implicit_trailing_newline,
 		     expected_buffer_content,
 		     0, 0,
 		     expected_newline_type,
+		     -1,
 		     implicit_trailing_newline,
 		     MAX_SIZE);
 }
@@ -249,6 +266,23 @@ generate_contents (gint n_bytes)
 }
 
 static void
+test_loader_max_size (const gchar *contents,
+		      const gchar *expected_buffer_content,
+		      GQuark       expected_error_domain,
+		      gint         expected_error_code,
+		      gint64       max_size)
+{
+	test_loader (contents,
+		     expected_buffer_content,
+		     expected_error_domain,
+		     expected_error_code,
+		     GTEF_NEWLINE_TYPE_LF,
+		     -1,
+		     FALSE,
+		     max_size);
+}
+
+static void
 test_max_size (void)
 {
 	gchar *contents;
@@ -256,22 +290,20 @@ test_max_size (void)
 	contents = generate_contents (MAX_SIZE + 10);
 
 	/* Unlimited */
-	test_loader (contents, contents, 0, 0, GTEF_NEWLINE_TYPE_LF, FALSE, -1);
+	test_loader_max_size (contents, contents, 0, 0, -1);
 
 	/* Too big */
-	test_loader (contents,
-		     "",
-		     GTEF_FILE_LOADER_ERROR,
-		     GTEF_FILE_LOADER_ERROR_TOO_BIG,
-		     GTEF_NEWLINE_TYPE_LF,
-		     FALSE,
-		     MAX_SIZE);
+	test_loader_max_size (contents,
+			      "",
+			      GTEF_FILE_LOADER_ERROR,
+			      GTEF_FILE_LOADER_ERROR_TOO_BIG,
+			      MAX_SIZE);
 
 	g_free (contents);
 
 	/* Exactly max size */
 	contents = generate_contents (MAX_SIZE);
-	test_loader (contents, contents, 0, 0, GTEF_NEWLINE_TYPE_LF, FALSE, MAX_SIZE);
+	test_loader_max_size (contents, contents, 0, 0, MAX_SIZE);
 	g_free (contents);
 }
 

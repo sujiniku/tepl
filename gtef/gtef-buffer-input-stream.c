@@ -37,7 +37,7 @@ struct _GtefBufferInputStreamPrivate
 	GtkTextMark *pos;
 	gint bytes_partial;
 
-	GtkSourceNewlineType newline_type;
+	GtefNewlineType newline_type;
 
 	guint newline_added : 1;
 	guint is_initialized : 1;
@@ -59,11 +59,11 @@ get_new_line_size (GtefBufferInputStream *stream)
 {
 	switch (stream->priv->newline_type)
 	{
-		case GTK_SOURCE_NEWLINE_TYPE_CR:
-		case GTK_SOURCE_NEWLINE_TYPE_LF:
+		case GTEF_NEWLINE_TYPE_CR:
+		case GTEF_NEWLINE_TYPE_LF:
 			return 1;
 
-		case GTK_SOURCE_NEWLINE_TYPE_CR_LF:
+		case GTEF_NEWLINE_TYPE_CR_LF:
 			return 2;
 
 		default:
@@ -79,13 +79,13 @@ get_new_line (GtefBufferInputStream *stream)
 {
 	switch (stream->priv->newline_type)
 	{
-		case GTK_SOURCE_NEWLINE_TYPE_LF:
+		case GTEF_NEWLINE_TYPE_LF:
 			return "\n";
 
-		case GTK_SOURCE_NEWLINE_TYPE_CR:
+		case GTEF_NEWLINE_TYPE_CR:
 			return "\r";
 
-		case GTK_SOURCE_NEWLINE_TYPE_CR_LF:
+		case GTEF_NEWLINE_TYPE_CR_LF:
 			return "\r\n";
 
 		default:
@@ -425,7 +425,7 @@ _gtef_buffer_input_stream_class_init (GtefBufferInputStreamClass *klass)
 							    "Newline type",
 							    "",
 							    GTK_SOURCE_TYPE_NEWLINE_TYPE,
-							    GTK_SOURCE_NEWLINE_TYPE_LF,
+							    GTEF_NEWLINE_TYPE_LF,
 							    G_PARAM_READWRITE |
 							    G_PARAM_STATIC_STRINGS |
 							    G_PARAM_CONSTRUCT_ONLY));
@@ -462,9 +462,9 @@ _gtef_buffer_input_stream_init (GtefBufferInputStream *stream)
  * Returns: a new input stream to read @buffer
  */
 GtefBufferInputStream *
-_gtef_buffer_input_stream_new (GtkTextBuffer        *buffer,
-			       GtkSourceNewlineType  type,
-			       gboolean              add_trailing_newline)
+_gtef_buffer_input_stream_new (GtkTextBuffer   *buffer,
+			       GtefNewlineType  type,
+			       gboolean         add_trailing_newline)
 {
 	g_return_val_if_fail (GTK_IS_TEXT_BUFFER (buffer), NULL);
 

@@ -21,7 +21,8 @@
 #ifndef GTEF_BUFFER_INPUT_STREAM_H
 #define GTEF_BUFFER_INPUT_STREAM_H
 
-#include <gtksourceview/gtksource.h>
+#include <gtk/gtk.h>
+#include "gtef-file.h"
 
 G_BEGIN_DECLS
 
@@ -54,7 +55,7 @@ GType		_gtef_buffer_input_stream_get_type		(void);
 G_GNUC_INTERNAL
 GtefBufferInputStream *
 		_gtef_buffer_input_stream_new			(GtkTextBuffer        *buffer,
-								 GtkSourceNewlineType  type,
+								 GtefNewlineType       type,
 								 gboolean              add_trailing_newline);
 
 G_GNUC_INTERNAL

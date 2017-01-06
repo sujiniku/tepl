@@ -87,7 +87,7 @@ struct _GtefFileSaverPrivate
 	GFile *location;
 
 	const GtkSourceEncoding *encoding;
-	GtkSourceNewlineType newline_type;
+	GtefNewlineType newline_type;
 	GtkSourceCompressionType compression_type;
 	GtefFileSaverFlags flags;
 
@@ -292,7 +292,7 @@ gtef_file_saver_constructed (GObject *object)
 	if (saver->priv->file != NULL)
 	{
 		const GtkSourceEncoding *encoding;
-		GtkSourceNewlineType newline_type;
+		GtefNewlineType newline_type;
 		GtkSourceCompressionType compression_type;
 
 		encoding = gtef_file_get_encoding (saver->priv->file);
@@ -417,7 +417,7 @@ gtef_file_saver_class_init (GtefFileSaverClass *klass)
 					                    "Newline type",
 							    "",
 					                    GTK_SOURCE_TYPE_NEWLINE_TYPE,
-					                    GTK_SOURCE_NEWLINE_TYPE_LF,
+					                    GTEF_NEWLINE_TYPE_LF,
 					                    G_PARAM_READWRITE |
 					                    G_PARAM_CONSTRUCT |
 							    G_PARAM_STATIC_STRINGS));
@@ -1104,8 +1104,8 @@ gtef_file_saver_get_encoding (GtefFileSaver *saver)
  * Since: 1.0
  */
 void
-gtef_file_saver_set_newline_type (GtefFileSaver        *saver,
-				  GtkSourceNewlineType  newline_type)
+gtef_file_saver_set_newline_type (GtefFileSaver   *saver,
+				  GtefNewlineType  newline_type)
 {
 	g_return_if_fail (GTEF_IS_FILE_SAVER (saver));
 	g_return_if_fail (saver->priv->task == NULL);
@@ -1124,10 +1124,10 @@ gtef_file_saver_set_newline_type (GtefFileSaver        *saver,
  * Returns: the newline type.
  * Since: 1.0
  */
-GtkSourceNewlineType
+GtefNewlineType
 gtef_file_saver_get_newline_type (GtefFileSaver *saver)
 {
-	g_return_val_if_fail (GTEF_IS_FILE_SAVER (saver), GTK_SOURCE_NEWLINE_TYPE_DEFAULT);
+	g_return_val_if_fail (GTEF_IS_FILE_SAVER (saver), GTEF_NEWLINE_TYPE_DEFAULT);
 
 	return saver->priv->newline_type;
 }

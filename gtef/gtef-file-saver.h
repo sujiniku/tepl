@@ -29,6 +29,7 @@
 
 #include <gtksourceview/gtksource.h>
 #include <gtef/gtef-types.h>
+#include <gtef/gtef-file.h>
 
 G_BEGIN_DECLS
 
@@ -114,10 +115,10 @@ void			 gtef_file_saver_set_encoding		(GtefFileSaver           *saver,
 
 const GtkSourceEncoding *gtef_file_saver_get_encoding		(GtefFileSaver *saver);
 
-void			 gtef_file_saver_set_newline_type	(GtefFileSaver        *saver,
-								 GtkSourceNewlineType  newline_type);
+void			 gtef_file_saver_set_newline_type	(GtefFileSaver   *saver,
+								 GtefNewlineType  newline_type);
 
-GtkSourceNewlineType	 gtef_file_saver_get_newline_type	(GtefFileSaver *saver);
+GtefNewlineType		 gtef_file_saver_get_newline_type	(GtefFileSaver *saver);
 
 void			 gtef_file_saver_set_compression_type	(GtefFileSaver            *saver,
 								 GtkSourceCompressionType  compression_type);

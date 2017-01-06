@@ -478,6 +478,11 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 static void
 gtef_file_loader_init (GtefFileLoader *loader)
 {
+	GtefFileLoaderPrivate *priv;
+
+	priv = gtef_file_loader_get_instance_private (loader);
+
+	priv->detected_newline_type = GTEF_NEWLINE_TYPE_DEFAULT;
 }
 
 /**
@@ -1110,4 +1115,22 @@ gtef_file_loader_load_finish (GtefFileLoader  *loader,
 	g_clear_object (&priv->task);
 
 	return ok;
+}
+
+/**
+ * gtef_file_loader_get_newline_type:
+ * @loader: a #GtefFileLoader.
+ *
+ * Returns: the detected newline type.
+ * Since: 2.0
+ */
+GtefNewlineType
+gtef_file_loader_get_newline_type (GtefFileLoader *loader)
+{
+	GtefFileLoaderPrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), GTEF_NEWLINE_TYPE_LF);
+
+	priv = gtef_file_loader_get_instance_private (loader);
+	return priv->detected_newline_type;
 }

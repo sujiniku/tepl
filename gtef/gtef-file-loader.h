@@ -26,6 +26,7 @@
 
 #include <gio/gio.h>
 #include <gtef/gtef-types.h>
+#include <gtef/gtef-file.h>
 
 G_BEGIN_DECLS
 
@@ -92,6 +93,8 @@ void			gtef_file_loader_load_async				(GtefFileLoader        *loader,
 gboolean		gtef_file_loader_load_finish				(GtefFileLoader  *loader,
 										 GAsyncResult    *result,
 										 GError         **error);
+
+GtefNewlineType		gtef_file_loader_get_newline_type			(GtefFileLoader *loader);
 
 G_END_DECLS
 

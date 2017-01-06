@@ -115,6 +115,7 @@ load_cb (GObject      *source_object,
 		file = gtef_file_loader_get_file (loader);
 
 		g_assert_cmpint (gtef_file_get_compression_type (file), ==, GTEF_COMPRESSION_TYPE_NONE);
+		g_assert_cmpint (gtef_file_loader_get_newline_type (loader), ==, data->expected_newline_type);
 		g_assert_cmpint (gtef_file_get_newline_type (file), ==, data->expected_newline_type);
 		g_assert (!gtef_file_is_externally_modified (file));
 		g_assert (!gtef_file_is_deleted (file));

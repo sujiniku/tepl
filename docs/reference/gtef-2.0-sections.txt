@@ -86,6 +86,7 @@ gtef_file_loader_get_chunk_size
 gtef_file_loader_set_chunk_size
 gtef_file_loader_load_async
 gtef_file_loader_load_finish
+gtef_file_loader_get_newline_type
 <SUBSECTION Standard>
 GTEF_TYPE_FILE_LOADER
 GTEF_TYPE_FILE_LOADER_ERROR

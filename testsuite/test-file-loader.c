@@ -73,6 +73,42 @@ test_data_free (TestData *data)
 	}
 }
 
+static gchar *
+generate_content (gsize  n_bytes,
+		  gint  *line_count)
+{
+	gchar *content;
+	gsize i;
+
+	if (line_count != NULL)
+	{
+		*line_count = 1;
+	}
+
+	content = g_malloc (n_bytes + 1);
+
+	for (i = 0; i < n_bytes; i++)
+	{
+		if (i % 80 == 0)
+		{
+			content[i] = '\n';
+
+			if (line_count != NULL)
+			{
+				(*line_count)++;
+			}
+		}
+		else
+		{
+			content[i] = 'a';
+		}
+	}
+
+	content[n_bytes] = '\0';
+
+	return content;
+}
+
 static void
 check_buffer_state (GtkTextBuffer *buffer)
 {
@@ -245,24 +281,99 @@ test_newlines (void)
 	test_loader_newlines (FALSE, DEFAULT_CONTENTS "\r\n", DEFAULT_CONTENTS "\r\n", GTEF_NEWLINE_TYPE_CR_LF);
 }
 
-static gchar *
-generate_contents (gint n_bytes)
+static void
+test_loader_split_cr_lf (const gchar *content,
+			 gint         expected_line_count)
 {
-	gchar *contents;
-	gint n_lines = n_bytes / 10;
-	const gchar *line = "123456789\n";
-	gint i;
+	test_loader (content,
+		     content,
+		     0, 0,
+		     GTEF_NEWLINE_TYPE_LF,
+		     expected_line_count,
+		     FALSE,
+		     -1);
+}
 
-	g_assert (n_bytes % 10 == 0);
+static void
+test_split_cr_lf (void)
+{
+	gint64 block_size;
+	gchar *content;
+	gint expected_line_count;
 
-	contents = g_malloc (n_bytes + 1);
-	for (i = 0; i < n_lines; i++)
-	{
-		memcpy (contents + i*10, line, 10);
-	}
-	contents[n_bytes] = '\0';
+	block_size = _gtef_file_loader_get_encoding_converter_buffer_size ();
+	/* Remove terminating nul byte */
+	block_size--;
 
-	return contents;
+	/* Only \n's. */
+	content = generate_content (block_size, &expected_line_count);
+	test_loader_split_cr_lf (content, expected_line_count);
+
+	/* End block size by \r */
+	g_assert (content[block_size - 1] != '\n');
+	g_assert (content[block_size] == '\0');
+	content[block_size - 1] = '\r';
+	expected_line_count++;
+	test_loader_split_cr_lf (content, expected_line_count);
+	g_free (content);
+
+	/* End of block 1: \r
+	 * Start of block 2: a
+	 */
+	content = generate_content (block_size + 1, &expected_line_count);
+	g_assert (content[block_size - 1] != '\n');
+	g_assert (content[block_size] == 'a');
+	g_assert (content[block_size + 1] == '\0');
+	content[block_size - 1] = '\r';
+	expected_line_count++;
+	test_loader_split_cr_lf (content, expected_line_count);
+
+	/* Split CR/LF:
+	 * End of block 1: \r
+	 * Start of block 2: \n
+	 */
+	g_assert (content[block_size - 1] == '\r');
+	g_assert (content[block_size] == 'a');
+	g_assert (content[block_size + 1] == '\0');
+	content[block_size] = '\n';
+	test_loader_split_cr_lf (content, expected_line_count);
+	g_free (content);
+
+	/* Split CR/LF:
+	 * End of block 1: \r
+	 * Start of block 2: \na
+	 */
+	content = generate_content (block_size + 2, &expected_line_count);
+	g_assert (content[block_size - 1] != '\n');
+	g_assert (content[block_size] != '\n');
+	g_assert (content[block_size + 1] == 'a');
+	g_assert (content[block_size + 2] == '\0');
+	content[block_size - 1] = '\r';
+	content[block_size] = '\n';
+	expected_line_count++;
+	test_loader_split_cr_lf (content, expected_line_count);
+	g_free (content);
+
+	/* Two complete blocks:
+	 * End of block 1: \r
+	 * Start of block 2: \naaaa...
+	 * End of block 2: \r
+	 */
+	content = generate_content (block_size * 2, &expected_line_count);
+
+	g_assert (content[block_size - 1] != '\n');
+	g_assert (content[block_size] != '\n');
+	content[block_size - 1] = '\r';
+	content[block_size] = '\n';
+	expected_line_count++;
+
+	g_assert (content[block_size*2 - 1] != '\n');
+	g_assert (content[block_size*2] == '\0');
+	content[block_size*2 - 1] = '\r';
+	expected_line_count++;
+
+	test_loader_split_cr_lf (content, expected_line_count);
+	g_free (content);
 }
 
 static void
@@ -285,26 +396,26 @@ test_loader_max_size (const gchar *contents,
 static void
 test_max_size (void)
 {
-	gchar *contents;
+	gchar *content;
 
-	contents = generate_contents (MAX_SIZE + 10);
+	content = generate_content (MAX_SIZE + 10, NULL);
 
 	/* Unlimited */
-	test_loader_max_size (contents, contents, 0, 0, -1);
+	test_loader_max_size (content, content, 0, 0, -1);
 
 	/* Too big */
-	test_loader_max_size (contents,
+	test_loader_max_size (content,
 			      "",
 			      GTEF_FILE_LOADER_ERROR,
 			      GTEF_FILE_LOADER_ERROR_TOO_BIG,
 			      MAX_SIZE);
 
-	g_free (contents);
+	g_free (content);
 
 	/* Exactly max size */
-	contents = generate_contents (MAX_SIZE);
-	test_loader_max_size (contents, contents, 0, 0, MAX_SIZE);
-	g_free (contents);
+	content = generate_content (MAX_SIZE, NULL);
+	test_loader_max_size (content, content, 0, 0, MAX_SIZE);
+	g_free (content);
 }
 
 #ifndef G_OS_WIN32
@@ -479,6 +590,7 @@ main (gint   argc,
 	gtk_test_init (&argc, &argv);
 
 	g_test_add_func ("/file-loader/newlines", test_newlines);
+	g_test_add_func ("/file-loader/split-cr-lf", test_split_cr_lf);
 	g_test_add_func ("/file-loader/max-size", test_max_size);
 
 #ifndef G_OS_WIN32

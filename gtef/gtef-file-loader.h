@@ -96,6 +96,9 @@ gboolean		gtef_file_loader_load_finish				(GtefFileLoader  *loader,
 
 GtefNewlineType		gtef_file_loader_get_newline_type			(GtefFileLoader *loader);
 
+G_GNUC_INTERNAL
+gint64			_gtef_file_loader_get_encoding_converter_buffer_size	(void);
+
 G_END_DECLS
 
 #endif /* GTEF_FILE_LOADER_H */

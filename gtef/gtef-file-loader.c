@@ -97,6 +97,9 @@ enum
 	N_PROPERTIES
 };
 
+/* Take the default buffer-size of GtefEncodingConverter. */
+#define ENCODING_CONVERTER_BUFFER_SIZE (-1)
+
 static GParamSpec *properties[N_PROPERTIES];
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefFileLoader, gtef_file_loader, G_TYPE_OBJECT)
@@ -781,7 +784,7 @@ convert_and_insert_content (GTask *task)
 		return;
 	}
 
-	converter = _gtef_encoding_converter_new (-1);
+	converter = _gtef_encoding_converter_new (ENCODING_CONVERTER_BUFFER_SIZE);
 
 	_gtef_encoding_converter_set_callback (converter,
 					       content_converted_cb,
@@ -1200,4 +1203,18 @@ gtef_file_loader_get_newline_type (GtefFileLoader *loader)
 
 	priv = gtef_file_loader_get_instance_private (loader);
 	return priv->detected_newline_type;
+}
+
+/* For the unit tests. */
+gint64
+_gtef_file_loader_get_encoding_converter_buffer_size (void)
+{
+	GtefEncodingConverter *converter;
+	gint64 buffer_size;
+
+	converter = _gtef_encoding_converter_new (ENCODING_CONVERTER_BUFFER_SIZE);
+	buffer_size = _gtef_encoding_converter_get_buffer_size (converter);
+	g_object_unref (converter);
+
+	return buffer_size;
 }

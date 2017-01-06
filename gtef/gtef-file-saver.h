@@ -120,10 +120,10 @@ void			 gtef_file_saver_set_newline_type	(GtefFileSaver   *saver,
 
 GtefNewlineType		 gtef_file_saver_get_newline_type	(GtefFileSaver *saver);
 
-void			 gtef_file_saver_set_compression_type	(GtefFileSaver            *saver,
-								 GtkSourceCompressionType  compression_type);
+void			 gtef_file_saver_set_compression_type	(GtefFileSaver       *saver,
+								 GtefCompressionType  compression_type);
 
-GtkSourceCompressionType gtef_file_saver_get_compression_type	(GtefFileSaver *saver);
+GtefCompressionType	 gtef_file_saver_get_compression_type	(GtefFileSaver *saver);
 
 void			 gtef_file_saver_set_flags		(GtefFileSaver      *saver,
 								 GtefFileSaverFlags  flags);

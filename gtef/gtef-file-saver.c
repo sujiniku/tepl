@@ -88,7 +88,7 @@ struct _GtefFileSaverPrivate
 
 	const GtkSourceEncoding *encoding;
 	GtefNewlineType newline_type;
-	GtkSourceCompressionType compression_type;
+	GtefCompressionType compression_type;
 	GtefFileSaverFlags flags;
 
 	GTask *task;
@@ -293,7 +293,7 @@ gtef_file_saver_constructed (GObject *object)
 	{
 		const GtkSourceEncoding *encoding;
 		GtefNewlineType newline_type;
-		GtkSourceCompressionType compression_type;
+		GtefCompressionType compression_type;
 
 		encoding = gtef_file_get_encoding (saver->priv->file);
 		gtef_file_saver_set_encoding (saver, encoding);
@@ -435,7 +435,7 @@ gtef_file_saver_class_init (GtefFileSaverClass *klass)
 					                    "Compression type",
 					                    "",
 					                    GTK_SOURCE_TYPE_COMPRESSION_TYPE,
-					                    GTK_SOURCE_COMPRESSION_TYPE_NONE,
+					                    GTEF_COMPRESSION_TYPE_NONE,
 					                    G_PARAM_READWRITE |
 					                    G_PARAM_CONSTRUCT |
 							    G_PARAM_STATIC_STRINGS));
@@ -774,7 +774,7 @@ replace_file_cb (GObject      *source_object,
 		return;
 	}
 
-	if (saver->priv->compression_type == GTK_SOURCE_COMPRESSION_TYPE_GZIP)
+	if (saver->priv->compression_type == GTEF_COMPRESSION_TYPE_GZIP)
 	{
 		GZlibCompressor *compressor;
 
@@ -1143,8 +1143,8 @@ gtef_file_saver_get_newline_type (GtefFileSaver *saver)
  * Since: 1.0
  */
 void
-gtef_file_saver_set_compression_type (GtefFileSaver            *saver,
-				      GtkSourceCompressionType  compression_type)
+gtef_file_saver_set_compression_type (GtefFileSaver       *saver,
+				      GtefCompressionType  compression_type)
 {
 	g_return_if_fail (GTEF_IS_FILE_SAVER (saver));
 	g_return_if_fail (saver->priv->task == NULL);
@@ -1163,10 +1163,10 @@ gtef_file_saver_set_compression_type (GtefFileSaver            *saver,
  * Returns: the compression type.
  * Since: 1.0
  */
-GtkSourceCompressionType
+GtefCompressionType
 gtef_file_saver_get_compression_type (GtefFileSaver *saver)
 {
-	g_return_val_if_fail (GTEF_IS_FILE_SAVER (saver), GTK_SOURCE_COMPRESSION_TYPE_NONE);
+	g_return_val_if_fail (GTEF_IS_FILE_SAVER (saver), GTEF_COMPRESSION_TYPE_NONE);
 
 	return saver->priv->compression_type;
 }

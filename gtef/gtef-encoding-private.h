@@ -1,7 +1,7 @@
 /*
  * This file is part of Gtef, a text editor library.
  *
- * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2014, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Gtef is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -17,29 +17,31 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GTEF_TYPES_H
-#define GTEF_TYPES_H
-
-#if !defined (GTEF_H_INSIDE) && !defined (GTEF_COMPILATION)
-#error "Only <gtef/gtef.h> can be included directly."
-#endif
+#ifndef GTEF_ENCODING_PRIVATE_H
+#define GTEF_ENCODING_PRIVATE_H
 
 #include <glib.h>
 
 G_BEGIN_DECLS
 
-typedef struct _GtefBuffer			GtefBuffer;
-typedef struct _GtefEncoding			GtefEncoding;
-typedef struct _GtefFile			GtefFile;
-typedef struct _GtefFileLoader			GtefFileLoader;
-typedef struct _GtefFileMetadata		GtefFileMetadata;
-typedef struct _GtefFileSaver			GtefFileSaver;
-typedef struct _GtefFoldRegion			GtefFoldRegion;
-typedef struct _GtefGutterRendererFolds		GtefGutterRendererFolds;
-typedef struct _GtefInfoBar			GtefInfoBar;
-typedef struct _GtefTab				GtefTab;
-typedef struct _GtefView			GtefView;
+/*
+ * GtefEncodingDuplicates:
+ * @GTEF_ENCODING_DUPLICATES_KEEP_FIRST: Keep the first occurrence.
+ * @GTEF_ENCODING_DUPLICATES_KEEP_LAST: Keep the last occurrence.
+ *
+ * Specifies which encoding occurrence to keep when removing duplicated
+ * encodings in a list with _gtef_encoding_remove_duplicates().
+ */
+typedef enum _GtefEncodingDuplicates
+{
+	GTEF_ENCODING_DUPLICATES_KEEP_FIRST,
+	GTEF_ENCODING_DUPLICATES_KEEP_LAST
+} GtefEncodingDuplicates;
+
+G_GNUC_INTERNAL
+GSList *	_gtef_encoding_remove_duplicates	(GSList                 *encodings,
+							 GtefEncodingDuplicates  removal_type);
 
 G_END_DECLS
 
-#endif /* GTEF_TYPES_H */
+#endif  /* GTEF_ENCODING_PRIVATE_H */

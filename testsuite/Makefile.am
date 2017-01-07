@@ -17,6 +17,9 @@ UNIT_TEST_PROGS =
 UNIT_TEST_PROGS += test-buffer-input-stream
 test_buffer_input_stream_SOURCES = test-buffer-input-stream.c
 
+UNIT_TEST_PROGS += test-encoding
+test_encoding_SOURCES = test-encoding.c
+
 UNIT_TEST_PROGS += test-encoding-converter
 test_encoding_converter_SOURCES = test-encoding-converter.c
 

@@ -1,7 +1,7 @@
 /*
  * This file is part of Gtef, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Gtef is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -26,6 +26,7 @@
 #include <gtef/gtef-enum-types.h>
 
 #include <gtef/gtef-buffer.h>
+#include <gtef/gtef-encoding.h>
 #include <gtef/gtef-file.h>
 #include <gtef/gtef-file-loader.h>
 #include <gtef/gtef-file-metadata.h>

@@ -20,6 +20,28 @@ gtef_selection_type_get_type
 </SECTION>
 
 <SECTION>
+<FILE>encoding</FILE>
+<TITLE>GtefEncoding</TITLE>
+GtefEncoding
+<SUBSECTION>
+gtef_encoding_new
+gtef_encoding_new_utf8
+gtef_encoding_new_from_locale
+gtef_encoding_copy
+gtef_encoding_free
+gtef_encoding_get_charset
+gtef_encoding_get_name
+gtef_encoding_to_string
+gtef_encoding_is_utf8
+gtef_encoding_equals
+gtef_encoding_get_all
+gtef_encoding_get_default_candidates
+<SUBSECTION Standard>
+GTEF_TYPE_ENCODING
+gtef_encoding_get_type
+</SECTION>
+
+<SECTION>
 <FILE>file</FILE>
 <TITLE>GtefFile</TITLE>
 GtefFile

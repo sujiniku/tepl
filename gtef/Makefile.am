@@ -13,6 +13,7 @@ AM_CPPFLAGS =				\
 gtef_public_headers =			\
 	gtef.h				\
 	gtef-buffer.h			\
+	gtef-encoding.h			\
 	gtef-file.h			\
 	gtef-file-loader.h		\
 	gtef-file-metadata.h		\
@@ -29,6 +30,7 @@ gtef_public_headers =			\
 
 gtef_public_c_files =			\
 	gtef-buffer.c			\
+	gtef-encoding.c			\
 	gtef-file.c			\
 	gtef-file-loader.c		\
 	gtef-file-metadata.c		\
@@ -46,6 +48,7 @@ gtef_private_headers =			\
 	gconstructor.h			\
 	gtef-buffer-input-stream.h	\
 	gtef-encoding-converter.h	\
+	gtef-encoding-private.h		\
 	gtef-file-content-loader.h	\
 	gtef-io-error-info-bar.h	\
 	gtef-progress-info-bar.h

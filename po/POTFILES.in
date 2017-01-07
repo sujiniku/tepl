@@ -1,6 +1,7 @@
 # List of source files containing translatable strings.
 gtef/gtef-buffer.c
 gtef/gtef-buffer-input-stream.c
+gtef/gtef-encoding.c
 gtef/gtef-encoding-converter.c
 gtef/gtef-file.c
 gtef/gtef-file-content-loader.c

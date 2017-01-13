@@ -2,7 +2,7 @@
  * This file is part of Gtef, a text editor library.
  *
  * Copyright 2010 - Jesse van den Kieboom
- * Copyright 2014 - Sébastien Wilmet
+ * Copyright 2014, 2017 - Sébastien Wilmet
  *
  * Gtef is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -185,7 +185,7 @@ test_saver (const gchar     *filename_or_uri,
 	saver = gtef_file_saver_new_with_target (buffer, file, location);
 
 	gtef_file_saver_set_newline_type (saver, newline_type);
-	gtef_file_saver_set_encoding (saver, gtk_source_encoding_get_utf8 ());
+	gtef_file_saver_set_encoding (saver, NULL);
 
 	data = g_slice_new (SaverTestData);
 	data->saver = saver;

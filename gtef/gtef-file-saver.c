@@ -4,7 +4,7 @@
  * Copyright 2005-2007 - Paolo Borelli and Paolo Maggi
  * Copyright 2007 - Steve Frécinaux
  * Copyright 2008 - Jesse van den Kieboom
- * Copyright 2014, 2016 - Sébastien Wilmet
+ * Copyright 2014, 2016, 2017 - Sébastien Wilmet
  *
  * Gtef is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -26,6 +26,7 @@
 #include "gtef-file.h"
 #include "gtef-buffer-input-stream.h"
 #include "gtef-buffer.h"
+#include "gtef-encoding.h"
 #include "gtef-enum-types.h"
 
 /**
@@ -86,7 +87,7 @@ struct _GtefFileSaverPrivate
 
 	GFile *location;
 
-	const GtkSourceEncoding *encoding;
+	GtefEncoding *encoding;
 	GtefNewlineType newline_type;
 	GtefCompressionType compression_type;
 	GtefFileSaverFlags flags;
@@ -285,13 +286,23 @@ gtef_file_saver_dispose (GObject *object)
 }
 
 static void
+gtef_file_saver_finalize (GObject *object)
+{
+	GtefFileSaver *saver = GTEF_FILE_SAVER (object);
+
+	gtef_encoding_free (saver->priv->encoding);
+
+	G_OBJECT_CLASS (gtef_file_saver_parent_class)->finalize (object);
+}
+
+static void
 gtef_file_saver_constructed (GObject *object)
 {
 	GtefFileSaver *saver = GTEF_FILE_SAVER (object);
 
 	if (saver->priv->file != NULL)
 	{
-		const GtkSourceEncoding *encoding;
+		const GtefEncoding *encoding;
 		GtefNewlineType newline_type;
 		GtefCompressionType compression_type;
 
@@ -329,6 +340,7 @@ gtef_file_saver_class_init (GtefFileSaverClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	object_class->dispose = gtef_file_saver_dispose;
+	object_class->finalize = gtef_file_saver_finalize;
 	object_class->set_property = gtef_file_saver_set_property;
 	object_class->get_property = gtef_file_saver_get_property;
 	object_class->constructed = gtef_file_saver_constructed;
@@ -399,7 +411,7 @@ gtef_file_saver_class_init (GtefFileSaverClass *klass)
 					 g_param_spec_boxed ("encoding",
 							     "Encoding",
 							     "",
-							     GTK_SOURCE_TYPE_ENCODING,
+							     GTEF_TYPE_ENCODING,
 							     G_PARAM_READWRITE |
 							     G_PARAM_CONSTRUCT |
 							     G_PARAM_STATIC_STRINGS));
@@ -799,14 +811,16 @@ replace_file_cb (GObject      *source_object,
 
 	DEBUG ({
 	       g_print ("Encoding charset: %s\n",
-			gtk_source_encoding_get_charset (saver->priv->encoding));
+			gtef_encoding_get_charset (saver->priv->encoding));
 	});
 
-	if (saver->priv->encoding != gtk_source_encoding_get_utf8 ())
+	g_return_if_fail (saver->priv->encoding != NULL);
+
+	if (!gtef_encoding_is_utf8 (saver->priv->encoding))
 	{
 		GCharsetConverter *converter;
 
-		converter = g_charset_converter_new (gtk_source_encoding_get_charset (saver->priv->encoding),
+		converter = g_charset_converter_new (gtef_encoding_get_charset (saver->priv->encoding),
 						     "UTF-8",
 						     NULL);
 
@@ -1060,21 +1074,33 @@ gtef_file_saver_get_location (GtefFileSaver *saver)
  * Since: 1.0
  */
 void
-gtef_file_saver_set_encoding (GtefFileSaver           *saver,
-			      const GtkSourceEncoding *encoding)
+gtef_file_saver_set_encoding (GtefFileSaver      *saver,
+			      const GtefEncoding *encoding)
 {
+	GtefEncoding *my_encoding;
+
 	g_return_if_fail (GTEF_IS_FILE_SAVER (saver));
 	g_return_if_fail (saver->priv->task == NULL);
 
 	if (encoding == NULL)
 	{
-		encoding = gtk_source_encoding_get_utf8 ();
+		my_encoding = gtef_encoding_new_utf8 ();
+	}
+	else
+	{
+		my_encoding = gtef_encoding_copy (encoding);
 	}
 
-	if (saver->priv->encoding != encoding)
+	if (!gtef_encoding_equals (saver->priv->encoding, my_encoding))
 	{
-		saver->priv->encoding = encoding;
+		gtef_encoding_free (saver->priv->encoding);
+		saver->priv->encoding = my_encoding;
+
 		g_object_notify (G_OBJECT (saver), "encoding");
+	}
+	else
+	{
+		gtef_encoding_free (my_encoding);
 	}
 }
 
@@ -1085,7 +1111,7 @@ gtef_file_saver_set_encoding (GtefFileSaver           *saver,
  * Returns: the encoding.
  * Since: 1.0
  */
-const GtkSourceEncoding *
+const GtefEncoding *
 gtef_file_saver_get_encoding (GtefFileSaver *saver)
 {
 	g_return_val_if_fail (GTEF_IS_FILE_SAVER (saver), NULL);

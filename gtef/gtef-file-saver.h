@@ -4,7 +4,7 @@
  * Copyright 2005, 2007 - Paolo Maggi
  * Copyrhing 2007 - Steve Frécinaux
  * Copyright 2008 - Jesse van den Kieboom
- * Copyright 2014, 2016 - Sébastien Wilmet
+ * Copyright 2014, 2016, 2017 - Sébastien Wilmet
  *
  * Gtef is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -110,10 +110,10 @@ GtefFile *		 gtef_file_saver_get_file		(GtefFileSaver *saver);
 
 GFile *			 gtef_file_saver_get_location		(GtefFileSaver *saver);
 
-void			 gtef_file_saver_set_encoding		(GtefFileSaver           *saver,
-								 const GtkSourceEncoding *encoding);
+void			 gtef_file_saver_set_encoding		(GtefFileSaver      *saver,
+								 const GtefEncoding *encoding);
 
-const GtkSourceEncoding *gtef_file_saver_get_encoding		(GtefFileSaver *saver);
+const GtefEncoding *	 gtef_file_saver_get_encoding		(GtefFileSaver *saver);
 
 void			 gtef_file_saver_set_newline_type	(GtefFileSaver   *saver,
 								 GtefNewlineType  newline_type);

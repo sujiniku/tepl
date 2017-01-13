@@ -1,7 +1,7 @@
 /*
  * This file is part of Gtef, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Gtef is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -20,6 +20,7 @@
 #include "config.h"
 #include "gtef-file.h"
 #include <glib/gi18n-lib.h>
+#include "gtef-encoding.h"
 #include "gtef-file-metadata.h"
 #include "gtef-utils.h"
 #include "gtef-enum-types.h"
@@ -54,7 +55,7 @@ struct _GtefFilePrivate
 	GtefFileMetadata *metadata;
 
 	GFile *location;
-	const GtkSourceEncoding *encoding;
+	GtefEncoding *encoding;
 	GtefNewlineType newline_type;
 	GtefCompressionType compression_type;
 
@@ -226,6 +227,7 @@ gtef_file_finalize (GObject *object)
 {
 	GtefFilePrivate *priv = gtef_file_get_instance_private (GTEF_FILE (object));
 
+	gtef_encoding_free (priv->encoding);
 	g_free (priv->short_name);
 	g_free (priv->etag);
 
@@ -275,7 +277,7 @@ gtef_file_class_init (GtefFileClass *klass)
 		g_param_spec_boxed ("encoding",
 				    "Encoding",
 				    "",
-				    GTK_SOURCE_TYPE_ENCODING,
+				    GTEF_TYPE_ENCODING,
 				    G_PARAM_READABLE |
 				    G_PARAM_STATIC_STRINGS);
 
@@ -566,8 +568,8 @@ gtef_file_get_short_name (GtefFile *file)
 }
 
 void
-_gtef_file_set_encoding (GtefFile                *file,
-			 const GtkSourceEncoding *encoding)
+_gtef_file_set_encoding (GtefFile           *file,
+			 const GtefEncoding *encoding)
 {
 	GtefFilePrivate *priv;
 
@@ -575,9 +577,11 @@ _gtef_file_set_encoding (GtefFile                *file,
 
 	priv = gtef_file_get_instance_private (file);
 
-	if (priv->encoding != encoding)
+	if (!gtef_encoding_equals (priv->encoding, encoding))
 	{
-		priv->encoding = encoding;
+		gtef_encoding_free (priv->encoding);
+		priv->encoding = gtef_encoding_copy (encoding);
+
 		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_ENCODING]);
 	}
 }
@@ -592,7 +596,7 @@ _gtef_file_set_encoding (GtefFile                *file,
  * Returns: the character encoding.
  * Since: 1.0
  */
-const GtkSourceEncoding *
+const GtefEncoding *
 gtef_file_get_encoding (GtefFile *file)
 {
 	GtefFilePrivate *priv;

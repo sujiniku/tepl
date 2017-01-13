@@ -1,7 +1,7 @@
 /*
  * This file is part of Gtef, a text editor library.
  *
- * Copyright 2014, 2015, 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2014, 2015, 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Gtef is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -107,7 +107,7 @@ void			gtef_file_set_location			(GtefFile *file,
 
 const gchar *		gtef_file_get_short_name		(GtefFile *file);
 
-const GtkSourceEncoding * gtef_file_get_encoding		(GtefFile *file);
+const GtefEncoding *	gtef_file_get_encoding			(GtefFile *file);
 
 GtefNewlineType		gtef_file_get_newline_type		(GtefFile *file);
 
@@ -129,8 +129,8 @@ gboolean	 	gtef_file_is_deleted			(GtefFile *file);
 gboolean	 	gtef_file_is_readonly			(GtefFile *file);
 
 G_GNUC_INTERNAL
-void			_gtef_file_set_encoding			(GtefFile                *file,
-								 const GtkSourceEncoding *encoding);
+void			_gtef_file_set_encoding			(GtefFile           *file,
+								 const GtefEncoding *encoding);
 
 G_GNUC_INTERNAL
 void			_gtef_file_set_newline_type		(GtefFile        *file,

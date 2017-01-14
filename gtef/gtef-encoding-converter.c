@@ -297,8 +297,8 @@ _gtef_encoding_converter_open (GtefEncodingConverter  *converter,
 		if (errno == EINVAL)
 		{
 			g_set_error (error,
-				     G_IO_ERROR,
-				     G_IO_ERROR_NOT_SUPPORTED,
+				     G_CONVERT_ERROR,
+				     G_CONVERT_ERROR_NO_CONVERSION,
 				     _("Conversion from character set '%s' to '%s' is not supported."),
 				     from_codeset,
 				     to_codeset);
@@ -363,8 +363,8 @@ read_inbuf (GtefEncodingConverter  *converter,
 			else if (errno == EILSEQ)
 			{
 				g_set_error (error,
-					     G_IO_ERROR,
-					     G_IO_ERROR_INVALID_DATA,
+					     G_CONVERT_ERROR,
+					     G_CONVERT_ERROR_ILLEGAL_SEQUENCE,
 					     "The input data contains an invalid sequence.");
 
 				return RESULT_ERROR;
@@ -551,8 +551,8 @@ _gtef_encoding_converter_close (GtefEncodingConverter  *converter,
 	    converter->priv->remaining_inbuf->len > 0)
 	{
 		g_set_error_literal (error,
-				     G_IO_ERROR,
-				     G_IO_ERROR_INVALID_DATA,
+				     G_CONVERT_ERROR,
+				     G_CONVERT_ERROR_PARTIAL_INPUT,
 				     _("The content ends with an incomplete multi-byte sequence."));
 		ok = FALSE;
 	}
@@ -574,8 +574,8 @@ _gtef_encoding_converter_close (GtefEncodingConverter  *converter,
 
 			case RESULT_INCOMPLETE_INPUT:
 				g_set_error_literal (error,
-						     G_IO_ERROR,
-						     G_IO_ERROR_INVALID_DATA,
+						     G_CONVERT_ERROR,
+						     G_CONVERT_ERROR_PARTIAL_INPUT,
 						     _("The content ends with incomplete data."));
 				ok = FALSE;
 				break;

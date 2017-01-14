@@ -333,7 +333,9 @@ read_inbuf (GtefEncodingConverter  *converter,
 	    gsize                  *inbytes_left,
 	    GError                **error)
 {
-	while (*inbytes_left > 0)
+	g_assert (inbytes_left != NULL);
+
+	while (*inbytes_left > 0 || inbuf == NULL)
 	{
 		gchar *outbuf;
 		gsize iconv_ret;
@@ -377,6 +379,10 @@ read_inbuf (GtefEncodingConverter  *converter,
 
 				return RESULT_ERROR;
 			}
+		}
+		else if (inbuf == NULL)
+		{
+			return RESULT_OK;
 		}
 	}
 
@@ -541,8 +547,6 @@ _gtef_encoding_converter_close (GtefEncodingConverter  *converter,
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 	g_return_val_if_fail (is_opened (converter), FALSE);
 
-	flush_outbuf (converter);
-
 	if (converter->priv->remaining_inbuf != NULL &&
 	    converter->priv->remaining_inbuf->len > 0)
 	{
@@ -552,6 +556,40 @@ _gtef_encoding_converter_close (GtefEncodingConverter  *converter,
 				     _("The content ends with an incomplete multi-byte sequence."));
 		ok = FALSE;
 	}
+	else
+	{
+		gchar **inbuf = NULL;
+		gsize inbytes_left = 0;
+		Result result;
+
+		result = read_inbuf (converter,
+				     inbuf,
+				     &inbytes_left,
+				     error);
+
+		switch (result)
+		{
+			case RESULT_OK:
+				break;
+
+			case RESULT_INCOMPLETE_INPUT:
+				g_set_error_literal (error,
+						     G_IO_ERROR,
+						     G_IO_ERROR_INVALID_DATA,
+						     _("The content ends with incomplete data."));
+				ok = FALSE;
+				break;
+
+			case RESULT_ERROR:
+				ok = FALSE;
+				break;
+
+			default:
+				g_assert_not_reached ();
+		}
+	}
+
+	flush_outbuf (converter);
 
 	/* We must call this even on error, because the converter can be
 	 * opened/closed several times.

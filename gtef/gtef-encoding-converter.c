@@ -311,7 +311,7 @@ _gtef_encoding_converter_open (GtefEncodingConverter  *converter,
 				     _("Could not open converter from '%s' to '%s': %s."),
 				     from_codeset,
 				     to_codeset,
-				     strerror (errno));
+				     g_strerror (errno));
 		}
 
 		return FALSE;
@@ -375,7 +375,7 @@ read_inbuf (GtefEncodingConverter  *converter,
 					     G_IO_ERROR,
 					     G_IO_ERROR_FAILED,
 					     "Error when converting data: %s.",
-					     strerror (errno));
+					     g_strerror (errno));
 
 				return RESULT_ERROR;
 			}

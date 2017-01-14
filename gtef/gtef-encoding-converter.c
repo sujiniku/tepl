@@ -528,13 +528,35 @@ _gtef_encoding_converter_feed (GtefEncodingConverter  *converter,
 	return TRUE;
 }
 
-/* This function can trigger the callback a last time. */
-void
-_gtef_encoding_converter_close (GtefEncodingConverter *converter)
+/* This function can trigger the callback a last time. There can be an error if
+ * the last chunk ended with an incomplete multi-byte char.
+ */
+gboolean
+_gtef_encoding_converter_close (GtefEncodingConverter  *converter,
+				GError                **error)
 {
-	g_return_if_fail (GTEF_IS_ENCODING_CONVERTER (converter));
-	g_return_if_fail (is_opened (converter));
+	gboolean ok = TRUE;
+
+	g_return_val_if_fail (GTEF_IS_ENCODING_CONVERTER (converter), FALSE);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	g_return_val_if_fail (is_opened (converter), FALSE);
 
 	flush_outbuf (converter);
+
+	if (converter->priv->remaining_inbuf != NULL &&
+	    converter->priv->remaining_inbuf->len > 0)
+	{
+		g_set_error_literal (error,
+				     G_IO_ERROR,
+				     G_IO_ERROR_INVALID_DATA,
+				     _("The content ends with an incomplete multi-byte sequence."));
+		ok = FALSE;
+	}
+
+	/* We must call this even on error, because the converter can be
+	 * opened/closed several times.
+	 */
 	close_conv (converter);
+
+	return ok;
 }

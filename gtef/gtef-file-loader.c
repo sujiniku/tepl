@@ -832,7 +832,12 @@ convert_and_insert_content (GTask *task)
 		}
 	}
 
-	_gtef_encoding_converter_close (converter);
+	_gtef_encoding_converter_close (converter, &error);
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		goto out;
+	}
 
 	if (task_data->insert_carriage_return)
 	{

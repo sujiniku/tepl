@@ -90,7 +90,8 @@ gboolean	_gtef_encoding_converter_feed			(GtefEncodingConverter  *converter,
 								 GError                **error);
 
 G_GNUC_INTERNAL
-void		_gtef_encoding_converter_close			(GtefEncodingConverter *converter);
+gboolean	_gtef_encoding_converter_close			(GtefEncodingConverter  *converter,
+								 GError                **error);
 
 G_END_DECLS
 

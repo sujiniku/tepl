@@ -73,7 +73,8 @@ test_iso_8859_15_to_utf8 (void)
 				       &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter);
+	_gtef_encoding_converter_close (converter, &error);
+	g_assert_no_error (error);
 
 	expected_output = g_queue_new ();
 	g_queue_push_tail (expected_output, g_strdup ("Hello S\303\251bastien."));
@@ -107,7 +108,8 @@ test_utf8_to_utf8 (void)
 				       &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter);
+	_gtef_encoding_converter_close (converter, &error);
+	g_assert_no_error (error);
 
 	expected_output = g_queue_new ();
 	g_queue_push_tail (expected_output, g_strdup ("Hello S\303\251bastien."));
@@ -142,7 +144,8 @@ test_buffer_full (void)
 				       &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter);
+	_gtef_encoding_converter_close (converter, &error);
+	g_assert_no_error (error);
 
 	expected_output = g_queue_new ();
 	g_queue_push_tail (expected_output, g_strdup ("Hello S\303\251b"));
@@ -177,7 +180,8 @@ test_incomplete_input (void)
 	_gtef_encoding_converter_feed (converter, "\251bastien.", -1, &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter);
+	_gtef_encoding_converter_close (converter, &error);
+	g_assert_no_error (error);
 
 	expected_output = g_queue_new ();
 	g_queue_push_tail (expected_output, g_strdup ("Hello S\303\251bastien."));
@@ -201,7 +205,8 @@ test_incomplete_input (void)
 	_gtef_encoding_converter_feed (converter, "\272\236", -1, &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter);
+	_gtef_encoding_converter_close (converter, &error);
+	g_assert_no_error (error);
 
 	expected_output = g_queue_new ();
 	g_queue_push_tail (expected_output, g_strdup ("\341\272\236"));
@@ -225,7 +230,8 @@ test_incomplete_input (void)
 	_gtef_encoding_converter_feed (converter, "\236", -1, &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter);
+	_gtef_encoding_converter_close (converter, &error);
+	g_assert_no_error (error);
 
 	expected_output = g_queue_new ();
 	g_queue_push_tail (expected_output, g_strdup ("\341\272\236"));
@@ -251,7 +257,8 @@ test_incomplete_input (void)
 	_gtef_encoding_converter_feed (converter, "\236", -1, &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter);
+	_gtef_encoding_converter_close (converter, &error);
+	g_assert_no_error (error);
 
 	expected_output = g_queue_new ();
 	g_queue_push_tail (expected_output, g_strdup ("\341\272\236"));
@@ -286,7 +293,31 @@ test_invalid_sequence (void)
 	g_assert (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_INVALID_DATA));
 	g_clear_error (&error);
 
-	_gtef_encoding_converter_close (converter);
+	_gtef_encoding_converter_close (converter, &error);
+	g_assert_no_error (error);
+
+	g_object_unref (converter);
+}
+
+static void
+test_end_with_incomplete_input (void)
+{
+	GtefEncodingConverter *converter;
+	GError *error = NULL;
+
+	converter = _gtef_encoding_converter_new (-1);
+
+	_gtef_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
+	g_assert_no_error (error);
+
+	/* \303 is the start of a two-byte character. */
+	_gtef_encoding_converter_feed (converter, "So far so \303", -1, &error);
+	g_assert_no_error (error);
+
+	_gtef_encoding_converter_close (converter, &error);
+	g_assert (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_INVALID_DATA));
+	g_clear_error (&error);
+
 	g_object_unref (converter);
 }
 
@@ -301,6 +332,7 @@ main (gint   argc,
 	g_test_add_func ("/encoding-converter/buffer-full", test_buffer_full);
 	g_test_add_func ("/encoding-converter/incomplete-input", test_incomplete_input);
 	g_test_add_func ("/encoding-converter/invalid-sequence", test_invalid_sequence);
+	g_test_add_func ("/encoding-converter/end-with-incomplete-input", test_end_with_incomplete_input);
 
 	return g_test_run ();
 }

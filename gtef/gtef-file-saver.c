@@ -807,14 +807,12 @@ replace_file_cb (GObject      *source_object,
 		g_object_ref (output_stream);
 	}
 
-	/* FIXME: manage converter error? */
+	g_return_if_fail (saver->priv->encoding != NULL);
 
 	DEBUG ({
 	       g_print ("Encoding charset: %s\n",
 			gtef_encoding_get_charset (saver->priv->encoding));
 	});
-
-	g_return_if_fail (saver->priv->encoding != NULL);
 
 	if (!gtef_encoding_is_utf8 (saver->priv->encoding))
 	{
@@ -822,7 +820,14 @@ replace_file_cb (GObject      *source_object,
 
 		converter = g_charset_converter_new (gtef_encoding_get_charset (saver->priv->encoding),
 						     "UTF-8",
-						     NULL);
+						     &error);
+
+		if (error != NULL)
+		{
+			g_task_return_error (task, error);
+			g_object_unref (output_stream);
+			return;
+		}
 
 		g_clear_object (&task_data->output_stream);
 		task_data->output_stream = g_converter_output_stream_new (output_stream,

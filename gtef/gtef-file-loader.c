@@ -24,6 +24,7 @@
 #include "gtef-buffer.h"
 #include "gtef-file.h"
 #include "gtef-file-content-loader.h"
+#include "gtef-encoding.h"
 #include "gtef-encoding-converter.h"
 
 /**
@@ -60,6 +61,7 @@ struct _GtefFileLoaderPrivate
 	gint64 chunk_size;
 	GTask *task;
 
+	GtefEncoding *detected_encoding;
 	GtefNewlineType detected_newline_type;
 };
 
@@ -73,8 +75,6 @@ struct _TaskData
 	GFileProgressCallback progress_cb;
 	gpointer progress_cb_data;
 	GDestroyNotify progress_cb_notify;
-
-	gchar *charset;
 
 	guint tried_mount : 1;
 
@@ -143,7 +143,6 @@ task_data_free (gpointer data)
 		task_data->progress_cb_notify (task_data->progress_cb_data);
 	}
 
-	g_free (task_data->charset);
 	g_free (task_data);
 }
 
@@ -377,6 +376,16 @@ gtef_file_loader_dispose (GObject *object)
 }
 
 static void
+gtef_file_loader_finalize (GObject *object)
+{
+	GtefFileLoaderPrivate *priv = gtef_file_loader_get_instance_private (GTEF_FILE_LOADER (object));
+
+	gtef_encoding_free (priv->detected_encoding);
+
+	G_OBJECT_CLASS (gtef_file_loader_parent_class)->finalize (object);
+}
+
+static void
 gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
@@ -385,6 +394,7 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 	object_class->set_property = gtef_file_loader_set_property;
 	object_class->constructed = gtef_file_loader_constructed;
 	object_class->dispose = gtef_file_loader_dispose;
+	object_class->finalize = gtef_file_loader_finalize;
 
 	/**
 	 * GtefFileLoader:buffer:
@@ -790,10 +800,10 @@ convert_and_insert_content (GTask *task)
 					       content_converted_cb,
 					       task);
 
-	g_assert (task_data->charset != NULL);
+	g_assert (priv->detected_encoding != NULL);
 	_gtef_encoding_converter_open (converter,
 				       "UTF-8",
-				       task_data->charset,
+				       gtef_encoding_get_charset (priv->detected_encoding),
 				       &error);
 	if (error != NULL)
 	{
@@ -845,11 +855,16 @@ out:
 static void
 determine_encoding (GTask *task)
 {
+	GtefFileLoader *loader;
+	GtefFileLoaderPrivate *priv;
 	TaskData *task_data;
 	uchardet_t ud;
 	const gchar *charset;
 	GQueue *content;
 	GList *l;
+
+	loader = g_task_get_source_object (task);
+	priv = gtef_file_loader_get_instance_private (loader);
 
 	task_data = g_task_get_task_data (task);
 
@@ -871,16 +886,18 @@ determine_encoding (GTask *task)
 
 	uchardet_data_end (ud);
 
+	/* reset() must have been called before launching the task. */
+	g_assert (priv->detected_encoding == NULL);
+
 	charset = uchardet_get_charset (ud);
 	if (charset != NULL && charset[0] != '\0')
 	{
-		g_free (task_data->charset);
-		task_data->charset = g_strdup (charset);
+		priv->detected_encoding = gtef_encoding_new (charset);
 	}
 
 	uchardet_delete (ud);
 
-	if (task_data->charset == NULL)
+	if (priv->detected_encoding == NULL)
 	{
 		g_task_return_new_error (task,
 					 GTEF_FILE_LOADER_ERROR,
@@ -1063,6 +1080,17 @@ finish_loading (GTask *task)
 	gtk_text_buffer_set_modified (GTK_TEXT_BUFFER (priv->buffer), FALSE);
 }
 
+static void
+reset (GtefFileLoader *loader)
+{
+	GtefFileLoaderPrivate *priv = gtef_file_loader_get_instance_private (loader);
+
+	gtef_encoding_free (priv->detected_encoding);
+	priv->detected_encoding = NULL;
+
+	priv->detected_newline_type = GTEF_NEWLINE_TYPE_DEFAULT;
+}
+
 /**
  * gtef_file_loader_load_async:
  * @loader: a #GtefFileLoader.
@@ -1116,6 +1144,8 @@ gtef_file_loader_load_async (GtefFileLoader        *loader,
 
 	g_return_if_fail (priv->location != NULL);
 
+	reset (loader);
+
 	priv->task = g_task_new (loader, cancellable, callback, user_data);
 	g_task_set_priority (priv->task, io_priority);
 
@@ -1168,8 +1198,7 @@ gtef_file_loader_load_finish (GtefFileLoader  *loader,
 
 		task_data = g_task_get_task_data (priv->task);
 
-		/* TODO set encoding */
-
+		_gtef_file_set_encoding (priv->file, priv->detected_encoding);
 		_gtef_file_set_newline_type (priv->file, priv->detected_newline_type);
 		_gtef_file_set_compression_type (priv->file, GTEF_COMPRESSION_TYPE_NONE);
 		_gtef_file_set_externally_modified (priv->file, FALSE);
@@ -1185,6 +1214,24 @@ gtef_file_loader_load_finish (GtefFileLoader  *loader,
 	g_clear_object (&priv->task);
 
 	return ok;
+}
+
+/**
+ * gtef_file_loader_get_encoding:
+ * @loader: a #GtefFileLoader.
+ *
+ * Returns: (nullable): the detected file encoding, or %NULL.
+ * Since: 2.0
+ */
+const GtefEncoding *
+gtef_file_loader_get_encoding (GtefFileLoader *loader)
+{
+	GtefFileLoaderPrivate *priv;
+
+	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), NULL);
+
+	priv = gtef_file_loader_get_instance_private (loader);
+	return priv->detected_encoding;
 }
 
 /**

@@ -36,6 +36,7 @@ struct _TestData
 	gchar *expected_buffer_content;
 	GQuark expected_error_domain;
 	gint expected_error_code;
+	GtefEncoding *expected_encoding;
 	GtefNewlineType expected_newline_type;
 
 	/* Can be -1 to disable checking the number of lines in the buffer. */
@@ -46,6 +47,7 @@ static TestData *
 test_data_new (const gchar     *expected_buffer_content,
 	       GQuark           expected_error_domain,
 	       gint             expected_error_code,
+	       const gchar     *expected_charset,
 	       GtefNewlineType  expected_newline_type,
 	       gint             expected_line_count)
 {
@@ -60,6 +62,11 @@ test_data_new (const gchar     *expected_buffer_content,
 	data->expected_newline_type = expected_newline_type;
 	data->expected_line_count = expected_line_count;
 
+	if (expected_charset != NULL)
+	{
+		data->expected_encoding = gtef_encoding_new (expected_charset);
+	}
+
 	return data;
 }
 
@@ -68,6 +75,7 @@ test_data_free (TestData *data)
 {
 	if (data != NULL)
 	{
+		gtef_encoding_free (data->expected_encoding);
 		g_free (data->expected_buffer_content);
 		g_free (data);
 	}
@@ -132,6 +140,18 @@ check_buffer_state (GtkTextBuffer *buffer)
 }
 
 static void
+check_equal_encodings (const GtefEncoding *received_enc,
+		       const GtefEncoding *expected_enc)
+{
+	if (!gtef_encoding_equals (received_enc, expected_enc))
+	{
+		g_warning ("Expected encoding '%s' but received '%s'.",
+			   gtef_encoding_get_charset (expected_enc),
+			   gtef_encoding_get_charset (received_enc));
+	}
+}
+
+static void
 load_cb (GObject      *source_object,
 	 GAsyncResult *result,
 	 gpointer      user_data)
@@ -170,6 +190,12 @@ load_cb (GObject      *source_object,
 			line_count = gtk_text_buffer_get_line_count (buffer);
 			g_assert_cmpint (line_count, ==, data->expected_line_count);
 		}
+
+		if (data->expected_encoding != NULL)
+		{
+			check_equal_encodings (gtef_file_loader_get_encoding (loader), data->expected_encoding);
+			check_equal_encodings (gtef_file_get_encoding (file), data->expected_encoding);
+		}
 	}
 	else
 	{
@@ -200,6 +226,7 @@ test_loader (const gchar     *contents,
 	     const gchar     *expected_buffer_content,
 	     GQuark           expected_error_domain,
 	     gint             expected_error_code,
+	     const gchar     *expected_charset,
 	     GtefNewlineType  expected_newline_type,
 	     gint             expected_line_count,
 	     gboolean         implicit_trailing_newline,
@@ -230,6 +257,7 @@ test_loader (const gchar     *contents,
 	data = test_data_new (expected_buffer_content,
 			      expected_error_domain,
 			      expected_error_code,
+			      expected_charset,
 			      expected_newline_type,
 			      expected_line_count);
 
@@ -261,6 +289,7 @@ test_loader_newlines (gboolean         implicit_trailing_newline,
 	test_loader (contents,
 		     expected_buffer_content,
 		     0, 0,
+		     "ASCII",
 		     expected_newline_type,
 		     -1,
 		     implicit_trailing_newline,
@@ -288,6 +317,7 @@ test_loader_split_cr_lf (const gchar *content,
 	test_loader (content,
 		     content,
 		     0, 0,
+		     "ASCII",
 		     GTEF_NEWLINE_TYPE_LF,
 		     expected_line_count,
 		     FALSE,
@@ -387,6 +417,7 @@ test_loader_max_size (const gchar *contents,
 		     expected_buffer_content,
 		     expected_error_domain,
 		     expected_error_code,
+		     "ASCII",
 		     GTEF_NEWLINE_TYPE_LF,
 		     -1,
 		     FALSE,
@@ -416,6 +447,39 @@ test_max_size (void)
 	content = generate_content (MAX_SIZE, NULL);
 	test_loader_max_size (content, content, 0, 0, MAX_SIZE);
 	g_free (content);
+}
+
+/* The idea of this unit test is not to test thoroughly all character encodings,
+ * a better place for this is uchardet. The idea is just to test something else
+ * than ASCII.
+ */
+static void
+test_encoding (void)
+{
+	/* The expected encoding depends on uchardet, so this unit test might
+	 * break with future versions of uchardet. The expected encoding is
+	 * ISO-8859-something. E.g. ISO-8859-15 would be correct too.
+	 *
+	 * French sentence: Un éléphant ça trompe énormément.
+	 */
+	test_loader ("Un \351l\351phant \347a trompe \351norm\351ment.\n",
+		     "Un \303\251l\303\251phant \303\247a trompe \303\251norm\303\251ment.\n",
+		     0, 0,
+		     "ISO-8859-1",
+		     GTEF_NEWLINE_TYPE_LF,
+		     2,
+		     FALSE,
+		     -1);
+
+	/* German word in uppercase: STRAẞE */
+	test_loader ("STRA\341\272\236E\n",
+		     "STRA\341\272\236E\n",
+		     0, 0,
+		     "UTF-8",
+		     GTEF_NEWLINE_TYPE_LF,
+		     2,
+		     FALSE,
+		     -1);
 }
 
 #ifndef G_OS_WIN32
@@ -592,6 +656,7 @@ main (gint   argc,
 	g_test_add_func ("/file-loader/newlines", test_newlines);
 	g_test_add_func ("/file-loader/split-cr-lf", test_split_cr_lf);
 	g_test_add_func ("/file-loader/max-size", test_max_size);
+	g_test_add_func ("/file-loader/encoding", test_encoding);
 
 #ifndef G_OS_WIN32
 	g_test_add_func ("/file-loader/readonly", test_readonly);

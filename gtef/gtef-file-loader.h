@@ -94,6 +94,8 @@ gboolean		gtef_file_loader_load_finish				(GtefFileLoader  *loader,
 										 GAsyncResult    *result,
 										 GError         **error);
 
+const GtefEncoding *	gtef_file_loader_get_encoding				(GtefFileLoader *loader);
+
 GtefNewlineType		gtef_file_loader_get_newline_type			(GtefFileLoader *loader);
 
 G_GNUC_INTERNAL

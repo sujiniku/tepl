@@ -299,7 +299,7 @@ _gtef_encoding_converter_open (GtefEncodingConverter  *converter,
 			g_set_error (error,
 				     G_CONVERT_ERROR,
 				     G_CONVERT_ERROR_NO_CONVERSION,
-				     _("Conversion from character set '%s' to '%s' is not supported."),
+				     _("Conversion from character set “%s” to “%s” is not supported."),
 				     from_codeset,
 				     to_codeset);
 		}
@@ -308,7 +308,7 @@ _gtef_encoding_converter_open (GtefEncodingConverter  *converter,
 			g_set_error (error,
 				     G_IO_ERROR,
 				     G_IO_ERROR_FAILED,
-				     _("Could not open converter from '%s' to '%s': %s."),
+				     _("Could not open converter from “%s” to “%s”: %s"),
 				     from_codeset,
 				     to_codeset,
 				     g_strerror (errno));
@@ -362,10 +362,10 @@ read_inbuf (GtefEncodingConverter  *converter,
 			}
 			else if (errno == EILSEQ)
 			{
-				g_set_error (error,
-					     G_CONVERT_ERROR,
-					     G_CONVERT_ERROR_ILLEGAL_SEQUENCE,
-					     "The input data contains an invalid sequence.");
+				g_set_error_literal (error,
+						     G_CONVERT_ERROR,
+						     G_CONVERT_ERROR_ILLEGAL_SEQUENCE,
+						     _("The input data contains an invalid sequence."));
 
 				return RESULT_ERROR;
 			}
@@ -374,7 +374,7 @@ read_inbuf (GtefEncodingConverter  *converter,
 				g_set_error (error,
 					     G_IO_ERROR,
 					     G_IO_ERROR_FAILED,
-					     "Error when converting data: %s.",
+					     _("Error when converting data: %s"),
 					     g_strerror (errno));
 
 				return RESULT_ERROR;
@@ -553,7 +553,7 @@ _gtef_encoding_converter_close (GtefEncodingConverter  *converter,
 		g_set_error_literal (error,
 				     G_CONVERT_ERROR,
 				     G_CONVERT_ERROR_PARTIAL_INPUT,
-				     _("The content ends with an incomplete multi-byte sequence."));
+				     _("The input data ends with an incomplete multi-byte sequence."));
 		ok = FALSE;
 	}
 	else
@@ -576,7 +576,7 @@ _gtef_encoding_converter_close (GtefEncodingConverter  *converter,
 				g_set_error_literal (error,
 						     G_CONVERT_ERROR,
 						     G_CONVERT_ERROR_PARTIAL_INPUT,
-						     _("The content ends with incomplete data."));
+						     _("The input content ends with incomplete data."));
 				ok = FALSE;
 				break;
 

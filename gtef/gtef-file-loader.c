@@ -31,12 +31,27 @@
  * SECTION:file-loader
  * @Short_description: Load a file into a GtefBuffer
  * @Title: GtefFileLoader
+ * @See_also: #GtefFile, #GtefFileSaver
  *
  * #GtefFileLoader is not a fork of #GtkSourceFileLoader, it is a new
  * implementation based on
  * [uchardet](https://www.freedesktop.org/wiki/Software/uchardet/).
  *
- * But the implementation is not yet finished.
+ * A #GtefFileLoader object permits to load the content of a #GFile into a
+ * #GtefBuffer.
+ *
+ * A file loader should be used only for one load operation, including errors
+ * handling. If an error occurs, you can reconfigure the loader and relaunch the
+ * operation with gtef_file_loader_load_async().
+ *
+ * Running a #GtefFileLoader is an undoable action for the #GtefBuffer. That is,
+ * gtk_source_buffer_begin_not_undoable_action() and
+ * gtk_source_buffer_end_not_undoable_action() are called, which delete the
+ * undo/redo history.
+ *
+ * After a file loading, the buffer is reset to the content provided by the
+ * #GFile, so the buffer is set as “unmodified”, that is,
+ * gtk_text_buffer_set_modified() is called with %FALSE.
  */
 
 typedef struct _GtefFileLoaderPrivate GtefFileLoaderPrivate;

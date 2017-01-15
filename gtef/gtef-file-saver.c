@@ -33,7 +33,7 @@
  * SECTION:file-saver
  * @Short_description: Save a GtefBuffer into a file
  * @Title: GtefFileSaver
- * @See_also: #GtefFile
+ * @See_also: #GtefFile, #GtefFileLoader
  *
  * A #GtefFileSaver object permits to save a #GtefBuffer into a #GFile.
  *
@@ -41,8 +41,9 @@
  * handling. If an error occurs, you can reconfigure the saver and relaunch the
  * operation with gtef_file_saver_save_async().
  *
- * #GtefFileSaver is a non-modified fork of #GtkSourceFileSaver. See the
- * description of #GtefFile for more background on why a fork was needed.
+ * #GtefFileSaver is a fork of #GtkSourceFileSaver, the code has been a little
+ * improved (but no major changes). See the description of #GtefFile for more
+ * background on why a fork was needed.
  */
 
 /* The code has been written initially in gedit (GeditDocumentSaver).

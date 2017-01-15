@@ -60,7 +60,7 @@ AC_CONFIG_HEADER([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
 # gnu strictness to generate the INSTALL file
-AM_INIT_AUTOMAKE([1.11 tar-ustar dist-xz no-dist-gzip gnu -Wno-portability])
+AM_INIT_AUTOMAKE([1.14 tar-ustar dist-xz no-dist-gzip gnu -Wno-portability])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 

@@ -148,7 +148,10 @@ AC_OUTPUT
 echo "
 Configuration:
 
+	${PACKAGE_NAME} version ${PACKAGE_VERSION}
+
 	Source code location:	${srcdir}
+	Prefix:			${prefix}
 	Compiler:		${CC}
 	GVfs metadata:		${enable_gvfs_metadata}
 	Documentation:		${enable_gtk_doc}

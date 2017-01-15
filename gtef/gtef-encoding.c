@@ -32,6 +32,9 @@
  * The #GtefEncoding boxed type represents a character encoding. It is used
  * for example by #GtefFile. Note that the text in GTK+ widgets is always
  * encoded in UTF-8.
+ *
+ * #GtefEncoding is a fork of #GtkSourceEncoding with a different API to
+ * accommodate the new #GtefFileLoader implementation.
  */
 
 /* API design:

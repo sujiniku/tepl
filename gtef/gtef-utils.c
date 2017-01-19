@@ -295,6 +295,33 @@ _gtef_utils_get_fallback_basename_for_display (GFile *location)
 	return basename;
 }
 
+/* Deep copy of @strv. */
+gchar **
+_gtef_utils_strv_copy (const gchar * const *strv)
+{
+	guint length;
+	gchar **new_strv;
+	guint i;
+
+	if (strv == NULL)
+	{
+		return NULL;
+	}
+
+	length = g_strv_length ((gchar **)strv);
+
+	new_strv = g_malloc ((length + 1) * sizeof (gchar *));
+
+	for (i = 0; i < length; i++)
+	{
+		new_strv[i] = g_strdup (strv[i]);
+	}
+
+	new_strv[length] = NULL;
+
+	return new_strv;
+}
+
 /**
  * gtef_utils_menu_item_set_icon_name:
  * @item: a #GtkMenuItem.

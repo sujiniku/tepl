@@ -46,6 +46,11 @@
     </chapter>
 
     <chapter>
+      <title>Application Support</title>
+      <xi:include href="xml/action-info.xml"/>
+    </chapter>
+
+    <chapter>
       <title>Other</title>
       <xi:include href="xml/iter.xml"/>
       <xi:include href="xml/utils.xml"/>

@@ -1,6 +1,30 @@
 <INCLUDE>gtef/gtef.h</INCLUDE>
 
 <SECTION>
+<FILE>action-info</FILE>
+<TITLE>GtefActionInfo</TITLE>
+GtefActionInfo
+GtefActionInfoEntry
+gtef_action_info_new
+gtef_action_info_new_from_entry
+gtef_action_info_copy
+gtef_action_info_free
+gtef_action_info_get_action_name
+gtef_action_info_set_action_name
+gtef_action_info_get_icon_name
+gtef_action_info_set_icon_name
+gtef_action_info_get_label
+gtef_action_info_set_label
+gtef_action_info_get_tooltip
+gtef_action_info_set_tooltip
+gtef_action_info_get_accels
+gtef_action_info_set_accels
+<SUBSECTION Standard>
+gtef_action_info_get_type
+GTEF_TYPE_ACTION_INFO
+</SECTION>
+
+<SECTION>
 <FILE>buffer</FILE>
 <TITLE>GtefBuffer</TITLE>
 GtefBuffer

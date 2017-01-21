@@ -48,6 +48,7 @@
     <chapter>
       <title>Application Support</title>
       <xi:include href="xml/action-info.xml"/>
+      <xi:include href="xml/action-info-store.xml"/>
     </chapter>
 
     <chapter>

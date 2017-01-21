@@ -25,6 +25,27 @@ GTEF_TYPE_ACTION_INFO
 </SECTION>
 
 <SECTION>
+<FILE>action-info-store</FILE>
+<TITLE>GtefActionInfoStore</TITLE>
+GtefActionInfoStore
+gtef_action_info_store_new
+gtef_action_info_store_get_application
+gtef_action_info_store_add
+gtef_action_info_store_add_entries
+gtef_action_info_store_lookup
+<SUBSECTION Standard>
+GTEF_ACTION_INFO_STORE
+GTEF_ACTION_INFO_STORE_CLASS
+GTEF_ACTION_INFO_STORE_GET_CLASS
+GTEF_IS_ACTION_INFO_STORE
+GTEF_IS_ACTION_INFO_STORE_CLASS
+GTEF_TYPE_ACTION_INFO_STORE
+GtefActionInfoStoreClass
+GtefActionInfoStorePrivate
+gtef_action_info_store_get_type
+</SECTION>
+
+<SECTION>
 <FILE>buffer</FILE>
 <TITLE>GtefBuffer</TITLE>
 GtefBuffer

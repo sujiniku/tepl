@@ -26,7 +26,7 @@
  * SECTION:action-info
  * @Short_description: GAction information
  * @Title: GtefActionInfo
- * @See_also:
+ * @See_also: #GtefActionInfoStore
  *
  * A #GtefActionInfo instance contains a set of information about a #GAction.
  * Those pieces of information are useful to create UI elements that trigger the

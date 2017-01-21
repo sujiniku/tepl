@@ -34,10 +34,18 @@ G_BEGIN_DECLS
 /**
  * GtefActionInfoEntry:
  * @action_name: the action name.
- * @icon_name: the icon name.
- * @label: the label, i.e. a short description.
+ * @icon_name: the icon name, or %NULL.
+ * @label: the label (i.e. a short description), or %NULL.
  * @accel: the accelerator, in the format understood by gtk_accelerator_parse().
- * @tooltip: the tooltip, i.e. a long description.
+ * Or %NULL.
+ * @tooltip: the tooltip (i.e. a long description), or %NULL.
+ *
+ * This struct defines a set of information for a single action. It is for use
+ * with gtef_action_info_store_add_entries().
+ *
+ * Like #GActionEntry, it is permissible to use an incomplete initialiser in
+ * order to leave some of the later values as %NULL. Additional optional fields
+ * may be added in the future.
  *
  * Since: 2.0
  */

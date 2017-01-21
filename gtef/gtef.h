@@ -26,6 +26,7 @@
 #include <gtef/gtef-enum-types.h>
 
 #include <gtef/gtef-action-info.h>
+#include <gtef/gtef-action-info-store.h>
 #include <gtef/gtef-buffer.h>
 #include <gtef/gtef-encoding.h>
 #include <gtef/gtef-file.h>

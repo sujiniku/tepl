@@ -24,7 +24,7 @@
  * SECTION:action-info-store
  * @Short_description: A store of GtefActionInfo's
  * @Title: GtefActionInfoStore
- * @See_also: #GtefActionInfo
+ * @See_also: #GtefActionInfo, #GtefApplication
  *
  * #GtefActionInfoStore contains a set of #GtefActionInfo's.
  *

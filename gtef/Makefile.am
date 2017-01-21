@@ -14,6 +14,7 @@ gtef_public_headers =			\
 	gtef.h				\
 	gtef-action-info.h		\
 	gtef-action-info-store.h	\
+	gtef-application.h		\
 	gtef-buffer.h			\
 	gtef-encoding.h			\
 	gtef-file.h			\
@@ -33,6 +34,7 @@ gtef_public_headers =			\
 gtef_public_c_files =			\
 	gtef-action-info.c		\
 	gtef-action-info-store.c	\
+	gtef-application.c		\
 	gtef-buffer.c			\
 	gtef-encoding.c			\
 	gtef-file.c			\

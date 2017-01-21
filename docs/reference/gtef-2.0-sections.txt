@@ -46,6 +46,25 @@ gtef_action_info_store_get_type
 </SECTION>
 
 <SECTION>
+<FILE>application</FILE>
+<TITLE>GtefApplication</TITLE>
+GtefApplication
+gtef_application_get_from_gtk_application
+gtef_application_get_application
+gtef_application_get_action_info_store
+<SUBSECTION Standard>
+GTEF_APPLICATION
+GTEF_APPLICATION_CLASS
+GTEF_APPLICATION_GET_CLASS
+GTEF_IS_APPLICATION
+GTEF_IS_APPLICATION_CLASS
+GTEF_TYPE_APPLICATION
+GtefApplicationClass
+GtefApplicationPrivate
+gtef_application_get_type
+</SECTION>
+
+<SECTION>
 <FILE>buffer</FILE>
 <TITLE>GtefBuffer</TITLE>
 GtefBuffer

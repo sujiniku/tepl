@@ -1,7 +1,7 @@
 Gtef - GNOME Text Editor Framework
 ==================================
 
-This is version 1.99.1 of Gtef.
+This is version 1.99.2 of Gtef.
 
 Gtef is a library that eases the development of GtkSourceView-based text
 editors and IDEs. Some of the Gtef code comes from gedit.

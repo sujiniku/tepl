@@ -1,3 +1,45 @@
+News in 1.99.1, 2017-01-26
+--------------------------
+This is an unstable release leading towards 2.0. The 2.0 stable version will be
+released at the same time as GNOME 3.24.
+
+File loading and saving:
+* Finish the first usable version of the new GtefFileLoader.
+* Use etags instead of mtime.
+* GtefFileSaver: do not use an heuristic to know if it's a "save as" operation.
+* Add GtefEncoding, a fork of GtkSourceEncoding to suit the needs of the new
+  file loader.
+* Re-usable code outside of GtkTextView: GtefFileContentLoader and
+  GtefEncodingConverter (private classes).
+* Various other small improvements.
+
+Various features for text editors:
+* Add GtefBuffer:gtef-style-scheme-id property.
+* Add gtef_view_select_lines().
+* Add gtef_view_goto_line() and gtef_view_goto_line_offset().
+* Add gtef_iter_get_line_indentation().
+* The GtefInfoBar class has been revamped.
+
+Starting a basic GtkUIManager replacement based on GAction:
+* Add gtef_utils_menu_item_set_icon_name()
+* Add GtefActionInfo
+* Add GtefActionInfoStore
+* Note that those classes are a little out of scope for a text editor library.
+  I would be happy to move those classes to a better library once the feature
+  is finished and well-tested. The classes were added to Gtef for convenience.
+
+Framework:
+* Add gtef namespace to GtefBuffer signals and properties to avoid potential
+  conflicts with future GtkSourceView versions.
+* Add GtefApplication with gtef_application_get_action_info_store().
+
+Documentation:
+* Add an intro with the pkg-config name.
+* List API breaks.
+
+Misc:
+* Improvements to the build system.
+
 News in 1.0.0, 2016-10-26
 -------------------------
 

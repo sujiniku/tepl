@@ -1,4 +1,4 @@
-SUBDIRS = gtef po tests testsuite docs
+SUBDIRS = po gtef tests testsuite docs
 
 @CODE_COVERAGE_RULES@
 

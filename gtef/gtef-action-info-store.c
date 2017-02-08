@@ -325,6 +325,7 @@ gtef_action_info_store_create_menu_item (GtefActionInfoStore *store,
 {
 	GtkMenuItem *menu_item;
 	const GtefActionInfo *action_info;
+	const gchar * const *accels;
 	const gchar *icon_name;
 
 	g_return_val_if_fail (GTEF_IS_ACTION_INFO_STORE (store), NULL);
@@ -348,8 +349,28 @@ gtef_action_info_store_create_menu_item (GtefActionInfoStore *store,
 	gtk_menu_item_set_use_underline (menu_item, TRUE);
 	gtk_menu_item_set_label (menu_item, gtef_action_info_get_label (action_info));
 
-	/* TODO set accel */
-	/* Set accel before setting icon, because set_icon_name adds a GtkBox. */
+	/* Set accel before setting icon, because
+	 * gtef_utils_menu_item_set_icon_name() adds a GtkBox.
+	 */
+	accels = gtef_action_info_get_accels (action_info);
+	if (accels != NULL && accels[0] != NULL)
+	{
+		guint accel_key;
+		GdkModifierType accel_mods;
+
+		gtk_accelerator_parse (accels[0], &accel_key, &accel_mods);
+
+		if (accel_key != 0 || accel_mods != 0)
+		{
+			GtkWidget *child;
+
+			child = gtk_bin_get_child (GTK_BIN (menu_item));
+
+			gtk_accel_label_set_accel (GTK_ACCEL_LABEL (child),
+						   accel_key,
+						   accel_mods);
+		}
+	}
 
 	icon_name = gtef_action_info_get_icon_name (action_info);
 	if (icon_name != NULL)

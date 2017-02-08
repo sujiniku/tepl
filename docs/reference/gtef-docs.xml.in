@@ -19,14 +19,16 @@
 
     <chapter>
       <title>Main Classes</title>
-      <xi:include href="xml/buffer.xml"/>
+      <xi:include href="xml/application.xml"/>
+      <xi:include href="xml/tab.xml"/>
       <xi:include href="xml/view.xml"/>
+      <xi:include href="xml/buffer.xml"/>
     </chapter>
 
     <chapter>
-      <title>Tab</title>
-      <xi:include href="xml/tab.xml"/>
-      <xi:include href="xml/info-bar.xml"/>
+      <title>Actions</title>
+      <xi:include href="xml/action-info.xml"/>
+      <xi:include href="xml/action-info-store.xml"/>
     </chapter>
 
     <chapter>
@@ -46,14 +48,8 @@
     </chapter>
 
     <chapter>
-      <title>Application Support</title>
-      <xi:include href="xml/application.xml"/>
-      <xi:include href="xml/action-info.xml"/>
-      <xi:include href="xml/action-info-store.xml"/>
-    </chapter>
-
-    <chapter>
       <title>Other</title>
+      <xi:include href="xml/info-bar.xml"/>
       <xi:include href="xml/iter.xml"/>
       <xi:include href="xml/utils.xml"/>
     </chapter>

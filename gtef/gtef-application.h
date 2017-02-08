@@ -57,7 +57,7 @@ GtefApplication *	gtef_application_get_from_gtk_application	(GtkApplication *gtk
 
 GtkApplication *	gtef_application_get_application		(GtefApplication *gtef_app);
 
-GtefActionInfoStore *	gtef_application_get_action_info_store		(GtefApplication *gtef_app);
+GtefActionInfoStore *	gtef_application_get_app_action_info_store	(GtefApplication *gtef_app);
 
 G_END_DECLS
 

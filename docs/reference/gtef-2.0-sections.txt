@@ -52,7 +52,7 @@ gtef_action_info_store_get_type
 GtefApplication
 gtef_application_get_from_gtk_application
 gtef_application_get_application
-gtef_application_get_action_info_store
+gtef_application_get_app_action_info_store
 <SUBSECTION Standard>
 GTEF_APPLICATION
 GTEF_APPLICATION_CLASS

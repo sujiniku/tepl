@@ -28,9 +28,6 @@
  *
  * #GtefApplication extends the #GtkApplication class.
  *
- * #GtefApplication has a #GtefActionInfoStore object that can be retrieved with
- * gtef_application_get_action_info_store().
- *
  * Note that #GtefApplication extends the #GtkApplication class but without
  * subclassing it, because several libraries might want to extend
  * #GtkApplication and an application needs to be able to use all those
@@ -40,7 +37,7 @@
 struct _GtefApplicationPrivate
 {
 	GtkApplication *gtk_app;
-	GtefActionInfoStore *action_info_store;
+	GtefActionInfoStore *app_action_info_store;
 };
 
 enum
@@ -57,17 +54,12 @@ static GParamSpec *properties[N_PROPERTIES];
 G_DEFINE_TYPE_WITH_PRIVATE (GtefApplication, gtef_application, G_TYPE_OBJECT)
 
 static void
-init_action_info_store (GtefApplication *gtef_app)
+init_app_action_info_store (GtefApplication *gtef_app)
 {
-	g_return_if_fail (gtef_app->priv->action_info_store == NULL);
-
+	g_return_if_fail (gtef_app->priv->app_action_info_store == NULL);
 	g_assert (gtef_app->priv->gtk_app != NULL);
 
-	gtef_app->priv->action_info_store = gtef_action_info_store_new (gtef_app->priv->gtk_app);
-
-	/* In the future the store can be populated with common actions for text
-	 * editors: open, save, save as, etc etc.
-	 */
+	gtef_app->priv->app_action_info_store = gtef_action_info_store_new (gtef_app->priv->gtk_app);
 }
 
 static void
@@ -104,7 +96,7 @@ gtef_application_set_property (GObject      *object,
 			g_assert (gtef_app->priv->gtk_app == NULL);
 			gtef_app->priv->gtk_app = g_value_get_object (value);
 
-			init_action_info_store (gtef_app);
+			init_app_action_info_store (gtef_app);
 			break;
 
 		default:
@@ -119,7 +111,7 @@ gtef_application_dispose (GObject *object)
 	GtefApplication *gtef_app = GTEF_APPLICATION (object);
 
 	gtef_app->priv->gtk_app = NULL;
-	g_clear_object (&gtef_app->priv->action_info_store);
+	g_clear_object (&gtef_app->priv->app_action_info_store);
 
 	G_OBJECT_CLASS (gtef_application_parent_class)->dispose (object);
 }
@@ -209,18 +201,24 @@ gtef_application_get_application (GtefApplication *gtef_app)
 }
 
 /**
- * gtef_application_get_action_info_store:
+ * gtef_application_get_app_action_info_store:
  * @gtef_app: a #GtefApplication.
  *
- * Returns: (transfer none): the #GtefActionInfoStore of @gtef_app.
+ * Returns an initially empty #GtefActionInfoStore reserved for the
+ * application-specific actions. Libraries should not add #GtefActionInfo's to
+ * this store. Libraries should provide their own store if they want to share
+ * #GtefActionInfo's.
+ *
+ * Returns: (transfer none): the #GtefActionInfoStore reserved for the
+ * application.
  * Since: 2.0
  */
 GtefActionInfoStore *
-gtef_application_get_action_info_store (GtefApplication *gtef_app)
+gtef_application_get_app_action_info_store (GtefApplication *gtef_app)
 {
 	g_return_val_if_fail (GTEF_IS_APPLICATION (gtef_app), NULL);
 
-	return gtef_app->priv->action_info_store;
+	return gtef_app->priv->app_action_info_store;
 }
 
 /* ex:set ts=8 noet: */

@@ -25,12 +25,19 @@
  * SECTION:action-info-store
  * @Short_description: A store of GtefActionInfo's
  * @Title: GtefActionInfoStore
- * @See_also: #GtefActionInfo, #GtefApplication
+ * @See_also: #GtefActionInfo
  *
  * #GtefActionInfoStore contains a set of #GtefActionInfo's.
  *
  * #GtefActionInfoStore is add-only, a #GtefActionInfo cannot be removed. If
  * needed, the remove operation will be added in the future.
+ *
+ * A #GtkApplication can be associated so that when a widget is created,
+ * gtk_application_set_accels_for_action() is called. See
+ * gtef_action_info_store_create_menu_item() for more details. Note that this
+ * happens on widget creation, not when adding a #GtefActionInfo to the store,
+ * so that the accelerator is bound to the application only if the
+ * #GtefActionInfo is actually used.
  */
 
 struct _GtefActionInfoStorePrivate
@@ -316,6 +323,19 @@ gtef_action_info_store_lookup (GtefActionInfoStore *store,
  * @store: a #GtefActionInfoStore.
  * @action_name: an action name.
  *
+ * Creates a new #GtkMenuItem for @action_name. The @store must contain a
+ * #GtefActionInfo for @action_name.
+ *
+ * gtk_actionable_set_action_name() is called on the menu item with
+ * @action_name. The label is set with the #GtkMenuItem:use-underline property
+ * enabled. The first accelerator is set to the #GtkAccelLabel of the menu item.
+ * And the icon is set.
+ *
+ * If #GtefActionInfoStore:application is non-%NULL, this function also calls
+ * gtk_application_set_accels_for_action() with the accelerators returned by
+ * gtef_action_info_get_accels() (this will erase previously set accelerators
+ * for that action, if any).
+ *
  * Returns: (transfer floating): a new #GtkMenuItem for @action_name.
  * Since: 2.0
  */
@@ -376,6 +396,13 @@ gtef_action_info_store_create_menu_item (GtefActionInfoStore *store,
 	if (icon_name != NULL)
 	{
 		gtef_utils_menu_item_set_icon_name (menu_item, icon_name);
+	}
+
+	if (store->priv->app != NULL)
+	{
+		gtk_application_set_accels_for_action (store->priv->app,
+						       action_name,
+						       accels);
 	}
 
 	return GTK_WIDGET (menu_item);

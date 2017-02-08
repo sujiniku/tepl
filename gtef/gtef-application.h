@@ -20,6 +20,10 @@
 #ifndef GTEF_APPLICATION_H
 #define GTEF_APPLICATION_H
 
+#if !defined (GTEF_H_INSIDE) && !defined (GTEF_COMPILATION)
+#error "Only <gtef/gtef.h> can be included directly."
+#endif
+
 #include <gtk/gtk.h>
 #include <gtef/gtef-types.h>
 

@@ -19,6 +19,7 @@
 
 #include "gtef-action-info-store.h"
 #include "gtef-action-info.h"
+#include "gtef-utils.h"
 
 /**
  * SECTION:action-info-store
@@ -308,4 +309,53 @@ gtef_action_info_store_lookup (GtefActionInfoStore *store,
 	g_return_val_if_fail (action_name != NULL, NULL);
 
 	return g_hash_table_lookup (store->priv->hash_table, action_name);
+}
+
+/**
+ * gtef_action_info_store_create_menu_item:
+ * @store: a #GtefActionInfoStore.
+ * @action_name: an action name.
+ *
+ * Returns: (transfer floating): a new #GtkMenuItem for @action_name.
+ * Since: 2.0
+ */
+GtkWidget *
+gtef_action_info_store_create_menu_item (GtefActionInfoStore *store,
+					 const gchar         *action_name)
+{
+	GtkMenuItem *menu_item;
+	const GtefActionInfo *action_info;
+	const gchar *icon_name;
+
+	g_return_val_if_fail (GTEF_IS_ACTION_INFO_STORE (store), NULL);
+	g_return_val_if_fail (action_name != NULL, NULL);
+
+	action_info = gtef_action_info_store_lookup (store, action_name);
+
+	if (action_info == NULL)
+	{
+		g_warning ("%s(): action name '%s' not found.",
+			   G_STRFUNC,
+			   action_name);
+
+		return NULL;
+	}
+
+	menu_item = GTK_MENU_ITEM (gtk_menu_item_new ());
+
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (menu_item), action_name);
+
+	gtk_menu_item_set_use_underline (menu_item, TRUE);
+	gtk_menu_item_set_label (menu_item, gtef_action_info_get_label (action_info));
+
+	/* TODO set accel */
+	/* Set accel before setting icon, because set_icon_name adds a GtkBox. */
+
+	icon_name = gtef_action_info_get_icon_name (action_info);
+	if (icon_name != NULL)
+	{
+		gtef_utils_menu_item_set_icon_name (menu_item, icon_name);
+	}
+
+	return GTK_WIDGET (menu_item);
 }

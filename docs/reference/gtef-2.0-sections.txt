@@ -33,6 +33,7 @@ gtef_action_info_store_get_application
 gtef_action_info_store_add
 gtef_action_info_store_add_entries
 gtef_action_info_store_lookup
+gtef_action_info_store_create_menu_item
 <SUBSECTION Standard>
 GTEF_ACTION_INFO_STORE
 GTEF_ACTION_INFO_STORE_CLASS

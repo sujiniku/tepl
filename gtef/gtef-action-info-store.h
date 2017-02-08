@@ -68,6 +68,9 @@ void			gtef_action_info_store_add_entries		(GtefActionInfoStore       *store,
 const GtefActionInfo *	gtef_action_info_store_lookup			(GtefActionInfoStore *store,
 									 const gchar         *action_name);
 
+GtkWidget *		gtef_action_info_store_create_menu_item		(GtefActionInfoStore *store,
+									 const gchar         *action_name);
+
 G_END_DECLS
 
 #endif /* GTEF_ACTION_INFO_STORE_H */

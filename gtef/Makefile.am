@@ -14,6 +14,7 @@ gtef_public_headers =			\
 	gtef.h				\
 	gtef-action-info.h		\
 	gtef-action-info-store.h	\
+	gtef-application.h		\
 	gtef-buffer.h			\
 	gtef-encoding.h			\
 	gtef-file.h			\
@@ -33,6 +34,7 @@ gtef_public_headers =			\
 gtef_public_c_files =			\
 	gtef-action-info.c		\
 	gtef-action-info-store.c	\
+	gtef-application.c		\
 	gtef-buffer.c			\
 	gtef-encoding.c			\
 	gtef-file.c			\
@@ -50,7 +52,6 @@ gtef_public_c_files =			\
 
 gtef_private_headers =			\
 	gconstructor.h			\
-	gtef-application.h		\
 	gtef-buffer-input-stream.h	\
 	gtef-encoding-converter.h	\
 	gtef-encoding-private.h		\
@@ -59,7 +60,6 @@ gtef_private_headers =			\
 	gtef-progress-info-bar.h
 
 gtef_private_c_files =			\
-	gtef-application.c		\
 	gtef-buffer-input-stream.c	\
 	gtef-encoding-converter.c	\
 	gtef-file-content-loader.c	\

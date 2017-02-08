@@ -20,7 +20,7 @@
 #include "gtef-application.h"
 #include "gtef-action-info-store.h"
 
-/*< private >
+/**
  * SECTION:application
  * @Short_description: An extension of GtkApplication
  * @Title: GtefApplication

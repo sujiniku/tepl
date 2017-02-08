@@ -25,6 +25,7 @@ CFILE_GLOB = $(top_srcdir)/gtef/*.c
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h private_code
 IGNORE_HFILES =				\
 	gtef.h				\
+	gtef-application.h		\
 	gtef-buffer-input-stream.h	\
 	gtef-encoding-converter.h	\
 	gtef-encoding-private.h		\

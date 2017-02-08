@@ -31,7 +31,6 @@ G_BEGIN_DECLS
 typedef struct _GtefActionInfo			GtefActionInfo;
 typedef struct _GtefActionInfoEntry		GtefActionInfoEntry;
 typedef struct _GtefActionInfoStore		GtefActionInfoStore;
-typedef struct _GtefApplication			GtefApplication;
 typedef struct _GtefBuffer			GtefBuffer;
 typedef struct _GtefEncoding			GtefEncoding;
 typedef struct _GtefFile			GtefFile;

@@ -36,6 +36,7 @@ G_BEGIN_DECLS
 #define GTEF_IS_APPLICATION_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), GTEF_TYPE_APPLICATION))
 #define GTEF_APPLICATION_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GTEF_TYPE_APPLICATION, GtefApplicationClass))
 
+typedef struct _GtefApplication         GtefApplication;
 typedef struct _GtefApplicationClass    GtefApplicationClass;
 typedef struct _GtefApplicationPrivate  GtefApplicationPrivate;
 
@@ -51,12 +52,16 @@ struct _GtefApplicationClass
 	GObjectClass parent_class;
 };
 
+G_GNUC_INTERNAL
 GType			gtef_application_get_type			(void) G_GNUC_CONST;
 
+G_GNUC_INTERNAL
 GtefApplication *	gtef_application_get_from_gtk_application	(GtkApplication *gtk_app);
 
+G_GNUC_INTERNAL
 GtkApplication *	gtef_application_get_application		(GtefApplication *gtef_app);
 
+G_GNUC_INTERNAL
 GtefActionInfoStore *	gtef_application_get_action_info_store		(GtefApplication *gtef_app);
 
 G_END_DECLS

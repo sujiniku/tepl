@@ -28,10 +28,6 @@
  *
  * #GtefActionInfoStore contains a set of #GtefActionInfo's.
  *
- * A #GtkApplication can be associated so that when a #GtefActionInfo is added,
- * gtk_application_set_accels_for_action() is called. See
- * gtef_action_info_store_add() for more details.
- *
  * #GtefActionInfoStore is add-only, a #GtefActionInfo cannot be removed. If
  * needed, the remove operation will be added in the future.
  */
@@ -229,11 +225,6 @@ gtef_action_info_store_get_application (GtefActionInfoStore *store)
  * Inserts a copy of @info to @store. The @store must <emphasis>not</emphasis>
  * already contain a #GtefActionInfo with the same action name.
  *
- * If #GtefActionInfoStore:application is non-%NULL, this function also calls
- * gtk_application_set_accels_for_action() with the accelerators returned by
- * gtef_action_info_get_accels() (this will erase previously set accelerators,
- * if any).
- *
  * Since: 2.0
  */
 void
@@ -260,13 +251,6 @@ gtef_action_info_store_add (GtefActionInfoStore  *store,
 	g_hash_table_insert (store->priv->hash_table,
 			     g_strdup (action_name),
 			     gtef_action_info_copy (info));
-
-	if (store->priv->app != NULL)
-	{
-		gtk_application_set_accels_for_action (store->priv->app,
-						       action_name,
-						       gtef_action_info_get_accels (info));
-	}
 }
 
 /**

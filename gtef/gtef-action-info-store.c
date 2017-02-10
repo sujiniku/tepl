@@ -182,7 +182,7 @@ gtef_action_info_store_init (GtefActionInfoStore *store)
 	store->priv->hash_table = g_hash_table_new_full (g_str_hash,
 							 g_str_equal,
 							 g_free,
-							 (GDestroyNotify) gtef_action_info_free);
+							 (GDestroyNotify) gtef_action_info_unref);
 }
 
 /**
@@ -230,14 +230,15 @@ gtef_action_info_store_get_application (GtefActionInfoStore *store)
  * @store: a #GtefActionInfoStore.
  * @info: a #GtefActionInfo.
  *
- * Inserts a copy of @info to @store. The @store must <emphasis>not</emphasis>
- * already contain a #GtefActionInfo with the same action name.
+ * Inserts @info into @store. The @store must <emphasis>not</emphasis> already
+ * contain a #GtefActionInfo with the same action name. The @store takes its own
+ * reference on @info.
  *
  * Since: 2.0
  */
 void
-gtef_action_info_store_add (GtefActionInfoStore  *store,
-			    const GtefActionInfo *info)
+gtef_action_info_store_add (GtefActionInfoStore *store,
+			    GtefActionInfo      *info)
 {
 	const gchar *action_name;
 
@@ -258,7 +259,7 @@ gtef_action_info_store_add (GtefActionInfoStore  *store,
 
 	g_hash_table_insert (store->priv->hash_table,
 			     g_strdup (action_name),
-			     gtef_action_info_copy (info));
+			     gtef_action_info_ref (info));
 }
 
 /**
@@ -296,7 +297,7 @@ gtef_action_info_store_add_entries (GtefActionInfoStore       *store,
 
 		info = gtef_action_info_new_from_entry (&entries[i], translation_domain);
 		gtef_action_info_store_add (store, info);
-		gtef_action_info_free (info);
+		gtef_action_info_unref (info);
 	}
 }
 

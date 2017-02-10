@@ -57,8 +57,8 @@ GtefActionInfoStore *	gtef_action_info_store_new			(GtkApplication *application)
 
 GtkApplication *	gtef_action_info_store_get_application		(GtefActionInfoStore *store);
 
-void			gtef_action_info_store_add			(GtefActionInfoStore  *store,
-									 const GtefActionInfo *info);
+void			gtef_action_info_store_add			(GtefActionInfoStore *store,
+									 GtefActionInfo      *info);
 
 void			gtef_action_info_store_add_entries		(GtefActionInfoStore       *store,
 									 const GtefActionInfoEntry *entries,

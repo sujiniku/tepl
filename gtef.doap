@@ -5,9 +5,9 @@
          xmlns:gnome="http://api.gnome.org/doap-extensions#"
          xmlns="http://usefulinc.com/ns/doap#">
   <name xml:lang="en">Gtef</name>
-  <shortdesc xml:lang="en">GNOME Text Editor Framework</shortdesc>
+  <shortdesc xml:lang="en">GTK+ Text Editor Framework</shortdesc>
   <description>Gtef is a library that eases the development of
-GtkSourceView-based text editors and IDEs. Gtef is an acronym for “GNOME Text
+GtkSourceView-based text editors and IDEs. Gtef is an acronym for “GTK+ Text
 Editor Framework”. Some of the Gtef code comes from gedit.</description>
 
   <homepage rdf:resource="https://github.com/swilmet/gtef" />

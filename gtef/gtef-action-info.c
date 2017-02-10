@@ -45,6 +45,8 @@ struct _GtefActionInfo
 	 * gtk_application_set_accels_for_action().
 	 */
 	gchar **accels;
+
+	gint ref_count;
 };
 
 G_DEFINE_BOXED_TYPE (GtefActionInfo, gtef_action_info,
@@ -54,7 +56,7 @@ G_DEFINE_BOXED_TYPE (GtefActionInfo, gtef_action_info,
 /**
  * gtef_action_info_new:
  *
- * Returns: a new #GtefActionInfo. Free with gtef_action_info_free().
+ * Returns: a new #GtefActionInfo.
  * Since: 2.0
  */
 GtefActionInfo *
@@ -64,6 +66,7 @@ gtef_action_info_new (void)
 
 	info = g_new0 (GtefActionInfo, 1);
 	info->accels = g_malloc0 (sizeof (gchar *));
+	info->ref_count = 1;
 
 	return info;
 }
@@ -78,7 +81,7 @@ gtef_action_info_new (void)
  * If @translation_domain is not %NULL, g_dgettext() is used to translate the
  * @label and @tooltip before setting them to the #GtefActionInfo.
  *
- * Returns: a new #GtefActionInfo. Free with gtef_action_info_free().
+ * Returns: a new #GtefActionInfo.
  * Since: 2.0
  */
 GtefActionInfo *
@@ -115,10 +118,52 @@ gtef_action_info_new_from_entry (const GtefActionInfoEntry *info_entry,
 }
 
 /**
+ * gtef_action_info_ref:
+ * @info: a #GtefActionInfo.
+ *
+ * Increments the reference count of @info by one.
+ *
+ * Returns: the passed in @info.
+ * Since: 2.0
+ */
+GtefActionInfo *
+gtef_action_info_ref (GtefActionInfo *info)
+{
+	g_return_val_if_fail (info != NULL, NULL);
+
+	info->ref_count++;
+
+	return info;
+}
+
+/**
+ * gtef_action_info_unref:
+ * @info: a #GtefActionInfo.
+ *
+ * Decrements the reference count of @info by one. If the reference count drops
+ * to 0, @info is freed.
+ *
+ * Since: 2.0
+ */
+void
+gtef_action_info_unref (GtefActionInfo *info)
+{
+	g_return_if_fail (info != NULL);
+
+	info->ref_count--;
+
+	if (info->ref_count == 0)
+	{
+		gtef_action_info_free (info);
+	}
+}
+
+/**
  * gtef_action_info_copy:
  * @info: a #GtefActionInfo.
  *
- * Returns: (transfer full): a copy of @info.
+ * Returns: (transfer full): a copy of @info. The copy will have a reference
+ * count of one.
  * Since: 2.0
  */
 GtefActionInfo *

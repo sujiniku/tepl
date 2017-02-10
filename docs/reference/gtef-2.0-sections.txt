@@ -7,6 +7,8 @@ GtefActionInfo
 GtefActionInfoEntry
 gtef_action_info_new
 gtef_action_info_new_from_entry
+gtef_action_info_ref
+gtef_action_info_unref
 gtef_action_info_copy
 gtef_action_info_free
 gtef_action_info_get_action_name

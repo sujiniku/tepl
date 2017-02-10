@@ -68,6 +68,10 @@ GtefActionInfo *	gtef_action_info_new			(void);
 GtefActionInfo *	gtef_action_info_new_from_entry		(const GtefActionInfoEntry *info_entry,
 								 const gchar               *translation_domain);
 
+GtefActionInfo *	gtef_action_info_ref			(GtefActionInfo *info);
+
+void			gtef_action_info_unref			(GtefActionInfo *info);
+
 GtefActionInfo *	gtef_action_info_copy			(const GtefActionInfo *info);
 
 void			gtef_action_info_free			(GtefActionInfo *info);

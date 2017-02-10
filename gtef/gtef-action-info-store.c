@@ -345,14 +345,14 @@ gtef_action_info_store_create_menu_item (GtefActionInfoStore *store,
 					 const gchar         *action_name)
 {
 	GtkMenuItem *menu_item;
-	const GtefActionInfo *action_info;
+	GtefActionInfo *action_info;
 	const gchar * const *accels;
 	const gchar *icon_name;
 
 	g_return_val_if_fail (GTEF_IS_ACTION_INFO_STORE (store), NULL);
 	g_return_val_if_fail (action_name != NULL, NULL);
 
-	action_info = gtef_action_info_store_lookup (store, action_name);
+	action_info = g_hash_table_lookup (store->priv->hash_table, action_name);
 
 	if (action_info == NULL)
 	{
@@ -406,5 +406,46 @@ gtef_action_info_store_create_menu_item (GtefActionInfoStore *store,
 						       accels);
 	}
 
+	_gtef_action_info_set_used (action_info);
+
 	return GTK_WIDGET (menu_item);
+}
+
+static void
+check_used_cb (gpointer key,
+	       gpointer value,
+	       gpointer user_data)
+{
+	const gchar *action_name = key;
+	const GtefActionInfo *action_info = value;
+
+	if (!_gtef_action_info_get_used (action_info))
+	{
+		g_warning ("GtefActionInfo with action_name='%s' has not been used.",
+			   action_name);
+	}
+}
+
+/**
+ * gtef_action_info_store_check_all_used:
+ * @store: a #GtefActionInfoStore.
+ *
+ * Checks that all #GtefActionInfo's of @store have been used by
+ * gtef_action_info_store_create_menu_item(). If not, a warning is printed and
+ * might indicate dead code.
+ *
+ * You probably want to call this function on the store returned by
+ * gtef_application_get_app_action_info_store(). But it can also be useful for a
+ * store provided by a library, to easily see which actions you don't use.
+ *
+ * Since: 2.0
+ */
+void
+gtef_action_info_store_check_all_used (GtefActionInfoStore *store)
+{
+	g_return_if_fail (GTEF_IS_ACTION_INFO_STORE (store));
+
+	g_hash_table_foreach (store->priv->hash_table,
+			      check_used_cb,
+			      NULL);
 }

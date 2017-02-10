@@ -47,6 +47,8 @@ struct _GtefActionInfo
 	gchar **accels;
 
 	gint ref_count;
+
+	guint used : 1;
 };
 
 static void _gtef_action_info_free (GtefActionInfo *info);
@@ -378,4 +380,20 @@ gtef_action_info_set_accels (GtefActionInfo      *info,
 
 	g_strfreev (info->accels);
 	info->accels = _gtef_utils_strv_copy (accels);
+}
+
+gboolean
+_gtef_action_info_get_used (const GtefActionInfo *info)
+{
+	g_return_val_if_fail (info != NULL, FALSE);
+
+	return info->used;
+}
+
+void
+_gtef_action_info_set_used (GtefActionInfo *info)
+{
+	g_return_if_fail (info != NULL);
+
+	info->used = TRUE;
 }

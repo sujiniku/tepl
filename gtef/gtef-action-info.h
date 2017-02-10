@@ -99,6 +99,12 @@ const gchar * const *	gtef_action_info_get_accels		(const GtefActionInfo *info);
 void			gtef_action_info_set_accels		(GtefActionInfo      *info,
 								 const gchar * const *accels);
 
+G_GNUC_INTERNAL
+gboolean		_gtef_action_info_get_used		(const GtefActionInfo *info);
+
+G_GNUC_INTERNAL
+void			_gtef_action_info_set_used		(GtefActionInfo *info);
+
 G_END_DECLS
 
 #endif  /* GTEF_ACTION_INFO_H */

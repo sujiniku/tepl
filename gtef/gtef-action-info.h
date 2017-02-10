@@ -74,8 +74,6 @@ void			gtef_action_info_unref			(GtefActionInfo *info);
 
 GtefActionInfo *	gtef_action_info_copy			(const GtefActionInfo *info);
 
-void			gtef_action_info_free			(GtefActionInfo *info);
-
 const gchar *		gtef_action_info_get_action_name	(const GtefActionInfo *info);
 
 void			gtef_action_info_set_action_name	(GtefActionInfo *info,

@@ -49,9 +49,26 @@ struct _GtefActionInfo
 	gint ref_count;
 };
 
+static void _gtef_action_info_free (GtefActionInfo *info);
+
 G_DEFINE_BOXED_TYPE (GtefActionInfo, gtef_action_info,
 		     gtef_action_info_copy,
-		     gtef_action_info_free)
+		     _gtef_action_info_free)
+
+static void
+_gtef_action_info_free (GtefActionInfo *info)
+{
+	if (info != NULL)
+	{
+		g_free (info->action_name);
+		g_free (info->icon_name);
+		g_free (info->label);
+		g_free (info->tooltip);
+		g_strfreev (info->accels);
+
+		g_free (info);
+	}
+}
 
 /**
  * gtef_action_info_new:
@@ -154,7 +171,7 @@ gtef_action_info_unref (GtefActionInfo *info)
 
 	if (info->ref_count == 0)
 	{
-		gtef_action_info_free (info);
+		_gtef_action_info_free (info);
 	}
 }
 
@@ -183,27 +200,6 @@ gtef_action_info_copy (const GtefActionInfo *info)
 	gtef_action_info_set_accels (new_info, (const gchar * const *)info->accels);
 
 	return new_info;
-}
-
-/**
- * gtef_action_info_free:
- * @info: (nullable): a #GtefActionInfo, or %NULL.
- *
- * Since: 2.0
- */
-void
-gtef_action_info_free (GtefActionInfo *info)
-{
-	if (info != NULL)
-	{
-		g_free (info->action_name);
-		g_free (info->icon_name);
-		g_free (info->label);
-		g_free (info->tooltip);
-		g_strfreev (info->accels);
-
-		g_free (info);
-	}
 }
 
 /**

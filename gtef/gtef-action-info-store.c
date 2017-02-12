@@ -39,6 +39,16 @@
  * happens on widget creation, not when adding a #GtefActionInfo to the store,
  * so that the accelerator is bound to the application only if the
  * #GtefActionInfo is actually used.
+ *
+ * #GtefActionInfoStore is designed so that libraries can provide their own
+ * store, to share action information (with translations) and possibly the
+ * #GAction implementations as well. Application-specific #GtefActionInfo's can
+ * be added to the store returned by
+ * gtef_application_get_app_action_info_store().
+ *
+ * A library #GtefActionInfoStore must namespace the action names to not have
+ * conflicts when a #GtefActionInfo is added to the #GtefActionInfoCentralStore.
+ * Examples of namespaced action names: `"win.gtef-save"` or `"app.gtef-quit"`.
  */
 
 struct _GtefActionInfoStorePrivate

@@ -19,6 +19,7 @@
 
 #include "gtef-action-info-store.h"
 #include "gtef-action-info.h"
+#include "gtef-action-info-central-store.h"
 #include "gtef-utils.h"
 
 /**
@@ -230,8 +231,9 @@ gtef_action_info_store_get_application (GtefActionInfoStore *store)
  * @store: a #GtefActionInfoStore.
  * @info: a #GtefActionInfo.
  *
- * Inserts @info into @store. The @store must <emphasis>not</emphasis> already
- * contain a #GtefActionInfo with the same action name. The @store takes its own
+ * Inserts @info into @store and into the #GtefActionInfoCentralStore. Both the
+ * @store and central store must <emphasis>not</emphasis> already contain a
+ * #GtefActionInfo with the same action name. The stores take their own
  * reference on @info.
  *
  * Since: 2.0
@@ -241,6 +243,7 @@ gtef_action_info_store_add (GtefActionInfoStore *store,
 			    GtefActionInfo      *info)
 {
 	const gchar *action_name;
+	GtefActionInfoCentralStore *central_store;
 
 	g_return_if_fail (GTEF_IS_ACTION_INFO_STORE (store));
 	g_return_if_fail (info != NULL);
@@ -260,6 +263,9 @@ gtef_action_info_store_add (GtefActionInfoStore *store,
 	g_hash_table_insert (store->priv->hash_table,
 			     g_strdup (action_name),
 			     gtef_action_info_ref (info));
+
+	central_store = gtef_action_info_central_store_get_instance ();
+	_gtef_action_info_central_store_add (central_store, info);
 }
 
 /**

@@ -10,44 +10,46 @@ AM_CPPFLAGS =				\
 	$(CODE_COVERAGE_CPPFLAGS)	\
 	$(DEP_CFLAGS)
 
-gtef_public_headers =			\
-	gtef.h				\
-	gtef-action-info.h		\
-	gtef-action-info-store.h	\
-	gtef-application.h		\
-	gtef-buffer.h			\
-	gtef-encoding.h			\
-	gtef-file.h			\
-	gtef-file-loader.h		\
-	gtef-file-metadata.h		\
-	gtef-file-saver.h		\
-	gtef-fold-region.h		\
-	gtef-gutter-renderer-folds.h	\
-	gtef-info-bar.h			\
-	gtef-iter.h			\
-	gtef-metadata-manager.h		\
-	gtef-types.h			\
-	gtef-tab.h			\
-	gtef-utils.h			\
+gtef_public_headers =				\
+	gtef.h					\
+	gtef-action-info.h			\
+	gtef-action-info-central-store.h	\
+	gtef-action-info-store.h		\
+	gtef-application.h			\
+	gtef-buffer.h				\
+	gtef-encoding.h				\
+	gtef-file.h				\
+	gtef-file-loader.h			\
+	gtef-file-metadata.h			\
+	gtef-file-saver.h			\
+	gtef-fold-region.h			\
+	gtef-gutter-renderer-folds.h		\
+	gtef-info-bar.h				\
+	gtef-iter.h				\
+	gtef-metadata-manager.h			\
+	gtef-types.h				\
+	gtef-tab.h				\
+	gtef-utils.h				\
 	gtef-view.h
 
-gtef_public_c_files =			\
-	gtef-action-info.c		\
-	gtef-action-info-store.c	\
-	gtef-application.c		\
-	gtef-buffer.c			\
-	gtef-encoding.c			\
-	gtef-file.c			\
-	gtef-file-loader.c		\
-	gtef-file-metadata.c		\
-	gtef-file-saver.c		\
-	gtef-fold-region.c		\
-	gtef-gutter-renderer-folds.c	\
-	gtef-info-bar.c			\
-	gtef-iter.c			\
-	gtef-metadata-manager.c		\
-	gtef-tab.c			\
-	gtef-utils.c			\
+gtef_public_c_files =				\
+	gtef-action-info.c			\
+	gtef-action-info-central-store.c	\
+	gtef-action-info-store.c		\
+	gtef-application.c			\
+	gtef-buffer.c				\
+	gtef-encoding.c				\
+	gtef-file.c				\
+	gtef-file-loader.c			\
+	gtef-file-metadata.c			\
+	gtef-file-saver.c			\
+	gtef-fold-region.c			\
+	gtef-gutter-renderer-folds.c		\
+	gtef-info-bar.c				\
+	gtef-iter.c				\
+	gtef-metadata-manager.c			\
+	gtef-tab.c				\
+	gtef-utils.c				\
 	gtef-view.c
 
 gtef_private_headers =			\

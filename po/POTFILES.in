@@ -1,5 +1,6 @@
 # List of source files containing translatable strings.
 gtef/gtef-action-info.c
+gtef/gtef-action-info-central-store.c
 gtef/gtef-action-info-store.c
 gtef/gtef-application.c
 gtef/gtef-buffer.c

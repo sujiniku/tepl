@@ -49,6 +49,24 @@ gtef_action_info_store_get_type
 </SECTION>
 
 <SECTION>
+<FILE>action-info-central-store</FILE>
+<TITLE>GtefActionInfoCentralStore</TITLE>
+GtefActionInfoCentralStore
+gtef_action_info_central_store_get_instance
+gtef_action_info_central_store_lookup
+<SUBSECTION Standard>
+GTEF_ACTION_INFO_CENTRAL_STORE
+GTEF_ACTION_INFO_CENTRAL_STORE_CLASS
+GTEF_ACTION_INFO_CENTRAL_STORE_GET_CLASS
+GTEF_IS_ACTION_INFO_CENTRAL_STORE
+GTEF_IS_ACTION_INFO_CENTRAL_STORE_CLASS
+GTEF_TYPE_ACTION_INFO_CENTRAL_STORE
+GtefActionInfoCentralStoreClass
+GtefActionInfoCentralStorePrivate
+gtef_action_info_central_store_get_type
+</SECTION>
+
+<SECTION>
 <FILE>application</FILE>
 <TITLE>GtefApplication</TITLE>
 GtefApplication

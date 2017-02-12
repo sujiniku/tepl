@@ -32,6 +32,28 @@
  * #GtefActionInfoStore, it is also added to the #GtefActionInfoCentralStore.
  */
 
+/* API design:
+ *
+ * Why both GtefActionInfoStore and GtefActionInfoCentralStore are needed?
+ *
+ * Advantages of GtefActionInfoStore:
+ * - gtef_action_info_store_new() takes an optional GtkApplication parameter. It
+ *   doesn't rely on g_application_get_default() (calling
+ *   g_application_get_default() in a library is not really a good practice I
+ *   think. In theory an app can have several GApplication instances).
+ * - gtef_action_info_store_check_all_used()
+ *
+ * Advantages of GtefActionInfoCentralStore:
+ * - For the menu bar, easy to retrieve the tooltip to show it in the statusbar.
+ * - The central store checks if there are no duplicated action names
+ *   (globally).
+ *
+ * If there was only one of the two classes, hacks would be needed to achieve
+ * the above items. So by having the two classes, we have the best of both
+ * worlds. We should not be afraid to create a lot of classes, and see things in
+ * big.
+ */
+
 struct _GtefActionInfoCentralStorePrivate
 {
 	GtefActionInfoStore *store;

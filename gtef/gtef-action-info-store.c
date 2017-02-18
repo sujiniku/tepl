@@ -79,9 +79,14 @@ static void
 set_application (GtefActionInfoStore *store,
 		 GtkApplication      *app)
 {
-	g_return_if_fail (GTK_IS_APPLICATION (app));
+	g_return_if_fail (app == NULL || GTK_IS_APPLICATION (app));
 
 	g_assert (store->priv->app == NULL);
+
+	if (app == NULL)
+	{
+		return;
+	}
 
 	store->priv->app = app;
 	g_object_add_weak_pointer (G_OBJECT (store->priv->app),
@@ -211,14 +216,9 @@ gtef_action_info_store_new (GtkApplication *application)
 {
 	g_return_val_if_fail (application == NULL || GTK_IS_APPLICATION (application), NULL);
 
-	if (application != NULL)
-	{
-		return g_object_new (GTEF_TYPE_ACTION_INFO_STORE,
-				     "application", application,
-				     NULL);
-	}
-
-	return g_object_new (GTEF_TYPE_ACTION_INFO_STORE, NULL);
+	return g_object_new (GTEF_TYPE_ACTION_INFO_STORE,
+			     "application", application,
+			     NULL);
 }
 
 /**

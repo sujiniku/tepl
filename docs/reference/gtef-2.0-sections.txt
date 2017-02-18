@@ -67,6 +67,12 @@ gtef_action_info_central_store_get_type
 </SECTION>
 
 <SECTION>
+<FILE>action-map</FILE>
+<TITLE>GtefActionMap</TITLE>
+gtef_action_map_add_action_entries_check_dups
+</SECTION>
+
+<SECTION>
 <FILE>application</FILE>
 <TITLE>GtefApplication</TITLE>
 GtefApplication

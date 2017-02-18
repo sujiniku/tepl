@@ -30,6 +30,7 @@
       <xi:include href="xml/action-info.xml"/>
       <xi:include href="xml/action-info-store.xml"/>
       <xi:include href="xml/action-info-central-store.xml"/>
+      <xi:include href="xml/action-map.xml"/>
     </chapter>
 
     <chapter>

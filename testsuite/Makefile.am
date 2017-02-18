@@ -14,6 +14,9 @@ noinst_PROGRAMS = $(UNIT_TEST_PROGS)
 TESTS = $(UNIT_TEST_PROGS)
 UNIT_TEST_PROGS =
 
+UNIT_TEST_PROGS += test-action-map
+test_action_map_SOURCES = test-action-map.c
+
 UNIT_TEST_PROGS += test-buffer-input-stream
 test_buffer_input_stream_SOURCES = test-buffer-input-stream.c
 

@@ -27,6 +27,28 @@
  * #GActionMap wrapper functions.
  */
 
+static void
+check_dups_in_array (const GActionEntry *entries,
+		     const gchar        *action_name,
+		     gint                action_num)
+{
+	gint i;
+
+	for (i = 0; i < action_num; i++)
+	{
+		const GActionEntry *entry = &entries[i];
+
+		if (g_strcmp0 (action_name, entry->name) == 0)
+		{
+			g_warning ("gtef_action_map_add_action_entries_check_dups(): "
+				   "the GActionEntry array contains duplicated entries for the action name '%s'. "
+				   "The first one will be dropped from the GActionMap.",
+				   action_name);
+			return;
+		}
+	}
+}
+
 /**
  * gtef_action_map_add_action_entries_check_dups:
  * @action_map: a #GActionMap.
@@ -69,6 +91,8 @@ gtef_action_map_add_action_entries_check_dups (GActionMap         *action_map,
 				   G_STRFUNC,
 				   entry->name);
 		}
+
+		check_dups_in_array (entries, entry->name, i);
 	}
 
 	g_action_map_add_action_entries (action_map,

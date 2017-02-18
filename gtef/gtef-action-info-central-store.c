@@ -18,7 +18,6 @@
  */
 
 #include "gtef-action-info-central-store.h"
-#include "gtef-action-info-store.h"
 #include "gtef-action-info.h"
 
 /**
@@ -56,7 +55,10 @@
 
 struct _GtefActionInfoCentralStorePrivate
 {
-	GtefActionInfoStore *store;
+	/* Key: owned gchar*: action name.
+	 * Value: owned GtefActionInfo.
+	 */
+	GHashTable *hash_table;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtefActionInfoCentralStore, gtef_action_info_central_store, G_TYPE_OBJECT)
@@ -66,7 +68,7 @@ gtef_action_info_central_store_finalize (GObject *object)
 {
 	GtefActionInfoCentralStore *central_store = GTEF_ACTION_INFO_CENTRAL_STORE (object);
 
-	g_object_unref (central_store->priv->store);
+	g_hash_table_unref (central_store->priv->hash_table);
 
 	G_OBJECT_CLASS (gtef_action_info_central_store_parent_class)->finalize (object);
 }
@@ -84,7 +86,10 @@ gtef_action_info_central_store_init (GtefActionInfoCentralStore *central_store)
 {
 	central_store->priv = gtef_action_info_central_store_get_instance_private (central_store);
 
-	central_store->priv->store = gtef_action_info_store_new (NULL);
+	central_store->priv->hash_table = g_hash_table_new_full (g_str_hash,
+								 g_str_equal,
+								 g_free,
+								 (GDestroyNotify) gtef_action_info_unref);
 }
 
 /**
@@ -118,7 +123,7 @@ _gtef_action_info_central_store_add (GtefActionInfoCentralStore *central_store,
 	action_name = gtef_action_info_get_action_name (info);
 	g_return_if_fail (action_name != NULL);
 
-	if (gtef_action_info_store_lookup (central_store->priv->store, action_name) != NULL)
+	if (g_hash_table_lookup (central_store->priv->hash_table, action_name) != NULL)
 	{
 		g_warning ("The GtefActionInfoCentralStore already contains a GtefActionInfo "
 			   "with the action name “%s”. Libraries must namespace their action names.",
@@ -126,7 +131,9 @@ _gtef_action_info_central_store_add (GtefActionInfoCentralStore *central_store,
 		return;
 	}
 
-	gtef_action_info_store_add (central_store->priv->store, info);
+	g_hash_table_insert (central_store->priv->hash_table,
+			     g_strdup (action_name),
+			     gtef_action_info_ref (info));
 }
 
 /**
@@ -144,5 +151,5 @@ gtef_action_info_central_store_lookup (GtefActionInfoCentralStore *central_store
 	g_return_val_if_fail (GTEF_IS_ACTION_INFO_CENTRAL_STORE (central_store), NULL);
 	g_return_val_if_fail (action_name != NULL, NULL);
 
-	return gtef_action_info_store_lookup (central_store->priv->store, action_name);
+	return g_hash_table_lookup (central_store->priv->hash_table, action_name);
 }

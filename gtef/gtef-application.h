@@ -49,6 +49,8 @@ struct _GtefApplication
 struct _GtefApplicationClass
 {
 	GObjectClass parent_class;
+
+	gpointer padding[12];
 };
 
 GType			gtef_application_get_type			(void) G_GNUC_CONST;

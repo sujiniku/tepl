@@ -49,6 +49,8 @@ struct _GtefActionInfoCentralStore
 struct _GtefActionInfoCentralStoreClass
 {
 	GObjectClass parent_class;
+
+	gpointer padding[12];
 };
 
 GType		gtef_action_info_central_store_get_type		(void) G_GNUC_CONST;

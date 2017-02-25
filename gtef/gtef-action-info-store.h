@@ -49,6 +49,8 @@ struct _GtefActionInfoStore
 struct _GtefActionInfoStoreClass
 {
 	GObjectClass parent_class;
+
+	gpointer padding[12];
 };
 
 GType			gtef_action_info_store_get_type			(void) G_GNUC_CONST;

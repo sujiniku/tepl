@@ -42,6 +42,7 @@ typedef struct _GtefFileSaver			GtefFileSaver;
 typedef struct _GtefFoldRegion			GtefFoldRegion;
 typedef struct _GtefGutterRendererFolds		GtefGutterRendererFolds;
 typedef struct _GtefInfoBar			GtefInfoBar;
+typedef struct _GtefMenuShell			GtefMenuShell;
 typedef struct _GtefTab				GtefTab;
 typedef struct _GtefView			GtefView;
 

@@ -302,6 +302,24 @@ gtef_iter_get_line_indentation
 </SECTION>
 
 <SECTION>
+<FILE>menu-shell</FILE>
+<TITLE>GtefMenuShell</TITLE>
+GtefMenuShell
+gtef_menu_shell_get_from_gtk_menu_shell
+gtef_menu_shell_get_menu_shell
+<SUBSECTION Standard>
+GTEF_IS_MENU_SHELL
+GTEF_IS_MENU_SHELL_CLASS
+GTEF_MENU_SHELL
+GTEF_MENU_SHELL_CLASS
+GTEF_MENU_SHELL_GET_CLASS
+GTEF_TYPE_MENU_SHELL
+GtefMenuShellClass
+GtefMenuShellPrivate
+gtef_menu_shell_get_type
+</SECTION>
+
+<SECTION>
 <FILE>metadata-manager</FILE>
 <TITLE>GtefMetadataManager</TITLE>
 gtef_metadata_manager_init

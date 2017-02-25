@@ -16,6 +16,7 @@ gtef/gtef-info-bar.c
 gtef/gtef-init.c
 gtef/gtef-iter.c
 gtef/gtef-io-error-info-bar.c
+gtef/gtef-menu-shell.c
 gtef/gtef-metadata-manager.c
 gtef/gtef-progress-info-bar.c
 gtef/gtef-tab.c

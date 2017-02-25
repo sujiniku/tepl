@@ -53,6 +53,7 @@
       <title>Other</title>
       <xi:include href="xml/info-bar.xml"/>
       <xi:include href="xml/iter.xml"/>
+      <xi:include href="xml/menu-shell.xml"/>
       <xi:include href="xml/utils.xml"/>
     </chapter>
   </part>

@@ -30,6 +30,7 @@
 #include <gtef/gtef-action-info-central-store.h>
 #include <gtef/gtef-action-map.h>
 #include <gtef/gtef-application.h>
+#include <gtef/gtef-application-window.h>
 #include <gtef/gtef-buffer.h>
 #include <gtef/gtef-encoding.h>
 #include <gtef/gtef-file.h>

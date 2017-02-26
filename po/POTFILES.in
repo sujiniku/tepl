@@ -4,6 +4,7 @@ gtef/gtef-action-info-central-store.c
 gtef/gtef-action-info-store.c
 gtef/gtef-action-map.c
 gtef/gtef-application.c
+gtef/gtef-application-window.c
 gtef/gtef-buffer.c
 gtef/gtef-buffer-input-stream.c
 gtef/gtef-encoding.c

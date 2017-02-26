@@ -20,6 +20,7 @@
     <chapter>
       <title>Main Classes</title>
       <xi:include href="xml/application.xml"/>
+      <xi:include href="xml/application-window.xml"/>
       <xi:include href="xml/tab.xml"/>
       <xi:include href="xml/view.xml"/>
       <xi:include href="xml/buffer.xml"/>

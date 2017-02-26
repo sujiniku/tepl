@@ -33,6 +33,7 @@ typedef struct _GtefActionInfoEntry		GtefActionInfoEntry;
 typedef struct _GtefActionInfoStore		GtefActionInfoStore;
 typedef struct _GtefActionInfoCentralStore	GtefActionInfoCentralStore;
 typedef struct _GtefApplication			GtefApplication;
+typedef struct _GtefApplicationWindow		GtefApplicationWindow;
 typedef struct _GtefBuffer			GtefBuffer;
 typedef struct _GtefEncoding			GtefEncoding;
 typedef struct _GtefFile			GtefFile;

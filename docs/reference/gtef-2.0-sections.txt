@@ -92,6 +92,27 @@ gtef_application_get_type
 </SECTION>
 
 <SECTION>
+<FILE>application-window</FILE>
+<TITLE>GtefApplicationWindow</TITLE>
+GtefApplicationWindow
+gtef_application_window_get_from_gtk_application_window
+gtef_application_window_get_application_window
+gtef_application_window_get_statusbar
+gtef_application_window_set_statusbar
+gtef_application_window_connect_menu_to_statusbar
+<SUBSECTION Standard>
+GTEF_APPLICATION_WINDOW
+GTEF_APPLICATION_WINDOW_CLASS
+GTEF_APPLICATION_WINDOW_GET_CLASS
+GTEF_IS_APPLICATION_WINDOW
+GTEF_IS_APPLICATION_WINDOW_CLASS
+GTEF_TYPE_APPLICATION_WINDOW
+GtefApplicationWindowClass
+GtefApplicationWindowPrivate
+gtef_application_window_get_type
+</SECTION>
+
+<SECTION>
 <FILE>buffer</FILE>
 <TITLE>GtefBuffer</TITLE>
 GtefBuffer

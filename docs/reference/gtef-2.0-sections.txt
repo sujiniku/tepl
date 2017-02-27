@@ -77,6 +77,7 @@ gtef_action_map_add_action_entries_check_dups
 <TITLE>GtefApplication</TITLE>
 GtefApplication
 gtef_application_get_from_gtk_application
+gtef_application_get_default
 gtef_application_get_application
 gtef_application_get_app_action_info_store
 gtef_application_open_simple

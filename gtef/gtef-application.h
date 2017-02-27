@@ -57,6 +57,8 @@ GType			gtef_application_get_type			(void) G_GNUC_CONST;
 
 GtefApplication *	gtef_application_get_from_gtk_application	(GtkApplication *gtk_app);
 
+GtefApplication *	gtef_application_get_default			(void);
+
 GtkApplication *	gtef_application_get_application		(GtefApplication *gtef_app);
 
 GtefActionInfoStore *	gtef_application_get_app_action_info_store	(GtefApplication *gtef_app);

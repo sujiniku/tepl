@@ -186,6 +186,27 @@ gtef_application_get_from_gtk_application (GtkApplication *gtk_app)
 }
 
 /**
+ * gtef_application_get_default:
+ *
+ * Convenience function that calls g_application_get_default() followed by
+ * gtef_application_get_from_gtk_application(). The object returned by
+ * g_application_get_default() must be a #GtkApplication.
+ *
+ * Returns: (transfer none): the default #GtefApplication.
+ * Since: 2.0
+ */
+GtefApplication *
+gtef_application_get_default (void)
+{
+	GApplication *g_app;
+
+	g_app = g_application_get_default ();
+	g_return_val_if_fail (GTK_IS_APPLICATION (g_app), NULL);
+
+	return gtef_application_get_from_gtk_application (GTK_APPLICATION (g_app));
+}
+
+/**
  * gtef_application_get_application:
  * @gtef_app: a #GtefApplication.
  *

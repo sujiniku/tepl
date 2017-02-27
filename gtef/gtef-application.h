@@ -61,6 +61,9 @@ GtkApplication *	gtef_application_get_application		(GtefApplication *gtef_app);
 
 GtefActionInfoStore *	gtef_application_get_app_action_info_store	(GtefApplication *gtef_app);
 
+void			gtef_application_open_simple			(GtefApplication *gtef_app,
+									 GFile           *file);
+
 G_END_DECLS
 
 #endif /* GTEF_APPLICATION_H */

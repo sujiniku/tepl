@@ -221,4 +221,26 @@ gtef_application_get_app_action_info_store (GtefApplication *gtef_app)
 	return gtef_app->priv->app_action_info_store;
 }
 
+/**
+ * gtef_application_open_simple:
+ * @gtef_app: a #GtefApplication.
+ * @file: a #GFile.
+ *
+ * Calls g_application_open() with a single file and an empty hint.
+ *
+ * Since: 2.0
+ */
+void
+gtef_application_open_simple (GtefApplication *gtef_app,
+			      GFile           *file)
+{
+	GFile *files[1];
+
+	g_return_if_fail (GTEF_IS_APPLICATION (gtef_app));
+	g_return_if_fail (G_IS_FILE (file));
+
+	files[0] = file;
+	g_application_open (G_APPLICATION (gtef_app->priv->gtk_app), files, 1, "");
+}
+
 /* ex:set ts=8 noet: */

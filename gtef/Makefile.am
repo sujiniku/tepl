@@ -28,6 +28,7 @@ gtef_public_headers =				\
 	gtef-gutter-renderer-folds.h		\
 	gtef-info-bar.h				\
 	gtef-iter.h				\
+	gtef-menu-item.h			\
 	gtef-menu-shell.h			\
 	gtef-metadata-manager.h			\
 	gtef-types.h				\
@@ -52,6 +53,7 @@ gtef_public_c_files =				\
 	gtef-gutter-renderer-folds.c		\
 	gtef-info-bar.c				\
 	gtef-iter.c				\
+	gtef-menu-item.c			\
 	gtef-menu-shell.c			\
 	gtef-metadata-manager.c			\
 	gtef-tab.c				\

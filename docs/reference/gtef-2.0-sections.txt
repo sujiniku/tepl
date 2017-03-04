@@ -325,6 +325,13 @@ gtef_iter_get_line_indentation
 </SECTION>
 
 <SECTION>
+<FILE>menu-item</FILE>
+<TITLE>GtefMenuItem</TITLE>
+gtef_menu_item_get_long_description
+gtef_menu_item_set_long_description
+</SECTION>
+
+<SECTION>
 <FILE>menu-shell</FILE>
 <TITLE>GtefMenuShell</TITLE>
 GtefMenuShell

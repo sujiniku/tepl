@@ -41,6 +41,7 @@
 #include <gtef/gtef-gutter-renderer-folds.h>
 #include <gtef/gtef-info-bar.h>
 #include <gtef/gtef-iter.h>
+#include <gtef/gtef-menu-item.h>
 #include <gtef/gtef-menu-shell.h>
 #include <gtef/gtef-metadata-manager.h>
 #include <gtef/gtef-tab.h>

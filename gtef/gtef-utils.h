@@ -20,7 +20,7 @@
 #ifndef GTEF_UTILS_H
 #define GTEF_UTILS_H
 
-#include <gtk/gtk.h>
+#include <gio/gio.h>
 
 G_BEGIN_DECLS
 

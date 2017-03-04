@@ -17,7 +17,7 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtef/gtef.h>
+#include "gtef/gtef-utils.h"
 
 static void
 test_replace_home_dir_with_tilde (void)

@@ -43,9 +43,10 @@
  * - gtef_action_info_store_check_all_used()
  *
  * Advantages of GtefActionInfoCentralStore:
- * - For the menu bar, easy to retrieve the tooltip to show it in the statusbar.
  * - The central store checks if there are no duplicated action names
  *   (globally).
+ * - [For the menu bar, easy to retrieve the tooltip to show it in the
+ *   statusbar.] No longer relevant with gtef_menu_item_get_long_description().
  *
  * If there was only one of the two classes, hacks would be needed to achieve
  * the above items. So by having the two classes, we have the best of both

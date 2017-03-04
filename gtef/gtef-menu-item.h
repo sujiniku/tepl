@@ -33,6 +33,9 @@ const gchar *	gtef_menu_item_get_long_description	(GtkMenuItem *menu_item);
 void		gtef_menu_item_set_long_description	(GtkMenuItem *menu_item,
 							 const gchar *long_description);
 
+void		gtef_menu_item_set_icon_name		(GtkMenuItem *item,
+							 const gchar *icon_name);
+
 G_END_DECLS
 
 #endif  /* GTEF_MENU_ITEM_H */

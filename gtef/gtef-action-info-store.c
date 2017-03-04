@@ -20,7 +20,7 @@
 #include "gtef-action-info-store.h"
 #include "gtef-action-info.h"
 #include "gtef-action-info-central-store.h"
-#include "gtef-utils.h"
+#include "gtef-menu-item.h"
 
 /**
  * SECTION:action-info-store
@@ -387,7 +387,7 @@ gtef_action_info_store_create_menu_item (GtefActionInfoStore *store,
 	gtk_menu_item_set_label (menu_item, gtef_action_info_get_label (action_info));
 
 	/* Set accel before setting icon, because
-	 * gtef_utils_menu_item_set_icon_name() adds a GtkBox.
+	 * gtef_menu_item_set_icon_name() adds a GtkBox.
 	 */
 	accels = gtef_action_info_get_accels (action_info);
 	if (accels != NULL && accels[0] != NULL)
@@ -412,7 +412,7 @@ gtef_action_info_store_create_menu_item (GtefActionInfoStore *store,
 	icon_name = gtef_action_info_get_icon_name (action_info);
 	if (icon_name != NULL)
 	{
-		gtef_utils_menu_item_set_icon_name (menu_item, icon_name);
+		gtef_menu_item_set_icon_name (menu_item, icon_name);
 	}
 
 	if (store->priv->app != NULL)

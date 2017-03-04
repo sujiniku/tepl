@@ -329,6 +329,7 @@ gtef_iter_get_line_indentation
 <TITLE>GtefMenuItem</TITLE>
 gtef_menu_item_get_long_description
 gtef_menu_item_set_long_description
+gtef_menu_item_set_icon_name
 </SECTION>
 
 <SECTION>
@@ -365,12 +366,6 @@ gtef_tab_add_info_bar
 <SUBSECTION Standard>
 GTEF_TYPE_TAB
 GtefTabClass
-</SECTION>
-
-<SECTION>
-<FILE>utils</FILE>
-<TITLE>GtefUtils</TITLE>
-gtef_utils_menu_item_set_icon_name
 </SECTION>
 
 <SECTION>

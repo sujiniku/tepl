@@ -346,7 +346,8 @@ gtef_action_info_store_lookup (GtefActionInfoStore *store,
  * gtk_actionable_set_action_name() is called on the menu item with
  * @action_name. The label is set with the #GtkMenuItem:use-underline property
  * enabled. The first accelerator is set to the #GtkAccelLabel of the menu item.
- * And the icon is set.
+ * The icon is set. And the tooltip is set with
+ * gtef_menu_item_set_long_description().
  *
  * If #GtefActionInfoStore:application is non-%NULL, this function also calls
  * gtk_application_set_accels_for_action() with the accelerators returned by
@@ -364,6 +365,7 @@ gtef_action_info_store_create_menu_item (GtefActionInfoStore *store,
 	GtefActionInfo *action_info;
 	const gchar * const *accels;
 	const gchar *icon_name;
+	const gchar *tooltip;
 
 	g_return_val_if_fail (GTEF_IS_ACTION_INFO_STORE (store), NULL);
 	g_return_val_if_fail (action_name != NULL, NULL);
@@ -413,6 +415,12 @@ gtef_action_info_store_create_menu_item (GtefActionInfoStore *store,
 	if (icon_name != NULL)
 	{
 		gtef_menu_item_set_icon_name (menu_item, icon_name);
+	}
+
+	tooltip = gtef_action_info_get_tooltip (action_info);
+	if (tooltip != NULL)
+	{
+		gtef_menu_item_set_long_description (menu_item, tooltip);
 	}
 
 	if (store->priv->app != NULL)

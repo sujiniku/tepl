@@ -20,6 +20,7 @@
 #include "gtef-application-window.h"
 #include "gtef-action-info.h"
 #include "gtef-action-info-central-store.h"
+#include "gtef-menu-item.h"
 #include "gtef-menu-shell.h"
 
 /**
@@ -264,29 +265,6 @@ gtef_application_window_set_statusbar (GtefApplicationWindow *gtef_window,
 	g_object_notify_by_pspec (G_OBJECT (gtef_window), properties[PROP_STATUSBAR]);
 }
 
-static const gchar *
-get_menu_item_tooltip (GtkMenuItem *menu_item)
-{
-	const gchar *action_name;
-	GtefActionInfoCentralStore *central_store;
-	const GtefActionInfo *action_info;
-
-	action_name = gtk_actionable_get_action_name (GTK_ACTIONABLE (menu_item));
-	if (action_name == NULL)
-	{
-		return NULL;
-	}
-
-	central_store = gtef_action_info_central_store_get_instance ();
-	action_info = gtef_action_info_central_store_lookup (central_store, action_name);
-	if (action_info == NULL)
-	{
-		return NULL;
-	}
-
-	return gtef_action_info_get_tooltip (action_info);
-}
-
 /* Returns: %TRUE if a context ID exists and has been set to @context_id. */
 static gboolean
 get_statusbar_context_id_for_menu_shell (GtefApplicationWindow *gtef_window,
@@ -329,7 +307,7 @@ menu_item_selected_cb (GtefMenuShell *gtef_menu_shell,
 		       gpointer       user_data)
 {
 	GtefApplicationWindow *gtef_window = GTEF_APPLICATION_WINDOW (user_data);
-	const gchar *tooltip;
+	const gchar *long_description;
 	guint context_id;
 
 	if (gtef_window->priv->statusbar == NULL)
@@ -337,8 +315,8 @@ menu_item_selected_cb (GtefMenuShell *gtef_menu_shell,
 		return;
 	}
 
-	tooltip = get_menu_item_tooltip (menu_item);
-	if (tooltip == NULL)
+	long_description = gtef_menu_item_get_long_description (menu_item);
+	if (long_description == NULL)
 	{
 		return;
 	}
@@ -350,7 +328,7 @@ menu_item_selected_cb (GtefMenuShell *gtef_menu_shell,
 
 	gtk_statusbar_push (gtef_window->priv->statusbar,
 			    context_id,
-			    tooltip);
+			    long_description);
 }
 
 static void
@@ -359,7 +337,7 @@ menu_item_deselected_cb (GtefMenuShell *gtef_menu_shell,
 			 gpointer       user_data)
 {
 	GtefApplicationWindow *gtef_window = GTEF_APPLICATION_WINDOW (user_data);
-	const gchar *tooltip;
+	const gchar *long_description;
 	guint context_id;
 
 	if (gtef_window->priv->statusbar == NULL)
@@ -367,8 +345,8 @@ menu_item_deselected_cb (GtefMenuShell *gtef_menu_shell,
 		return;
 	}
 
-	tooltip = get_menu_item_tooltip (menu_item);
-	if (tooltip == NULL)
+	long_description = gtef_menu_item_get_long_description (menu_item);
+	if (long_description == NULL)
 	{
 		return;
 	}
@@ -401,13 +379,13 @@ statusbar_notify_cb (GtefApplicationWindow *gtef_window,
  *
  * Connect to the #GtefMenuShell::menu-item-selected and
  * #GtefMenuShell::menu-item-deselected signals of @gtef_menu_shell to push/pop
- * the tooltip (i.e. long description) of #GtkMenuItem's to the
+ * the long description of #GtkMenuItem's to the
  * #GtefApplicationWindow:statusbar.
  *
- * The tooltip is retrieved from the #GtefActionInfoCentralStore. The
- * @action_name is get from the #GtkMenuItem, by calling
- * gtk_actionable_get_action_name(). This will work fine if you've created the
- * menu items with the functions available in #GtefActionInfoStore.
+ * The long description is retrieved with gtef_menu_item_get_long_description().
+ * So gtef_menu_item_set_long_description() must have been called, which is the
+ * case if the #GtkMenuItem has been created with the functions available in
+ * #GtefActionInfoStore.
  *
  * Since: 2.0
  */

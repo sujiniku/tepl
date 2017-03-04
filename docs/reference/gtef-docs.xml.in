@@ -27,11 +27,13 @@
     </chapter>
 
     <chapter>
-      <title>Actions</title>
+      <title>Actions and Menus</title>
       <xi:include href="xml/action-info.xml"/>
       <xi:include href="xml/action-info-store.xml"/>
       <xi:include href="xml/action-info-central-store.xml"/>
       <xi:include href="xml/action-map.xml"/>
+      <xi:include href="xml/menu-item.xml"/>
+      <xi:include href="xml/menu-shell.xml"/>
     </chapter>
 
     <chapter>
@@ -51,11 +53,9 @@
     </chapter>
 
     <chapter>
-      <title>Other</title>
+      <title>Misc</title>
       <xi:include href="xml/info-bar.xml"/>
       <xi:include href="xml/iter.xml"/>
-      <xi:include href="xml/menu-item.xml"/>
-      <xi:include href="xml/menu-shell.xml"/>
     </chapter>
   </part>
 

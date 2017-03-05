@@ -352,7 +352,8 @@ get_menu_item_position (GtkMenuShell *menu_shell,
  * @menu: a #GtkRecentChooserMenu.
  * @item: a #GtkMenuItem.
  *
- * Gets the URI of @item. @item must be a children of @menu.
+ * Gets the URI of @item. @item must be a child of @menu. @menu must be a
+ * #GtkRecentChooserMenu.
  *
  * This function has been written because the value returned by
  * gtk_recent_chooser_get_current_uri() is not updated when #GtkMenuItem's of a

@@ -74,6 +74,17 @@ gtef_menu_item_set_long_description (GtkMenuItem *menu_item,
  *
  * Sets an icon to a #GtkMenuItem.
  *
+ * If the child widget of @item is already a #GtkBox, all #GtkImage widgets
+ * inside that box are first destroyed. A #GtkImage for @icon_name is then
+ * inserted to the box.
+ *
+ * If the child widget of @item is not a #GtkBox (it's usually the
+ * #GtkAccelLabel), it is replaced by a new #GtkBox and the initial child widget
+ * is inserted to the #GtkBox, alongside the icon.
+ *
+ * As a consequence, if you want to call functions on the #GtkAccelLabel, it's
+ * easier to do it before calling this function.
+ *
  * Since: 2.0
  */
 /* Based on gtk_model_menu_item_set_icon() from gtkmodelmenuitem.c (private

@@ -33,6 +33,7 @@ gtef_public_headers =				\
 	gtef-metadata-manager.h			\
 	gtef-types.h				\
 	gtef-tab.h				\
+	gtef-utils.h				\
 	gtef-view.h
 
 gtef_public_c_files =				\
@@ -56,6 +57,7 @@ gtef_public_c_files =				\
 	gtef-menu-shell.c			\
 	gtef-metadata-manager.c			\
 	gtef-tab.c				\
+	gtef-utils.c				\
 	gtef-view.c
 
 gtef_private_headers =			\
@@ -65,8 +67,7 @@ gtef_private_headers =			\
 	gtef-encoding-private.h		\
 	gtef-file-content-loader.h	\
 	gtef-io-error-info-bar.h	\
-	gtef-progress-info-bar.h	\
-	gtef-utils.h
+	gtef-progress-info-bar.h
 
 gtef_private_c_files =			\
 	gtef-buffer-input-stream.c	\
@@ -74,8 +75,7 @@ gtef_private_c_files =			\
 	gtef-file-content-loader.c	\
 	gtef-init.c			\
 	gtef-io-error-info-bar.c	\
-	gtef-progress-info-bar.c	\
-	gtef-utils.c
+	gtef-progress-info-bar.c
 
 gtef_built_public_headers =		\
 	gtef-enum-types.h

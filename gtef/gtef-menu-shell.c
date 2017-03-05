@@ -29,7 +29,8 @@
  * convenience signals.
  *
  * One possible use-case is to push/pop longer descriptions of menu items to a
- * #GtkStatusbar.
+ * #GtkStatusbar, exactly like
+ * gtef_application_window_connect_menu_to_statusbar() does.
  */
 
 struct _GtefMenuShellPrivate

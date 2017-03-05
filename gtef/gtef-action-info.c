@@ -31,6 +31,13 @@
  * A #GtefActionInfo instance contains a set of information about a #GAction.
  * Those pieces of information are useful to create UI elements that trigger the
  * #GAction, for example a menu item or a toolbar item.
+ *
+ * When writing an XML file to create a #GMenu, with the format understood by
+ * #GtkBuilder (see the class description of #GtkApplicationWindow), the
+ * information in the XML file can be used only to create a #GMenu. The initial
+ * goal with #GtefActionInfo and its related classes is to encode the
+ * information just once, and be able to create both a menu and a toolbar easily
+ * (to have a traditional user interface).
  */
 
 struct _GtefActionInfo

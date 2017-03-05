@@ -208,11 +208,8 @@ gtef_action_info_copy (const GtefActionInfo *info)
  * gtef_action_info_get_action_name:
  * @info: a #GtefActionInfo.
  *
- * Returns: (nullable): the action name, or %NULL.
+ * Returns: (nullable): the action name, or %NULL. Example: `"win.save"`.
  * Since: 2.0
- */
-/* FIXME explain that it is the "full" action name, e.g. win.save.
- * Or change the API to be the detailed action name?
  */
 const gchar *
 gtef_action_info_get_action_name (const GtefActionInfo *info)
@@ -226,6 +223,8 @@ gtef_action_info_get_action_name (const GtefActionInfo *info)
  * gtef_action_info_set_action_name:
  * @info: a #GtefActionInfo.
  * @action_name: the action name.
+ *
+ * Sets the action name, for example `"win.save"`.
  *
  * Since: 2.0
  */

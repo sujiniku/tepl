@@ -1,7 +1,7 @@
 /*
  * This file is part of Gtef, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Gtef is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -24,7 +24,7 @@
 #error "Only <gtef/gtef.h> can be included directly."
 #endif
 
-#include <gio/gio.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
@@ -48,6 +48,11 @@ gchar *		_gtef_utils_get_fallback_basename_for_display	(GFile *location);
 
 G_GNUC_INTERNAL
 gchar **	_gtef_utils_strv_copy				(const gchar * const *strv);
+
+/* Widget utilities */
+
+gchar *		gtef_utils_recent_chooser_menu_get_item_uri	(GtkRecentChooserMenu *menu,
+								 GtkMenuItem          *item);
 
 G_END_DECLS
 

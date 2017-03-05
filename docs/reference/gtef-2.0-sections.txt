@@ -369,6 +369,12 @@ GtefTabClass
 </SECTION>
 
 <SECTION>
+<FILE>utils</FILE>
+<TITLE>GtefUtils</TITLE>
+gtef_utils_recent_chooser_menu_get_item_uri
+</SECTION>
+
+<SECTION>
 <FILE>view</FILE>
 <TITLE>GtefView</TITLE>
 GtefView

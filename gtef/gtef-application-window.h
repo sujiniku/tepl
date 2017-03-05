@@ -67,6 +67,10 @@ void			gtef_application_window_set_statusbar			(GtefApplicationWindow *gtef_wind
 void			gtef_application_window_connect_menu_to_statusbar	(GtefApplicationWindow *gtef_window,
 										 GtefMenuShell         *gtef_menu_shell);
 
+void			gtef_application_window_connect_recent_chooser_menu_to_statusbar
+										(GtefApplicationWindow *gtef_window,
+										 GtkRecentChooserMenu  *menu);
+
 G_END_DECLS
 
 #endif /* GTEF_APPLICATION_WINDOW_H */

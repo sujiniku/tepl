@@ -17,11 +17,14 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "gtef-application-window.h"
+#include <glib/gi18n-lib.h>
 #include "gtef-action-info.h"
 #include "gtef-action-info-central-store.h"
 #include "gtef-menu-item.h"
 #include "gtef-menu-shell.h"
+#include "gtef-utils.h"
 
 /**
  * SECTION:application-window
@@ -52,6 +55,7 @@ enum
 
 #define GTEF_APPLICATION_WINDOW_KEY "gtef-application-window-key"
 #define MENU_SHELL_STATUSBAR_CONTEXT_ID_KEY "gtef-menu-shell-statusbar-context-id-key"
+#define MENU_SHELL_FOR_RECENT_CHOOSER_KEY "gtef-menu-shell-for-recent-chooser-key"
 
 static GParamSpec *properties[N_PROPERTIES];
 
@@ -301,13 +305,69 @@ get_statusbar_context_id_for_menu_shell (GtefApplicationWindow *gtef_window,
 	return TRUE;
 }
 
+/* Free the return value with g_free(). */
+static gchar *
+get_menu_item_long_description (GtefMenuShell *gtef_menu_shell,
+				GtkMenuItem   *menu_item)
+{
+	const gchar *long_description;
+	gpointer data;
+	gboolean is_for_recent_chooser;
+
+	long_description = gtef_menu_item_get_long_description (menu_item);
+	if (long_description != NULL)
+	{
+		return g_strdup (long_description);
+	}
+
+	data = g_object_get_data (G_OBJECT (gtef_menu_shell), MENU_SHELL_FOR_RECENT_CHOOSER_KEY);
+	is_for_recent_chooser = data != NULL ? GPOINTER_TO_INT (data) : FALSE;
+
+	if (is_for_recent_chooser)
+	{
+		GtkMenuShell *gtk_menu_shell;
+		GtkRecentChooserMenu *recent_chooser_menu;
+		gchar *uri;
+		GFile *file;
+		gchar *parse_name;
+		gchar *nicer_filename;
+		gchar *ret;
+
+		gtk_menu_shell = gtef_menu_shell_get_menu_shell (gtef_menu_shell);
+		recent_chooser_menu = GTK_RECENT_CHOOSER_MENU (gtk_menu_shell);
+		uri = gtef_utils_recent_chooser_menu_get_item_uri (recent_chooser_menu, menu_item);
+
+		if (uri == NULL)
+		{
+			return NULL;
+		}
+
+		file = g_file_new_for_uri (uri);
+		g_free (uri);
+
+		parse_name = g_file_get_parse_name (file);
+		g_object_unref (file);
+
+		nicer_filename = _gtef_utils_replace_home_dir_with_tilde (parse_name);
+		g_free (parse_name);
+
+		/* Translators: %s is a filename. */
+		ret = g_strdup_printf (_("Open “%s”"), nicer_filename);
+		g_free (nicer_filename);
+
+		return ret;
+	}
+
+	return NULL;
+}
+
 static void
 menu_item_selected_cb (GtefMenuShell *gtef_menu_shell,
 		       GtkMenuItem   *menu_item,
 		       gpointer       user_data)
 {
 	GtefApplicationWindow *gtef_window = GTEF_APPLICATION_WINDOW (user_data);
-	const gchar *long_description;
+	gchar *long_description;
 	guint context_id;
 
 	if (gtef_window->priv->statusbar == NULL)
@@ -315,7 +375,7 @@ menu_item_selected_cb (GtefMenuShell *gtef_menu_shell,
 		return;
 	}
 
-	long_description = gtef_menu_item_get_long_description (menu_item);
+	long_description = get_menu_item_long_description (gtef_menu_shell, menu_item);
 	if (long_description == NULL)
 	{
 		return;
@@ -329,6 +389,8 @@ menu_item_selected_cb (GtefMenuShell *gtef_menu_shell,
 	gtk_statusbar_push (gtef_window->priv->statusbar,
 			    context_id,
 			    long_description);
+
+	g_free (long_description);
 }
 
 static void
@@ -338,6 +400,8 @@ menu_item_deselected_cb (GtefMenuShell *gtef_menu_shell,
 {
 	GtefApplicationWindow *gtef_window = GTEF_APPLICATION_WINDOW (user_data);
 	const gchar *long_description;
+	gpointer data;
+	gboolean is_for_recent_chooser;
 	guint context_id;
 
 	if (gtef_window->priv->statusbar == NULL)
@@ -346,7 +410,11 @@ menu_item_deselected_cb (GtefMenuShell *gtef_menu_shell,
 	}
 
 	long_description = gtef_menu_item_get_long_description (menu_item);
-	if (long_description == NULL)
+
+	data = g_object_get_data (G_OBJECT (gtef_menu_shell), MENU_SHELL_FOR_RECENT_CHOOSER_KEY);
+	is_for_recent_chooser = data != NULL ? GPOINTER_TO_INT (data) : FALSE;
+
+	if (long_description == NULL && !is_for_recent_chooser)
 	{
 		return;
 	}
@@ -413,6 +481,38 @@ gtef_application_window_connect_menu_to_statusbar (GtefApplicationWindow *gtef_w
 				 G_CALLBACK (statusbar_notify_cb),
 				 gtef_menu_shell,
 				 0);
+}
+
+/**
+ * gtef_application_window_connect_recent_chooser_menu_to_statusbar:
+ * @gtef_window: a #GtefApplicationWindow.
+ * @menu: a #GtkRecentChooserMenu.
+ *
+ * An alternative to gtk_recent_chooser_set_show_tips(). Shows the full path in
+ * the #GtefApplicationWindow:statusbar when a #GtkMenuItem of @menu is
+ * selected.
+ *
+ * The full path is retrieved with
+ * gtef_utils_recent_chooser_menu_get_item_uri().
+ *
+ * Since: 2.0
+ */
+void
+gtef_application_window_connect_recent_chooser_menu_to_statusbar (GtefApplicationWindow *gtef_window,
+								  GtkRecentChooserMenu  *menu)
+{
+	GtefMenuShell *gtef_menu_shell;
+
+	g_return_if_fail (GTEF_IS_APPLICATION_WINDOW (gtef_window));
+	g_return_if_fail (GTK_IS_RECENT_CHOOSER_MENU (menu));
+
+	gtef_menu_shell = gtef_menu_shell_get_from_gtk_menu_shell (GTK_MENU_SHELL (menu));
+
+	g_object_set_data (G_OBJECT (gtef_menu_shell),
+			   MENU_SHELL_FOR_RECENT_CHOOSER_KEY,
+			   GINT_TO_POINTER (TRUE));
+
+	gtef_application_window_connect_menu_to_statusbar (gtef_window, gtef_menu_shell);
 }
 
 /* ex:set ts=8 noet: */

@@ -66,6 +66,9 @@ check_dups_in_array (const GActionEntry *entries,
  * g_action_map_add_action_entries() with the same arguments as passed to this
  * function.
  *
+ * This function also checks if there are duplicates in the @entries array
+ * itself.
+ *
  * Since: 2.0
  */
 void

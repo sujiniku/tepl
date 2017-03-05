@@ -71,6 +71,8 @@ void			gtef_application_window_connect_recent_chooser_menu_to_statusbar
 										(GtefApplicationWindow *gtef_window,
 										 GtkRecentChooserMenu  *menu);
 
+GtkWidget *		gtef_application_window_create_open_recent_menu_item	(GtefApplicationWindow *gtef_window);
+
 G_END_DECLS
 
 #endif /* GTEF_APPLICATION_WINDOW_H */

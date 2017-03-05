@@ -20,6 +20,7 @@
 #include "config.h"
 #include "gtef-application-window.h"
 #include <glib/gi18n-lib.h>
+#include "gtef-application.h"
 #include "gtef-action-info.h"
 #include "gtef-action-info-central-store.h"
 #include "gtef-menu-item.h"
@@ -513,6 +514,92 @@ gtef_application_window_connect_recent_chooser_menu_to_statusbar (GtefApplicatio
 			   GINT_TO_POINTER (TRUE));
 
 	gtef_application_window_connect_menu_to_statusbar (gtef_window, gtef_menu_shell);
+}
+
+static void
+open_recent_file_cb (GtkRecentChooser *recent_chooser,
+		     gpointer          user_data)
+{
+	GtefApplicationWindow *gtef_window = GTEF_APPLICATION_WINDOW (user_data);
+	GtkApplication *gtk_app;
+	GtefApplication *gtef_app;
+	gchar *uri;
+	GFile *file;
+
+	gtk_app = gtk_window_get_application (GTK_WINDOW (gtef_window->priv->gtk_window));
+	gtef_app = gtef_application_get_from_gtk_application (gtk_app);
+
+	uri = gtk_recent_chooser_get_current_uri (recent_chooser);
+	file = g_file_new_for_uri (uri);
+
+	gtef_application_open_simple (gtef_app, file);
+
+	g_free (uri);
+	g_object_unref (file);
+}
+
+/**
+ * gtef_application_window_create_open_recent_menu_item:
+ * @gtef_window: a #GtefApplicationWindow.
+ *
+ * Creates a #GtkMenuItem with a simple and generic #GtkRecentChooserMenu as
+ * submenu.
+ *
+ * The #GtkRecentChooser is configured to show files only recently used with the
+ * current application, as returned by g_get_application_name(). If recent files
+ * are added to the default #GtkRecentManager with
+ * gtk_recent_manager_add_item(), the files will normally show up in the
+ * #GtkRecentChooserMenu.
+ *
+ * The #GtkRecentChooserMenu is connected to the statusbar with
+ * gtef_application_window_connect_recent_chooser_menu_to_statusbar().
+ *
+ * When the #GtkRecentChooser::item-activated signal is emitted,
+ * gtef_application_open_simple() is called, so the #GApplication must have the
+ * %G_APPLICATION_HANDLES_OPEN flag set.
+ *
+ * Returns: (transfer floating): a new #GtkMenuItem.
+ * Since: 2.0
+ */
+GtkWidget *
+gtef_application_window_create_open_recent_menu_item (GtefApplicationWindow *gtef_window)
+{
+	GtkMenuItem *menu_item;
+	gchar *long_description;
+	GtkRecentChooserMenu *recent_chooser_menu;
+	GtkRecentChooser *recent_chooser;
+	GtkRecentFilter *filter;
+
+	g_return_val_if_fail (GTEF_IS_APPLICATION_WINDOW (gtef_window), NULL);
+
+	menu_item = GTK_MENU_ITEM (gtk_menu_item_new_with_mnemonic (_("Open _Recent")));
+
+	/* Translators: %s is the application name. */
+	long_description = g_strdup_printf (_("Open a file recently used with %s"),
+					    g_get_application_name ());
+	gtef_menu_item_set_long_description (menu_item, long_description);
+	g_free (long_description);
+
+	recent_chooser_menu = GTK_RECENT_CHOOSER_MENU (gtk_recent_chooser_menu_new ());
+	gtk_menu_item_set_submenu (menu_item, GTK_WIDGET (recent_chooser_menu));
+
+	recent_chooser = GTK_RECENT_CHOOSER (recent_chooser_menu);
+	gtk_recent_chooser_set_local_only (recent_chooser, FALSE);
+	gtk_recent_chooser_set_sort_type (recent_chooser, GTK_RECENT_SORT_MRU);
+
+	filter = gtk_recent_filter_new ();
+	gtk_recent_filter_add_application (filter, g_get_application_name ());
+	gtk_recent_chooser_set_filter (recent_chooser, filter);
+
+	gtef_application_window_connect_recent_chooser_menu_to_statusbar (gtef_window, recent_chooser_menu);
+
+	g_signal_connect_object (recent_chooser,
+				 "item-activated",
+				 G_CALLBACK (open_recent_file_cb),
+				 gtef_window,
+				 0);
+
+	return GTK_WIDGET (menu_item);
 }
 
 /* ex:set ts=8 noet: */

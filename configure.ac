@@ -50,7 +50,7 @@ GTEF_API_VERSION=2
 AC_SUBST(GTEF_API_VERSION)
 
 # Dependencies
-glib_req=2.51.0
+glib_req=2.51.4
 gtk_req=3.20
 gtksourceview_req=3.22
 libxml_req=2.5

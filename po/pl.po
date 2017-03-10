@@ -1,0 +1,345 @@
+# Polish translation for gtef.
+# Copyright © 2017 the gtef authors.
+# This file is distributed under the same license as the gtef package.
+# Piotr Drąg <piotrdrag@gmail.com>, 2017.
+# Aviary.pl <community-poland@mozilla.org>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gtef\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-10 16:14+0000\n"
+"PO-Revision-Date: 2017-03-10 17:38+0100\n"
+"Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
+"Language-Team: Polish <community-poland@mozilla.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+
+#. Translators: %s is a filename.
+#: gtef/gtef-application-window.c:356
+#, c-format
+msgid "Open “%s”"
+msgstr "Otwórz „%s”"
+
+#: gtef/gtef-application-window.c:575
+msgid "Open _Recent"
+msgstr "Ostatnio używane doku_menty"
+
+#. Translators: %s is the application name.
+#: gtef/gtef-application-window.c:578
+#, c-format
+msgid "Open a file recently used with %s"
+msgstr "Otwarcie pliku ostatnio używanego w programie %s"
+
+#. UTF-8 first, so that it's the first encoding returned by
+#. * gtef_encoding_get_all().
+#.
+#: gtef/gtef-encoding.c:115 gtef/gtef-encoding.c:132 gtef/gtef-encoding.c:133
+#: gtef/gtef-encoding.c:134 gtef/gtef-encoding.c:135 gtef/gtef-encoding.c:136
+#: gtef/gtef-encoding.c:137 gtef/gtef-encoding.c:138
+msgid "Unicode"
+msgstr "unikod"
+
+#. FIXME GEOSTD8 ?
+#: gtef/gtef-encoding.c:117 gtef/gtef-encoding.c:129 gtef/gtef-encoding.c:157
+#: gtef/gtef-encoding.c:180
+msgid "Western"
+msgstr "zachodnie"
+
+#: gtef/gtef-encoding.c:118 gtef/gtef-encoding.c:158 gtef/gtef-encoding.c:178
+msgid "Central European"
+msgstr "środkowoeuropejskie"
+
+#: gtef/gtef-encoding.c:119
+msgid "South European"
+msgstr "południowoeuropejskie"
+
+#: gtef/gtef-encoding.c:120 gtef/gtef-encoding.c:127 gtef/gtef-encoding.c:185
+msgid "Baltic"
+msgstr "bałtyckie"
+
+#: gtef/gtef-encoding.c:121 gtef/gtef-encoding.c:159 gtef/gtef-encoding.c:166
+#: gtef/gtef-encoding.c:168 gtef/gtef-encoding.c:169 gtef/gtef-encoding.c:179
+msgid "Cyrillic"
+msgstr "cyrylica"
+
+#: gtef/gtef-encoding.c:122 gtef/gtef-encoding.c:162 gtef/gtef-encoding.c:184
+msgid "Arabic"
+msgstr "arabskie"
+
+#: gtef/gtef-encoding.c:123 gtef/gtef-encoding.c:181
+msgid "Greek"
+msgstr "greckie"
+
+#: gtef/gtef-encoding.c:124
+msgid "Hebrew Visual"
+msgstr "hebrajskie (wizualne)"
+
+#: gtef/gtef-encoding.c:125 gtef/gtef-encoding.c:160 gtef/gtef-encoding.c:182
+msgid "Turkish"
+msgstr "tureckie"
+
+#: gtef/gtef-encoding.c:126
+msgid "Nordic"
+msgstr "skandynawskie"
+
+#: gtef/gtef-encoding.c:128
+msgid "Celtic"
+msgstr "celtyckie"
+
+#: gtef/gtef-encoding.c:130
+msgid "Romanian"
+msgstr "rumuńskie"
+
+#: gtef/gtef-encoding.c:140
+msgid "Armenian"
+msgstr "ormiańskie"
+
+#: gtef/gtef-encoding.c:141 gtef/gtef-encoding.c:142 gtef/gtef-encoding.c:150
+msgid "Chinese Traditional"
+msgstr "chińskie (tradycyjne)"
+
+#: gtef/gtef-encoding.c:143
+msgid "Cyrillic/Russian"
+msgstr "cyrylica/rosyjskie"
+
+#: gtef/gtef-encoding.c:145 gtef/gtef-encoding.c:146 gtef/gtef-encoding.c:147
+#: gtef/gtef-encoding.c:164 gtef/gtef-encoding.c:172
+msgid "Japanese"
+msgstr "japońskie"
+
+#: gtef/gtef-encoding.c:149 gtef/gtef-encoding.c:165 gtef/gtef-encoding.c:167
+#: gtef/gtef-encoding.c:175
+msgid "Korean"
+msgstr "koreańskie"
+
+#: gtef/gtef-encoding.c:152 gtef/gtef-encoding.c:153 gtef/gtef-encoding.c:154
+msgid "Chinese Simplified"
+msgstr "chińskie (uproszczone)"
+
+#: gtef/gtef-encoding.c:155
+msgid "Georgian"
+msgstr "gruzińskie"
+
+#: gtef/gtef-encoding.c:161 gtef/gtef-encoding.c:183
+msgid "Hebrew"
+msgstr "hebrajskie"
+
+#: gtef/gtef-encoding.c:170
+msgid "Cyrillic/Ukrainian"
+msgstr "cyrylica/ukraińskie"
+
+#: gtef/gtef-encoding.c:173 gtef/gtef-encoding.c:176 gtef/gtef-encoding.c:186
+msgid "Vietnamese"
+msgstr "wietnamskie"
+
+#: gtef/gtef-encoding.c:174
+msgid "Thai"
+msgstr "tajskie"
+
+#: gtef/gtef-encoding.c:365
+msgid "Unknown"
+msgstr "nieznane"
+
+#. Translators: This is the sorted list of encodings used by Gtef for
+#. * automatic detection of the file encoding. You may want to customize
+#. * it adding encodings that are common in your country, for instance the
+#. * GB18030 encoding for the Chinese translation. You may also want to
+#. * remove the ISO-8859-15 encoding (covering English and most Western
+#. * European languages) if you think people in your country will rarely
+#. * use it. 'CURRENT' is a magic value used by Gtef and it represents
+#. * the encoding for the current locale, so please don't translate the
+#. * 'CURRENT' term. Keep the same format: square brackets, single quotes,
+#. * commas.
+#.
+#: gtef/gtef-encoding.c:640
+msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
+msgstr "['UTF-8', 'CURRENT', 'ISO-8859-2', 'WINDOWS-1250', 'UTF-16']"
+
+#: gtef/gtef-encoding-converter.c:302
+#, c-format
+msgid "Conversion from character set “%s” to “%s” is not supported."
+msgstr "Konwersja z zestawu znaków „%s” do „%s” jest nieobsługiwana."
+
+#: gtef/gtef-encoding-converter.c:311
+#, c-format
+msgid "Could not open converter from “%s” to “%s”: %s"
+msgstr "Nie można otworzyć konwertera z „%s” do „%s”: %s"
+
+#: gtef/gtef-encoding-converter.c:368
+msgid "The input data contains an invalid sequence."
+msgstr "Dane wejściowe zawierają nieprawidłową sekwencję."
+
+#: gtef/gtef-encoding-converter.c:377
+#, c-format
+msgid "Error when converting data: %s"
+msgstr "Błąd podczas konwersji danych: %s"
+
+#: gtef/gtef-encoding-converter.c:556
+msgid "The input data ends with an incomplete multi-byte sequence."
+msgstr "Dane wejściowe kończą się niepełną sekwencją wielobajtową."
+
+#: gtef/gtef-encoding-converter.c:579
+msgid "The input content ends with incomplete data."
+msgstr "Treść wejściowa kończą się niepełnymi danymi."
+
+#: gtef/gtef-file.c:413
+#, c-format
+msgid "Untitled File %d"
+msgstr "Plik bez tytułu %d"
+
+#: gtef/gtef-file-content-loader.c:334
+#, c-format
+msgid "The file is too big. Maximum %s can be loaded."
+msgstr "Plik jest za duży. Maksymalnie można wczytać %s."
+
+#: gtef/gtef-file-loader.c:925
+msgid "It is not possible to detect the character encoding automatically."
+msgstr "Nie można automatycznie wykryć kodowania znaków."
+
+#: gtef/gtef-file-saver.c:776
+msgid "The file is externally modified."
+msgstr "Plik został zmodyfikowany poza programem."
+
+#: gtef/gtef-file-saver.c:1310
+msgid "The buffer contains invalid characters."
+msgstr "Bufor zawiera nieprawidłowe znaki."
+
+#: gtef/gtef-io-error-info-bar.c:74
+#, c-format
+msgid "Could not find the file “%s”."
+msgstr "Nie można odnaleźć pliku „%s”."
+
+#: gtef/gtef-io-error-info-bar.c:77 gtef/gtef-io-error-info-bar.c:104
+#: gtef/gtef-io-error-info-bar.c:111
+msgid "Please check that you typed the location correctly and try again."
+msgstr ""
+"Proszę sprawdzić, czy wprowadzone zostało poprawne położenie i spróbować "
+"ponownie."
+
+#. Translators: %s is a URI scheme (like for example
+#. * http:, ftp:, etc.).
+#.
+#: gtef/gtef-io-error-info-bar.c:90
+#, c-format
+msgid "Unable to handle “%s:” locations."
+msgstr "Nie można obsłużyć położeń „%s:”."
+
+#: gtef/gtef-io-error-info-bar.c:98
+msgid "The location of the file cannot be accessed."
+msgstr "Nie można uzyskać dostępu do położenia pliku."
+
+#: gtef/gtef-io-error-info-bar.c:102
+#, c-format
+msgid "“%s” is a directory."
+msgstr "„%s” jest katalogiem."
+
+#: gtef/gtef-io-error-info-bar.c:109
+#, c-format
+msgid "“%s” is not a valid location."
+msgstr "„%s” nie jest prawidłowym położeniem."
+
+#. Translators: %s is a hostname.
+#: gtef/gtef-io-error-info-bar.c:141
+#, c-format
+msgid ""
+"Host “%s” could not be found. Please check that your proxy settings are "
+"correct and try again."
+msgstr ""
+"Nie można odnaleźć komputera „%s”. Proszę sprawdzić poprawność ustawień "
+"pośrednika i spróbować ponownie."
+
+#. Use the same string as INVALID_HOST.
+#: gtef/gtef-io-error-info-bar.c:150
+msgid ""
+"Hostname was invalid. Please check that you typed the location correctly and "
+"try again."
+msgstr ""
+"Nazwa komputera jest nieprawidłowa. Proszę sprawdzić, czy wprowadzone "
+"położenie jest poprawne i spróbować ponownie."
+
+#: gtef/gtef-io-error-info-bar.c:159
+#, c-format
+msgid "“%s” is not a regular file."
+msgstr "„%s” nie jest zwykłym plikiem."
+
+#: gtef/gtef-io-error-info-bar.c:164
+msgid "Connection timed out. Please try again."
+msgstr "Przekroczono czas połączenia. Proszę spróbować ponownie."
+
+#: gtef/gtef-io-error-info-bar.c:168
+#, c-format
+msgid "Unexpected error: %s"
+msgstr "Nieoczekiwany błąd: %s"
+
+#: gtef/gtef-io-error-info-bar.c:179 gtef/gtef-io-error-info-bar.c:212
+#: gtef/gtef-progress-info-bar.c:53
+msgid "_Cancel"
+msgstr "_Anuluj"
+
+#: gtef/gtef-io-error-info-bar.c:185 gtef/gtef-io-error-info-bar.c:195
+msgid "_Retry"
+msgstr "P_onów"
+
+#: gtef/gtef-io-error-info-bar.c:201
+msgid "Edit Any_way"
+msgstr "_Modyfikuj mimo to"
+
+#: gtef/gtef-io-error-info-bar.c:270
+msgid ""
+"The number of followed links is limited and the actual file could not be "
+"found within this limit."
+msgstr ""
+"Liczba dowiązań do podążenia jest ograniczona. Plik nie został odnaleziony "
+"w zakresie tego ograniczenia."
+
+#: gtef/gtef-io-error-info-bar.c:275
+msgid "You do not have the permissions necessary to open the file."
+msgstr "Brak odpowiednich uprawnień do otwarcia tego pliku."
+
+#: gtef/gtef-io-error-info-bar.c:285
+msgid ""
+"Unable to detect the character encoding.\n"
+"Please check that you are not trying to open a binary file.\n"
+"Select a character encoding from the menu and try again."
+msgstr ""
+"Nie można wykryć kodowania znaków.\n"
+"Proszę sprawdzić, czy otwierany plik nie jest binarny.\n"
+"Można także wybrać kodowanie znaków w menu i spróbować ponownie."
+
+#: gtef/gtef-io-error-info-bar.c:294
+#, c-format
+msgid "There was a problem opening the file “%s”."
+msgstr "Wystąpił problem podczas otwierania pliku „%s”."
+
+#: gtef/gtef-io-error-info-bar.c:296
+msgid ""
+"The file you opened has some invalid characters. If you continue editing "
+"this file you could corrupt it.\n"
+"You can also choose another character encoding and try again."
+msgstr ""
+"Otwarty plik zawiera nieprawidłowe znaki. Jeśli modyfikowanie tego pliku "
+"zostanie kontynuowane, może on zostać uszkodzony.\n"
+"Można także wybrać inne kodowanie znaków i spróbować ponownie."
+
+#: gtef/gtef-io-error-info-bar.c:312
+#, c-format
+msgid "Could not open the file “%s” using the “%s” character encoding."
+msgstr "Nie można otworzyć pliku „%s” za pomocą kodowania znaków „%s”."
+
+#: gtef/gtef-io-error-info-bar.c:316
+msgid ""
+"Please check that you are not trying to open a binary file.\n"
+"Select a different character encoding from the menu and try again."
+msgstr ""
+"Proszę sprawdzić, czy otwierany plik nie jest binarny.\n"
+"Można także wybrać inne kodowanie znaków w menu i spróbować ponownie."
+
+#: gtef/gtef-io-error-info-bar.c:329
+#, c-format
+msgid "Could not open the file “%s”."
+msgstr "Nie można otworzyć pliku „%s”."

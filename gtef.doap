@@ -10,7 +10,7 @@
 GtkSourceView-based text editors and IDEs. Gtef is an acronym for “GTK+ Text
 Editor Framework”.</description>
 
-  <homepage rdf:resource="https://github.com/swilmet/gtef" />
+  <homepage rdf:resource="https://wiki.gnome.org/Projects/Gtef" />
   <download-page rdf:resource="https://github.com/swilmet/gtef/releases" />
 
   <programming-language>C</programming-language>

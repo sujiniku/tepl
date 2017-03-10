@@ -9,7 +9,7 @@ AC_INIT([gtef],
 	[gtef_package_version],
 	[https://github.com/swilmet/gtef/issues],
 	[gtef],
-	[https://github.com/swilmet/gtef])
+	[https://wiki.gnome.org/Projects/Gtef])
 
 AX_REQUIRE_DEFINED([AX_IS_RELEASE])
 AX_IS_RELEASE([git-directory])

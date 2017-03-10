@@ -6,8 +6,14 @@ This is version 1.99.2 of Gtef.
 Gtef is a library that eases the development of GtkSourceView-based text
 editors and IDEs.
 
-https://wiki.gnome.org/Apps/Gedit/ReusableCode
-https://wiki.gnome.org/Projects/GtkSourceView/TdiFramework
+The Gtef website:
+
+    https://wiki.gnome.org/Projects/Gtef
+
+Some background on why this project has been created:
+
+    https://wiki.gnome.org/Apps/Gedit/ReusableCode
+    https://wiki.gnome.org/Projects/GtkSourceView/TdiFramework
 
 The final goal is to create a Tabbed Document Interface (TDI) framework
 suitable for text editors.
@@ -21,12 +27,6 @@ GtkSourceView features.
 
 The Gtef library is free software and is released under the terms of the
 GNU Lesser General Public License.
-
-Roadmap
--------
-
-A roadmap is available alongside the GtkSourceView roadmap:
-https://wiki.gnome.org/Projects/GtkSourceView/RoadMap
 
 Warning - API/ABI stability
 ---------------------------

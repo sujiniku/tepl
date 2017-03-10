@@ -12,7 +12,7 @@
 
   <para>
     Gtef is a library that eases the development of GtkSourceView-based text
-    editors and IDEs. Gtef is an acronym for “GTK+ Text Editor Framework”.
+    editors and IDEs. Gtef is the acronym for “GTK+ Text Editor Framework”.
   </para>
 
   <para>

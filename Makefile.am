@@ -6,7 +6,11 @@ AM_DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-introspection --enable-
 
 pkgconfig_DATA = gtef-$(GTEF_API_VERSION).pc
 DISTCLEANFILES = $(pkgconfig_DATA)
-EXTRA_DIST = gtef.pc.in
+
+EXTRA_DIST =		\
+	gtef.doap	\
+	gtef.pc.in	\
+	HACKING
 
 MAINTAINERCLEANFILES = \
 	$(GITIGNORE_MAINTAINERCLEANFILES_TOPLEVEL) \

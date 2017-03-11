@@ -24,6 +24,9 @@ noinst_PROGRAMS = $(UNIT_TEST_PROGS)
 TESTS = $(UNIT_TEST_PROGS)
 UNIT_TEST_PROGS =
 
+UNIT_TEST_PROGS += test-action-info-store
+test_action_info_store_SOURCES = test-action-info-store.c
+
 UNIT_TEST_PROGS += test-action-map
 test_action_map_SOURCES = test-action-map.c
 

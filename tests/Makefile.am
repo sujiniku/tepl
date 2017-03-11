@@ -20,6 +20,9 @@ test_gutter_renderer_folds_SOURCES =		\
 	gtef-gutter-renderer-folds-sub.h	\
 	test-gutter-renderer-folds.c
 
+TEST_PROGS += test-menu
+test_menu_SOURCES = test-menu.c
+
 TEST_PROGS += test-tab
 test_tab_SOURCES = test-tab.c
 

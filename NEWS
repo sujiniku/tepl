@@ -1,3 +1,41 @@
+News in 1.99.2, 2017-03-12
+--------------------------
+This is an unstable release leading towards 2.0. The 2.0 stable version will be
+released at the same time as GNOME 3.24.
+
+Basic GtkUIManager replacement based on GAction:
+* Add an easy way to create a GtkMenuItem from a GtefActionInfo.
+* Add a function to check that every GtefActionInfo in a GtefActionInfoStore
+  has been used.
+* Add reference counting to GtefActionInfo.
+* Add GtefActionInfoCentralStore singleton class.
+* Add gtef_action_map_add_action_entries_check_dups(), to check if there are
+  duplicates when adding GActions to a GActionMap.
+* Rename gtef_application_get_action_info_store() to
+  gtef_application_get_app_action_info_store().
+* Add GtefMenuShell, an extension of GtkMenuShell with the ::menu-item-selected
+  and ::menu-item-deselected signals.
+* Add gtef_menu_item_get/set_long_description().
+* Add GtefApplicationWindow, an extension of GtkApplicationWindow with:
+	* A statusbar property.
+	* A function to connect a GtefMenuShell to the statusbar,
+	  pushing/popping the long descriptions of GtkMenuItems when they are
+	  selected/deselected.
+	* A function to connect a GtkRecentChooserMenu to the statusbar,
+	  pushing/popping the full paths.
+	* A function to create a GtkMenuItem with a simple and generic
+	  GtkRecentChooserMenu as submenu.
+
+Misc:
+* Add gtef_application_open_simple().
+* Replace GNOME by GTK+ in the Gtef acronym. Gtef now stands for “GTK+ Text
+  Editor Framework”.
+* The project is now hosted on gnome.org!
+  https://wiki.gnome.org/Projects/Gtef
+  The bugzilla product is not yet created.
+* Add Polish, Brazilian Portuguese, Swedish, Indonesian and German
+  translations.
+
 News in 1.99.1, 2017-01-26
 --------------------------
 This is an unstable release leading towards 2.0. The 2.0 stable version will be

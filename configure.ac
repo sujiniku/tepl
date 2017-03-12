@@ -50,6 +50,7 @@ GTEF_API_VERSION=2
 AC_SUBST(GTEF_API_VERSION)
 
 # Dependencies
+# Should be glib_req=2.51.5 but the version has not been bumped in git.
 glib_req=2.51.4
 gtk_req=3.20
 gtksourceview_req=3.22

@@ -16,12 +16,10 @@ gtef/gtef-file-metadata.c
 gtef/gtef-file-saver.c
 gtef/gtef-info-bar.c
 gtef/gtef-init.c
-gtef/gtef-io-error-info-bar.c
 gtef/gtef-iter.c
 gtef/gtef-menu-item.c
 gtef/gtef-menu-shell.c
 gtef/gtef-metadata-manager.c
-gtef/gtef-progress-info-bar.c
 gtef/gtef-tab.c
 gtef/gtef-utils.c
 gtef/gtef-view.c

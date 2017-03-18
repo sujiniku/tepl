@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.64)
 
 # Package version of the form 'major.minor.micro'.
-m4_define(gtef_package_version, 1.99.2)
+m4_define(gtef_package_version, 2.0.0)
 
 AC_INIT([gtef],
 	[gtef_package_version],
@@ -50,8 +50,7 @@ GTEF_API_VERSION=2
 AC_SUBST(GTEF_API_VERSION)
 
 # Dependencies
-# Should be glib_req=2.51.5 but the version has not been bumped in git.
-glib_req=2.51.4
+glib_req=2.51.5
 gtk_req=3.20
 gtksourceview_req=3.22
 libxml_req=2.5

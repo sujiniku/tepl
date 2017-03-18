@@ -1,7 +1,7 @@
 Gtef - GTK+ Text Editor Framework
 =================================
 
-This is version 1.99.2 of Gtef.
+This is version 2.0.0 of Gtef.
 
 Gtef is a library that eases the development of GtkSourceView-based text
 editors and IDEs.

@@ -470,6 +470,14 @@ gtef_file_saver_class_init (GtefFileSaverClass *klass)
 							     G_PARAM_READWRITE |
 							     G_PARAM_CONSTRUCT |
 							     G_PARAM_STATIC_STRINGS));
+
+	/* Due to potential deadlocks when registering types, we need to ensure
+	 * the dependent private class GtefBufferInputStream has been registered
+	 * up front.
+	 *
+	 * See https://bugzilla.gnome.org/show_bug.cgi?id=780216
+	 */
+	g_type_ensure (GTEF_TYPE_BUFFER_INPUT_STREAM);
 }
 
 static void

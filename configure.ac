@@ -7,7 +7,7 @@ m4_define(gtef_package_version, 2.0.0)
 
 AC_INIT([gtef],
 	[gtef_package_version],
-	[https://github.com/swilmet/gtef/issues],
+	[https://bugzilla.gnome.org/enter_bug.cgi?product=gtef],
 	[gtef],
 	[https://wiki.gnome.org/Projects/Gtef])
 

@@ -1,7 +1,7 @@
 /*
  * This file is part of Gtef, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Gtef is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -43,7 +43,7 @@ get_leading_spaces_end_boundary (const GtkTextIter *iter,
 	*leading_end = *iter;
 	gtk_text_iter_set_line_offset (leading_end, 0);
 
-	while (!gtk_text_iter_is_end (leading_end))
+	while (!gtk_text_iter_ends_line (leading_end))
 	{
 		gunichar ch = gtk_text_iter_get_char (leading_end);
 

@@ -2,7 +2,6 @@
 
 <SECTION>
 <FILE>action-info</FILE>
-<TITLE>GtefActionInfo</TITLE>
 GtefActionInfo
 GtefActionInfoEntry
 gtef_action_info_new
@@ -27,7 +26,6 @@ GTEF_TYPE_ACTION_INFO
 
 <SECTION>
 <FILE>action-info-store</FILE>
-<TITLE>GtefActionInfoStore</TITLE>
 GtefActionInfoStore
 gtef_action_info_store_new
 gtef_action_info_store_get_application
@@ -50,7 +48,6 @@ gtef_action_info_store_get_type
 
 <SECTION>
 <FILE>action-info-central-store</FILE>
-<TITLE>GtefActionInfoCentralStore</TITLE>
 GtefActionInfoCentralStore
 gtef_action_info_central_store_get_instance
 gtef_action_info_central_store_lookup
@@ -68,13 +65,11 @@ gtef_action_info_central_store_get_type
 
 <SECTION>
 <FILE>action-map</FILE>
-<TITLE>GtefActionMap</TITLE>
 gtef_action_map_add_action_entries_check_dups
 </SECTION>
 
 <SECTION>
 <FILE>application</FILE>
-<TITLE>GtefApplication</TITLE>
 GtefApplication
 gtef_application_get_from_gtk_application
 gtef_application_get_default
@@ -95,7 +90,6 @@ gtef_application_get_type
 
 <SECTION>
 <FILE>application-window</FILE>
-<TITLE>GtefApplicationWindow</TITLE>
 GtefApplicationWindow
 gtef_application_window_get_from_gtk_application_window
 gtef_application_window_get_application_window
@@ -118,7 +112,6 @@ gtef_application_window_get_type
 
 <SECTION>
 <FILE>buffer</FILE>
-<TITLE>GtefBuffer</TITLE>
 GtefBuffer
 GtefSelectionType
 gtef_buffer_new
@@ -137,7 +130,6 @@ gtef_selection_type_get_type
 
 <SECTION>
 <FILE>encoding</FILE>
-<TITLE>GtefEncoding</TITLE>
 GtefEncoding
 <SUBSECTION>
 gtef_encoding_new
@@ -159,7 +151,6 @@ gtef_encoding_get_type
 
 <SECTION>
 <FILE>file</FILE>
-<TITLE>GtefFile</TITLE>
 GtefFile
 GtefNewlineType
 GTEF_NEWLINE_TYPE_DEFAULT
@@ -190,7 +181,6 @@ gtef_compression_type_get_type
 
 <SECTION>
 <FILE>file-metadata</FILE>
-<TITLE>GtefFileMetadata</TITLE>
 GtefFileMetadata
 gtef_file_metadata_new
 gtef_file_metadata_get_file
@@ -209,7 +199,6 @@ GtefFileMetadataClass
 
 <SECTION>
 <FILE>file-loader</FILE>
-<TITLE>GtefFileLoader</TITLE>
 GtefFileLoader
 GTEF_FILE_LOADER_ERROR
 GtefFileLoaderError
@@ -236,7 +225,6 @@ gtef_file_loader_error_quark
 
 <SECTION>
 <FILE>file-saver</FILE>
-<TITLE>GtefFileSaver</TITLE>
 GtefFileSaver
 GTEF_FILE_SAVER_ERROR
 GtefFileSaverError
@@ -276,7 +264,6 @@ gtef_file_saver_flags_get_type
 
 <SECTION>
 <FILE>fold-region</FILE>
-<TITLE>GtefFoldRegion</TITLE>
 GtefFoldRegion
 gtef_fold_region_new
 gtef_fold_region_get_buffer
@@ -291,7 +278,6 @@ GtefFoldRegionClass
 
 <SECTION>
 <FILE>gutter-renderer-folds</FILE>
-<TITLE>GtefGutterRendererFolds</TITLE>
 GtefGutterRendererFolds
 GtefGutterRendererFoldsState
 gtef_gutter_renderer_folds_new
@@ -305,7 +291,6 @@ gtef_gutter_renderer_folds_state_get_type
 
 <SECTION>
 <FILE>info-bar</FILE>
-<TITLE>GtefInfoBar</TITLE>
 GtefInfoBar
 gtef_info_bar_new
 gtef_info_bar_new_simple
@@ -322,13 +307,11 @@ GtefInfoBarClass
 
 <SECTION>
 <FILE>iter</FILE>
-<TITLE>GtefIter</TITLE>
 gtef_iter_get_line_indentation
 </SECTION>
 
 <SECTION>
 <FILE>menu-item</FILE>
-<TITLE>GtefMenuItem</TITLE>
 gtef_menu_item_get_long_description
 gtef_menu_item_set_long_description
 gtef_menu_item_set_icon_name
@@ -336,7 +319,6 @@ gtef_menu_item_set_icon_name
 
 <SECTION>
 <FILE>menu-shell</FILE>
-<TITLE>GtefMenuShell</TITLE>
 GtefMenuShell
 gtef_menu_shell_get_from_gtk_menu_shell
 gtef_menu_shell_get_menu_shell
@@ -354,14 +336,12 @@ gtef_menu_shell_get_type
 
 <SECTION>
 <FILE>metadata-manager</FILE>
-<TITLE>GtefMetadataManager</TITLE>
 gtef_metadata_manager_init
 gtef_metadata_manager_shutdown
 </SECTION>
 
 <SECTION>
 <FILE>tab</FILE>
-<TITLE>GtefTab</TITLE>
 GtefTab
 gtef_tab_new
 gtef_tab_add_info_bar
@@ -372,13 +352,11 @@ GtefTabClass
 
 <SECTION>
 <FILE>utils</FILE>
-<TITLE>GtefUtils</TITLE>
 gtef_utils_recent_chooser_menu_get_item_uri
 </SECTION>
 
 <SECTION>
 <FILE>view</FILE>
-<TITLE>GtefView</TITLE>
 GtefView
 gtef_view_new
 gtef_view_cut_clipboard

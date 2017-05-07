@@ -172,6 +172,7 @@ gtef_file_is_deleted
 gtef_file_is_readonly
 gtef_file_set_mount_operation_factory
 <SUBSECTION Standard>
+GtefFileClass
 GTEF_TYPE_FILE
 GTEF_TYPE_NEWLINE_TYPE
 GTEF_TYPE_COMPRESSION_TYPE

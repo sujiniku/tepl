@@ -912,6 +912,14 @@ determine_encoding (GTask *task)
 	charset = uchardet_get_charset (ud);
 	if (charset != NULL && charset[0] != '\0')
 	{
+		/* Workaround for uchardet bug:
+		 * https://bugs.freedesktop.org/show_bug.cgi?id=101204
+		 */
+		if (g_ascii_strcasecmp (charset, "ASCII") == 0)
+		{
+			charset = "UTF-8";
+		}
+
 		priv->detected_encoding = gtef_encoding_new (charset);
 	}
 

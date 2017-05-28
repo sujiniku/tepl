@@ -289,7 +289,7 @@ test_loader_newlines (gboolean         implicit_trailing_newline,
 	test_loader (contents,
 		     expected_buffer_content,
 		     0, 0,
-		     "UTF-8",
+		     "ASCII",
 		     expected_newline_type,
 		     -1,
 		     implicit_trailing_newline,
@@ -317,7 +317,7 @@ test_loader_split_cr_lf (const gchar *content,
 	test_loader (content,
 		     content,
 		     0, 0,
-		     "UTF-8",
+		     "ASCII",
 		     GTEF_NEWLINE_TYPE_LF,
 		     expected_line_count,
 		     FALSE,
@@ -417,7 +417,7 @@ test_loader_max_size (const gchar *contents,
 		     expected_buffer_content,
 		     expected_error_domain,
 		     expected_error_code,
-		     "UTF-8",
+		     "ASCII",
 		     GTEF_NEWLINE_TYPE_LF,
 		     -1,
 		     FALSE,
@@ -451,7 +451,7 @@ test_max_size (void)
 
 /* The idea of this unit test is not to test thoroughly all character encodings,
  * a better place for this is uchardet. The idea is just to test something else
- * than ASCII/UTF-8.
+ * than ASCII.
  */
 static void
 test_encoding (void)

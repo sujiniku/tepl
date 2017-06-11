@@ -6,6 +6,10 @@ This is version 2.0.1 of Tepl.
 Tepl is a library that eases the development of GtkSourceView-based text
 editors and IDEs.
 
+Tepl was previously known as Gtef (GTK+ text editor framework). The project has
+been renamed to have a more beautiful name. The end of Tepl is pronounced like
+apple.
+
 The Tepl website:
 
     https://wiki.gnome.org/Projects/Tepl
@@ -25,8 +29,8 @@ Maybe some of the Tepl features will be moved to GtkSourceView when it's
 considered more stable. So Tepl can also be seen as an incubator for some
 GtkSourceView features.
 
-The Tepl library is free software and is released under the terms of the
-GNU Lesser General Public License.
+The Tepl library is free software and is released under the terms of the GNU
+Lesser General Public License, see the 'COPYING' file for more information.
 
 Warning - API/ABI stability
 ---------------------------

@@ -12,7 +12,7 @@
 
   <para>
     Tepl is a library that eases the development of GtkSourceView-based text
-    editors and IDEs. Tepl is the acronym for “GTK+ Text Editor Framework”.
+    editors and IDEs. Tepl is the acronym for “Text editor product line”.
   </para>
 
   <para>

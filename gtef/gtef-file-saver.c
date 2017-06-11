@@ -1,17 +1,17 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2005-2007 - Paolo Borelli and Paolo Maggi
  * Copyright 2007 - Steve Frécinaux
  * Copyright 2008 - Jesse van den Kieboom
  * Copyright 2014, 2016, 2017 - Sébastien Wilmet
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -21,33 +21,33 @@
  */
 
 #include "config.h"
-#include "gtef-file-saver.h"
+#include "tepl-file-saver.h"
 #include <glib/gi18n-lib.h>
-#include "gtef-file.h"
-#include "gtef-buffer-input-stream.h"
-#include "gtef-buffer.h"
-#include "gtef-encoding.h"
-#include "gtef-enum-types.h"
+#include "tepl-file.h"
+#include "tepl-buffer-input-stream.h"
+#include "tepl-buffer.h"
+#include "tepl-encoding.h"
+#include "tepl-enum-types.h"
 
 /**
  * SECTION:file-saver
- * @Short_description: Save a GtefBuffer into a file
- * @Title: GtefFileSaver
- * @See_also: #GtefFile, #GtefFileLoader
+ * @Short_description: Save a TeplBuffer into a file
+ * @Title: TeplFileSaver
+ * @See_also: #TeplFile, #TeplFileLoader
  *
- * A #GtefFileSaver object permits to save a #GtefBuffer into a #GFile.
+ * A #TeplFileSaver object permits to save a #TeplBuffer into a #GFile.
  *
  * A file saver should be used only for one save operation, including errors
  * handling. If an error occurs, you can reconfigure the saver and relaunch the
- * operation with gtef_file_saver_save_async().
+ * operation with tepl_file_saver_save_async().
  *
- * #GtefFileSaver is a fork of #GtkSourceFileSaver, the code has been a little
- * improved (but no major changes). See the description of #GtefFile for more
+ * #TeplFileSaver is a fork of #GtkSourceFileSaver, the code has been a little
+ * improved (but no major changes). See the description of #TeplFile for more
  * background on why a fork was needed.
  */
 
 /* The code has been written initially in gedit (GeditDocumentSaver).
- * It uses a GtefBufferInputStream as input, create converter(s) if needed
+ * It uses a TeplBufferInputStream as input, create converter(s) if needed
  * for the encoding and the compression, and write the contents to a
  * GOutputStream (the file).
  */
@@ -72,7 +72,7 @@ enum
 	PROP_FLAGS
 };
 
-struct _GtefFileSaverPrivate
+struct _TeplFileSaverPrivate
 {
 	/* Weak ref to the GtkSourceBuffer. A strong ref could create a
 	 * reference cycle in an application. For example a subclass of
@@ -80,18 +80,18 @@ struct _GtefFileSaverPrivate
 	 */
 	GtkSourceBuffer *source_buffer;
 
-	/* Weak ref to the GtefFile. A strong ref could create a reference
-	 * cycle in an application. For example a subclass of GtefFile can
+	/* Weak ref to the TeplFile. A strong ref could create a reference
+	 * cycle in an application. For example a subclass of TeplFile can
 	 * have a strong ref to the FileSaver.
 	 */
-	GtefFile *file;
+	TeplFile *file;
 
 	GFile *location;
 
-	GtefEncoding *encoding;
-	GtefNewlineType newline_type;
-	GtefCompressionType compression_type;
-	GtefFileSaverFlags flags;
+	TeplEncoding *encoding;
+	TeplNewlineType newline_type;
+	TeplCompressionType compression_type;
+	TeplFileSaverFlags flags;
 
 	GTask *task;
 };
@@ -108,7 +108,7 @@ struct _TaskData
 	 * (2) Sync methods must be used for the input stream, and async
 	 *     methods for the output stream.
 	 */
-	GtefBufferInputStream *input_stream;
+	TeplBufferInputStream *input_stream;
 	GOutputStream *output_stream;
 
 	goffset total_size;
@@ -129,7 +129,7 @@ struct _TaskData
 	guint tried_mount : 1;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE (GtefFileSaver, gtef_file_saver, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (TeplFileSaver, tepl_file_saver, G_TYPE_OBJECT)
 
 static void read_file_chunk (GTask *task);
 static void write_file_chunk (GTask *task);
@@ -165,12 +165,12 @@ task_data_free (gpointer data)
 }
 
 static void
-gtef_file_saver_set_property (GObject      *object,
+tepl_file_saver_set_property (GObject      *object,
 			      guint         prop_id,
 			      const GValue *value,
 			      GParamSpec   *pspec)
 {
-	GtefFileSaver *saver = GTEF_FILE_SAVER (object);
+	TeplFileSaver *saver = TEPL_FILE_SAVER (object);
 
 	switch (prop_id)
 	{
@@ -194,19 +194,19 @@ gtef_file_saver_set_property (GObject      *object,
 			break;
 
 		case PROP_ENCODING:
-			gtef_file_saver_set_encoding (saver, g_value_get_boxed (value));
+			tepl_file_saver_set_encoding (saver, g_value_get_boxed (value));
 			break;
 
 		case PROP_NEWLINE_TYPE:
-			gtef_file_saver_set_newline_type (saver, g_value_get_enum (value));
+			tepl_file_saver_set_newline_type (saver, g_value_get_enum (value));
 			break;
 
 		case PROP_COMPRESSION_TYPE:
-			gtef_file_saver_set_compression_type (saver, g_value_get_enum (value));
+			tepl_file_saver_set_compression_type (saver, g_value_get_enum (value));
 			break;
 
 		case PROP_FLAGS:
-			gtef_file_saver_set_flags (saver, g_value_get_flags (value));
+			tepl_file_saver_set_flags (saver, g_value_get_flags (value));
 			break;
 
 		default:
@@ -216,12 +216,12 @@ gtef_file_saver_set_property (GObject      *object,
 }
 
 static void
-gtef_file_saver_get_property (GObject    *object,
+tepl_file_saver_get_property (GObject    *object,
 			      guint       prop_id,
 			      GValue     *value,
 			      GParamSpec *pspec)
 {
-	GtefFileSaver *saver = GTEF_FILE_SAVER (object);
+	TeplFileSaver *saver = TEPL_FILE_SAVER (object);
 
 	switch (prop_id)
 	{
@@ -260,9 +260,9 @@ gtef_file_saver_get_property (GObject    *object,
 }
 
 static void
-gtef_file_saver_dispose (GObject *object)
+tepl_file_saver_dispose (GObject *object)
 {
-	GtefFileSaver *saver = GTEF_FILE_SAVER (object);
+	TeplFileSaver *saver = TEPL_FILE_SAVER (object);
 
 	if (saver->priv->source_buffer != NULL)
 	{
@@ -283,42 +283,42 @@ gtef_file_saver_dispose (GObject *object)
 	g_clear_object (&saver->priv->location);
 	g_clear_object (&saver->priv->task);
 
-	G_OBJECT_CLASS (gtef_file_saver_parent_class)->dispose (object);
+	G_OBJECT_CLASS (tepl_file_saver_parent_class)->dispose (object);
 }
 
 static void
-gtef_file_saver_finalize (GObject *object)
+tepl_file_saver_finalize (GObject *object)
 {
-	GtefFileSaver *saver = GTEF_FILE_SAVER (object);
+	TeplFileSaver *saver = TEPL_FILE_SAVER (object);
 
-	gtef_encoding_free (saver->priv->encoding);
+	tepl_encoding_free (saver->priv->encoding);
 
-	G_OBJECT_CLASS (gtef_file_saver_parent_class)->finalize (object);
+	G_OBJECT_CLASS (tepl_file_saver_parent_class)->finalize (object);
 }
 
 static void
-gtef_file_saver_constructed (GObject *object)
+tepl_file_saver_constructed (GObject *object)
 {
-	GtefFileSaver *saver = GTEF_FILE_SAVER (object);
+	TeplFileSaver *saver = TEPL_FILE_SAVER (object);
 
 	if (saver->priv->file != NULL)
 	{
-		const GtefEncoding *encoding;
-		GtefNewlineType newline_type;
-		GtefCompressionType compression_type;
+		const TeplEncoding *encoding;
+		TeplNewlineType newline_type;
+		TeplCompressionType compression_type;
 
-		encoding = gtef_file_get_encoding (saver->priv->file);
-		gtef_file_saver_set_encoding (saver, encoding);
+		encoding = tepl_file_get_encoding (saver->priv->file);
+		tepl_file_saver_set_encoding (saver, encoding);
 
-		newline_type = gtef_file_get_newline_type (saver->priv->file);
-		gtef_file_saver_set_newline_type (saver, newline_type);
+		newline_type = tepl_file_get_newline_type (saver->priv->file);
+		tepl_file_saver_set_newline_type (saver, newline_type);
 
-		compression_type = gtef_file_get_compression_type (saver->priv->file);
-		gtef_file_saver_set_compression_type (saver, compression_type);
+		compression_type = tepl_file_get_compression_type (saver->priv->file);
+		tepl_file_saver_set_compression_type (saver, compression_type);
 
 		if (saver->priv->location == NULL)
 		{
-			saver->priv->location = gtef_file_get_location (saver->priv->file);
+			saver->priv->location = tepl_file_get_location (saver->priv->file);
 
 			if (saver->priv->location != NULL)
 			{
@@ -326,30 +326,30 @@ gtef_file_saver_constructed (GObject *object)
 			}
 			else
 			{
-				g_warning ("GtefFileSaver: the GtefFile's location is NULL. "
-					   "Use gtef_file_saver_new_with_target().");
+				g_warning ("TeplFileSaver: the TeplFile's location is NULL. "
+					   "Use tepl_file_saver_new_with_target().");
 			}
 		}
 	}
 
-	G_OBJECT_CLASS (gtef_file_saver_parent_class)->constructed (object);
+	G_OBJECT_CLASS (tepl_file_saver_parent_class)->constructed (object);
 }
 
 static void
-gtef_file_saver_class_init (GtefFileSaverClass *klass)
+tepl_file_saver_class_init (TeplFileSaverClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->dispose = gtef_file_saver_dispose;
-	object_class->finalize = gtef_file_saver_finalize;
-	object_class->set_property = gtef_file_saver_set_property;
-	object_class->get_property = gtef_file_saver_get_property;
-	object_class->constructed = gtef_file_saver_constructed;
+	object_class->dispose = tepl_file_saver_dispose;
+	object_class->finalize = tepl_file_saver_finalize;
+	object_class->set_property = tepl_file_saver_set_property;
+	object_class->get_property = tepl_file_saver_get_property;
+	object_class->constructed = tepl_file_saver_constructed;
 
 	/**
-	 * GtefFileSaver:buffer:
+	 * TeplFileSaver:buffer:
 	 *
-	 * The #GtefBuffer to save. The #GtefFileSaver object has a weak
+	 * The #TeplBuffer to save. The #TeplFileSaver object has a weak
 	 * reference to the buffer.
 	 *
 	 * Since: 1.0
@@ -357,7 +357,7 @@ gtef_file_saver_class_init (GtefFileSaverClass *klass)
 	g_object_class_install_property (object_class,
 					 PROP_BUFFER,
 					 g_param_spec_object ("buffer",
-							      "GtefBuffer",
+							      "TeplBuffer",
 							      "",
 							      GTK_SOURCE_TYPE_BUFFER,
 							      G_PARAM_READWRITE |
@@ -365,9 +365,9 @@ gtef_file_saver_class_init (GtefFileSaverClass *klass)
 							      G_PARAM_STATIC_STRINGS));
 
 	/**
-	 * GtefFileSaver:file:
+	 * TeplFileSaver:file:
 	 *
-	 * The #GtefFile. The #GtefFileSaver object has a weak
+	 * The #TeplFile. The #TeplFileSaver object has a weak
 	 * reference to the file.
 	 *
 	 * Since: 1.0
@@ -375,18 +375,18 @@ gtef_file_saver_class_init (GtefFileSaverClass *klass)
 	g_object_class_install_property (object_class,
 					 PROP_FILE,
 					 g_param_spec_object ("file",
-							      "GtefFile",
+							      "TeplFile",
 							      "",
-							      GTEF_TYPE_FILE,
+							      TEPL_TYPE_FILE,
 							      G_PARAM_READWRITE |
 							      G_PARAM_CONSTRUCT_ONLY |
 							      G_PARAM_STATIC_STRINGS));
 
 	/**
-	 * GtefFileSaver:location:
+	 * TeplFileSaver:location:
 	 *
 	 * The #GFile where to save the buffer. By default the location is taken
-	 * from the #GtefFile at construction time.
+	 * from the #TeplFile at construction time.
 	 *
 	 * Since: 1.0
 	 */
@@ -401,7 +401,7 @@ gtef_file_saver_class_init (GtefFileSaverClass *klass)
 							      G_PARAM_STATIC_STRINGS));
 
 	/**
-	 * GtefFileSaver:encoding:
+	 * TeplFileSaver:encoding:
 	 *
 	 * The file's encoding.
 	 *
@@ -412,13 +412,13 @@ gtef_file_saver_class_init (GtefFileSaverClass *klass)
 					 g_param_spec_boxed ("encoding",
 							     "Encoding",
 							     "",
-							     GTEF_TYPE_ENCODING,
+							     TEPL_TYPE_ENCODING,
 							     G_PARAM_READWRITE |
 							     G_PARAM_CONSTRUCT |
 							     G_PARAM_STATIC_STRINGS));
 
 	/**
-	 * GtefFileSaver:newline-type:
+	 * TeplFileSaver:newline-type:
 	 *
 	 * The newline type.
 	 *
@@ -430,13 +430,13 @@ gtef_file_saver_class_init (GtefFileSaverClass *klass)
 					                    "Newline type",
 							    "",
 					                    GTK_SOURCE_TYPE_NEWLINE_TYPE,
-					                    GTEF_NEWLINE_TYPE_LF,
+					                    TEPL_NEWLINE_TYPE_LF,
 					                    G_PARAM_READWRITE |
 					                    G_PARAM_CONSTRUCT |
 							    G_PARAM_STATIC_STRINGS));
 
 	/**
-	 * GtefFileSaver:compression-type:
+	 * TeplFileSaver:compression-type:
 	 *
 	 * The compression type.
 	 *
@@ -448,13 +448,13 @@ gtef_file_saver_class_init (GtefFileSaverClass *klass)
 					                    "Compression type",
 					                    "",
 					                    GTK_SOURCE_TYPE_COMPRESSION_TYPE,
-					                    GTEF_COMPRESSION_TYPE_NONE,
+					                    TEPL_COMPRESSION_TYPE_NONE,
 					                    G_PARAM_READWRITE |
 					                    G_PARAM_CONSTRUCT |
 							    G_PARAM_STATIC_STRINGS));
 
 	/**
-	 * GtefFileSaver:flags:
+	 * TeplFileSaver:flags:
 	 *
 	 * File saving flags.
 	 *
@@ -465,25 +465,25 @@ gtef_file_saver_class_init (GtefFileSaverClass *klass)
 					 g_param_spec_flags ("flags",
 							     "Flags",
 							     "",
-							     GTEF_TYPE_FILE_SAVER_FLAGS,
-							     GTEF_FILE_SAVER_FLAGS_NONE,
+							     TEPL_TYPE_FILE_SAVER_FLAGS,
+							     TEPL_FILE_SAVER_FLAGS_NONE,
 							     G_PARAM_READWRITE |
 							     G_PARAM_CONSTRUCT |
 							     G_PARAM_STATIC_STRINGS));
 
 	/* Due to potential deadlocks when registering types, we need to ensure
-	 * the dependent private class GtefBufferInputStream has been registered
+	 * the dependent private class TeplBufferInputStream has been registered
 	 * up front.
 	 *
 	 * See https://bugzilla.gnome.org/show_bug.cgi?id=780216
 	 */
-	g_type_ensure (GTEF_TYPE_BUFFER_INPUT_STREAM);
+	g_type_ensure (TEPL_TYPE_BUFFER_INPUT_STREAM);
 }
 
 static void
-gtef_file_saver_init (GtefFileSaver *saver)
+tepl_file_saver_init (TeplFileSaver *saver)
 {
-	saver->priv = gtef_file_saver_get_instance_private (saver);
+	saver->priv = tepl_file_saver_get_instance_private (saver);
 }
 
 /* BEGIN NOTE:
@@ -676,7 +676,7 @@ write_file_chunk_cb (GObject      *source_object,
 	{
 		gsize total_chars_written;
 
-		total_chars_written = _gtef_buffer_input_stream_tell (task_data->input_stream);
+		total_chars_written = _tepl_buffer_input_stream_tell (task_data->input_stream);
 
 		task_data->progress_cb (total_chars_written,
 					task_data->total_size,
@@ -754,7 +754,7 @@ replace_file_cb (GObject      *source_object,
 {
 	GFile *location = G_FILE (source_object);
 	GTask *task = G_TASK (user_data);
-	GtefFileSaver *saver;
+	TeplFileSaver *saver;
 	TaskData *task_data;
 	GOutputStream *output_stream;
 	GError *error = NULL;
@@ -779,8 +779,8 @@ replace_file_cb (GObject      *source_object,
 	else if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_WRONG_ETAG))
 	{
 		g_task_return_new_error (task,
-					 GTEF_FILE_SAVER_ERROR,
-					 GTEF_FILE_SAVER_ERROR_EXTERNALLY_MODIFIED,
+					 TEPL_FILE_SAVER_ERROR,
+					 TEPL_FILE_SAVER_ERROR_EXTERNALLY_MODIFIED,
 					 _("The file is externally modified."));
 		g_error_free (error);
 		return;
@@ -795,7 +795,7 @@ replace_file_cb (GObject      *source_object,
 		return;
 	}
 
-	if (saver->priv->compression_type == GTEF_COMPRESSION_TYPE_GZIP)
+	if (saver->priv->compression_type == TEPL_COMPRESSION_TYPE_GZIP)
 	{
 		GZlibCompressor *compressor;
 
@@ -820,14 +820,14 @@ replace_file_cb (GObject      *source_object,
 
 	DEBUG ({
 	       g_print ("Encoding charset: %s\n",
-			gtef_encoding_get_charset (saver->priv->encoding));
+			tepl_encoding_get_charset (saver->priv->encoding));
 	});
 
-	if (!gtef_encoding_is_utf8 (saver->priv->encoding))
+	if (!tepl_encoding_is_utf8 (saver->priv->encoding))
 	{
 		GCharsetConverter *converter;
 
-		converter = g_charset_converter_new (gtef_encoding_get_charset (saver->priv->encoding),
+		converter = g_charset_converter_new (tepl_encoding_get_charset (saver->priv->encoding),
 						     "UTF-8",
 						     &error);
 
@@ -851,7 +851,7 @@ replace_file_cb (GObject      *source_object,
 		task_data->output_stream = G_OUTPUT_STREAM (output_stream);
 	}
 
-	task_data->total_size = _gtef_buffer_input_stream_get_total_size (task_data->input_stream);
+	task_data->total_size = _tepl_buffer_input_stream_get_total_size (task_data->input_stream);
 
 	DEBUG ({
 	       g_print ("Total number of characters: %" G_GINT64_FORMAT "\n", task_data->total_size);
@@ -863,26 +863,26 @@ replace_file_cb (GObject      *source_object,
 static void
 begin_write (GTask *task)
 {
-	GtefFileSaver *saver;
+	TeplFileSaver *saver;
 	gboolean create_backup;
 	const gchar *etag;
 
 	saver = g_task_get_source_object (task);
 
-	create_backup = (saver->priv->flags & GTEF_FILE_SAVER_FLAGS_CREATE_BACKUP) != 0;
+	create_backup = (saver->priv->flags & TEPL_FILE_SAVER_FLAGS_CREATE_BACKUP) != 0;
 
 	DEBUG ({
 	       g_print ("Start replacing file contents\n");
 	       g_print ("Make backup: %s\n", create_backup ? "yes" : "no");
 	});
 
-	if (saver->priv->flags & GTEF_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME)
+	if (saver->priv->flags & TEPL_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME)
 	{
 		etag = NULL;
 	}
 	else
 	{
-		etag = _gtef_file_get_etag (saver->priv->file);
+		etag = _tepl_file_get_etag (saver->priv->file);
 	}
 
 	g_file_replace_async (saver->priv->location,
@@ -902,7 +902,7 @@ mount_cb (GObject      *source_object,
 {
 	GFile *location = G_FILE (source_object);
 	GTask *task = G_TASK (user_data);
-	GtefFileSaver *saver;
+	TeplFileSaver *saver;
 	GError *error = NULL;
 
 	DEBUG ({
@@ -921,7 +921,7 @@ mount_cb (GObject      *source_object,
 
 	if (saver->priv->file != NULL)
 	{
-		_gtef_file_set_mounted (saver->priv->file);
+		_tepl_file_set_mounted (saver->priv->file);
 	}
 
 	begin_write (task);
@@ -930,14 +930,14 @@ mount_cb (GObject      *source_object,
 static void
 recover_not_mounted (GTask *task)
 {
-	GtefFileSaver *saver;
+	TeplFileSaver *saver;
 	TaskData *task_data;
 	GMountOperation *mount_operation;
 
 	saver = g_task_get_source_object (task);
 	task_data = g_task_get_task_data (task);
 
-	mount_operation = _gtef_file_create_mount_operation (saver->priv->file);
+	mount_operation = _tepl_file_create_mount_operation (saver->priv->file);
 
 	DEBUG ({
 	       g_print ("%s\n", G_STRFUNC);
@@ -956,7 +956,7 @@ recover_not_mounted (GTask *task)
 }
 
 GQuark
-gtef_file_saver_error_quark (void)
+tepl_file_saver_error_quark (void)
 {
 	static GQuark quark = 0;
 
@@ -969,185 +969,185 @@ gtef_file_saver_error_quark (void)
 }
 
 /**
- * gtef_file_saver_new:
- * @buffer: the #GtefBuffer to save.
- * @file: the #GtefFile.
+ * tepl_file_saver_new:
+ * @buffer: the #TeplBuffer to save.
+ * @file: the #TeplFile.
  *
- * Creates a new #GtefFileSaver object. The @buffer will be saved to the
- * #GtefFile's location.
+ * Creates a new #TeplFileSaver object. The @buffer will be saved to the
+ * #TeplFile's location.
  *
  * This constructor is suitable for a simple "save" operation, when the @file
- * already contains a non-%NULL #GtefFile:location.
+ * already contains a non-%NULL #TeplFile:location.
  *
- * Returns: a new #GtefFileSaver object.
+ * Returns: a new #TeplFileSaver object.
  * Since: 1.0
  */
-GtefFileSaver *
-gtef_file_saver_new (GtefBuffer *buffer,
-		     GtefFile   *file)
+TeplFileSaver *
+tepl_file_saver_new (TeplBuffer *buffer,
+		     TeplFile   *file)
 {
-	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), NULL);
-	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
+	g_return_val_if_fail (TEPL_IS_BUFFER (buffer), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
 
-	return g_object_new (GTEF_TYPE_FILE_SAVER,
+	return g_object_new (TEPL_TYPE_FILE_SAVER,
 			     "buffer", buffer,
 			     "file", file,
 			     NULL);
 }
 
 /**
- * gtef_file_saver_new_with_target:
- * @buffer: the #GtefBuffer to save.
- * @file: the #GtefFile.
+ * tepl_file_saver_new_with_target:
+ * @buffer: the #TeplBuffer to save.
+ * @file: the #TeplFile.
  * @target_location: the #GFile where to save the buffer to.
  *
- * Creates a new #GtefFileSaver object with a target location. When the
+ * Creates a new #TeplFileSaver object with a target location. When the
  * file saving is finished successfully, @target_location is set to the @file's
- * #GtefFile:location property. If an error occurs, the previous valid
- * location is still available in #GtefFile.
+ * #TeplFile:location property. If an error occurs, the previous valid
+ * location is still available in #TeplFile.
  *
- * This constructor adds %GTEF_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME to the
- * #GtefFileSaver:flags property.
+ * This constructor adds %TEPL_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME to the
+ * #TeplFileSaver:flags property.
  *
  * This constructor is suitable for a "save as" operation, or for saving a new
  * buffer for the first time.
  *
- * Returns: a new #GtefFileSaver object.
+ * Returns: a new #TeplFileSaver object.
  * Since: 1.0
  */
-GtefFileSaver *
-gtef_file_saver_new_with_target (GtefBuffer *buffer,
-				 GtefFile   *file,
+TeplFileSaver *
+tepl_file_saver_new_with_target (TeplBuffer *buffer,
+				 TeplFile   *file,
 				 GFile      *target_location)
 {
-	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), NULL);
-	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
+	g_return_val_if_fail (TEPL_IS_BUFFER (buffer), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
 	g_return_val_if_fail (G_IS_FILE (target_location), NULL);
 
-	return g_object_new (GTEF_TYPE_FILE_SAVER,
+	return g_object_new (TEPL_TYPE_FILE_SAVER,
 			     "buffer", buffer,
 			     "file", file,
 			     "location", target_location,
-			     "flags", GTEF_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME,
+			     "flags", TEPL_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME,
 			     NULL);
 }
 
 /**
- * gtef_file_saver_get_buffer:
- * @saver: a #GtefFileSaver.
+ * tepl_file_saver_get_buffer:
+ * @saver: a #TeplFileSaver.
  *
- * Returns: (transfer none): the #GtefBuffer to save.
+ * Returns: (transfer none): the #TeplBuffer to save.
  * Since: 1.0
  */
-GtefBuffer *
-gtef_file_saver_get_buffer (GtefFileSaver *saver)
+TeplBuffer *
+tepl_file_saver_get_buffer (TeplFileSaver *saver)
 {
-	g_return_val_if_fail (GTEF_IS_FILE_SAVER (saver), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE_SAVER (saver), NULL);
 
-	return GTEF_BUFFER (saver->priv->source_buffer);
+	return TEPL_BUFFER (saver->priv->source_buffer);
 }
 
 /**
- * gtef_file_saver_get_file:
- * @saver: a #GtefFileSaver.
+ * tepl_file_saver_get_file:
+ * @saver: a #TeplFileSaver.
  *
- * Returns: (transfer none): the #GtefFile.
+ * Returns: (transfer none): the #TeplFile.
  * Since: 1.0
  */
-GtefFile *
-gtef_file_saver_get_file (GtefFileSaver *saver)
+TeplFile *
+tepl_file_saver_get_file (TeplFileSaver *saver)
 {
-	g_return_val_if_fail (GTEF_IS_FILE_SAVER (saver), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE_SAVER (saver), NULL);
 
 	return saver->priv->file;
 }
 
 /**
- * gtef_file_saver_get_location:
- * @saver: a #GtefFileSaver.
+ * tepl_file_saver_get_location:
+ * @saver: a #TeplFileSaver.
  *
  * Returns: (transfer none): the #GFile where to save the buffer to.
  * Since: 1.0
  */
 GFile *
-gtef_file_saver_get_location (GtefFileSaver *saver)
+tepl_file_saver_get_location (TeplFileSaver *saver)
 {
-	g_return_val_if_fail (GTEF_IS_FILE_SAVER (saver), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE_SAVER (saver), NULL);
 
 	return saver->priv->location;
 }
 
 /**
- * gtef_file_saver_set_encoding:
- * @saver: a #GtefFileSaver.
+ * tepl_file_saver_set_encoding:
+ * @saver: a #TeplFileSaver.
  * @encoding: (allow-none): the new encoding, or %NULL for UTF-8.
  *
  * Sets the encoding. If @encoding is %NULL, the UTF-8 encoding will be set.
- * By default the encoding is taken from the #GtefFile.
+ * By default the encoding is taken from the #TeplFile.
  *
  * Since: 1.0
  */
 void
-gtef_file_saver_set_encoding (GtefFileSaver      *saver,
-			      const GtefEncoding *encoding)
+tepl_file_saver_set_encoding (TeplFileSaver      *saver,
+			      const TeplEncoding *encoding)
 {
-	GtefEncoding *my_encoding;
+	TeplEncoding *my_encoding;
 
-	g_return_if_fail (GTEF_IS_FILE_SAVER (saver));
+	g_return_if_fail (TEPL_IS_FILE_SAVER (saver));
 	g_return_if_fail (saver->priv->task == NULL);
 
 	if (encoding == NULL)
 	{
-		my_encoding = gtef_encoding_new_utf8 ();
+		my_encoding = tepl_encoding_new_utf8 ();
 	}
 	else
 	{
-		my_encoding = gtef_encoding_copy (encoding);
+		my_encoding = tepl_encoding_copy (encoding);
 	}
 
-	if (!gtef_encoding_equals (saver->priv->encoding, my_encoding))
+	if (!tepl_encoding_equals (saver->priv->encoding, my_encoding))
 	{
-		gtef_encoding_free (saver->priv->encoding);
+		tepl_encoding_free (saver->priv->encoding);
 		saver->priv->encoding = my_encoding;
 
 		g_object_notify (G_OBJECT (saver), "encoding");
 	}
 	else
 	{
-		gtef_encoding_free (my_encoding);
+		tepl_encoding_free (my_encoding);
 	}
 }
 
 /**
- * gtef_file_saver_get_encoding:
- * @saver: a #GtefFileSaver.
+ * tepl_file_saver_get_encoding:
+ * @saver: a #TeplFileSaver.
  *
  * Returns: the encoding.
  * Since: 1.0
  */
-const GtefEncoding *
-gtef_file_saver_get_encoding (GtefFileSaver *saver)
+const TeplEncoding *
+tepl_file_saver_get_encoding (TeplFileSaver *saver)
 {
-	g_return_val_if_fail (GTEF_IS_FILE_SAVER (saver), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE_SAVER (saver), NULL);
 
 	return saver->priv->encoding;
 }
 
 /**
- * gtef_file_saver_set_newline_type:
- * @saver: a #GtefFileSaver.
+ * tepl_file_saver_set_newline_type:
+ * @saver: a #TeplFileSaver.
  * @newline_type: the new newline type.
  *
  * Sets the newline type. By default the newline type is taken from the
- * #GtefFile.
+ * #TeplFile.
  *
  * Since: 1.0
  */
 void
-gtef_file_saver_set_newline_type (GtefFileSaver   *saver,
-				  GtefNewlineType  newline_type)
+tepl_file_saver_set_newline_type (TeplFileSaver   *saver,
+				  TeplNewlineType  newline_type)
 {
-	g_return_if_fail (GTEF_IS_FILE_SAVER (saver));
+	g_return_if_fail (TEPL_IS_FILE_SAVER (saver));
 	g_return_if_fail (saver->priv->task == NULL);
 
 	if (saver->priv->newline_type != newline_type)
@@ -1158,35 +1158,35 @@ gtef_file_saver_set_newline_type (GtefFileSaver   *saver,
 }
 
 /**
- * gtef_file_saver_get_newline_type:
- * @saver: a #GtefFileSaver.
+ * tepl_file_saver_get_newline_type:
+ * @saver: a #TeplFileSaver.
  *
  * Returns: the newline type.
  * Since: 1.0
  */
-GtefNewlineType
-gtef_file_saver_get_newline_type (GtefFileSaver *saver)
+TeplNewlineType
+tepl_file_saver_get_newline_type (TeplFileSaver *saver)
 {
-	g_return_val_if_fail (GTEF_IS_FILE_SAVER (saver), GTEF_NEWLINE_TYPE_DEFAULT);
+	g_return_val_if_fail (TEPL_IS_FILE_SAVER (saver), TEPL_NEWLINE_TYPE_DEFAULT);
 
 	return saver->priv->newline_type;
 }
 
 /**
- * gtef_file_saver_set_compression_type:
- * @saver: a #GtefFileSaver.
+ * tepl_file_saver_set_compression_type:
+ * @saver: a #TeplFileSaver.
  * @compression_type: the new compression type.
  *
  * Sets the compression type. By default the compression type is taken from the
- * #GtefFile.
+ * #TeplFile.
  *
  * Since: 1.0
  */
 void
-gtef_file_saver_set_compression_type (GtefFileSaver       *saver,
-				      GtefCompressionType  compression_type)
+tepl_file_saver_set_compression_type (TeplFileSaver       *saver,
+				      TeplCompressionType  compression_type)
 {
-	g_return_if_fail (GTEF_IS_FILE_SAVER (saver));
+	g_return_if_fail (TEPL_IS_FILE_SAVER (saver));
 	g_return_if_fail (saver->priv->task == NULL);
 
 	if (saver->priv->compression_type != compression_type)
@@ -1197,32 +1197,32 @@ gtef_file_saver_set_compression_type (GtefFileSaver       *saver,
 }
 
 /**
- * gtef_file_saver_get_compression_type:
- * @saver: a #GtefFileSaver.
+ * tepl_file_saver_get_compression_type:
+ * @saver: a #TeplFileSaver.
  *
  * Returns: the compression type.
  * Since: 1.0
  */
-GtefCompressionType
-gtef_file_saver_get_compression_type (GtefFileSaver *saver)
+TeplCompressionType
+tepl_file_saver_get_compression_type (TeplFileSaver *saver)
 {
-	g_return_val_if_fail (GTEF_IS_FILE_SAVER (saver), GTEF_COMPRESSION_TYPE_NONE);
+	g_return_val_if_fail (TEPL_IS_FILE_SAVER (saver), TEPL_COMPRESSION_TYPE_NONE);
 
 	return saver->priv->compression_type;
 }
 
 /**
- * gtef_file_saver_set_flags:
- * @saver: a #GtefFileSaver.
+ * tepl_file_saver_set_flags:
+ * @saver: a #TeplFileSaver.
  * @flags: the new flags.
  *
  * Since: 1.0
  */
 void
-gtef_file_saver_set_flags (GtefFileSaver      *saver,
-			   GtefFileSaverFlags  flags)
+tepl_file_saver_set_flags (TeplFileSaver      *saver,
+			   TeplFileSaverFlags  flags)
 {
-	g_return_if_fail (GTEF_IS_FILE_SAVER (saver));
+	g_return_if_fail (TEPL_IS_FILE_SAVER (saver));
 	g_return_if_fail (saver->priv->task == NULL);
 
 	if (saver->priv->flags != flags)
@@ -1233,23 +1233,23 @@ gtef_file_saver_set_flags (GtefFileSaver      *saver,
 }
 
 /**
- * gtef_file_saver_get_flags:
- * @saver: a #GtefFileSaver.
+ * tepl_file_saver_get_flags:
+ * @saver: a #TeplFileSaver.
  *
  * Returns: the flags.
  * Since: 1.0
  */
-GtefFileSaverFlags
-gtef_file_saver_get_flags (GtefFileSaver *saver)
+TeplFileSaverFlags
+tepl_file_saver_get_flags (TeplFileSaver *saver)
 {
-	g_return_val_if_fail (GTEF_IS_FILE_SAVER (saver), GTEF_FILE_SAVER_FLAGS_NONE);
+	g_return_val_if_fail (TEPL_IS_FILE_SAVER (saver), TEPL_FILE_SAVER_FLAGS_NONE);
 
 	return saver->priv->flags;
 }
 
 /**
- * gtef_file_saver_save_async:
- * @saver: a #GtefFileSaver.
+ * tepl_file_saver_save_async:
+ * @saver: a #TeplFileSaver.
  * @io_priority: the I/O priority of the request. E.g. %G_PRIORITY_LOW,
  *   %G_PRIORITY_DEFAULT or %G_PRIORITY_HIGH.
  * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
@@ -1273,7 +1273,7 @@ gtef_file_saver_get_flags (GtefFileSaver *saver)
  * https://bugzilla.gnome.org/show_bug.cgi?id=616044
  */
 void
-gtef_file_saver_save_async (GtefFileSaver         *saver,
+tepl_file_saver_save_async (TeplFileSaver         *saver,
 			    gint                   io_priority,
 			    GCancellable          *cancellable,
 			    GFileProgressCallback  progress_callback,
@@ -1286,7 +1286,7 @@ gtef_file_saver_save_async (GtefFileSaver         *saver,
 	gboolean check_invalid_chars;
 	gboolean implicit_trailing_newline;
 
-	g_return_if_fail (GTEF_IS_FILE_SAVER (saver));
+	g_return_if_fail (TEPL_IS_FILE_SAVER (saver));
 	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
 	g_return_if_fail (saver->priv->task == NULL);
 
@@ -1308,13 +1308,13 @@ gtef_file_saver_save_async (GtefFileSaver         *saver,
 		return;
 	}
 
-	check_invalid_chars = (saver->priv->flags & GTEF_FILE_SAVER_FLAGS_IGNORE_INVALID_CHARS) == 0;
+	check_invalid_chars = (saver->priv->flags & TEPL_FILE_SAVER_FLAGS_IGNORE_INVALID_CHARS) == 0;
 
-	if (check_invalid_chars && _gtef_buffer_has_invalid_chars (GTEF_BUFFER (saver->priv->source_buffer)))
+	if (check_invalid_chars && _tepl_buffer_has_invalid_chars (TEPL_BUFFER (saver->priv->source_buffer)))
 	{
 		g_task_return_new_error (saver->priv->task,
-					 GTEF_FILE_SAVER_ERROR,
-					 GTEF_FILE_SAVER_ERROR_INVALID_CHARS,
+					 TEPL_FILE_SAVER_ERROR,
+					 TEPL_FILE_SAVER_ERROR_INVALID_CHARS,
 					 _("The buffer contains invalid characters."));
 		return;
 	}
@@ -1329,7 +1329,7 @@ gtef_file_saver_save_async (GtefFileSaver         *saver,
 	 * We create the BufferInputStream here so we are sure that the
 	 * buffer will not be destroyed during the file saving.
 	 */
-	task_data->input_stream = _gtef_buffer_input_stream_new (GTK_TEXT_BUFFER (saver->priv->source_buffer),
+	task_data->input_stream = _tepl_buffer_input_stream_new (GTK_TEXT_BUFFER (saver->priv->source_buffer),
 								 saver->priv->newline_type,
 								 implicit_trailing_newline);
 
@@ -1337,14 +1337,14 @@ gtef_file_saver_save_async (GtefFileSaver         *saver,
 }
 
 /**
- * gtef_file_saver_save_finish:
- * @saver: a #GtefFileSaver.
+ * tepl_file_saver_save_finish:
+ * @saver: a #TeplFileSaver.
  * @result: a #GAsyncResult.
  * @error: a #GError, or %NULL.
  *
- * Finishes a file saving started with gtef_file_saver_save_async().
+ * Finishes a file saving started with tepl_file_saver_save_async().
  *
- * If the file has been saved successfully, the following #GtefFile
+ * If the file has been saved successfully, the following #TeplFile
  * properties will be updated: the location, the encoding, the newline type and
  * the compression type.
  *
@@ -1355,13 +1355,13 @@ gtef_file_saver_save_async (GtefFileSaver         *saver,
  * Since: 1.0
  */
 gboolean
-gtef_file_saver_save_finish (GtefFileSaver  *saver,
+tepl_file_saver_save_finish (TeplFileSaver  *saver,
 			     GAsyncResult   *result,
 			     GError        **error)
 {
 	gboolean ok;
 
-	g_return_val_if_fail (GTEF_IS_FILE_SAVER (saver), FALSE);
+	g_return_val_if_fail (TEPL_IS_FILE_SAVER (saver), FALSE);
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 	g_return_val_if_fail (g_task_is_valid (result, saver), FALSE);
 
@@ -1372,25 +1372,25 @@ gtef_file_saver_save_finish (GtefFileSaver  *saver,
 		TaskData *task_data;
 		gchar *new_etag;
 
-		gtef_file_set_location (saver->priv->file,
+		tepl_file_set_location (saver->priv->file,
 					saver->priv->location);
 
-		_gtef_file_set_encoding (saver->priv->file,
+		_tepl_file_set_encoding (saver->priv->file,
 					 saver->priv->encoding);
 
-		_gtef_file_set_newline_type (saver->priv->file,
+		_tepl_file_set_newline_type (saver->priv->file,
 					     saver->priv->newline_type);
 
-		_gtef_file_set_compression_type (saver->priv->file,
+		_tepl_file_set_compression_type (saver->priv->file,
 						 saver->priv->compression_type);
 
-		_gtef_file_set_externally_modified (saver->priv->file, FALSE);
-		_gtef_file_set_deleted (saver->priv->file, FALSE);
-		_gtef_file_set_readonly (saver->priv->file, FALSE);
+		_tepl_file_set_externally_modified (saver->priv->file, FALSE);
+		_tepl_file_set_deleted (saver->priv->file, FALSE);
+		_tepl_file_set_readonly (saver->priv->file, FALSE);
 
 		task_data = g_task_get_task_data (G_TASK (result));
 		new_etag = g_file_output_stream_get_etag (task_data->file_output_stream);
-		_gtef_file_set_etag (saver->priv->file, new_etag);
+		_tepl_file_set_etag (saver->priv->file, new_etag);
 		g_free (new_etag);
 	}
 

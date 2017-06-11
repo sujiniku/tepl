@@ -3,13 +3,13 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.64)
 
 # Package version of the form 'major.minor.micro'.
-m4_define(gtef_package_version, 2.0.1)
+m4_define(tepl_package_version, 2.0.1)
 
-AC_INIT([gtef],
-	[gtef_package_version],
-	[https://bugzilla.gnome.org/enter_bug.cgi?product=gtef],
-	[gtef],
-	[https://wiki.gnome.org/Projects/Gtef])
+AC_INIT([tepl],
+	[tepl_package_version],
+	[https://bugzilla.gnome.org/enter_bug.cgi?product=tepl],
+	[tepl],
+	[https://wiki.gnome.org/Projects/Tepl])
 
 AX_REQUIRE_DEFINED([AX_IS_RELEASE])
 AX_IS_RELEASE([git-directory])
@@ -34,20 +34,20 @@ AX_IS_RELEASE([git-directory])
 # When incrementing the API version (usually for a new major package version),
 # set CURRENT, REVISION and AGE to 0 since it's like a new library.
 
-GTEF_LT_CURRENT=0
-GTEF_LT_REVISION=0
-GTEF_LT_AGE=0
-GTEF_LT_VERSION="$GTEF_LT_CURRENT:$GTEF_LT_REVISION:$GTEF_LT_AGE"
-AC_SUBST(GTEF_LT_VERSION)
+TEPL_LT_CURRENT=0
+TEPL_LT_REVISION=0
+TEPL_LT_AGE=0
+TEPL_LT_VERSION="$TEPL_LT_CURRENT:$TEPL_LT_REVISION:$TEPL_LT_AGE"
+AC_SUBST(TEPL_LT_VERSION)
 
 # API version, used for parallel installability.
 # Not used in:
 # - po/Makevars
-# - the docs/reference/gtef-1.0-sections.txt filename
+# - the docs/reference/tepl-1.0-sections.txt filename
 # Because as far as I've tested, it is not easily feasible to not hardcode the
 # API version in those places (swilmet).
-GTEF_API_VERSION=2
-AC_SUBST(GTEF_API_VERSION)
+TEPL_API_VERSION=2
+AC_SUBST(TEPL_API_VERSION)
 
 # Dependencies
 glib_req=2.52
@@ -55,7 +55,7 @@ gtk_req=3.20
 gtksourceview_req=3.22
 libxml_req=2.5
 
-AC_CONFIG_SRCDIR([gtef/gtef.h])
+AC_CONFIG_SRCDIR([tepl/tepl.h])
 AC_CONFIG_HEADER([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -103,7 +103,7 @@ fi
 # i18n
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.19.4])
-AC_SUBST([GETTEXT_PACKAGE], [gtef-$GTEF_API_VERSION])
+AC_SUBST([GETTEXT_PACKAGE], [tepl-$TEPL_API_VERSION])
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [Define to the gettext package name.])
 
 # Documentation
@@ -139,13 +139,13 @@ PKG_CHECK_VAR([GLIB_PREFIX], [glib-2.0], [prefix])
 
 # Output files
 AC_CONFIG_FILES([
-	gtef-${GTEF_API_VERSION}.pc:gtef.pc.in
+	tepl-${TEPL_API_VERSION}.pc:tepl.pc.in
 	Makefile
 	docs/Makefile
-	docs/reference/gtef-docs.xml
+	docs/reference/tepl-docs.xml
 	docs/reference/intro.xml
 	docs/reference/Makefile
-	gtef/Makefile
+	tepl/Makefile
 	po/Makefile.in
 	tests/Makefile
 	testsuite/Makefile

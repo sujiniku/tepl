@@ -1,15 +1,15 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2013, 2016 - Sébastien Wilmet <swilmet@gnome.org>
  * Copyright 2016 - David Rabel <david.rabel@noresoft.com>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -18,14 +18,14 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gtef-gutter-renderer-folds.h"
+#include "tepl-gutter-renderer-folds.h"
 
 /**
  * SECTION:gutter-renderer-folds
  * @Short_description: Basic gutter renderer for code folding
- * @Title: GtefGutterRendererFolds
+ * @Title: TeplGutterRendererFolds
  *
- * #GtefGutterRendererFolds is a basic gutter renderer for code folding. It
+ * #TeplGutterRendererFolds is a basic gutter renderer for code folding. It
  * handles only the drawing, and has a flat view of the folding tree.
  */
 
@@ -35,15 +35,15 @@
  */
 #define SQUARE_SIZE 9
 
-typedef struct _GtefGutterRendererFoldsPrivate GtefGutterRendererFoldsPrivate;
+typedef struct _TeplGutterRendererFoldsPrivate TeplGutterRendererFoldsPrivate;
 
-struct _GtefGutterRendererFoldsPrivate
+struct _TeplGutterRendererFoldsPrivate
 {
-	GtefGutterRendererFoldsState folding_state;
+	TeplGutterRendererFoldsState folding_state;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE (GtefGutterRendererFolds,
-			    gtef_gutter_renderer_folds,
+G_DEFINE_TYPE_WITH_PRIVATE (TeplGutterRendererFolds,
+			    tepl_gutter_renderer_folds,
 			    GTK_SOURCE_TYPE_GUTTER_RENDERER)
 
 /* Draw a minus or a plus surrounded by a square. */
@@ -163,7 +163,7 @@ split_cell_area (const GdkRectangle *cell_area,
 }
 
 static void
-gtef_gutter_renderer_folds_draw (GtkSourceGutterRenderer      *renderer,
+tepl_gutter_renderer_folds_draw (GtkSourceGutterRenderer      *renderer,
 			         cairo_t                      *cr,
 			         GdkRectangle                 *background_area,
 			         GdkRectangle                 *cell_area,
@@ -171,20 +171,20 @@ gtef_gutter_renderer_folds_draw (GtkSourceGutterRenderer      *renderer,
 			         GtkTextIter                  *end,
 			         GtkSourceGutterRendererState  state)
 {
-	GtefGutterRendererFolds *self;
-	GtefGutterRendererFoldsPrivate *priv;
-	GtefGutterRendererFoldsState folding_state;
+	TeplGutterRendererFolds *self;
+	TeplGutterRendererFoldsPrivate *priv;
+	TeplGutterRendererFoldsState folding_state;
 	GdkRectangle top_area;
 	GdkRectangle middle_area;
 	GdkRectangle bottom_area;
 
-	self = GTEF_GUTTER_RENDERER_FOLDS (renderer);
-	priv = gtef_gutter_renderer_folds_get_instance_private (self);
+	self = TEPL_GUTTER_RENDERER_FOLDS (renderer);
+	priv = tepl_gutter_renderer_folds_get_instance_private (self);
 
 	/* Chain up to draw background */
-	if (GTK_SOURCE_GUTTER_RENDERER_CLASS (gtef_gutter_renderer_folds_parent_class)->draw != NULL)
+	if (GTK_SOURCE_GUTTER_RENDERER_CLASS (tepl_gutter_renderer_folds_parent_class)->draw != NULL)
 	{
-		GTK_SOURCE_GUTTER_RENDERER_CLASS (gtef_gutter_renderer_folds_parent_class)->draw (renderer,
+		GTK_SOURCE_GUTTER_RENDERER_CLASS (tepl_gutter_renderer_folds_parent_class)->draw (renderer,
 												  cr,
 												  background_area,
 												  cell_area,
@@ -209,30 +209,30 @@ gtef_gutter_renderer_folds_draw (GtkSourceGutterRenderer      *renderer,
 
 	/* Top area */
 
-	if (folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE ||
-	    folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_END)
+	if (folding_state & TEPL_GUTTER_RENDERER_FOLDS_STATE_CONTINUE ||
+	    folding_state & TEPL_GUTTER_RENDERER_FOLDS_STATE_END)
 	{
 		draw_vertical_line (cr, &top_area);
 	}
 
 	/* Middle area */
 
-	if (folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_START_FOLDED)
+	if (folding_state & TEPL_GUTTER_RENDERER_FOLDS_STATE_START_FOLDED)
 	{
 		draw_sign (cr, &middle_area, TRUE);
 	}
-	else if (folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_START_OPENED)
+	else if (folding_state & TEPL_GUTTER_RENDERER_FOLDS_STATE_START_OPENED)
 	{
 		draw_sign (cr, &middle_area, FALSE);
 	}
 	else
 	{
-		if (folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE)
+		if (folding_state & TEPL_GUTTER_RENDERER_FOLDS_STATE_CONTINUE)
 		{
 			draw_vertical_line (cr, &middle_area);
 		}
 
-		if (folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_END)
+		if (folding_state & TEPL_GUTTER_RENDERER_FOLDS_STATE_END)
 		{
 			draw_end (cr, &middle_area);
 		}
@@ -240,8 +240,8 @@ gtef_gutter_renderer_folds_draw (GtkSourceGutterRenderer      *renderer,
 
 	/* Bottom area */
 
-	if (folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_START_OPENED ||
-	    folding_state & GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE)
+	if (folding_state & TEPL_GUTTER_RENDERER_FOLDS_STATE_START_OPENED ||
+	    folding_state & TEPL_GUTTER_RENDERER_FOLDS_STATE_CONTINUE)
 	{
 		draw_vertical_line (cr, &bottom_area);
 	}
@@ -251,48 +251,48 @@ gtef_gutter_renderer_folds_draw (GtkSourceGutterRenderer      *renderer,
 }
 
 static void
-gtef_gutter_renderer_folds_constructed (GObject *object)
+tepl_gutter_renderer_folds_constructed (GObject *object)
 {
 	GtkSourceGutterRenderer *renderer = GTK_SOURCE_GUTTER_RENDERER (object);
 
-	G_OBJECT_CLASS (gtef_gutter_renderer_folds_parent_class)->constructed (object);
+	G_OBJECT_CLASS (tepl_gutter_renderer_folds_parent_class)->constructed (object);
 
 	gtk_source_gutter_renderer_set_size (renderer, SQUARE_SIZE);
 	gtk_source_gutter_renderer_set_padding (renderer, 2, -1);
 }
 
 static void
-gtef_gutter_renderer_folds_class_init (GtefGutterRendererFoldsClass *klass)
+tepl_gutter_renderer_folds_class_init (TeplGutterRendererFoldsClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GtkSourceGutterRendererClass *renderer_class = GTK_SOURCE_GUTTER_RENDERER_CLASS (klass);
 
-	object_class->constructed = gtef_gutter_renderer_folds_constructed;
+	object_class->constructed = tepl_gutter_renderer_folds_constructed;
 
-	renderer_class->draw = gtef_gutter_renderer_folds_draw;
+	renderer_class->draw = tepl_gutter_renderer_folds_draw;
 }
 
 static void
-gtef_gutter_renderer_folds_init (GtefGutterRendererFolds *self)
+tepl_gutter_renderer_folds_init (TeplGutterRendererFolds *self)
 {
 }
 
 /**
- * gtef_gutter_renderer_folds_new:
+ * tepl_gutter_renderer_folds_new:
  *
- * Returns: a new #GtefGutterRendererFolds.
+ * Returns: a new #TeplGutterRendererFolds.
  * Since: 1.0
  */
 GtkSourceGutterRenderer *
-gtef_gutter_renderer_folds_new (void)
+tepl_gutter_renderer_folds_new (void)
 {
-	return g_object_new (GTEF_TYPE_GUTTER_RENDERER_FOLDS, NULL);
+	return g_object_new (TEPL_TYPE_GUTTER_RENDERER_FOLDS, NULL);
 }
 
 /**
- * gtef_gutter_renderer_folds_set_state:
- * @self: a #GtefGutterRendererFolds.
- * @state: a #GtefGutterRendererFoldsState.
+ * tepl_gutter_renderer_folds_set_state:
+ * @self: a #TeplGutterRendererFolds.
+ * @state: a #TeplGutterRendererFoldsState.
  *
  * Sets the folding state of the next cell to be drawn.
  *
@@ -302,13 +302,13 @@ gtef_gutter_renderer_folds_new (void)
  * Since: 1.0
  */
 void
-gtef_gutter_renderer_folds_set_state (GtefGutterRendererFolds 	   *self,
-                                      GtefGutterRendererFoldsState  state)
+tepl_gutter_renderer_folds_set_state (TeplGutterRendererFolds 	   *self,
+                                      TeplGutterRendererFoldsState  state)
 {
-	GtefGutterRendererFoldsPrivate *priv;
+	TeplGutterRendererFoldsPrivate *priv;
 
-	g_return_if_fail (GTEF_IS_GUTTER_RENDERER_FOLDS (self));
+	g_return_if_fail (TEPL_IS_GUTTER_RENDERER_FOLDS (self));
 
-	priv = gtef_gutter_renderer_folds_get_instance_private (self);
+	priv = tepl_gutter_renderer_folds_get_instance_private (self);
 	priv->folding_state = state;
 }

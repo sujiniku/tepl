@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2010 - Ignacio Casal Quinteiro
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,18 +17,18 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtef/gtef.h>
-#include "gtef/gtef-buffer-input-stream.h"
+#include <tepl/tepl.h>
+#include "tepl/tepl-buffer-input-stream.h"
 #include <string.h>
 
 static void
 test_consecutive_read (const gchar     *inbuf,
 		       const gchar     *outbuf,
-		       GtefNewlineType  type,
+		       TeplNewlineType  type,
 		       gsize            read_chunk_len)
 {
 	GtkTextBuffer *buf;
-	GtefBufferInputStream *in;
+	TeplBufferInputStream *in;
 	gsize outlen;
 	gssize n, r;
 	GError *err = NULL;
@@ -39,7 +39,7 @@ test_consecutive_read (const gchar     *inbuf,
 	gtk_text_buffer_set_text (buf, inbuf, -1);
 
 	b = g_malloc (200);
-	in = _gtef_buffer_input_stream_new (buf, type, TRUE);
+	in = _tepl_buffer_input_stream_new (buf, type, TRUE);
 
 	outlen = strlen (outbuf);
 	n = 0;
@@ -72,63 +72,63 @@ static void
 test_empty (void)
 {
 	/* empty file should not have a trailing newline */
-	test_consecutive_read ("", "", GTEF_NEWLINE_TYPE_CR_LF, 10);
+	test_consecutive_read ("", "", TEPL_NEWLINE_TYPE_CR_LF, 10);
 }
 
 static void
 test_consecutive_cut_char (void)
 {
 	/* first \n is read then fo and then is added \r but not \n */
-	test_consecutive_read ("\nfo\nbar\n\nblah\n", "\r\nfo\r\nbar\r\n\r\nblah\r\n\r\n", GTEF_NEWLINE_TYPE_CR_LF, 8);
-	test_consecutive_read ("\nfo\nbar\n\nblah", "\r\nfo\r\nbar\r\n\r\nblah\r\n", GTEF_NEWLINE_TYPE_CR_LF, 8);
+	test_consecutive_read ("\nfo\nbar\n\nblah\n", "\r\nfo\r\nbar\r\n\r\nblah\r\n\r\n", TEPL_NEWLINE_TYPE_CR_LF, 8);
+	test_consecutive_read ("\nfo\nbar\n\nblah", "\r\nfo\r\nbar\r\n\r\nblah\r\n", TEPL_NEWLINE_TYPE_CR_LF, 8);
 }
 
 static void
 test_consecutive_big_read (void)
 {
-	test_consecutive_read ("\nfo\nbar\n\nblah\n", "\rfo\rbar\r\rblah\r\r", GTEF_NEWLINE_TYPE_CR, 200);
-	test_consecutive_read ("\nfo\nbar\n\nblah", "\rfo\rbar\r\rblah\r", GTEF_NEWLINE_TYPE_CR, 200);
+	test_consecutive_read ("\nfo\nbar\n\nblah\n", "\rfo\rbar\r\rblah\r\r", TEPL_NEWLINE_TYPE_CR, 200);
+	test_consecutive_read ("\nfo\nbar\n\nblah", "\rfo\rbar\r\rblah\r", TEPL_NEWLINE_TYPE_CR, 200);
 
-	test_consecutive_read ("\rfo\rbar\r\rblah\r", "\nfo\nbar\n\nblah\n\n", GTEF_NEWLINE_TYPE_LF, 200);
-	test_consecutive_read ("\rfo\rbar\r\rblah", "\nfo\nbar\n\nblah\n", GTEF_NEWLINE_TYPE_LF, 200);
+	test_consecutive_read ("\rfo\rbar\r\rblah\r", "\nfo\nbar\n\nblah\n\n", TEPL_NEWLINE_TYPE_LF, 200);
+	test_consecutive_read ("\rfo\rbar\r\rblah", "\nfo\nbar\n\nblah\n", TEPL_NEWLINE_TYPE_LF, 200);
 
-	test_consecutive_read ("\r\nfo\r\nbar\r\n\r\nblah\r\n", "\nfo\nbar\n\nblah\n\n", GTEF_NEWLINE_TYPE_LF, 200);
-	test_consecutive_read ("\r\nfo\r\nbar\r\n\r\nblah", "\nfo\nbar\n\nblah\n", GTEF_NEWLINE_TYPE_LF, 200);
+	test_consecutive_read ("\r\nfo\r\nbar\r\n\r\nblah\r\n", "\nfo\nbar\n\nblah\n\n", TEPL_NEWLINE_TYPE_LF, 200);
+	test_consecutive_read ("\r\nfo\r\nbar\r\n\r\nblah", "\nfo\nbar\n\nblah\n", TEPL_NEWLINE_TYPE_LF, 200);
 
-	test_consecutive_read ("\nfo\nbar\n\nblah\n", "\r\nfo\r\nbar\r\n\r\nblah\r\n\r\n", GTEF_NEWLINE_TYPE_CR_LF, 200);
-	test_consecutive_read ("\nfo\nbar\n\nblah", "\r\nfo\r\nbar\r\n\r\nblah\r\n", GTEF_NEWLINE_TYPE_CR_LF, 200);
+	test_consecutive_read ("\nfo\nbar\n\nblah\n", "\r\nfo\r\nbar\r\n\r\nblah\r\n\r\n", TEPL_NEWLINE_TYPE_CR_LF, 200);
+	test_consecutive_read ("\nfo\nbar\n\nblah", "\r\nfo\r\nbar\r\n\r\nblah\r\n", TEPL_NEWLINE_TYPE_CR_LF, 200);
 }
 
 static void
 test_consecutive_middle_read (void)
 {
-	test_consecutive_read ("\nfo\nbar\n\nblah\n", "\rfo\rbar\r\rblah\r\r", GTEF_NEWLINE_TYPE_CR, 6);
-	test_consecutive_read ("\nfo\nbar\n\nblah", "\rfo\rbar\r\rblah\r", GTEF_NEWLINE_TYPE_CR, 6);
+	test_consecutive_read ("\nfo\nbar\n\nblah\n", "\rfo\rbar\r\rblah\r\r", TEPL_NEWLINE_TYPE_CR, 6);
+	test_consecutive_read ("\nfo\nbar\n\nblah", "\rfo\rbar\r\rblah\r", TEPL_NEWLINE_TYPE_CR, 6);
 
-	test_consecutive_read ("\rfo\rbar\r\rblah\r", "\nfo\nbar\n\nblah\n\n", GTEF_NEWLINE_TYPE_LF, 6);
-	test_consecutive_read ("\rfo\rbar\r\rblah", "\nfo\nbar\n\nblah\n", GTEF_NEWLINE_TYPE_LF, 6);
+	test_consecutive_read ("\rfo\rbar\r\rblah\r", "\nfo\nbar\n\nblah\n\n", TEPL_NEWLINE_TYPE_LF, 6);
+	test_consecutive_read ("\rfo\rbar\r\rblah", "\nfo\nbar\n\nblah\n", TEPL_NEWLINE_TYPE_LF, 6);
 
-	test_consecutive_read ("\r\nfo\r\nbar\r\n\r\nblah\r\n", "\nfo\nbar\n\nblah\n\n", GTEF_NEWLINE_TYPE_LF, 6);
-	test_consecutive_read ("\r\nfo\r\nbar\r\n\r\nblah", "\nfo\nbar\n\nblah\n", GTEF_NEWLINE_TYPE_LF, 6);
+	test_consecutive_read ("\r\nfo\r\nbar\r\n\r\nblah\r\n", "\nfo\nbar\n\nblah\n\n", TEPL_NEWLINE_TYPE_LF, 6);
+	test_consecutive_read ("\r\nfo\r\nbar\r\n\r\nblah", "\nfo\nbar\n\nblah\n", TEPL_NEWLINE_TYPE_LF, 6);
 
-	test_consecutive_read ("\nfo\nbar\n\nblah\n", "\r\nfo\r\nbar\r\n\r\nblah\r\n\r\n", GTEF_NEWLINE_TYPE_CR_LF, 6);
-	test_consecutive_read ("\nfo\nbar\n\nblah", "\r\nfo\r\nbar\r\n\r\nblah\r\n", GTEF_NEWLINE_TYPE_CR_LF, 6);
+	test_consecutive_read ("\nfo\nbar\n\nblah\n", "\r\nfo\r\nbar\r\n\r\nblah\r\n\r\n", TEPL_NEWLINE_TYPE_CR_LF, 6);
+	test_consecutive_read ("\nfo\nbar\n\nblah", "\r\nfo\r\nbar\r\n\r\nblah\r\n", TEPL_NEWLINE_TYPE_CR_LF, 6);
 }
 
 static void
 test_consecutive_multibyte_cut (void)
 {
-	test_consecutive_read ("hello\nhello\xe6\x96\x87\nworld\n", "hello\rhello\xe6\x96\x87\rworld\r\r", GTEF_NEWLINE_TYPE_CR, 6);
-	test_consecutive_read ("hello\rhello\xe6\x96\x87\rworld\r", "hello\rhello\xe6\x96\x87\rworld\r\r", GTEF_NEWLINE_TYPE_CR, 6);
-	test_consecutive_read ("hello\nhello\xe6\x96\x87\nworld\n", "hello\nhello\xe6\x96\x87\nworld\n\n", GTEF_NEWLINE_TYPE_LF, 6);
+	test_consecutive_read ("hello\nhello\xe6\x96\x87\nworld\n", "hello\rhello\xe6\x96\x87\rworld\r\r", TEPL_NEWLINE_TYPE_CR, 6);
+	test_consecutive_read ("hello\rhello\xe6\x96\x87\rworld\r", "hello\rhello\xe6\x96\x87\rworld\r\r", TEPL_NEWLINE_TYPE_CR, 6);
+	test_consecutive_read ("hello\nhello\xe6\x96\x87\nworld\n", "hello\nhello\xe6\x96\x87\nworld\n\n", TEPL_NEWLINE_TYPE_LF, 6);
 }
 
 static void
 test_consecutive_multibyte_big_read (void)
 {
-	test_consecutive_read ("hello\nhello\xe6\x96\x87\nworld\n", "hello\rhello\xe6\x96\x87\rworld\r\r", GTEF_NEWLINE_TYPE_CR, 200);
-	test_consecutive_read ("hello\rhello\xe6\x96\x87\rworld\r", "hello\rhello\xe6\x96\x87\rworld\r\r", GTEF_NEWLINE_TYPE_CR, 200);
-	test_consecutive_read ("hello\nhello\xe6\x96\x87\nworld\n", "hello\nhello\xe6\x96\x87\nworld\n\n", GTEF_NEWLINE_TYPE_LF, 200);
+	test_consecutive_read ("hello\nhello\xe6\x96\x87\nworld\n", "hello\rhello\xe6\x96\x87\rworld\r\r", TEPL_NEWLINE_TYPE_CR, 200);
+	test_consecutive_read ("hello\rhello\xe6\x96\x87\rworld\r", "hello\rhello\xe6\x96\x87\rworld\r\r", TEPL_NEWLINE_TYPE_CR, 200);
+	test_consecutive_read ("hello\nhello\xe6\x96\x87\nworld\n", "hello\nhello\xe6\x96\x87\nworld\n\n", TEPL_NEWLINE_TYPE_LF, 200);
 }
 
 gint

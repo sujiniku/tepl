@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -18,29 +18,29 @@
  */
 
 #include "config.h"
-#include "gtef-action-info.h"
+#include "tepl-action-info.h"
 #include <glib/gi18n-lib.h>
-#include "gtef-utils.h"
+#include "tepl-utils.h"
 
 /**
  * SECTION:action-info
  * @Short_description: GAction information
- * @Title: GtefActionInfo
- * @See_also: #GtefActionInfoStore
+ * @Title: TeplActionInfo
+ * @See_also: #TeplActionInfoStore
  *
- * A #GtefActionInfo instance contains a set of information about a #GAction.
+ * A #TeplActionInfo instance contains a set of information about a #GAction.
  * Those pieces of information are useful to create UI elements that trigger the
  * #GAction, for example a menu item or a toolbar item.
  *
  * When writing an XML file to create a #GMenu, with the format understood by
  * #GtkBuilder (see the class description of #GtkApplicationWindow), the
  * information in the XML file can be used only to create a #GMenu. The initial
- * goal with #GtefActionInfo and its related classes is to encode the
+ * goal with #TeplActionInfo and its related classes is to encode the
  * information just once, and be able to create both a menu and a toolbar easily
  * (to have a traditional user interface).
  */
 
-struct _GtefActionInfo
+struct _TeplActionInfo
 {
 	gchar *action_name;
 	gchar *icon_name;
@@ -58,14 +58,14 @@ struct _GtefActionInfo
 	guint used : 1;
 };
 
-static void _gtef_action_info_free (GtefActionInfo *info);
+static void _tepl_action_info_free (TeplActionInfo *info);
 
-G_DEFINE_BOXED_TYPE (GtefActionInfo, gtef_action_info,
-		     gtef_action_info_copy,
-		     _gtef_action_info_free)
+G_DEFINE_BOXED_TYPE (TeplActionInfo, tepl_action_info,
+		     tepl_action_info_copy,
+		     _tepl_action_info_free)
 
 static void
-_gtef_action_info_free (GtefActionInfo *info)
+_tepl_action_info_free (TeplActionInfo *info)
 {
 	if (info != NULL)
 	{
@@ -80,17 +80,17 @@ _gtef_action_info_free (GtefActionInfo *info)
 }
 
 /**
- * gtef_action_info_new:
+ * tepl_action_info_new:
  *
- * Returns: a new #GtefActionInfo.
+ * Returns: a new #TeplActionInfo.
  * Since: 2.0
  */
-GtefActionInfo *
-gtef_action_info_new (void)
+TeplActionInfo *
+tepl_action_info_new (void)
 {
-	GtefActionInfo *info;
+	TeplActionInfo *info;
 
-	info = g_new0 (GtefActionInfo, 1);
+	info = g_new0 (TeplActionInfo, 1);
 	info->accels = g_malloc0 (sizeof (gchar *));
 	info->ref_count = 1;
 
@@ -98,25 +98,25 @@ gtef_action_info_new (void)
 }
 
 /**
- * gtef_action_info_new_from_entry:
- * @info_entry: a #GtefActionInfoEntry.
+ * tepl_action_info_new_from_entry:
+ * @info_entry: a #TeplActionInfoEntry.
  * @translation_domain: (nullable): a gettext domain, or %NULL.
  *
- * Creates a new #GtefActionInfo from a #GtefActionInfoEntry.
+ * Creates a new #TeplActionInfo from a #TeplActionInfoEntry.
  *
  * If @translation_domain is not %NULL, g_dgettext() is used to translate the
- * @label and @tooltip before setting them to the #GtefActionInfo.
+ * @label and @tooltip before setting them to the #TeplActionInfo.
  *
- * Returns: a new #GtefActionInfo.
+ * Returns: a new #TeplActionInfo.
  * Since: 2.0
  */
-GtefActionInfo *
-gtef_action_info_new_from_entry (const GtefActionInfoEntry *info_entry,
+TeplActionInfo *
+tepl_action_info_new_from_entry (const TeplActionInfoEntry *info_entry,
 				 const gchar               *translation_domain)
 {
-	GtefActionInfo *info;
+	TeplActionInfo *info;
 
-	info = gtef_action_info_new ();
+	info = tepl_action_info_new ();
 	info->action_name = g_strdup (info_entry->action_name);
 	info->icon_name = g_strdup (info_entry->icon_name);
 
@@ -144,16 +144,16 @@ gtef_action_info_new_from_entry (const GtefActionInfoEntry *info_entry,
 }
 
 /**
- * gtef_action_info_ref:
- * @info: a #GtefActionInfo.
+ * tepl_action_info_ref:
+ * @info: a #TeplActionInfo.
  *
  * Increments the reference count of @info by one.
  *
  * Returns: the passed in @info.
  * Since: 2.0
  */
-GtefActionInfo *
-gtef_action_info_ref (GtefActionInfo *info)
+TeplActionInfo *
+tepl_action_info_ref (TeplActionInfo *info)
 {
 	g_return_val_if_fail (info != NULL, NULL);
 
@@ -163,8 +163,8 @@ gtef_action_info_ref (GtefActionInfo *info)
 }
 
 /**
- * gtef_action_info_unref:
- * @info: a #GtefActionInfo.
+ * tepl_action_info_unref:
+ * @info: a #TeplActionInfo.
  *
  * Decrements the reference count of @info by one. If the reference count drops
  * to 0, @info is freed.
@@ -172,7 +172,7 @@ gtef_action_info_ref (GtefActionInfo *info)
  * Since: 2.0
  */
 void
-gtef_action_info_unref (GtefActionInfo *info)
+tepl_action_info_unref (TeplActionInfo *info)
 {
 	g_return_if_fail (info != NULL);
 
@@ -180,46 +180,46 @@ gtef_action_info_unref (GtefActionInfo *info)
 
 	if (info->ref_count == 0)
 	{
-		_gtef_action_info_free (info);
+		_tepl_action_info_free (info);
 	}
 }
 
 /**
- * gtef_action_info_copy:
- * @info: a #GtefActionInfo.
+ * tepl_action_info_copy:
+ * @info: a #TeplActionInfo.
  *
  * Returns: (transfer full): a copy of @info. The copy will have a reference
  * count of one.
  * Since: 2.0
  */
-GtefActionInfo *
-gtef_action_info_copy (const GtefActionInfo *info)
+TeplActionInfo *
+tepl_action_info_copy (const TeplActionInfo *info)
 {
-	GtefActionInfo *new_info;
+	TeplActionInfo *new_info;
 
 	g_return_val_if_fail (info != NULL, NULL);
 
-	new_info = gtef_action_info_new ();
+	new_info = tepl_action_info_new ();
 
 	new_info->action_name = g_strdup (info->action_name);
 	new_info->icon_name = g_strdup (info->icon_name);
 	new_info->label = g_strdup (info->label);
 	new_info->tooltip = g_strdup (info->tooltip);
 
-	gtef_action_info_set_accels (new_info, (const gchar * const *)info->accels);
+	tepl_action_info_set_accels (new_info, (const gchar * const *)info->accels);
 
 	return new_info;
 }
 
 /**
- * gtef_action_info_get_action_name:
- * @info: a #GtefActionInfo.
+ * tepl_action_info_get_action_name:
+ * @info: a #TeplActionInfo.
  *
  * Returns: (nullable): the action name, or %NULL. Example: `"win.save"`.
  * Since: 2.0
  */
 const gchar *
-gtef_action_info_get_action_name (const GtefActionInfo *info)
+tepl_action_info_get_action_name (const TeplActionInfo *info)
 {
 	g_return_val_if_fail (info != NULL, NULL);
 
@@ -227,8 +227,8 @@ gtef_action_info_get_action_name (const GtefActionInfo *info)
 }
 
 /**
- * gtef_action_info_set_action_name:
- * @info: a #GtefActionInfo.
+ * tepl_action_info_set_action_name:
+ * @info: a #TeplActionInfo.
  * @action_name: the action name.
  *
  * Sets the action name, for example `"win.save"`.
@@ -236,7 +236,7 @@ gtef_action_info_get_action_name (const GtefActionInfo *info)
  * Since: 2.0
  */
 void
-gtef_action_info_set_action_name (GtefActionInfo *info,
+tepl_action_info_set_action_name (TeplActionInfo *info,
 				  const gchar    *action_name)
 {
 	g_return_if_fail (info != NULL);
@@ -247,14 +247,14 @@ gtef_action_info_set_action_name (GtefActionInfo *info,
 }
 
 /**
- * gtef_action_info_get_icon_name:
- * @info: a #GtefActionInfo.
+ * tepl_action_info_get_icon_name:
+ * @info: a #TeplActionInfo.
  *
  * Returns: (nullable): the icon name, or %NULL.
  * Since: 2.0
  */
 const gchar *
-gtef_action_info_get_icon_name (const GtefActionInfo *info)
+tepl_action_info_get_icon_name (const TeplActionInfo *info)
 {
 	g_return_val_if_fail (info != NULL, NULL);
 
@@ -262,14 +262,14 @@ gtef_action_info_get_icon_name (const GtefActionInfo *info)
 }
 
 /**
- * gtef_action_info_set_icon_name:
- * @info: a #GtefActionInfo.
+ * tepl_action_info_set_icon_name:
+ * @info: a #TeplActionInfo.
  * @icon_name: (nullable): the icon name, or %NULL.
  *
  * Since: 2.0
  */
 void
-gtef_action_info_set_icon_name (GtefActionInfo *info,
+tepl_action_info_set_icon_name (TeplActionInfo *info,
 				const gchar    *icon_name)
 {
 	g_return_if_fail (info != NULL);
@@ -279,14 +279,14 @@ gtef_action_info_set_icon_name (GtefActionInfo *info,
 }
 
 /**
- * gtef_action_info_get_label:
- * @info: a #GtefActionInfo.
+ * tepl_action_info_get_label:
+ * @info: a #TeplActionInfo.
  *
  * Returns: (nullable): the label (i.e. a short description), or %NULL.
  * Since: 2.0
  */
 const gchar *
-gtef_action_info_get_label (const GtefActionInfo *info)
+tepl_action_info_get_label (const TeplActionInfo *info)
 {
 	g_return_val_if_fail (info != NULL, NULL);
 
@@ -294,14 +294,14 @@ gtef_action_info_get_label (const GtefActionInfo *info)
 }
 
 /**
- * gtef_action_info_set_label:
- * @info: a #GtefActionInfo.
+ * tepl_action_info_set_label:
+ * @info: a #TeplActionInfo.
  * @label: (nullable): the label (i.e. a short description), or %NULL.
  *
  * Since: 2.0
  */
 void
-gtef_action_info_set_label (GtefActionInfo *info,
+tepl_action_info_set_label (TeplActionInfo *info,
 			    const gchar    *label)
 {
 	g_return_if_fail (info != NULL);
@@ -311,14 +311,14 @@ gtef_action_info_set_label (GtefActionInfo *info,
 }
 
 /**
- * gtef_action_info_get_tooltip:
- * @info: a #GtefActionInfo.
+ * tepl_action_info_get_tooltip:
+ * @info: a #TeplActionInfo.
  *
  * Returns: (nullable): the tooltip (i.e. a long description), or %NULL.
  * Since: 2.0
  */
 const gchar *
-gtef_action_info_get_tooltip (const GtefActionInfo *info)
+tepl_action_info_get_tooltip (const TeplActionInfo *info)
 {
 	g_return_val_if_fail (info != NULL, NULL);
 
@@ -326,14 +326,14 @@ gtef_action_info_get_tooltip (const GtefActionInfo *info)
 }
 
 /**
- * gtef_action_info_set_tooltip:
- * @info: a #GtefActionInfo.
+ * tepl_action_info_set_tooltip:
+ * @info: a #TeplActionInfo.
  * @tooltip: (nullable): the tooltip (i.e. a long description), or %NULL.
  *
  * Since: 2.0
  */
 void
-gtef_action_info_set_tooltip (GtefActionInfo *info,
+tepl_action_info_set_tooltip (TeplActionInfo *info,
 			      const gchar    *tooltip)
 {
 	g_return_if_fail (info != NULL);
@@ -343,8 +343,8 @@ gtef_action_info_set_tooltip (GtefActionInfo *info,
 }
 
 /**
- * gtef_action_info_get_accels:
- * @info: a #GtefActionInfo.
+ * tepl_action_info_get_accels:
+ * @info: a #TeplActionInfo.
  *
  * Returns the accelerators. This function never returns %NULL, it always
  * returns a %NULL-terminated array, to be suitable for
@@ -355,7 +355,7 @@ gtef_action_info_set_tooltip (GtefActionInfo *info,
  * Since: 2.0
  */
 const gchar * const *
-gtef_action_info_get_accels (const GtefActionInfo *info)
+tepl_action_info_get_accels (const TeplActionInfo *info)
 {
 	g_return_val_if_fail (info != NULL, NULL);
 
@@ -365,8 +365,8 @@ gtef_action_info_get_accels (const GtefActionInfo *info)
 }
 
 /**
- * gtef_action_info_set_accels:
- * @info: a #GtefActionInfo.
+ * tepl_action_info_set_accels:
+ * @info: a #TeplActionInfo.
  * @accels: (array zero-terminated=1): a %NULL-terminated array of accelerators
  * in the format understood by gtk_accelerator_parse().
  *
@@ -378,18 +378,18 @@ gtef_action_info_get_accels (const GtefActionInfo *info)
  * Since: 2.0
  */
 void
-gtef_action_info_set_accels (GtefActionInfo      *info,
+tepl_action_info_set_accels (TeplActionInfo      *info,
 			     const gchar * const *accels)
 {
 	g_return_if_fail (info != NULL);
 	g_return_if_fail (accels != NULL);
 
 	g_strfreev (info->accels);
-	info->accels = _gtef_utils_strv_copy (accels);
+	info->accels = _tepl_utils_strv_copy (accels);
 }
 
 gboolean
-_gtef_action_info_get_used (const GtefActionInfo *info)
+_tepl_action_info_get_used (const TeplActionInfo *info)
 {
 	g_return_val_if_fail (info != NULL, FALSE);
 
@@ -397,7 +397,7 @@ _gtef_action_info_get_used (const GtefActionInfo *info)
 }
 
 void
-_gtef_action_info_set_used (GtefActionInfo *info)
+_tepl_action_info_set_used (TeplActionInfo *info)
 {
 	g_return_if_fail (info != NULL);
 

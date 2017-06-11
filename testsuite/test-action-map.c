@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,7 +17,7 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtef/gtef.h>
+#include <tepl/tepl.h>
 
 static void
 test_add_action_entries_check_dups (void)
@@ -30,7 +30,7 @@ test_add_action_entries_check_dups (void)
 	};
 
 	group = g_simple_action_group_new ();
-	gtef_action_map_add_action_entries_check_dups (G_ACTION_MAP (group),
+	tepl_action_map_add_action_entries_check_dups (G_ACTION_MAP (group),
 						       entries,
 						       G_N_ELEMENTS (entries),
 						       NULL);
@@ -56,11 +56,11 @@ test_add_action_entries_check_dups__add_two_times (void)
 
 	group = g_simple_action_group_new ();
 
-	gtef_action_map_add_action_entries_check_dups (G_ACTION_MAP (group),
+	tepl_action_map_add_action_entries_check_dups (G_ACTION_MAP (group),
 						       entries,
 						       G_N_ELEMENTS (entries),
 						       NULL);
-	gtef_action_map_add_action_entries_check_dups (G_ACTION_MAP (group),
+	tepl_action_map_add_action_entries_check_dups (G_ACTION_MAP (group),
 						       entries,
 						       G_N_ELEMENTS (entries),
 						       NULL);
@@ -80,7 +80,7 @@ test_add_action_entries_check_dups__dups_in_array (void)
 
 	group = g_simple_action_group_new ();
 
-	gtef_action_map_add_action_entries_check_dups (G_ACTION_MAP (group),
+	tepl_action_map_add_action_entries_check_dups (G_ACTION_MAP (group),
 						       entries,
 						       G_N_ELEMENTS (entries),
 						       NULL);

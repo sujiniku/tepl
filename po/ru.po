@@ -1,11 +1,11 @@
-# Russian translation for gtef.
-# Copyright (C) 2017 gtef's COPYRIGHT HOLDER
-# This file is distributed under the same license as the gtef package.
+# Russian translation for tepl.
+# Copyright (C) 2017 tepl's COPYRIGHT HOLDER
+# This file is distributed under the same license as the tepl package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gtef master\n"
+"Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-19 11:57+0000\n"
 "PO-Revision-Date: 2017-03-25 22:57+0500\n"
@@ -19,191 +19,191 @@ msgstr ""
 "X-Generator: Poedit 1.8.11\n"
 
 #. Translators: %s is a filename.
-#: gtef/gtef-application-window.c:356
+#: tepl/tepl-application-window.c:356
 #, c-format
 msgid "Open “%s”"
 msgstr "Открыть «%s»"
 
-#: gtef/gtef-application-window.c:575
+#: tepl/tepl-application-window.c:575
 msgid "Open _Recent"
 msgstr "Открыть _недавние"
 
 #. Translators: %s is the application name.
-#: gtef/gtef-application-window.c:578
+#: tepl/tepl-application-window.c:578
 #, c-format
 msgid "Open a file recently used with %s"
 msgstr "Открыть файл, который недавно использовался с «%s»"
 
 #. UTF-8 first, so that it's the first encoding returned by
-#. * gtef_encoding_get_all().
+#. * tepl_encoding_get_all().
 #.
-#: gtef/gtef-encoding.c:115 gtef/gtef-encoding.c:132 gtef/gtef-encoding.c:133
-#: gtef/gtef-encoding.c:134 gtef/gtef-encoding.c:135 gtef/gtef-encoding.c:136
-#: gtef/gtef-encoding.c:137 gtef/gtef-encoding.c:138
+#: tepl/tepl-encoding.c:115 tepl/tepl-encoding.c:132 tepl/tepl-encoding.c:133
+#: tepl/tepl-encoding.c:134 tepl/tepl-encoding.c:135 tepl/tepl-encoding.c:136
+#: tepl/tepl-encoding.c:137 tepl/tepl-encoding.c:138
 msgid "Unicode"
 msgstr "Юникод"
 
 #. FIXME GEOSTD8 ?
-#: gtef/gtef-encoding.c:117 gtef/gtef-encoding.c:129 gtef/gtef-encoding.c:157
-#: gtef/gtef-encoding.c:180
+#: tepl/tepl-encoding.c:117 tepl/tepl-encoding.c:129 tepl/tepl-encoding.c:157
+#: tepl/tepl-encoding.c:180
 msgid "Western"
 msgstr "Западная"
 
-#: gtef/gtef-encoding.c:118 gtef/gtef-encoding.c:158 gtef/gtef-encoding.c:178
+#: tepl/tepl-encoding.c:118 tepl/tepl-encoding.c:158 tepl/tepl-encoding.c:178
 msgid "Central European"
 msgstr "Центральноевропейская"
 
-#: gtef/gtef-encoding.c:119
+#: tepl/tepl-encoding.c:119
 msgid "South European"
 msgstr "Южноевропейская"
 
-#: gtef/gtef-encoding.c:120 gtef/gtef-encoding.c:127 gtef/gtef-encoding.c:185
+#: tepl/tepl-encoding.c:120 tepl/tepl-encoding.c:127 tepl/tepl-encoding.c:185
 msgid "Baltic"
 msgstr "Балтийская"
 
-#: gtef/gtef-encoding.c:121 gtef/gtef-encoding.c:159 gtef/gtef-encoding.c:166
-#: gtef/gtef-encoding.c:168 gtef/gtef-encoding.c:169 gtef/gtef-encoding.c:179
+#: tepl/tepl-encoding.c:121 tepl/tepl-encoding.c:159 tepl/tepl-encoding.c:166
+#: tepl/tepl-encoding.c:168 tepl/tepl-encoding.c:169 tepl/tepl-encoding.c:179
 msgid "Cyrillic"
 msgstr "Кириллица"
 
-#: gtef/gtef-encoding.c:122 gtef/gtef-encoding.c:162 gtef/gtef-encoding.c:184
+#: tepl/tepl-encoding.c:122 tepl/tepl-encoding.c:162 tepl/tepl-encoding.c:184
 msgid "Arabic"
 msgstr "Арабская"
 
-#: gtef/gtef-encoding.c:123 gtef/gtef-encoding.c:181
+#: tepl/tepl-encoding.c:123 tepl/tepl-encoding.c:181
 msgid "Greek"
 msgstr "Греческая"
 
-#: gtef/gtef-encoding.c:124
+#: tepl/tepl-encoding.c:124
 msgid "Hebrew Visual"
 msgstr "Еврейская отображаемая"
 
-#: gtef/gtef-encoding.c:125 gtef/gtef-encoding.c:160 gtef/gtef-encoding.c:182
+#: tepl/tepl-encoding.c:125 tepl/tepl-encoding.c:160 tepl/tepl-encoding.c:182
 msgid "Turkish"
 msgstr "Турецкая"
 
-#: gtef/gtef-encoding.c:126
+#: tepl/tepl-encoding.c:126
 msgid "Nordic"
 msgstr "Северная"
 
-#: gtef/gtef-encoding.c:128
+#: tepl/tepl-encoding.c:128
 msgid "Celtic"
 msgstr "Кельтская"
 
-#: gtef/gtef-encoding.c:130
+#: tepl/tepl-encoding.c:130
 msgid "Romanian"
 msgstr "Римская"
 
-#: gtef/gtef-encoding.c:140
+#: tepl/tepl-encoding.c:140
 msgid "Armenian"
 msgstr "Армянская"
 
-#: gtef/gtef-encoding.c:141 gtef/gtef-encoding.c:142 gtef/gtef-encoding.c:150
+#: tepl/tepl-encoding.c:141 tepl/tepl-encoding.c:142 tepl/tepl-encoding.c:150
 msgid "Chinese Traditional"
 msgstr "Китайская традиционная"
 
-#: gtef/gtef-encoding.c:143
+#: tepl/tepl-encoding.c:143
 msgid "Cyrillic/Russian"
 msgstr "Кириллица (российская)"
 
-#: gtef/gtef-encoding.c:145 gtef/gtef-encoding.c:146 gtef/gtef-encoding.c:147
-#: gtef/gtef-encoding.c:164 gtef/gtef-encoding.c:172
+#: tepl/tepl-encoding.c:145 tepl/tepl-encoding.c:146 tepl/tepl-encoding.c:147
+#: tepl/tepl-encoding.c:164 tepl/tepl-encoding.c:172
 msgid "Japanese"
 msgstr "Японская"
 
-#: gtef/gtef-encoding.c:149 gtef/gtef-encoding.c:165 gtef/gtef-encoding.c:167
-#: gtef/gtef-encoding.c:175
+#: tepl/tepl-encoding.c:149 tepl/tepl-encoding.c:165 tepl/tepl-encoding.c:167
+#: tepl/tepl-encoding.c:175
 msgid "Korean"
 msgstr "Корейская"
 
-#: gtef/gtef-encoding.c:152 gtef/gtef-encoding.c:153 gtef/gtef-encoding.c:154
+#: tepl/tepl-encoding.c:152 tepl/tepl-encoding.c:153 tepl/tepl-encoding.c:154
 msgid "Chinese Simplified"
 msgstr "Китайская упрощённая"
 
-#: gtef/gtef-encoding.c:155
+#: tepl/tepl-encoding.c:155
 msgid "Georgian"
 msgstr "Грузинская"
 
-#: gtef/gtef-encoding.c:161 gtef/gtef-encoding.c:183
+#: tepl/tepl-encoding.c:161 tepl/tepl-encoding.c:183
 msgid "Hebrew"
 msgstr "Еврейская"
 
-#: gtef/gtef-encoding.c:170
+#: tepl/tepl-encoding.c:170
 msgid "Cyrillic/Ukrainian"
 msgstr "Кириллица (украинская)"
 
-#: gtef/gtef-encoding.c:173 gtef/gtef-encoding.c:176 gtef/gtef-encoding.c:186
+#: tepl/tepl-encoding.c:173 tepl/tepl-encoding.c:176 tepl/tepl-encoding.c:186
 msgid "Vietnamese"
 msgstr "Вьетнамская"
 
-#: gtef/gtef-encoding.c:174
+#: tepl/tepl-encoding.c:174
 msgid "Thai"
 msgstr "Тайская"
 
-#: gtef/gtef-encoding.c:365
+#: tepl/tepl-encoding.c:365
 msgid "Unknown"
 msgstr "Неизвестная"
 
-#. Translators: This is the sorted list of encodings used by Gtef for
+#. Translators: This is the sorted list of encodings used by Tepl for
 #. * automatic detection of the file encoding. You may want to customize
 #. * it adding encodings that are common in your country, for instance the
 #. * GB18030 encoding for the Chinese translation. You may also want to
 #. * remove the ISO-8859-15 encoding (covering English and most Western
 #. * European languages) if you think people in your country will rarely
-#. * use it. 'CURRENT' is a magic value used by Gtef and it represents
+#. * use it. 'CURRENT' is a magic value used by Tepl and it represents
 #. * the encoding for the current locale, so please don't translate the
 #. * 'CURRENT' term. Keep the same format: square brackets, single quotes,
 #. * commas.
 #.
-#: gtef/gtef-encoding.c:640
+#: tepl/tepl-encoding.c:640
 msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 msgstr "['UTF-8', 'CURRENT', 'ISO-8859-5', 'UTF-16', ' KOI8-R']"
 
-#: gtef/gtef-encoding-converter.c:302
+#: tepl/tepl-encoding-converter.c:302
 #, c-format
 msgid "Conversion from character set “%s” to “%s” is not supported."
 msgstr "Преобразование из набора символов «%s» в «%s» не поддерживается."
 
-#: gtef/gtef-encoding-converter.c:311
+#: tepl/tepl-encoding-converter.c:311
 #, c-format
 msgid "Could not open converter from “%s” to “%s”: %s"
 msgstr "Не удалось открыть конвертер из «%s» в «%s»: «%s»"
 
-#: gtef/gtef-encoding-converter.c:368
+#: tepl/tepl-encoding-converter.c:368
 msgid "The input data contains an invalid sequence."
 msgstr "Входные данные содержат недопустимую последовательность."
 
-#: gtef/gtef-encoding-converter.c:377
+#: tepl/tepl-encoding-converter.c:377
 #, c-format
 msgid "Error when converting data: %s"
 msgstr "Ошибка при конвертировании данных: «%s»"
 
-#: gtef/gtef-encoding-converter.c:556
+#: tepl/tepl-encoding-converter.c:556
 msgid "The input data ends with an incomplete multi-byte sequence."
 msgstr "Входные данные заканчиваются незавершенной многобайтовой последовательностью."
 
-#: gtef/gtef-encoding-converter.c:579
+#: tepl/tepl-encoding-converter.c:579
 msgid "The input content ends with incomplete data."
 msgstr "Содержимое ввода заканчивается незавершенными данными."
 
-#: gtef/gtef-file.c:413
+#: tepl/tepl-file.c:413
 #, c-format
 msgid "Untitled File %d"
 msgstr "Безымянный файл %d"
 
-#: gtef/gtef-file-content-loader.c:334
+#: tepl/tepl-file-content-loader.c:334
 #, c-format
 msgid "The file is too big. Maximum %s can be loaded."
 msgstr "Файл слишком большой. Максимальный размер загрузки «%s»."
 
-#: gtef/gtef-file-loader.c:925
+#: tepl/tepl-file-loader.c:925
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Не удалось автоматически определить кодировку."
 
-#: gtef/gtef-file-saver.c:784
+#: tepl/tepl-file-saver.c:784
 msgid "The file is externally modified."
 msgstr "Файл был модифицирован внешней программой."
 
-#: gtef/gtef-file-saver.c:1318
+#: tepl/tepl-file-saver.c:1318
 msgid "The buffer contains invalid characters."
 msgstr "Буфер содержит недопустимые символы."

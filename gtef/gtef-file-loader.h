@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,71 +17,71 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GTEF_FILE_LOADER_H
-#define GTEF_FILE_LOADER_H
+#ifndef TEPL_FILE_LOADER_H
+#define TEPL_FILE_LOADER_H
 
-#if !defined (GTEF_H_INSIDE) && !defined (GTEF_COMPILATION)
-#error "Only <gtef/gtef.h> can be included directly."
+#if !defined (TEPL_H_INSIDE) && !defined (TEPL_COMPILATION)
+#error "Only <tepl/tepl.h> can be included directly."
 #endif
 
 #include <gio/gio.h>
-#include <gtef/gtef-types.h>
-#include <gtef/gtef-file.h>
+#include <tepl/tepl-types.h>
+#include <tepl/tepl-file.h>
 
 G_BEGIN_DECLS
 
-#define GTEF_TYPE_FILE_LOADER (gtef_file_loader_get_type ())
-G_DECLARE_DERIVABLE_TYPE (GtefFileLoader, gtef_file_loader,
-			  GTEF, FILE_LOADER,
+#define TEPL_TYPE_FILE_LOADER (tepl_file_loader_get_type ())
+G_DECLARE_DERIVABLE_TYPE (TeplFileLoader, tepl_file_loader,
+			  TEPL, FILE_LOADER,
 			  GObject)
 
-#define GTEF_FILE_LOADER_ERROR gtef_file_loader_error_quark ()
+#define TEPL_FILE_LOADER_ERROR tepl_file_loader_error_quark ()
 
 /**
- * GtefFileLoaderError:
- * @GTEF_FILE_LOADER_ERROR_TOO_BIG: The file is too big.
- * @GTEF_FILE_LOADER_ERROR_ENCODING_AUTO_DETECTION_FAILED: It is not possible to
+ * TeplFileLoaderError:
+ * @TEPL_FILE_LOADER_ERROR_TOO_BIG: The file is too big.
+ * @TEPL_FILE_LOADER_ERROR_ENCODING_AUTO_DETECTION_FAILED: It is not possible to
  *   detect the encoding automatically.
  *
- * An error code used with the %GTEF_FILE_LOADER_ERROR domain.
+ * An error code used with the %TEPL_FILE_LOADER_ERROR domain.
  *
  * Since: 1.0
  */
-typedef enum _GtefFileLoaderError
+typedef enum _TeplFileLoaderError
 {
-	GTEF_FILE_LOADER_ERROR_TOO_BIG,
-	GTEF_FILE_LOADER_ERROR_ENCODING_AUTO_DETECTION_FAILED
-} GtefFileLoaderError;
+	TEPL_FILE_LOADER_ERROR_TOO_BIG,
+	TEPL_FILE_LOADER_ERROR_ENCODING_AUTO_DETECTION_FAILED
+} TeplFileLoaderError;
 
-struct _GtefFileLoaderClass
+struct _TeplFileLoaderClass
 {
 	GObjectClass parent_class;
 
 	gpointer padding[12];
 };
 
-GQuark			gtef_file_loader_error_quark				(void);
+GQuark			tepl_file_loader_error_quark				(void);
 
-GtefFileLoader *	gtef_file_loader_new					(GtefBuffer *buffer,
-										 GtefFile   *file);
+TeplFileLoader *	tepl_file_loader_new					(TeplBuffer *buffer,
+										 TeplFile   *file);
 
-GtefBuffer *		gtef_file_loader_get_buffer				(GtefFileLoader *loader);
+TeplBuffer *		tepl_file_loader_get_buffer				(TeplFileLoader *loader);
 
-GtefFile *		gtef_file_loader_get_file				(GtefFileLoader *loader);
+TeplFile *		tepl_file_loader_get_file				(TeplFileLoader *loader);
 
-GFile *			gtef_file_loader_get_location				(GtefFileLoader *loader);
+GFile *			tepl_file_loader_get_location				(TeplFileLoader *loader);
 
-gint64			gtef_file_loader_get_max_size				(GtefFileLoader *loader);
+gint64			tepl_file_loader_get_max_size				(TeplFileLoader *loader);
 
-void			gtef_file_loader_set_max_size				(GtefFileLoader *loader,
+void			tepl_file_loader_set_max_size				(TeplFileLoader *loader,
 										 gint64          max_size);
 
-gint64			gtef_file_loader_get_chunk_size				(GtefFileLoader *loader);
+gint64			tepl_file_loader_get_chunk_size				(TeplFileLoader *loader);
 
-void			gtef_file_loader_set_chunk_size				(GtefFileLoader *loader,
+void			tepl_file_loader_set_chunk_size				(TeplFileLoader *loader,
 										 gint64          chunk_size);
 
-void			gtef_file_loader_load_async				(GtefFileLoader        *loader,
+void			tepl_file_loader_load_async				(TeplFileLoader        *loader,
 										 gint                   io_priority,
 										 GCancellable          *cancellable,
 										 GFileProgressCallback  progress_callback,
@@ -90,17 +90,17 @@ void			gtef_file_loader_load_async				(GtefFileLoader        *loader,
 										 GAsyncReadyCallback    callback,
 										 gpointer               user_data);
 
-gboolean		gtef_file_loader_load_finish				(GtefFileLoader  *loader,
+gboolean		tepl_file_loader_load_finish				(TeplFileLoader  *loader,
 										 GAsyncResult    *result,
 										 GError         **error);
 
-const GtefEncoding *	gtef_file_loader_get_encoding				(GtefFileLoader *loader);
+const TeplEncoding *	tepl_file_loader_get_encoding				(TeplFileLoader *loader);
 
-GtefNewlineType		gtef_file_loader_get_newline_type			(GtefFileLoader *loader);
+TeplNewlineType		tepl_file_loader_get_newline_type			(TeplFileLoader *loader);
 
 G_GNUC_INTERNAL
-gint64			_gtef_file_loader_get_encoding_converter_buffer_size	(void);
+gint64			_tepl_file_loader_get_encoding_converter_buffer_size	(void);
 
 G_END_DECLS
 
-#endif /* GTEF_FILE_LOADER_H */
+#endif /* TEPL_FILE_LOADER_H */

@@ -1,5 +1,5 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * From gedit-utils.c:
  * Copyright 1998, 1999 - Alex Roberts, Evan Lawrence
@@ -8,12 +8,12 @@
  *
  * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -22,19 +22,19 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gtef-utils.h"
+#include "tepl-utils.h"
 #include <string.h>
 
 /**
  * SECTION:utils
- * @title: GtefUtils
+ * @title: TeplUtils
  * @short_description: Utility functions
  *
  * Utility functions.
  */
 
 /*
- * _gtef_utils_replace_home_dir_with_tilde:
+ * _tepl_utils_replace_home_dir_with_tilde:
  * @filename: the filename.
  *
  * Replaces the home directory with a tilde, if the home directory is present in
@@ -44,7 +44,7 @@
  */
 /* This function comes from gedit. */
 gchar *
-_gtef_utils_replace_home_dir_with_tilde (const gchar *filename)
+_tepl_utils_replace_home_dir_with_tilde (const gchar *filename)
 {
 	gchar *tmp;
 	gchar *home;
@@ -96,7 +96,7 @@ null_ptr (gchar **ptr)
 }
 
 /*
- * _gtef_utils_decode_uri:
+ * _tepl_utils_decode_uri:
  * @uri: the uri to decode
  * @scheme: (out) (optional): return value pointer for the uri's
  *     scheme (e.g. http, sftp, ...), or %NULL
@@ -113,7 +113,7 @@ null_ptr (gchar **ptr)
  * Returns: %TRUE if the uri could be properly decoded, %FALSE otherwise.
  */
 gboolean
-_gtef_utils_decode_uri (const gchar  *uri,
+_tepl_utils_decode_uri (const gchar  *uri,
 			gchar       **scheme,
 			gchar       **user,
 			gchar       **host,
@@ -250,7 +250,7 @@ _gtef_utils_decode_uri (const gchar  *uri,
 }
 
 /**
- * _gtef_utils_get_fallback_basename_for_display:
+ * _tepl_utils_get_fallback_basename_for_display:
  * @location: a #GFile.
  *
  * If querying the %G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME fails, this function
@@ -259,7 +259,7 @@ _gtef_utils_decode_uri (const gchar  *uri,
  * Returns: (transfer full): the @location's basename suitable for display.
  */
 gchar *
-_gtef_utils_get_fallback_basename_for_display (GFile *location)
+_tepl_utils_get_fallback_basename_for_display (GFile *location)
 {
 	gchar *basename;
 	gchar *parse_name;
@@ -295,7 +295,7 @@ _gtef_utils_get_fallback_basename_for_display (GFile *location)
 
 /* Deep copy of @strv. */
 gchar **
-_gtef_utils_strv_copy (const gchar * const *strv)
+_tepl_utils_strv_copy (const gchar * const *strv)
 {
 	guint length;
 	gchar **new_strv;
@@ -348,7 +348,7 @@ get_menu_item_position (GtkMenuShell *menu_shell,
 }
 
 /**
- * gtef_utils_recent_chooser_menu_get_item_uri:
+ * tepl_utils_recent_chooser_menu_get_item_uri:
  * @menu: a #GtkRecentChooserMenu.
  * @item: a #GtkMenuItem.
  *
@@ -363,7 +363,7 @@ get_menu_item_position (GtkMenuShell *menu_shell,
  * Since: 2.0
  */
 gchar *
-gtef_utils_recent_chooser_menu_get_item_uri (GtkRecentChooserMenu *menu,
+tepl_utils_recent_chooser_menu_get_item_uri (GtkRecentChooserMenu *menu,
 					     GtkMenuItem          *item)
 {
 	gint pos;

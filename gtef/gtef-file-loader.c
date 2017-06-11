@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -18,33 +18,33 @@
  */
 
 #include "config.h"
-#include "gtef-file-loader.h"
+#include "tepl-file-loader.h"
 #include <uchardet.h>
 #include <glib/gi18n-lib.h>
-#include "gtef-buffer.h"
-#include "gtef-file.h"
-#include "gtef-file-content-loader.h"
-#include "gtef-encoding.h"
-#include "gtef-encoding-converter.h"
+#include "tepl-buffer.h"
+#include "tepl-file.h"
+#include "tepl-file-content-loader.h"
+#include "tepl-encoding.h"
+#include "tepl-encoding-converter.h"
 
 /**
  * SECTION:file-loader
- * @Short_description: Load a file into a GtefBuffer
- * @Title: GtefFileLoader
- * @See_also: #GtefFile, #GtefFileSaver
+ * @Short_description: Load a file into a TeplBuffer
+ * @Title: TeplFileLoader
+ * @See_also: #TeplFile, #TeplFileSaver
  *
- * #GtefFileLoader is not a fork of #GtkSourceFileLoader, it is a new
+ * #TeplFileLoader is not a fork of #GtkSourceFileLoader, it is a new
  * implementation based on
  * [uchardet](https://www.freedesktop.org/wiki/Software/uchardet/).
  *
- * A #GtefFileLoader object permits to load the content of a #GFile into a
- * #GtefBuffer.
+ * A #TeplFileLoader object permits to load the content of a #GFile into a
+ * #TeplBuffer.
  *
  * A file loader should be used only for one load operation, including errors
  * handling. If an error occurs, you can reconfigure the loader and relaunch the
- * operation with gtef_file_loader_load_async().
+ * operation with tepl_file_loader_load_async().
  *
- * Running a #GtefFileLoader is an undoable action for the #GtefBuffer. That is,
+ * Running a #TeplFileLoader is an undoable action for the #TeplBuffer. That is,
  * gtk_source_buffer_begin_not_undoable_action() and
  * gtk_source_buffer_end_not_undoable_action() are called, which delete the
  * undo/redo history.
@@ -54,35 +54,35 @@
  * gtk_text_buffer_set_modified() is called with %FALSE.
  */
 
-typedef struct _GtefFileLoaderPrivate GtefFileLoaderPrivate;
+typedef struct _TeplFileLoaderPrivate TeplFileLoaderPrivate;
 typedef struct _TaskData TaskData;
 
-struct _GtefFileLoaderPrivate
+struct _TeplFileLoaderPrivate
 {
-	/* Weak ref to the GtefBuffer. A strong ref could create a reference
-	 * cycle in an application. For example a subclass of GtefBuffer can
+	/* Weak ref to the TeplBuffer. A strong ref could create a reference
+	 * cycle in an application. For example a subclass of TeplBuffer can
 	 * have a strong ref to the FileLoader.
 	 */
-	GtefBuffer *buffer;
+	TeplBuffer *buffer;
 
-	/* Weak ref to the GtefFile. A strong ref could create a reference
-	 * cycle in an application. For example a subclass of GtefFile can
+	/* Weak ref to the TeplFile. A strong ref could create a reference
+	 * cycle in an application. For example a subclass of TeplFile can
 	 * have a strong ref to the FileLoader.
 	 */
-	GtefFile *file;
+	TeplFile *file;
 
 	GFile *location;
 	gint64 max_size;
 	gint64 chunk_size;
 	GTask *task;
 
-	GtefEncoding *detected_encoding;
-	GtefNewlineType detected_newline_type;
+	TeplEncoding *detected_encoding;
+	TeplNewlineType detected_newline_type;
 };
 
 struct _TaskData
 {
-	GtefFileContentLoader *content_loader;
+	TeplFileContentLoader *content_loader;
 
 	/* TODO report progress also when determining encoding, and when
 	 * converting and inserting the content.
@@ -112,24 +112,24 @@ enum
 	N_PROPERTIES
 };
 
-/* Take the default buffer-size of GtefEncodingConverter. */
+/* Take the default buffer-size of TeplEncodingConverter. */
 #define ENCODING_CONVERTER_BUFFER_SIZE (-1)
 
 static GParamSpec *properties[N_PROPERTIES];
 
-G_DEFINE_TYPE_WITH_PRIVATE (GtefFileLoader, gtef_file_loader, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (TeplFileLoader, tepl_file_loader, G_TYPE_OBJECT)
 
 /* Prototypes */
 static void load_content (GTask *task);
 
 GQuark
-gtef_file_loader_error_quark (void)
+tepl_file_loader_error_quark (void)
 {
 	static GQuark quark = 0;
 
 	if (G_UNLIKELY (quark == 0))
 	{
-		quark = g_quark_from_static_string ("gtef-file-loader-error");
+		quark = g_quark_from_static_string ("tepl-file-loader-error");
 	}
 
 	return quark;
@@ -162,11 +162,11 @@ task_data_free (gpointer data)
 }
 
 static void
-empty_buffer (GtefFileLoader *loader)
+empty_buffer (TeplFileLoader *loader)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	if (priv->buffer != NULL)
 	{
@@ -175,17 +175,17 @@ empty_buffer (GtefFileLoader *loader)
 }
 
 static void
-detect_newline_type (GtefFileLoader *loader)
+detect_newline_type (TeplFileLoader *loader)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 	GtkTextIter iter;
 	gunichar first_char;
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	if (priv->buffer == NULL)
 	{
-		priv->detected_newline_type = GTEF_NEWLINE_TYPE_DEFAULT;
+		priv->detected_newline_type = TEPL_NEWLINE_TYPE_DEFAULT;
 		return;
 	}
 
@@ -199,7 +199,7 @@ detect_newline_type (GtefFileLoader *loader)
 
 	if (first_char == '\n')
 	{
-		priv->detected_newline_type = GTEF_NEWLINE_TYPE_LF;
+		priv->detected_newline_type = TEPL_NEWLINE_TYPE_LF;
 	}
 	else if (first_char == '\r')
 	{
@@ -210,27 +210,27 @@ detect_newline_type (GtefFileLoader *loader)
 
 		if (second_char == '\n')
 		{
-			priv->detected_newline_type = GTEF_NEWLINE_TYPE_CR_LF;
+			priv->detected_newline_type = TEPL_NEWLINE_TYPE_CR_LF;
 		}
 		else
 		{
-			priv->detected_newline_type = GTEF_NEWLINE_TYPE_CR;
+			priv->detected_newline_type = TEPL_NEWLINE_TYPE_CR;
 		}
 	}
 	else
 	{
-		priv->detected_newline_type = GTEF_NEWLINE_TYPE_DEFAULT;
+		priv->detected_newline_type = TEPL_NEWLINE_TYPE_DEFAULT;
 	}
 }
 
 static void
-remove_trailing_newline_if_needed (GtefFileLoader *loader)
+remove_trailing_newline_if_needed (TeplFileLoader *loader)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 	GtkTextIter start;
 	GtkTextIter end;
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	if (priv->buffer == NULL)
 	{
@@ -262,33 +262,33 @@ remove_trailing_newline_if_needed (GtefFileLoader *loader)
 }
 
 static void
-gtef_file_loader_get_property (GObject    *object,
+tepl_file_loader_get_property (GObject    *object,
 			       guint       prop_id,
 			       GValue     *value,
 			       GParamSpec *pspec)
 {
-	GtefFileLoader *loader = GTEF_FILE_LOADER (object);
+	TeplFileLoader *loader = TEPL_FILE_LOADER (object);
 
 	switch (prop_id)
 	{
 		case PROP_BUFFER:
-			g_value_set_object (value, gtef_file_loader_get_buffer (loader));
+			g_value_set_object (value, tepl_file_loader_get_buffer (loader));
 			break;
 
 		case PROP_FILE:
-			g_value_set_object (value, gtef_file_loader_get_file (loader));
+			g_value_set_object (value, tepl_file_loader_get_file (loader));
 			break;
 
 		case PROP_LOCATION:
-			g_value_set_object (value, gtef_file_loader_get_location (loader));
+			g_value_set_object (value, tepl_file_loader_get_location (loader));
 			break;
 
 		case PROP_MAX_SIZE:
-			g_value_set_int64 (value, gtef_file_loader_get_max_size (loader));
+			g_value_set_int64 (value, tepl_file_loader_get_max_size (loader));
 			break;
 
 		case PROP_CHUNK_SIZE:
-			g_value_set_int64 (value, gtef_file_loader_get_chunk_size (loader));
+			g_value_set_int64 (value, tepl_file_loader_get_chunk_size (loader));
 			break;
 
 		default:
@@ -298,13 +298,13 @@ gtef_file_loader_get_property (GObject    *object,
 }
 
 static void
-gtef_file_loader_set_property (GObject      *object,
+tepl_file_loader_set_property (GObject      *object,
 			       guint         prop_id,
 			       const GValue *value,
 			       GParamSpec   *pspec)
 {
-	GtefFileLoader *loader = GTEF_FILE_LOADER (object);
-	GtefFileLoaderPrivate *priv = gtef_file_loader_get_instance_private (loader);
+	TeplFileLoader *loader = TEPL_FILE_LOADER (object);
+	TeplFileLoaderPrivate *priv = tepl_file_loader_get_instance_private (loader);
 
 	switch (prop_id)
 	{
@@ -328,11 +328,11 @@ gtef_file_loader_set_property (GObject      *object,
 			break;
 
 		case PROP_MAX_SIZE:
-			gtef_file_loader_set_max_size (loader, g_value_get_int64 (value));
+			tepl_file_loader_set_max_size (loader, g_value_get_int64 (value));
 			break;
 
 		case PROP_CHUNK_SIZE:
-			gtef_file_loader_set_chunk_size (loader, g_value_get_int64 (value));
+			tepl_file_loader_set_chunk_size (loader, g_value_get_int64 (value));
 			break;
 
 		default:
@@ -342,16 +342,16 @@ gtef_file_loader_set_property (GObject      *object,
 }
 
 static void
-gtef_file_loader_constructed (GObject *object)
+tepl_file_loader_constructed (GObject *object)
 {
-	GtefFileLoaderPrivate *priv = gtef_file_loader_get_instance_private (GTEF_FILE_LOADER (object));
+	TeplFileLoaderPrivate *priv = tepl_file_loader_get_instance_private (TEPL_FILE_LOADER (object));
 
-	G_OBJECT_CLASS (gtef_file_loader_parent_class)->constructed (object);
+	G_OBJECT_CLASS (tepl_file_loader_parent_class)->constructed (object);
 
 	if (priv->file != NULL &&
 	    priv->location == NULL)
 	{
-		priv->location = gtef_file_get_location (priv->file);
+		priv->location = tepl_file_get_location (priv->file);
 
 		if (priv->location != NULL)
 		{
@@ -359,16 +359,16 @@ gtef_file_loader_constructed (GObject *object)
 		}
 		else
 		{
-			g_warning ("GtefFileLoader: the GtefFile location is NULL. "
-				   "Call gtef_file_set_location() before creating the FileLoader.");
+			g_warning ("TeplFileLoader: the TeplFile location is NULL. "
+				   "Call tepl_file_set_location() before creating the FileLoader.");
 		}
 	}
 }
 
 static void
-gtef_file_loader_dispose (GObject *object)
+tepl_file_loader_dispose (GObject *object)
 {
-	GtefFileLoaderPrivate *priv = gtef_file_loader_get_instance_private (GTEF_FILE_LOADER (object));
+	TeplFileLoaderPrivate *priv = tepl_file_loader_get_instance_private (TEPL_FILE_LOADER (object));
 
 	if (priv->buffer != NULL)
 	{
@@ -387,69 +387,69 @@ gtef_file_loader_dispose (GObject *object)
 	g_clear_object (&priv->location);
 	g_clear_object (&priv->task);
 
-	G_OBJECT_CLASS (gtef_file_loader_parent_class)->dispose (object);
+	G_OBJECT_CLASS (tepl_file_loader_parent_class)->dispose (object);
 }
 
 static void
-gtef_file_loader_finalize (GObject *object)
+tepl_file_loader_finalize (GObject *object)
 {
-	GtefFileLoaderPrivate *priv = gtef_file_loader_get_instance_private (GTEF_FILE_LOADER (object));
+	TeplFileLoaderPrivate *priv = tepl_file_loader_get_instance_private (TEPL_FILE_LOADER (object));
 
-	gtef_encoding_free (priv->detected_encoding);
+	tepl_encoding_free (priv->detected_encoding);
 
-	G_OBJECT_CLASS (gtef_file_loader_parent_class)->finalize (object);
+	G_OBJECT_CLASS (tepl_file_loader_parent_class)->finalize (object);
 }
 
 static void
-gtef_file_loader_class_init (GtefFileLoaderClass *klass)
+tepl_file_loader_class_init (TeplFileLoaderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->get_property = gtef_file_loader_get_property;
-	object_class->set_property = gtef_file_loader_set_property;
-	object_class->constructed = gtef_file_loader_constructed;
-	object_class->dispose = gtef_file_loader_dispose;
-	object_class->finalize = gtef_file_loader_finalize;
+	object_class->get_property = tepl_file_loader_get_property;
+	object_class->set_property = tepl_file_loader_set_property;
+	object_class->constructed = tepl_file_loader_constructed;
+	object_class->dispose = tepl_file_loader_dispose;
+	object_class->finalize = tepl_file_loader_finalize;
 
 	/**
-	 * GtefFileLoader:buffer:
+	 * TeplFileLoader:buffer:
 	 *
-	 * The #GtefBuffer to load the content into. The #GtefFileLoader object
+	 * The #TeplBuffer to load the content into. The #TeplFileLoader object
 	 * has a weak reference to the buffer.
 	 *
 	 * Since: 1.0
 	 */
 	properties[PROP_BUFFER] =
 		g_param_spec_object ("buffer",
-				     "GtefBuffer",
+				     "TeplBuffer",
 				     "",
-				     GTEF_TYPE_BUFFER,
+				     TEPL_TYPE_BUFFER,
 				     G_PARAM_READWRITE |
 				     G_PARAM_CONSTRUCT_ONLY |
 				     G_PARAM_STATIC_STRINGS);
 
 	/**
-	 * GtefFileLoader:file:
+	 * TeplFileLoader:file:
 	 *
-	 * The #GtefFile. The #GtefFileLoader object has a weak
+	 * The #TeplFile. The #TeplFileLoader object has a weak
 	 * reference to the file.
 	 *
 	 * Since: 1.0
 	 */
 	properties[PROP_FILE] =
 		g_param_spec_object ("file",
-				     "GtefFile",
+				     "TeplFile",
 				     "",
-				     GTEF_TYPE_FILE,
+				     TEPL_TYPE_FILE,
 				     G_PARAM_READWRITE |
 				     G_PARAM_CONSTRUCT_ONLY |
 				     G_PARAM_STATIC_STRINGS);
 
 	/**
-	 * GtefFileLoader:location:
+	 * TeplFileLoader:location:
 	 *
 	 * The #GFile to load. By default the location is taken from the
-	 * #GtefFile at construction time.
+	 * #TeplFile at construction time.
 	 *
 	 * Since: 1.0
 	 */
@@ -463,7 +463,7 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 				     G_PARAM_STATIC_STRINGS);
 
 	/**
-	 * GtefFileLoader:max-size:
+	 * TeplFileLoader:max-size:
 	 *
 	 * The maximum content size, in bytes. Keep in mind that all the
 	 * content is loaded in memory, and when loaded into a #GtkTextBuffer
@@ -479,13 +479,13 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 				    "",
 				    -1,
 				    G_MAXINT64,
-				    GTEF_FILE_CONTENT_LOADER_DEFAULT_MAX_SIZE,
+				    TEPL_FILE_CONTENT_LOADER_DEFAULT_MAX_SIZE,
 				    G_PARAM_READWRITE |
 				    G_PARAM_CONSTRUCT |
 				    G_PARAM_STATIC_STRINGS);
 
 	/**
-	 * GtefFileLoader:chunk-size:
+	 * TeplFileLoader:chunk-size:
 	 *
 	 * The chunk size, in bytes. The content is loaded chunk by chunk. It
 	 * permits to avoid allocating a too big contiguous memory area, as well
@@ -502,7 +502,7 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 				    "",
 				    1,
 				    G_MAXINT64,
-				    GTEF_FILE_CONTENT_LOADER_DEFAULT_CHUNK_SIZE,
+				    TEPL_FILE_CONTENT_LOADER_DEFAULT_CHUNK_SIZE,
 				    G_PARAM_READWRITE |
 				    G_PARAM_CONSTRUCT |
 				    G_PARAM_STATIC_STRINGS);
@@ -511,136 +511,136 @@ gtef_file_loader_class_init (GtefFileLoaderClass *klass)
 }
 
 static void
-gtef_file_loader_init (GtefFileLoader *loader)
+tepl_file_loader_init (TeplFileLoader *loader)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
-	priv->detected_newline_type = GTEF_NEWLINE_TYPE_DEFAULT;
+	priv->detected_newline_type = TEPL_NEWLINE_TYPE_DEFAULT;
 }
 
 /**
- * gtef_file_loader_new:
- * @buffer: the #GtefBuffer to load the content into.
- * @file: the #GtefFile.
+ * tepl_file_loader_new:
+ * @buffer: the #TeplBuffer to load the content into.
+ * @file: the #TeplFile.
  *
- * Creates a new #GtefFileLoader object. The content is read from the #GtefFile
+ * Creates a new #TeplFileLoader object. The content is read from the #TeplFile
  * location.
  *
- * If not already done, call gtef_file_set_location() before calling this
+ * If not already done, call tepl_file_set_location() before calling this
  * constructor. The previous location is anyway not needed, because as soon as
- * the file loading begins, the @buffer is emptied. Setting the #GtefFile
+ * the file loading begins, the @buffer is emptied. Setting the #TeplFile
  * location directly permits to update the UI, to display the good location when
  * the file is loading.
  *
- * Returns: a new #GtefFileLoader object.
+ * Returns: a new #TeplFileLoader object.
  * Since: 1.0
  */
-GtefFileLoader *
-gtef_file_loader_new (GtefBuffer *buffer,
-		      GtefFile   *file)
+TeplFileLoader *
+tepl_file_loader_new (TeplBuffer *buffer,
+		      TeplFile   *file)
 {
-	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), NULL);
-	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
+	g_return_val_if_fail (TEPL_IS_BUFFER (buffer), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
 
-	return g_object_new (GTEF_TYPE_FILE_LOADER,
+	return g_object_new (TEPL_TYPE_FILE_LOADER,
 			     "buffer", buffer,
 			     "file", file,
 			     NULL);
 }
 
 /**
- * gtef_file_loader_get_buffer:
- * @loader: a #GtefFileLoader.
+ * tepl_file_loader_get_buffer:
+ * @loader: a #TeplFileLoader.
  *
- * Returns: (transfer none) (nullable): the #GtefBuffer to load the content
+ * Returns: (transfer none) (nullable): the #TeplBuffer to load the content
  * into.
  * Since: 1.0
  */
-GtefBuffer *
-gtef_file_loader_get_buffer (GtefFileLoader *loader)
+TeplBuffer *
+tepl_file_loader_get_buffer (TeplFileLoader *loader)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE_LOADER (loader), NULL);
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 	return priv->buffer;
 }
 
 /**
- * gtef_file_loader_get_file:
- * @loader: a #GtefFileLoader.
+ * tepl_file_loader_get_file:
+ * @loader: a #TeplFileLoader.
  *
- * Returns: (transfer none) (nullable): the #GtefFile.
+ * Returns: (transfer none) (nullable): the #TeplFile.
  * Since: 1.0
  */
-GtefFile *
-gtef_file_loader_get_file (GtefFileLoader *loader)
+TeplFile *
+tepl_file_loader_get_file (TeplFileLoader *loader)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE_LOADER (loader), NULL);
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 	return priv->file;
 }
 
 /**
- * gtef_file_loader_get_location:
- * @loader: a #GtefFileLoader.
+ * tepl_file_loader_get_location:
+ * @loader: a #TeplFileLoader.
  *
  * Returns: (transfer none) (nullable): the #GFile to load.
  * Since: 1.0
  */
 GFile *
-gtef_file_loader_get_location (GtefFileLoader *loader)
+tepl_file_loader_get_location (TeplFileLoader *loader)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE_LOADER (loader), NULL);
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 	return priv->location;
 }
 
 /**
- * gtef_file_loader_get_max_size:
- * @loader: a #GtefFileLoader.
+ * tepl_file_loader_get_max_size:
+ * @loader: a #TeplFileLoader.
  *
  * Returns: the maximum content size, or -1 for unlimited.
  * Since: 1.0
  */
 gint64
-gtef_file_loader_get_max_size (GtefFileLoader *loader)
+tepl_file_loader_get_max_size (TeplFileLoader *loader)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader),
-			      GTEF_FILE_CONTENT_LOADER_DEFAULT_MAX_SIZE);
+	g_return_val_if_fail (TEPL_IS_FILE_LOADER (loader),
+			      TEPL_FILE_CONTENT_LOADER_DEFAULT_MAX_SIZE);
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 	return priv->max_size;
 }
 
 /**
- * gtef_file_loader_set_max_size:
- * @loader: a #GtefFileLoader.
+ * tepl_file_loader_set_max_size:
+ * @loader: a #TeplFileLoader.
  * @max_size: the new maximum size, or -1 for unlimited.
  *
  * Since: 1.0
  */
 void
-gtef_file_loader_set_max_size (GtefFileLoader *loader,
+tepl_file_loader_set_max_size (TeplFileLoader *loader,
 			       gint64          max_size)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 
-	g_return_if_fail (GTEF_IS_FILE_LOADER (loader));
+	g_return_if_fail (TEPL_IS_FILE_LOADER (loader));
 	g_return_if_fail (max_size >= -1);
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	g_return_if_fail (priv->task == NULL);
 
@@ -652,41 +652,41 @@ gtef_file_loader_set_max_size (GtefFileLoader *loader,
 }
 
 /**
- * gtef_file_loader_get_chunk_size:
- * @loader: a #GtefFileLoader.
+ * tepl_file_loader_get_chunk_size:
+ * @loader: a #TeplFileLoader.
  *
  * Returns: the chunk size.
  * Since: 1.0
  */
 gint64
-gtef_file_loader_get_chunk_size (GtefFileLoader *loader)
+tepl_file_loader_get_chunk_size (TeplFileLoader *loader)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader),
-			      GTEF_FILE_CONTENT_LOADER_DEFAULT_CHUNK_SIZE);
+	g_return_val_if_fail (TEPL_IS_FILE_LOADER (loader),
+			      TEPL_FILE_CONTENT_LOADER_DEFAULT_CHUNK_SIZE);
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 	return priv->chunk_size;
 }
 
 /**
- * gtef_file_loader_set_chunk_size:
- * @loader: a #GtefFileLoader.
+ * tepl_file_loader_set_chunk_size:
+ * @loader: a #TeplFileLoader.
  * @chunk_size: the new chunk size.
  *
  * Since: 1.0
  */
 void
-gtef_file_loader_set_chunk_size (GtefFileLoader *loader,
+tepl_file_loader_set_chunk_size (TeplFileLoader *loader,
 				 gint64          chunk_size)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 
-	g_return_if_fail (GTEF_IS_FILE_LOADER (loader));
+	g_return_if_fail (TEPL_IS_FILE_LOADER (loader));
 	g_return_if_fail (chunk_size >= 1);
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	if (priv->chunk_size == chunk_size)
 	{
@@ -703,7 +703,7 @@ gtef_file_loader_set_chunk_size (GtefFileLoader *loader,
 
 		if (task_data->content_loader != NULL)
 		{
-			_gtef_file_content_loader_set_chunk_size (task_data->content_loader,
+			_tepl_file_content_loader_set_chunk_size (task_data->content_loader,
 								  chunk_size);
 		}
 	}
@@ -733,14 +733,14 @@ content_converted_cb (const gchar *str,
 		      gpointer     user_data)
 {
 	GTask *task = G_TASK (user_data);
-	GtefFileLoader *loader;
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoader *loader;
+	TeplFileLoaderPrivate *priv;
 	TaskData *task_data;
 	gchar *my_str;
 	gsize my_length;
 
 	loader = g_task_get_source_object (task);
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	task_data = g_task_get_task_data (task);
 
@@ -790,16 +790,16 @@ content_converted_cb (const gchar *str,
 static void
 convert_and_insert_content (GTask *task)
 {
-	GtefFileLoader *loader;
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoader *loader;
+	TeplFileLoaderPrivate *priv;
 	TaskData *task_data;
-	GtefEncodingConverter *converter = NULL;
+	TeplEncodingConverter *converter = NULL;
 	GQueue *content;
 	GList *l;
 	GError *error = NULL;
 
 	loader = g_task_get_source_object (task);
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	task_data = g_task_get_task_data (task);
 
@@ -809,16 +809,16 @@ convert_and_insert_content (GTask *task)
 		return;
 	}
 
-	converter = _gtef_encoding_converter_new (ENCODING_CONVERTER_BUFFER_SIZE);
+	converter = _tepl_encoding_converter_new (ENCODING_CONVERTER_BUFFER_SIZE);
 
-	_gtef_encoding_converter_set_callback (converter,
+	_tepl_encoding_converter_set_callback (converter,
 					       content_converted_cb,
 					       task);
 
 	g_assert (priv->detected_encoding != NULL);
-	_gtef_encoding_converter_open (converter,
+	_tepl_encoding_converter_open (converter,
 				       "UTF-8",
-				       gtef_encoding_get_charset (priv->detected_encoding),
+				       tepl_encoding_get_charset (priv->detected_encoding),
 				       &error);
 	if (error != NULL)
 	{
@@ -826,7 +826,7 @@ convert_and_insert_content (GTask *task)
 		goto out;
 	}
 
-	content = _gtef_file_content_loader_get_content (task_data->content_loader);
+	content = _tepl_file_content_loader_get_content (task_data->content_loader);
 
 	for (l = content->head; l != NULL; l = l->next)
 	{
@@ -835,7 +835,7 @@ convert_and_insert_content (GTask *task)
 		g_assert (chunk != NULL);
 		g_assert (g_bytes_get_size (chunk) > 0);
 
-		_gtef_encoding_converter_feed (converter,
+		_tepl_encoding_converter_feed (converter,
 					       g_bytes_get_data (chunk, NULL),
 					       g_bytes_get_size (chunk),
 					       &error);
@@ -847,7 +847,7 @@ convert_and_insert_content (GTask *task)
 		}
 	}
 
-	_gtef_encoding_converter_close (converter, &error);
+	_tepl_encoding_converter_close (converter, &error);
 	if (error != NULL)
 	{
 		g_task_return_error (task, error);
@@ -875,8 +875,8 @@ out:
 static void
 determine_encoding (GTask *task)
 {
-	GtefFileLoader *loader;
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoader *loader;
+	TeplFileLoaderPrivate *priv;
 	TaskData *task_data;
 	uchardet_t ud;
 	const gchar *charset;
@@ -884,13 +884,13 @@ determine_encoding (GTask *task)
 	GList *l;
 
 	loader = g_task_get_source_object (task);
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	task_data = g_task_get_task_data (task);
 
 	ud = uchardet_new ();
 
-	content = _gtef_file_content_loader_get_content (task_data->content_loader);
+	content = _tepl_file_content_loader_get_content (task_data->content_loader);
 
 	for (l = content->head; l != NULL; l = l->next)
 	{
@@ -912,7 +912,7 @@ determine_encoding (GTask *task)
 	charset = uchardet_get_charset (ud);
 	if (charset != NULL && charset[0] != '\0')
 	{
-		priv->detected_encoding = gtef_encoding_new (charset);
+		priv->detected_encoding = tepl_encoding_new (charset);
 	}
 
 	uchardet_delete (ud);
@@ -920,8 +920,8 @@ determine_encoding (GTask *task)
 	if (priv->detected_encoding == NULL)
 	{
 		g_task_return_new_error (task,
-					 GTEF_FILE_LOADER_ERROR,
-					 GTEF_FILE_LOADER_ERROR_ENCODING_AUTO_DETECTION_FAILED,
+					 TEPL_FILE_LOADER_ERROR,
+					 TEPL_FILE_LOADER_ERROR_ENCODING_AUTO_DETECTION_FAILED,
 					 _("It is not possible to detect the character encoding automatically."));
 		return;
 	}
@@ -936,12 +936,12 @@ mount_cb (GObject      *source_object,
 {
 	GFile *location = G_FILE (source_object);
 	GTask *task = G_TASK (user_data);
-	GtefFileLoader *loader;
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoader *loader;
+	TeplFileLoaderPrivate *priv;
 	GError *error = NULL;
 
 	loader = g_task_get_source_object (task);
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	g_file_mount_enclosing_volume_finish (location, result, &error);
 
@@ -953,7 +953,7 @@ mount_cb (GObject      *source_object,
 	{
 		if (priv->file != NULL)
 		{
-			_gtef_file_set_mounted (priv->file);
+			_tepl_file_set_mounted (priv->file);
 		}
 
 		/* Try again the previous operation. */
@@ -964,17 +964,17 @@ mount_cb (GObject      *source_object,
 static void
 recover_not_mounted (GTask *task)
 {
-	GtefFileLoader *loader;
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoader *loader;
+	TeplFileLoaderPrivate *priv;
 	TaskData *task_data;
 	GMountOperation *mount_operation;
 
 	loader = g_task_get_source_object (task);
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	task_data = g_task_get_task_data (task);
 
-	mount_operation = _gtef_file_create_mount_operation (priv->file);
+	mount_operation = _tepl_file_create_mount_operation (priv->file);
 
 	task_data->tried_mount = TRUE;
 
@@ -993,14 +993,14 @@ load_content_cb (GObject      *source_object,
 		 GAsyncResult *result,
 		 gpointer      user_data)
 {
-	GtefFileContentLoader *content_loader = GTEF_FILE_CONTENT_LOADER (source_object);
+	TeplFileContentLoader *content_loader = TEPL_FILE_CONTENT_LOADER (source_object);
 	GTask *task = G_TASK (user_data);
 	TaskData *task_data;
 	GError *error = NULL;
 
 	task_data = g_task_get_task_data (task);
 
-	_gtef_file_content_loader_load_finish (content_loader, result, &error);
+	_tepl_file_content_loader_load_finish (content_loader, result, &error);
 
 	if (error != NULL)
 	{
@@ -1026,24 +1026,24 @@ static void
 load_content (GTask *task)
 {
 	TaskData *task_data;
-	GtefFileLoader *loader;
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoader *loader;
+	TeplFileLoaderPrivate *priv;
 
 	task_data = g_task_get_task_data (task);
 
 	loader = g_task_get_source_object (task);
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	g_clear_object (&task_data->content_loader);
-	task_data->content_loader = _gtef_file_content_loader_new_from_file (priv->location);
+	task_data->content_loader = _tepl_file_content_loader_new_from_file (priv->location);
 
-	_gtef_file_content_loader_set_max_size (task_data->content_loader,
+	_tepl_file_content_loader_set_max_size (task_data->content_loader,
 						priv->max_size);
 
-	_gtef_file_content_loader_set_chunk_size (task_data->content_loader,
+	_tepl_file_content_loader_set_chunk_size (task_data->content_loader,
 						  priv->chunk_size);
 
-	_gtef_file_content_loader_load_async (task_data->content_loader,
+	_tepl_file_content_loader_load_async (task_data->content_loader,
 					      g_task_get_priority (task),
 					      g_task_get_cancellable (task),
 					      task_data->progress_cb,
@@ -1056,11 +1056,11 @@ load_content (GTask *task)
 static void
 start_loading (GTask *task)
 {
-	GtefFileLoader *loader;
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoader *loader;
+	TeplFileLoaderPrivate *priv;
 
 	loader = g_task_get_source_object (task);
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	if (priv->buffer == NULL)
 	{
@@ -1079,12 +1079,12 @@ start_loading (GTask *task)
 static void
 finish_loading (GTask *task)
 {
-	GtefFileLoader *loader;
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoader *loader;
+	TeplFileLoaderPrivate *priv;
 	GtkTextIter start;
 
 	loader = g_task_get_source_object (task);
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	if (priv->buffer == NULL)
 	{
@@ -1101,19 +1101,19 @@ finish_loading (GTask *task)
 }
 
 static void
-reset (GtefFileLoader *loader)
+reset (TeplFileLoader *loader)
 {
-	GtefFileLoaderPrivate *priv = gtef_file_loader_get_instance_private (loader);
+	TeplFileLoaderPrivate *priv = tepl_file_loader_get_instance_private (loader);
 
-	gtef_encoding_free (priv->detected_encoding);
+	tepl_encoding_free (priv->detected_encoding);
 	priv->detected_encoding = NULL;
 
-	priv->detected_newline_type = GTEF_NEWLINE_TYPE_DEFAULT;
+	priv->detected_newline_type = TEPL_NEWLINE_TYPE_DEFAULT;
 }
 
 /**
- * gtef_file_loader_load_async:
- * @loader: a #GtefFileLoader.
+ * tepl_file_loader_load_async:
+ * @loader: a #TeplFileLoader.
  * @io_priority: the I/O priority of the request. E.g. %G_PRIORITY_LOW,
  *   %G_PRIORITY_DEFAULT or %G_PRIORITY_HIGH.
  * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
@@ -1127,7 +1127,7 @@ reset (GtefFileLoader *loader)
  *   satisfied.
  * @user_data: user data to pass to @callback.
  *
- * Loads asynchronously the file content into the #GtefBuffer.
+ * Loads asynchronously the file content into the #TeplBuffer.
  *
  * See the #GAsyncResult documentation to know how to use this function.
  *
@@ -1138,7 +1138,7 @@ reset (GtefFileLoader *loader)
  * https://bugzilla.gnome.org/show_bug.cgi?id=616044
  */
 void
-gtef_file_loader_load_async (GtefFileLoader        *loader,
+tepl_file_loader_load_async (TeplFileLoader        *loader,
 			     gint                   io_priority,
 			     GCancellable          *cancellable,
 			     GFileProgressCallback  progress_callback,
@@ -1147,18 +1147,18 @@ gtef_file_loader_load_async (GtefFileLoader        *loader,
 			     GAsyncReadyCallback    callback,
 			     gpointer               user_data)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 	TaskData *task_data;
 
-	g_return_if_fail (GTEF_IS_FILE_LOADER (loader));
+	g_return_if_fail (TEPL_IS_FILE_LOADER (loader));
 	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	if (priv->task != NULL)
 	{
 		g_warning ("Several load operations in parallel with the same "
-			   "GtefFileLoader is not possible and doesn't make sense.");
+			   "TeplFileLoader is not possible and doesn't make sense.");
 		return;
 	}
 
@@ -1180,29 +1180,29 @@ gtef_file_loader_load_async (GtefFileLoader        *loader,
 }
 
 /**
- * gtef_file_loader_load_finish:
- * @loader: a #GtefFileLoader.
+ * tepl_file_loader_load_finish:
+ * @loader: a #TeplFileLoader.
  * @result: a #GAsyncResult.
  * @error: a #GError, or %NULL.
  *
- * Finishes a file loading started with gtef_file_loader_load_async().
+ * Finishes a file loading started with tepl_file_loader_load_async().
  *
  * Returns: whether the content has been loaded successfully.
  * Since: 1.0
  */
 gboolean
-gtef_file_loader_load_finish (GtefFileLoader  *loader,
+tepl_file_loader_load_finish (TeplFileLoader  *loader,
 			      GAsyncResult    *result,
 			      GError         **error)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 	gboolean ok;
 
-	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), FALSE);
+	g_return_val_if_fail (TEPL_IS_FILE_LOADER (loader), FALSE);
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 	g_return_val_if_fail (g_task_is_valid (result, loader), FALSE);
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 
 	g_return_val_if_fail (G_TASK (result) == priv->task, FALSE);
 
@@ -1218,17 +1218,17 @@ gtef_file_loader_load_finish (GtefFileLoader  *loader,
 
 		task_data = g_task_get_task_data (priv->task);
 
-		_gtef_file_set_encoding (priv->file, priv->detected_encoding);
-		_gtef_file_set_newline_type (priv->file, priv->detected_newline_type);
-		_gtef_file_set_compression_type (priv->file, GTEF_COMPRESSION_TYPE_NONE);
-		_gtef_file_set_externally_modified (priv->file, FALSE);
-		_gtef_file_set_deleted (priv->file, FALSE);
+		_tepl_file_set_encoding (priv->file, priv->detected_encoding);
+		_tepl_file_set_newline_type (priv->file, priv->detected_newline_type);
+		_tepl_file_set_compression_type (priv->file, TEPL_COMPRESSION_TYPE_NONE);
+		_tepl_file_set_externally_modified (priv->file, FALSE);
+		_tepl_file_set_deleted (priv->file, FALSE);
 
-		etag = _gtef_file_content_loader_get_etag (task_data->content_loader);
-		_gtef_file_set_etag (priv->file, etag);
+		etag = _tepl_file_content_loader_get_etag (task_data->content_loader);
+		_tepl_file_set_etag (priv->file, etag);
 
-		readonly = _gtef_file_content_loader_get_readonly (task_data->content_loader);
-		_gtef_file_set_readonly (priv->file, readonly);
+		readonly = _tepl_file_content_loader_get_readonly (task_data->content_loader);
+		_tepl_file_set_readonly (priv->file, readonly);
 	}
 
 	g_clear_object (&priv->task);
@@ -1237,50 +1237,50 @@ gtef_file_loader_load_finish (GtefFileLoader  *loader,
 }
 
 /**
- * gtef_file_loader_get_encoding:
- * @loader: a #GtefFileLoader.
+ * tepl_file_loader_get_encoding:
+ * @loader: a #TeplFileLoader.
  *
  * Returns: (nullable): the detected file encoding, or %NULL.
  * Since: 2.0
  */
-const GtefEncoding *
-gtef_file_loader_get_encoding (GtefFileLoader *loader)
+const TeplEncoding *
+tepl_file_loader_get_encoding (TeplFileLoader *loader)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE_LOADER (loader), NULL);
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 	return priv->detected_encoding;
 }
 
 /**
- * gtef_file_loader_get_newline_type:
- * @loader: a #GtefFileLoader.
+ * tepl_file_loader_get_newline_type:
+ * @loader: a #TeplFileLoader.
  *
  * Returns: the detected newline type.
  * Since: 2.0
  */
-GtefNewlineType
-gtef_file_loader_get_newline_type (GtefFileLoader *loader)
+TeplNewlineType
+tepl_file_loader_get_newline_type (TeplFileLoader *loader)
 {
-	GtefFileLoaderPrivate *priv;
+	TeplFileLoaderPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE_LOADER (loader), GTEF_NEWLINE_TYPE_LF);
+	g_return_val_if_fail (TEPL_IS_FILE_LOADER (loader), TEPL_NEWLINE_TYPE_LF);
 
-	priv = gtef_file_loader_get_instance_private (loader);
+	priv = tepl_file_loader_get_instance_private (loader);
 	return priv->detected_newline_type;
 }
 
 /* For the unit tests. */
 gint64
-_gtef_file_loader_get_encoding_converter_buffer_size (void)
+_tepl_file_loader_get_encoding_converter_buffer_size (void)
 {
-	GtefEncodingConverter *converter;
+	TeplEncodingConverter *converter;
 	gint64 buffer_size;
 
-	converter = _gtef_encoding_converter_new (ENCODING_CONVERTER_BUFFER_SIZE);
-	buffer_size = _gtef_encoding_converter_get_buffer_size (converter);
+	converter = _tepl_encoding_converter_new (ENCODING_CONVERTER_BUFFER_SIZE);
+	buffer_size = _tepl_encoding_converter_get_buffer_size (converter);
 	g_object_unref (converter);
 
 	return buffer_size;

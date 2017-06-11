@@ -1,14 +1,14 @@
-Gtef - GTK+ Text Editor Framework
+Tepl - GTK+ Text Editor Framework
 =================================
 
-This is version 2.0.1 of Gtef.
+This is version 2.0.1 of Tepl.
 
-Gtef is a library that eases the development of GtkSourceView-based text
+Tepl is a library that eases the development of GtkSourceView-based text
 editors and IDEs.
 
-The Gtef website:
+The Tepl website:
 
-    https://wiki.gnome.org/Projects/Gtef
+    https://wiki.gnome.org/Projects/Tepl
 
 Some background on why this project has been created:
 
@@ -19,19 +19,19 @@ The final goal is to create a Tabbed Document Interface (TDI) framework
 suitable for text editors.
 
 But the first short-term goal is to have a higher-level API to load and save a
-file. All the errors would be handled by Gtef, showing GtkInfoBars etc.
+file. All the errors would be handled by Tepl, showing GtkInfoBars etc.
 
-Maybe some of the Gtef features will be moved to GtkSourceView when it's
-considered more stable. So Gtef can also be seen as an incubator for some
+Maybe some of the Tepl features will be moved to GtkSourceView when it's
+considered more stable. So Tepl can also be seen as an incubator for some
 GtkSourceView features.
 
-The Gtef library is free software and is released under the terms of the
+The Tepl library is free software and is released under the terms of the
 GNU Lesser General Public License.
 
 Warning - API/ABI stability
 ---------------------------
 
-Gtef uses the same versioning *scheme* as GNOME, but not the same version
+Tepl uses the same versioning *scheme* as GNOME, but not the same version
 *numbers* at the same time. The package version has the form
 'major.minor.micro'. If 'minor' is an even number, it means that it is a stable
 version and that API/ABI stability is guaranteed, and that it is
@@ -44,7 +44,7 @@ parallel.
 To learn more about the GNOME versioning scheme:
 https://developer.gnome.org/programming-guidelines/stable/versioning.html.en
 
-Gtef contains more experimental APIs than GtkSourceView, sometimes even
+Tepl contains more experimental APIs than GtkSourceView, sometimes even
 unfinished features. It means that - if needed - new major versions are
 released every 6 months, breaking the API to improve and design it
 incrementally.
@@ -77,12 +77,12 @@ From the Git repository, the 'configure' script and the 'INSTALL' file are not
 yet generated, so you need to run 'autogen.sh' instead, which takes the same
 arguments as 'configure'.
 
-To build the latest version of Gtef plus its dependencies from Git, Jhbuild is
+To build the latest version of Tepl plus its dependencies from Git, Jhbuild is
 recommended:
 
     https://wiki.gnome.org/Projects/Jhbuild
 
-Applications that use Gtef
+Applications that use Tepl
 --------------------------
 
 - gCSVedit: http://gcsvedit.sourceforge.net/

@@ -17,7 +17,7 @@ AM_CPPFLAGS = 			\
 
 AM_LDFLAGS = $(WARN_LDFLAGS)
 
-LDADD = $(top_builddir)/gtef/libgtef-core.la	\
+LDADD = $(top_builddir)/tepl/libtepl-core.la	\
 	$(DEP_LIBS)
 
 noinst_PROGRAMS = $(UNIT_TEST_PROGS)
@@ -61,12 +61,12 @@ UNIT_TEST_PROGS += test-utils
 test_utils_SOURCES = test-utils.c
 
 if INSTALLED_TESTS
-insttestdir = $(libexecdir)/installed-tests/$(PACKAGE)-@GTEF_API_VERSION@
+insttestdir = $(libexecdir)/installed-tests/$(PACKAGE)-@TEPL_API_VERSION@
 insttest_PROGRAMS = $(UNIT_TEST_PROGS)
 
 %.test: %$(EXEEXT) Makefile
 	$(AM_V_GEN) (echo '[Test]' > $@.tmp; \
-	echo 'Description=Gtef test' >> $@.tmp; \
+	echo 'Description=Tepl test' >> $@.tmp; \
 	echo 'Exec=$(insttestdir)/$<' >> $@.tmp; \
 	echo 'Type=session' >> $@.tmp; \
 	echo 'Output=TAP' >> $@.tmp; \
@@ -76,7 +76,7 @@ test_files = $(UNIT_TEST_PROGS:=.test)
 
 CLEANFILES = $(test_files)
 
-testmetadir = $(datadir)/installed-tests/$(PACKAGE)-@GTEF_API_VERSION@
+testmetadir = $(datadir)/installed-tests/$(PACKAGE)-@TEPL_API_VERSION@
 testmeta_DATA = $(test_files)
 
 endif # INSTALLED_TESTS

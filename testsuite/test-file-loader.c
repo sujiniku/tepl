@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -19,7 +19,7 @@
 
 #include <string.h>
 #include <sys/stat.h>
-#include <gtef/gtef.h>
+#include <tepl/tepl.h>
 
 #define DEFAULT_CONTENTS "My shiny content!"
 #define MAX_SIZE 10000
@@ -36,8 +36,8 @@ struct _TestData
 	gchar *expected_buffer_content;
 	GQuark expected_error_domain;
 	gint expected_error_code;
-	GtefEncoding *expected_encoding;
-	GtefNewlineType expected_newline_type;
+	TeplEncoding *expected_encoding;
+	TeplNewlineType expected_newline_type;
 
 	/* Can be -1 to disable checking the number of lines in the buffer. */
 	gint expected_line_count;
@@ -48,7 +48,7 @@ test_data_new (const gchar     *expected_buffer_content,
 	       GQuark           expected_error_domain,
 	       gint             expected_error_code,
 	       const gchar     *expected_charset,
-	       GtefNewlineType  expected_newline_type,
+	       TeplNewlineType  expected_newline_type,
 	       gint             expected_line_count)
 {
 	TestData *data;
@@ -64,7 +64,7 @@ test_data_new (const gchar     *expected_buffer_content,
 
 	if (expected_charset != NULL)
 	{
-		data->expected_encoding = gtef_encoding_new (expected_charset);
+		data->expected_encoding = tepl_encoding_new (expected_charset);
 	}
 
 	return data;
@@ -75,7 +75,7 @@ test_data_free (TestData *data)
 {
 	if (data != NULL)
 	{
-		gtef_encoding_free (data->expected_encoding);
+		tepl_encoding_free (data->expected_encoding);
 		g_free (data->expected_buffer_content);
 		g_free (data);
 	}
@@ -140,14 +140,14 @@ check_buffer_state (GtkTextBuffer *buffer)
 }
 
 static void
-check_equal_encodings (const GtefEncoding *received_enc,
-		       const GtefEncoding *expected_enc)
+check_equal_encodings (const TeplEncoding *received_enc,
+		       const TeplEncoding *expected_enc)
 {
-	if (!gtef_encoding_equals (received_enc, expected_enc))
+	if (!tepl_encoding_equals (received_enc, expected_enc))
 	{
 		g_warning ("Expected encoding '%s' but received '%s'.",
-			   gtef_encoding_get_charset (expected_enc),
-			   gtef_encoding_get_charset (received_enc));
+			   tepl_encoding_get_charset (expected_enc),
+			   tepl_encoding_get_charset (received_enc));
 	}
 }
 
@@ -156,7 +156,7 @@ load_cb (GObject      *source_object,
 	 GAsyncResult *result,
 	 gpointer      user_data)
 {
-	GtefFileLoader *loader = GTEF_FILE_LOADER (source_object);
+	TeplFileLoader *loader = TEPL_FILE_LOADER (source_object);
 	TestData *data = user_data;
 	GtkTextBuffer *buffer;
 	GtkTextIter start;
@@ -165,23 +165,23 @@ load_cb (GObject      *source_object,
 	GFile *location;
 	GError *error = NULL;
 
-	gtef_file_loader_load_finish (loader, result, &error);
+	tepl_file_loader_load_finish (loader, result, &error);
 
-	buffer = GTK_TEXT_BUFFER (gtef_file_loader_get_buffer (loader));
+	buffer = GTK_TEXT_BUFFER (tepl_file_loader_get_buffer (loader));
 
 	if (data->expected_error_domain == 0)
 	{
-		GtefFile *file;
+		TeplFile *file;
 
 		g_assert_no_error (error);
 
-		file = gtef_file_loader_get_file (loader);
+		file = tepl_file_loader_get_file (loader);
 
-		g_assert_cmpint (gtef_file_get_compression_type (file), ==, GTEF_COMPRESSION_TYPE_NONE);
-		g_assert_cmpint (gtef_file_loader_get_newline_type (loader), ==, data->expected_newline_type);
-		g_assert_cmpint (gtef_file_get_newline_type (file), ==, data->expected_newline_type);
-		g_assert (!gtef_file_is_externally_modified (file));
-		g_assert (!gtef_file_is_deleted (file));
+		g_assert_cmpint (tepl_file_get_compression_type (file), ==, TEPL_COMPRESSION_TYPE_NONE);
+		g_assert_cmpint (tepl_file_loader_get_newline_type (loader), ==, data->expected_newline_type);
+		g_assert_cmpint (tepl_file_get_newline_type (file), ==, data->expected_newline_type);
+		g_assert (!tepl_file_is_externally_modified (file));
+		g_assert (!tepl_file_is_deleted (file));
 
 		if (data->expected_line_count != -1)
 		{
@@ -193,8 +193,8 @@ load_cb (GObject      *source_object,
 
 		if (data->expected_encoding != NULL)
 		{
-			check_equal_encodings (gtef_file_loader_get_encoding (loader), data->expected_encoding);
-			check_equal_encodings (gtef_file_get_encoding (file), data->expected_encoding);
+			check_equal_encodings (tepl_file_loader_get_encoding (loader), data->expected_encoding);
+			check_equal_encodings (tepl_file_get_encoding (file), data->expected_encoding);
 		}
 	}
 	else
@@ -211,7 +211,7 @@ load_cb (GObject      *source_object,
 
 	check_buffer_state (buffer);
 
-	location = gtef_file_loader_get_location (loader);
+	location = tepl_file_loader_get_location (loader);
 	g_file_delete (location, NULL, &error);
 	g_assert_no_error (error);
 
@@ -227,32 +227,32 @@ test_loader (const gchar     *contents,
 	     GQuark           expected_error_domain,
 	     gint             expected_error_code,
 	     const gchar     *expected_charset,
-	     GtefNewlineType  expected_newline_type,
+	     TeplNewlineType  expected_newline_type,
 	     gint             expected_line_count,
 	     gboolean         implicit_trailing_newline,
 	     gint64           max_size)
 {
-	GtefBuffer *buffer;
-	GtefFile *file;
+	TeplBuffer *buffer;
+	TeplFile *file;
 	gchar *path;
 	GFile *location;
-	GtefFileLoader *loader;
+	TeplFileLoader *loader;
 	TestData *data;
 	GError *error = NULL;
 
-	buffer = gtef_buffer_new ();
+	buffer = tepl_buffer_new ();
 	gtk_text_buffer_set_text (GTK_TEXT_BUFFER (buffer), "Previous contents, must be emptied.", -1);
 	gtk_source_buffer_set_implicit_trailing_newline (GTK_SOURCE_BUFFER (buffer),
 							 implicit_trailing_newline);
 
-	file = gtef_buffer_get_file (buffer);
+	file = tepl_buffer_get_file (buffer);
 
-	path = g_build_filename (g_get_tmp_dir (), "gtef-test-file-loader", NULL);
+	path = g_build_filename (g_get_tmp_dir (), "tepl-test-file-loader", NULL);
 	g_file_set_contents (path, contents, -1, &error);
 	g_assert_no_error (error);
 
 	location = g_file_new_for_path (path);
-	gtef_file_set_location (file, location);
+	tepl_file_set_location (file, location);
 
 	data = test_data_new (expected_buffer_content,
 			      expected_error_domain,
@@ -261,11 +261,11 @@ test_loader (const gchar     *contents,
 			      expected_newline_type,
 			      expected_line_count);
 
-	loader = gtef_file_loader_new (buffer, file);
-	gtef_file_loader_set_max_size (loader, max_size);
-	gtef_file_loader_set_chunk_size (loader, CHUNK_SIZE);
+	loader = tepl_file_loader_new (buffer, file);
+	tepl_file_loader_set_max_size (loader, max_size);
+	tepl_file_loader_set_chunk_size (loader, CHUNK_SIZE);
 
-	gtef_file_loader_load_async (loader,
+	tepl_file_loader_load_async (loader,
 				     G_PRIORITY_DEFAULT,
 				     NULL, /* cancellable */
 				     NULL, NULL, NULL, /* progress */
@@ -284,7 +284,7 @@ static void
 test_loader_newlines (gboolean         implicit_trailing_newline,
 		      const gchar     *contents,
 		      const gchar     *expected_buffer_content,
-		      GtefNewlineType  expected_newline_type)
+		      TeplNewlineType  expected_newline_type)
 {
 	test_loader (contents,
 		     expected_buffer_content,
@@ -299,15 +299,15 @@ test_loader_newlines (gboolean         implicit_trailing_newline,
 static void
 test_newlines (void)
 {
-	test_loader_newlines (TRUE, DEFAULT_CONTENTS, DEFAULT_CONTENTS, GTEF_NEWLINE_TYPE_DEFAULT);
-	test_loader_newlines (TRUE, DEFAULT_CONTENTS "\n", DEFAULT_CONTENTS, GTEF_NEWLINE_TYPE_LF);
-	test_loader_newlines (TRUE, DEFAULT_CONTENTS "\r", DEFAULT_CONTENTS, GTEF_NEWLINE_TYPE_CR);
-	test_loader_newlines (TRUE, DEFAULT_CONTENTS "\r\n", DEFAULT_CONTENTS, GTEF_NEWLINE_TYPE_CR_LF);
+	test_loader_newlines (TRUE, DEFAULT_CONTENTS, DEFAULT_CONTENTS, TEPL_NEWLINE_TYPE_DEFAULT);
+	test_loader_newlines (TRUE, DEFAULT_CONTENTS "\n", DEFAULT_CONTENTS, TEPL_NEWLINE_TYPE_LF);
+	test_loader_newlines (TRUE, DEFAULT_CONTENTS "\r", DEFAULT_CONTENTS, TEPL_NEWLINE_TYPE_CR);
+	test_loader_newlines (TRUE, DEFAULT_CONTENTS "\r\n", DEFAULT_CONTENTS, TEPL_NEWLINE_TYPE_CR_LF);
 
-	test_loader_newlines (FALSE, DEFAULT_CONTENTS, DEFAULT_CONTENTS, GTEF_NEWLINE_TYPE_DEFAULT);
-	test_loader_newlines (FALSE, DEFAULT_CONTENTS "\n", DEFAULT_CONTENTS "\n", GTEF_NEWLINE_TYPE_LF);
-	test_loader_newlines (FALSE, DEFAULT_CONTENTS "\r", DEFAULT_CONTENTS "\r", GTEF_NEWLINE_TYPE_CR);
-	test_loader_newlines (FALSE, DEFAULT_CONTENTS "\r\n", DEFAULT_CONTENTS "\r\n", GTEF_NEWLINE_TYPE_CR_LF);
+	test_loader_newlines (FALSE, DEFAULT_CONTENTS, DEFAULT_CONTENTS, TEPL_NEWLINE_TYPE_DEFAULT);
+	test_loader_newlines (FALSE, DEFAULT_CONTENTS "\n", DEFAULT_CONTENTS "\n", TEPL_NEWLINE_TYPE_LF);
+	test_loader_newlines (FALSE, DEFAULT_CONTENTS "\r", DEFAULT_CONTENTS "\r", TEPL_NEWLINE_TYPE_CR);
+	test_loader_newlines (FALSE, DEFAULT_CONTENTS "\r\n", DEFAULT_CONTENTS "\r\n", TEPL_NEWLINE_TYPE_CR_LF);
 }
 
 static void
@@ -318,7 +318,7 @@ test_loader_split_cr_lf (const gchar *content,
 		     content,
 		     0, 0,
 		     "ASCII",
-		     GTEF_NEWLINE_TYPE_LF,
+		     TEPL_NEWLINE_TYPE_LF,
 		     expected_line_count,
 		     FALSE,
 		     -1);
@@ -331,7 +331,7 @@ test_split_cr_lf (void)
 	gchar *content;
 	gint expected_line_count;
 
-	block_size = _gtef_file_loader_get_encoding_converter_buffer_size ();
+	block_size = _tepl_file_loader_get_encoding_converter_buffer_size ();
 	/* Remove terminating nul byte */
 	block_size--;
 
@@ -418,7 +418,7 @@ test_loader_max_size (const gchar *contents,
 		     expected_error_domain,
 		     expected_error_code,
 		     "ASCII",
-		     GTEF_NEWLINE_TYPE_LF,
+		     TEPL_NEWLINE_TYPE_LF,
 		     -1,
 		     FALSE,
 		     max_size);
@@ -437,8 +437,8 @@ test_max_size (void)
 	/* Too big */
 	test_loader_max_size (content,
 			      "",
-			      GTEF_FILE_LOADER_ERROR,
-			      GTEF_FILE_LOADER_ERROR_TOO_BIG,
+			      TEPL_FILE_LOADER_ERROR,
+			      TEPL_FILE_LOADER_ERROR_TOO_BIG,
 			      MAX_SIZE);
 
 	g_free (content);
@@ -466,7 +466,7 @@ test_encoding (void)
 		     "Un \303\251l\303\251phant \303\247a trompe \303\251norm\303\251ment.\n",
 		     0, 0,
 		     "ISO-8859-1",
-		     GTEF_NEWLINE_TYPE_LF,
+		     TEPL_NEWLINE_TYPE_LF,
 		     2,
 		     FALSE,
 		     -1);
@@ -476,7 +476,7 @@ test_encoding (void)
 		     "STRA\341\272\236E\n",
 		     0, 0,
 		     "UTF-8",
-		     GTEF_NEWLINE_TYPE_LF,
+		     TEPL_NEWLINE_TYPE_LF,
 		     2,
 		     FALSE,
 		     -1);
@@ -490,7 +490,7 @@ create_writable_file (void)
 	GFile *location;
 	GError *error = NULL;
 
-	path = g_build_filename (g_get_tmp_dir (), "gtef-test-file-loader", NULL);
+	path = g_build_filename (g_get_tmp_dir (), "tepl-test-file-loader", NULL);
 	location = g_file_new_for_path (path);
 
 	g_file_delete (location, NULL, NULL);
@@ -533,7 +533,7 @@ create_file_with_permissions (guint permissions)
 	guint mode;
 	GError *error = NULL;
 
-	path = g_build_filename (g_get_tmp_dir (), "gtef-test-file-loader", NULL);
+	path = g_build_filename (g_get_tmp_dir (), "tepl-test-file-loader", NULL);
 	location = g_file_new_for_path (path);
 
 	g_file_delete (location, NULL, NULL);
@@ -570,17 +570,17 @@ check_readonly_cb (GObject      *source_object,
 		   GAsyncResult *result,
 		   gpointer      user_data)
 {
-	GtefFileLoader *loader = GTEF_FILE_LOADER (source_object);
+	TeplFileLoader *loader = TEPL_FILE_LOADER (source_object);
 	gboolean expected_readonly = GPOINTER_TO_INT (user_data);
-	GtefFile *file;
+	TeplFile *file;
 	gboolean readonly;
 	GError *error = NULL;
 
-	gtef_file_loader_load_finish (loader, result, &error);
+	tepl_file_loader_load_finish (loader, result, &error);
 	g_assert_no_error (error);
 
-	file = gtef_file_loader_get_file (loader);
-	readonly = gtef_file_is_readonly (file);
+	file = tepl_file_loader_get_file (loader);
+	readonly = tepl_file_is_readonly (file);
 	g_assert_cmpint (readonly, ==, expected_readonly);
 
 	gtk_main_quit ();
@@ -590,17 +590,17 @@ static void
 check_readonly (GFile    *location,
 		gboolean  expected_readonly)
 {
-	GtefBuffer *buffer;
-	GtefFile *file;
-	GtefFileLoader *loader;
+	TeplBuffer *buffer;
+	TeplFile *file;
+	TeplFileLoader *loader;
 
-	buffer = gtef_buffer_new ();
-	file = gtef_buffer_get_file (buffer);
+	buffer = tepl_buffer_new ();
+	file = tepl_buffer_get_file (buffer);
 
-	gtef_file_set_location (file, location);
-	loader = gtef_file_loader_new (buffer, file);
+	tepl_file_set_location (file, location);
+	loader = tepl_file_loader_new (buffer, file);
 
-	gtef_file_loader_load_async (loader,
+	tepl_file_loader_load_async (loader,
 				     G_PRIORITY_DEFAULT,
 				     NULL,
 				     NULL, NULL, NULL,

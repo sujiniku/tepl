@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,7 +17,7 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gtef/gtef-encoding-converter.h"
+#include "tepl/tepl-encoding-converter.h"
 #include <gio/gio.h> /* For G_IO_ERROR */
 
 static void
@@ -54,26 +54,26 @@ compare_outputs (GQueue *received_output,
 static void
 test_iso_8859_15_to_utf8 (void)
 {
-	GtefEncodingConverter *converter;
+	TeplEncodingConverter *converter;
 	GQueue *received_output;
 	GQueue *expected_output;
 	GError *error = NULL;
 
-	converter = _gtef_encoding_converter_new (-1);
+	converter = _tepl_encoding_converter_new (-1);
 
 	received_output = g_queue_new ();
-	_gtef_encoding_converter_set_callback (converter, converter_cb, received_output);
+	_tepl_encoding_converter_set_callback (converter, converter_cb, received_output);
 
-	_gtef_encoding_converter_open (converter, "UTF-8", "ISO-8859-15", &error);
+	_tepl_encoding_converter_open (converter, "UTF-8", "ISO-8859-15", &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_feed (converter,
+	_tepl_encoding_converter_feed (converter,
 				       "Hello S\351bastien.",
 				       -1,
 				       &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter, &error);
+	_tepl_encoding_converter_close (converter, &error);
 	g_assert_no_error (error);
 
 	expected_output = g_queue_new ();
@@ -89,26 +89,26 @@ test_iso_8859_15_to_utf8 (void)
 static void
 test_utf8_to_utf8 (void)
 {
-	GtefEncodingConverter *converter;
+	TeplEncodingConverter *converter;
 	GQueue *received_output;
 	GQueue *expected_output;
 	GError *error = NULL;
 
-	converter = _gtef_encoding_converter_new (-1);
+	converter = _tepl_encoding_converter_new (-1);
 
 	received_output = g_queue_new ();
-	_gtef_encoding_converter_set_callback (converter, converter_cb, received_output);
+	_tepl_encoding_converter_set_callback (converter, converter_cb, received_output);
 
-	_gtef_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
+	_tepl_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_feed (converter,
+	_tepl_encoding_converter_feed (converter,
 				       "Hello S\303\251bastien.",
 				       -1,
 				       &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter, &error);
+	_tepl_encoding_converter_close (converter, &error);
 	g_assert_no_error (error);
 
 	expected_output = g_queue_new ();
@@ -124,27 +124,27 @@ test_utf8_to_utf8 (void)
 static void
 test_buffer_full (void)
 {
-	GtefEncodingConverter *converter;
+	TeplEncodingConverter *converter;
 	GQueue *received_output;
 	GQueue *expected_output;
 	GError *error = NULL;
 
 	/* 10 + terminated nul byte. */
-	converter = _gtef_encoding_converter_new (11);
+	converter = _tepl_encoding_converter_new (11);
 
 	received_output = g_queue_new ();
-	_gtef_encoding_converter_set_callback (converter, converter_cb, received_output);
+	_tepl_encoding_converter_set_callback (converter, converter_cb, received_output);
 
-	_gtef_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
+	_tepl_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_feed (converter,
+	_tepl_encoding_converter_feed (converter,
 				       "Hello S\303\251bastien.",
 				       -1,
 				       &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter, &error);
+	_tepl_encoding_converter_close (converter, &error);
 	g_assert_no_error (error);
 
 	expected_output = g_queue_new ();
@@ -161,26 +161,26 @@ test_buffer_full (void)
 static void
 test_incomplete_input (void)
 {
-	GtefEncodingConverter *converter;
+	TeplEncodingConverter *converter;
 	GQueue *received_output;
 	GQueue *expected_output;
 	GError *error = NULL;
 
-	converter = _gtef_encoding_converter_new (-1);
+	converter = _tepl_encoding_converter_new (-1);
 
 	/* Split a 2-byte character */
 	received_output = g_queue_new ();
-	_gtef_encoding_converter_set_callback (converter, converter_cb, received_output);
+	_tepl_encoding_converter_set_callback (converter, converter_cb, received_output);
 
-	_gtef_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
+	_tepl_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_feed (converter, "Hello S\303", -1, &error);
+	_tepl_encoding_converter_feed (converter, "Hello S\303", -1, &error);
 	g_assert_no_error (error);
-	_gtef_encoding_converter_feed (converter, "\251bastien.", -1, &error);
+	_tepl_encoding_converter_feed (converter, "\251bastien.", -1, &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter, &error);
+	_tepl_encoding_converter_close (converter, &error);
 	g_assert_no_error (error);
 
 	expected_output = g_queue_new ();
@@ -195,17 +195,17 @@ test_incomplete_input (void)
 
 	/* Split the 3-byte character ẞ: [1, 2] */
 	received_output = g_queue_new ();
-	_gtef_encoding_converter_set_callback (converter, converter_cb, received_output);
+	_tepl_encoding_converter_set_callback (converter, converter_cb, received_output);
 
-	_gtef_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
+	_tepl_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_feed (converter, "\341", -1, &error);
+	_tepl_encoding_converter_feed (converter, "\341", -1, &error);
 	g_assert_no_error (error);
-	_gtef_encoding_converter_feed (converter, "\272\236", -1, &error);
+	_tepl_encoding_converter_feed (converter, "\272\236", -1, &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter, &error);
+	_tepl_encoding_converter_close (converter, &error);
 	g_assert_no_error (error);
 
 	expected_output = g_queue_new ();
@@ -220,17 +220,17 @@ test_incomplete_input (void)
 
 	/* Split the 3-byte character ẞ: [2, 1] */
 	received_output = g_queue_new ();
-	_gtef_encoding_converter_set_callback (converter, converter_cb, received_output);
+	_tepl_encoding_converter_set_callback (converter, converter_cb, received_output);
 
-	_gtef_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
+	_tepl_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_feed (converter, "\341\272", -1, &error);
+	_tepl_encoding_converter_feed (converter, "\341\272", -1, &error);
 	g_assert_no_error (error);
-	_gtef_encoding_converter_feed (converter, "\236", -1, &error);
+	_tepl_encoding_converter_feed (converter, "\236", -1, &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter, &error);
+	_tepl_encoding_converter_close (converter, &error);
 	g_assert_no_error (error);
 
 	expected_output = g_queue_new ();
@@ -245,19 +245,19 @@ test_incomplete_input (void)
 
 	/* Split the 3-byte character ẞ: [1, 1, 1] */
 	received_output = g_queue_new ();
-	_gtef_encoding_converter_set_callback (converter, converter_cb, received_output);
+	_tepl_encoding_converter_set_callback (converter, converter_cb, received_output);
 
-	_gtef_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
-	g_assert_no_error (error);
-
-	_gtef_encoding_converter_feed (converter, "\341", -1, &error);
-	g_assert_no_error (error);
-	_gtef_encoding_converter_feed (converter, "\272", -1, &error);
-	g_assert_no_error (error);
-	_gtef_encoding_converter_feed (converter, "\236", -1, &error);
+	_tepl_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter, &error);
+	_tepl_encoding_converter_feed (converter, "\341", -1, &error);
+	g_assert_no_error (error);
+	_tepl_encoding_converter_feed (converter, "\272", -1, &error);
+	g_assert_no_error (error);
+	_tepl_encoding_converter_feed (converter, "\236", -1, &error);
+	g_assert_no_error (error);
+
+	_tepl_encoding_converter_close (converter, &error);
 	g_assert_no_error (error);
 
 	expected_output = g_queue_new ();
@@ -276,16 +276,16 @@ test_incomplete_input (void)
 static void
 test_invalid_sequence (void)
 {
-	GtefEncodingConverter *converter;
+	TeplEncodingConverter *converter;
 	GError *error = NULL;
 
-	converter = _gtef_encoding_converter_new (-1);
+	converter = _tepl_encoding_converter_new (-1);
 
-	_gtef_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
+	_tepl_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
 	g_assert_no_error (error);
 
 	/* \251 is the second byte of "é". */
-	_gtef_encoding_converter_feed (converter,
+	_tepl_encoding_converter_feed (converter,
 				       "Hello S\251bastien.",
 				       -1,
 				       &error);
@@ -293,7 +293,7 @@ test_invalid_sequence (void)
 	g_assert (g_error_matches (error, G_CONVERT_ERROR, G_CONVERT_ERROR_ILLEGAL_SEQUENCE));
 	g_clear_error (&error);
 
-	_gtef_encoding_converter_close (converter, &error);
+	_tepl_encoding_converter_close (converter, &error);
 	g_assert_no_error (error);
 
 	g_object_unref (converter);
@@ -302,19 +302,19 @@ test_invalid_sequence (void)
 static void
 test_end_with_incomplete_input (void)
 {
-	GtefEncodingConverter *converter;
+	TeplEncodingConverter *converter;
 	GError *error = NULL;
 
-	converter = _gtef_encoding_converter_new (-1);
+	converter = _tepl_encoding_converter_new (-1);
 
-	_gtef_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
+	_tepl_encoding_converter_open (converter, "UTF-8", "UTF-8", &error);
 	g_assert_no_error (error);
 
 	/* \303 is the start of a two-byte character. */
-	_gtef_encoding_converter_feed (converter, "So far so \303", -1, &error);
+	_tepl_encoding_converter_feed (converter, "So far so \303", -1, &error);
 	g_assert_no_error (error);
 
-	_gtef_encoding_converter_close (converter, &error);
+	_tepl_encoding_converter_close (converter, &error);
 	g_assert (g_error_matches (error, G_CONVERT_ERROR, G_CONVERT_ERROR_PARTIAL_INPUT));
 	g_clear_error (&error);
 

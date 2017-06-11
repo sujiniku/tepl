@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - David Rabel <david.rabel@noresoft.com>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,18 +17,18 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtef/gtef.h>
+#include <tepl/tepl.h>
 
 static GtkWidget *
 create_view (void)
 {
 	GtkWidget *view;
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 	GtkTextIter start_iter;
 	GtkTextIter end_iter;
 
-	view = gtef_view_new ();
+	view = tepl_view_new ();
 
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
 	gtk_text_buffer_insert_at_cursor (buffer, "Line0\nLine1\nLine2\nLine3\nLine4\nLine5", -1);
@@ -37,11 +37,11 @@ create_view (void)
 	gtk_text_buffer_get_iter_at_line (buffer, &end_iter, 3);
 
 	/* FIXME: fold_region must be unreffed on exit. */
-	fold_region = gtef_fold_region_new (buffer,
+	fold_region = tepl_fold_region_new (buffer,
 	                                    &start_iter,
 	                                    &end_iter);
 
-	gtef_fold_region_set_folded (fold_region, TRUE);
+	tepl_fold_region_set_folded (fold_region, TRUE);
 
 	return view;
 }

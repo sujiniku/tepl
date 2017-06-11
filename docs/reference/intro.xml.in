@@ -11,30 +11,30 @@
   <title>Introduction</title>
 
   <para>
-    Gtef is a library that eases the development of GtkSourceView-based text
-    editors and IDEs. Gtef is the acronym for “GTK+ Text Editor Framework”.
+    Tepl is a library that eases the development of GtkSourceView-based text
+    editors and IDEs. Tepl is the acronym for “GTK+ Text Editor Framework”.
   </para>
 
   <para>
-    See the <ulink url="https://wiki.gnome.org/Projects/Gtef">Gtef website</ulink>.
+    See the <ulink url="https://wiki.gnome.org/Projects/Tepl">Tepl website</ulink>.
   </para>
 
   <para>
-    Gtef @GTEF_API_VERSION@ depends on GTK+ 3 and GtkSourceView 3.
+    Tepl @TEPL_API_VERSION@ depends on GTK+ 3 and GtkSourceView 3.
   </para>
 
   <refsect1>
     <title>pkg-config name</title>
     <para>
-      For Gtef @GTEF_API_VERSION@, the pkg-config name is:
-      <code>gtef-@GTEF_API_VERSION@</code>
+      For Tepl @TEPL_API_VERSION@, the pkg-config name is:
+      <code>tepl-@TEPL_API_VERSION@</code>
     </para>
     <para>
-      To compile a program that uses Gtef @GTEF_API_VERSION@, you
+      To compile a program that uses Tepl @TEPL_API_VERSION@, you
       can for example use the following command:
     </para>
     <para>
-      <code>$ gcc hello.c `pkg-config --cflags --libs gtef-@GTEF_API_VERSION@` -o hello</code>
+      <code>$ gcc hello.c `pkg-config --cflags --libs tepl-@TEPL_API_VERSION@` -o hello</code>
     </para>
   </refsect1>
 </part>

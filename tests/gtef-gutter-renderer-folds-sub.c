@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - David Rabel <david.rabel@noresoft.com>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,14 +17,14 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gtef-gutter-renderer-folds-sub.h"
+#include "tepl-gutter-renderer-folds-sub.h"
 
-G_DEFINE_TYPE (GtefGutterRendererFoldsSub,
-	       gtef_gutter_renderer_folds_sub,
-	       GTEF_TYPE_GUTTER_RENDERER_FOLDS)
+G_DEFINE_TYPE (TeplGutterRendererFoldsSub,
+	       tepl_gutter_renderer_folds_sub,
+	       TEPL_TYPE_GUTTER_RENDERER_FOLDS)
 
 static void
-gtef_gutter_renderer_folds_sub_draw (GtkSourceGutterRenderer      *renderer,
+tepl_gutter_renderer_folds_sub_draw (GtkSourceGutterRenderer      *renderer,
 				     cairo_t                      *cr,
 				     GdkRectangle                 *background_area,
 				     GdkRectangle                 *cell_area,
@@ -33,79 +33,79 @@ gtef_gutter_renderer_folds_sub_draw (GtkSourceGutterRenderer      *renderer,
 				     GtkSourceGutterRendererState  state)
 {
 	gint line_num;
-	GtefGutterRendererFoldsState folding_state;
+	TeplGutterRendererFoldsState folding_state;
 
 	line_num = gtk_text_iter_get_line (start);
 
 	if (line_num == 0)
 	{
-		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_START_FOLDED;
+		folding_state = TEPL_GUTTER_RENDERER_FOLDS_STATE_START_FOLDED;
 	}
 	else if (line_num == 1)
 	{
-		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_START_OPENED;
+		folding_state = TEPL_GUTTER_RENDERER_FOLDS_STATE_START_OPENED;
 	}
 	else if (line_num < 5)
 	{
-		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
+		folding_state = TEPL_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
 	}
 	else if (line_num == 5)
 	{
-		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_END;
+		folding_state = TEPL_GUTTER_RENDERER_FOLDS_STATE_END;
 	}
 	else if (line_num == 6)
 	{
-		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_NONE;
+		folding_state = TEPL_GUTTER_RENDERER_FOLDS_STATE_NONE;
 	}
 	else if (line_num == 7)
 	{
-		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_START_OPENED;
+		folding_state = TEPL_GUTTER_RENDERER_FOLDS_STATE_START_OPENED;
 	}
 	else if (line_num == 8)
 	{
-		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
+		folding_state = TEPL_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
 	}
 	else if (line_num == 9)
 	{
-		folding_state = (GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE |
-				 GTEF_GUTTER_RENDERER_FOLDS_STATE_START_OPENED);
+		folding_state = (TEPL_GUTTER_RENDERER_FOLDS_STATE_CONTINUE |
+				 TEPL_GUTTER_RENDERER_FOLDS_STATE_START_OPENED);
 	}
 	else if (line_num < 12)
 	{
-		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
+		folding_state = TEPL_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
 	}
 	else if (line_num == 12)
 	{
-		folding_state = (GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE |
-				 GTEF_GUTTER_RENDERER_FOLDS_STATE_END);
+		folding_state = (TEPL_GUTTER_RENDERER_FOLDS_STATE_CONTINUE |
+				 TEPL_GUTTER_RENDERER_FOLDS_STATE_END);
 	}
 	else if (line_num == 13)
 	{
-		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
+		folding_state = TEPL_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
 	}
 	else if (line_num == 14)
 	{
-		folding_state = (GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE |
-				 GTEF_GUTTER_RENDERER_FOLDS_STATE_START_FOLDED);
+		folding_state = (TEPL_GUTTER_RENDERER_FOLDS_STATE_CONTINUE |
+				 TEPL_GUTTER_RENDERER_FOLDS_STATE_START_FOLDED);
 	}
 	else if (line_num == 15)
 	{
-		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
+		folding_state = TEPL_GUTTER_RENDERER_FOLDS_STATE_CONTINUE;
 	}
 	else if (line_num == 16)
 	{
-		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_END;
+		folding_state = TEPL_GUTTER_RENDERER_FOLDS_STATE_END;
 	}
 	else
 	{
-		folding_state = GTEF_GUTTER_RENDERER_FOLDS_STATE_NONE;
+		folding_state = TEPL_GUTTER_RENDERER_FOLDS_STATE_NONE;
 	}
 
-	gtef_gutter_renderer_folds_set_state (GTEF_GUTTER_RENDERER_FOLDS (renderer), folding_state);
+	tepl_gutter_renderer_folds_set_state (TEPL_GUTTER_RENDERER_FOLDS (renderer), folding_state);
 
-	if (GTK_SOURCE_GUTTER_RENDERER_CLASS (gtef_gutter_renderer_folds_sub_parent_class)->draw != NULL)
+	if (GTK_SOURCE_GUTTER_RENDERER_CLASS (tepl_gutter_renderer_folds_sub_parent_class)->draw != NULL)
 	{
-		GTK_SOURCE_GUTTER_RENDERER_CLASS (gtef_gutter_renderer_folds_sub_parent_class)->draw (renderer,
+		GTK_SOURCE_GUTTER_RENDERER_CLASS (tepl_gutter_renderer_folds_sub_parent_class)->draw (renderer,
 												      cr,
 												      background_area,
 												      cell_area,
@@ -116,20 +116,20 @@ gtef_gutter_renderer_folds_sub_draw (GtkSourceGutterRenderer      *renderer,
 }
 
 static void
-gtef_gutter_renderer_folds_sub_class_init (GtefGutterRendererFoldsSubClass *klass)
+tepl_gutter_renderer_folds_sub_class_init (TeplGutterRendererFoldsSubClass *klass)
 {
 	GtkSourceGutterRendererClass *renderer_class = GTK_SOURCE_GUTTER_RENDERER_CLASS (klass);
 
-	renderer_class->draw = gtef_gutter_renderer_folds_sub_draw;
+	renderer_class->draw = tepl_gutter_renderer_folds_sub_draw;
 }
 
 static void
-gtef_gutter_renderer_folds_sub_init (GtefGutterRendererFoldsSub *self)
+tepl_gutter_renderer_folds_sub_init (TeplGutterRendererFoldsSub *self)
 {
 }
 
 GtkSourceGutterRenderer *
-gtef_gutter_renderer_folds_sub_new (void)
+tepl_gutter_renderer_folds_sub_new (void)
 {
-	return g_object_new (GTEF_TYPE_GUTTER_RENDERER_FOLDS_SUB, NULL);
+	return g_object_new (TEPL_TYPE_GUTTER_RENDERER_FOLDS_SUB, NULL);
 }

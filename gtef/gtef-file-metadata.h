@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,73 +17,73 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GTEF_FILE_METADATA_H
-#define GTEF_FILE_METADATA_H
+#ifndef TEPL_FILE_METADATA_H
+#define TEPL_FILE_METADATA_H
 
-#if !defined (GTEF_H_INSIDE) && !defined (GTEF_COMPILATION)
-#error "Only <gtef/gtef.h> can be included directly."
+#if !defined (TEPL_H_INSIDE) && !defined (TEPL_COMPILATION)
+#error "Only <tepl/tepl.h> can be included directly."
 #endif
 
 #include <gio/gio.h>
-#include <gtef/gtef-types.h>
+#include <tepl/tepl-types.h>
 
 G_BEGIN_DECLS
 
-#define GTEF_TYPE_FILE_METADATA (gtef_file_metadata_get_type ())
-G_DECLARE_DERIVABLE_TYPE (GtefFileMetadata, gtef_file_metadata,
-			  GTEF, FILE_METADATA,
+#define TEPL_TYPE_FILE_METADATA (tepl_file_metadata_get_type ())
+G_DECLARE_DERIVABLE_TYPE (TeplFileMetadata, tepl_file_metadata,
+			  TEPL, FILE_METADATA,
 			  GObject)
 
-struct _GtefFileMetadataClass
+struct _TeplFileMetadataClass
 {
 	GObjectClass parent_class;
 
 	gpointer padding[12];
 };
 
-GtefFileMetadata *	gtef_file_metadata_new				(GtefFile *file);
+TeplFileMetadata *	tepl_file_metadata_new				(TeplFile *file);
 
-GtefFile *		gtef_file_metadata_get_file			(GtefFileMetadata *metadata);
+TeplFile *		tepl_file_metadata_get_file			(TeplFileMetadata *metadata);
 
-gchar *			gtef_file_metadata_get				(GtefFileMetadata *metadata,
+gchar *			tepl_file_metadata_get				(TeplFileMetadata *metadata,
 									 const gchar      *key);
 
-void			gtef_file_metadata_set				(GtefFileMetadata *metadata,
+void			tepl_file_metadata_set				(TeplFileMetadata *metadata,
 									 const gchar      *key,
 									 const gchar      *value);
 
-gboolean		gtef_file_metadata_load				(GtefFileMetadata  *metadata,
+gboolean		tepl_file_metadata_load				(TeplFileMetadata  *metadata,
 									 GCancellable      *cancellable,
 									 GError           **error);
 
-void			gtef_file_metadata_load_async			(GtefFileMetadata    *metadata,
+void			tepl_file_metadata_load_async			(TeplFileMetadata    *metadata,
 									 gint                 io_priority,
 									 GCancellable        *cancellable,
 									 GAsyncReadyCallback  callback,
 									 gpointer             user_data);
 
-gboolean		gtef_file_metadata_load_finish			(GtefFileMetadata  *metadata,
+gboolean		tepl_file_metadata_load_finish			(TeplFileMetadata  *metadata,
 									 GAsyncResult      *result,
 									 GError           **error);
 
-gboolean		gtef_file_metadata_save				(GtefFileMetadata  *metadata,
+gboolean		tepl_file_metadata_save				(TeplFileMetadata  *metadata,
 									 GCancellable      *cancellable,
 									 GError           **error);
 
-void			gtef_file_metadata_save_async			(GtefFileMetadata    *metadata,
+void			tepl_file_metadata_save_async			(TeplFileMetadata    *metadata,
 									 gint                 io_priority,
 									 GCancellable        *cancellable,
 									 GAsyncReadyCallback  callback,
 									 gpointer             user_data);
 
-gboolean		gtef_file_metadata_save_finish			(GtefFileMetadata  *metadata,
+gboolean		tepl_file_metadata_save_finish			(TeplFileMetadata  *metadata,
 									 GAsyncResult      *result,
 									 GError           **error);
 
 G_GNUC_INTERNAL
-void			_gtef_file_metadata_set_use_gvfs_metadata	(GtefFileMetadata *metadata,
+void			_tepl_file_metadata_set_use_gvfs_metadata	(TeplFileMetadata *metadata,
 									 gboolean          use_gvfs_metadata);
 
 G_END_DECLS
 
-#endif /* GTEF_FILE_METADATA_H */
+#endif /* TEPL_FILE_METADATA_H */

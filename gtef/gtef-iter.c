@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,12 +17,12 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gtef-iter.h"
+#include "tepl-iter.h"
 
 /**
  * SECTION:iter
  * @Short_description: GtkTextIter utility functions
- * @Title: GtefIter
+ * @Title: TeplIter
  *
  * #GtkTextIter utility functions.
  */
@@ -57,7 +57,7 @@ get_leading_spaces_end_boundary (const GtkTextIter *iter,
 }
 
 /**
- * gtef_iter_get_line_indentation:
+ * tepl_iter_get_line_indentation:
  * @iter: a #GtkTextIter.
  *
  * Gets the indentation, as a string, of the line at @iter. @iter can be
@@ -71,7 +71,7 @@ get_leading_spaces_end_boundary (const GtkTextIter *iter,
  * Since: 2.0
  */
 gchar *
-gtef_iter_get_line_indentation (const GtkTextIter *iter)
+tepl_iter_get_line_indentation (const GtkTextIter *iter)
 {
 	GtkTextIter line_start;
 	GtkTextIter leading_end;

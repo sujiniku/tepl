@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2014, 2015, 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,24 +17,24 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GTEF_FILE_H
-#define GTEF_FILE_H
+#ifndef TEPL_FILE_H
+#define TEPL_FILE_H
 
-#if !defined (GTEF_H_INSIDE) && !defined (GTEF_COMPILATION)
-#error "Only <gtef/gtef.h> can be included directly."
+#if !defined (TEPL_H_INSIDE) && !defined (TEPL_COMPILATION)
+#error "Only <tepl/tepl.h> can be included directly."
 #endif
 
 #include <gtksourceview/gtksource.h>
-#include <gtef/gtef-types.h>
+#include <tepl/tepl-types.h>
 
 G_BEGIN_DECLS
 
-#define GTEF_TYPE_FILE (gtef_file_get_type ())
-G_DECLARE_DERIVABLE_TYPE (GtefFile, gtef_file,
-			  GTEF, FILE,
+#define TEPL_TYPE_FILE (tepl_file_get_type ())
+G_DECLARE_DERIVABLE_TYPE (TeplFile, tepl_file,
+			  TEPL, FILE,
 			  GObject)
 
-struct _GtefFileClass
+struct _TeplFileClass
 {
 	GObjectClass parent_class;
 
@@ -42,8 +42,8 @@ struct _GtefFileClass
 };
 
 /**
- * GtefMountOperationFactory:
- * @file: a #GtefFile.
+ * TeplMountOperationFactory:
+ * @file: a #TeplFile.
  * @userdata: user data
  *
  * Type definition for a function that will be called to create a
@@ -51,120 +51,120 @@ struct _GtefFileClass
  *
  * Since: 1.0
  */
-typedef GMountOperation *(*GtefMountOperationFactory) (GtefFile *file,
+typedef GMountOperation *(*TeplMountOperationFactory) (TeplFile *file,
 						       gpointer  userdata);
 
 /**
- * GtefNewlineType:
- * @GTEF_NEWLINE_TYPE_LF: line feed, used on UNIX.
- * @GTEF_NEWLINE_TYPE_CR: carriage return, used on Mac.
- * @GTEF_NEWLINE_TYPE_CR_LF: carriage return followed by a line feed, used
+ * TeplNewlineType:
+ * @TEPL_NEWLINE_TYPE_LF: line feed, used on UNIX.
+ * @TEPL_NEWLINE_TYPE_CR: carriage return, used on Mac.
+ * @TEPL_NEWLINE_TYPE_CR_LF: carriage return followed by a line feed, used
  *   on Windows.
  *
  * Since: 1.0
  */
 typedef enum
 {
-	GTEF_NEWLINE_TYPE_LF,
-	GTEF_NEWLINE_TYPE_CR,
-	GTEF_NEWLINE_TYPE_CR_LF
-} GtefNewlineType;
+	TEPL_NEWLINE_TYPE_LF,
+	TEPL_NEWLINE_TYPE_CR,
+	TEPL_NEWLINE_TYPE_CR_LF
+} TeplNewlineType;
 
 /**
- * GTEF_NEWLINE_TYPE_DEFAULT:
+ * TEPL_NEWLINE_TYPE_DEFAULT:
  *
  * The default newline type on the current OS.
  *
  * Since: 1.0
  */
 #ifdef G_OS_WIN32
-#define GTEF_NEWLINE_TYPE_DEFAULT GTEF_NEWLINE_TYPE_CR_LF
+#define TEPL_NEWLINE_TYPE_DEFAULT TEPL_NEWLINE_TYPE_CR_LF
 #else
-#define GTEF_NEWLINE_TYPE_DEFAULT GTEF_NEWLINE_TYPE_LF
+#define TEPL_NEWLINE_TYPE_DEFAULT TEPL_NEWLINE_TYPE_LF
 #endif
 
 /**
- * GtefCompressionType:
- * @GTEF_COMPRESSION_TYPE_NONE: plain text.
- * @GTEF_COMPRESSION_TYPE_GZIP: gzip compression.
+ * TeplCompressionType:
+ * @TEPL_COMPRESSION_TYPE_NONE: plain text.
+ * @TEPL_COMPRESSION_TYPE_GZIP: gzip compression.
  *
  * Since: 1.0
  */
 typedef enum
 {
-	GTEF_COMPRESSION_TYPE_NONE,
-	GTEF_COMPRESSION_TYPE_GZIP
-} GtefCompressionType;
+	TEPL_COMPRESSION_TYPE_NONE,
+	TEPL_COMPRESSION_TYPE_GZIP
+} TeplCompressionType;
 
-GtefFile *		gtef_file_new				(void);
+TeplFile *		tepl_file_new				(void);
 
-GtefFileMetadata *	gtef_file_get_file_metadata		(GtefFile *file);
+TeplFileMetadata *	tepl_file_get_file_metadata		(TeplFile *file);
 
-GFile *			gtef_file_get_location			(GtefFile *file);
+GFile *			tepl_file_get_location			(TeplFile *file);
 
-void			gtef_file_set_location			(GtefFile *file,
+void			tepl_file_set_location			(TeplFile *file,
 								 GFile    *location);
 
-const gchar *		gtef_file_get_short_name		(GtefFile *file);
+const gchar *		tepl_file_get_short_name		(TeplFile *file);
 
-const GtefEncoding *	gtef_file_get_encoding			(GtefFile *file);
+const TeplEncoding *	tepl_file_get_encoding			(TeplFile *file);
 
-GtefNewlineType		gtef_file_get_newline_type		(GtefFile *file);
+TeplNewlineType		tepl_file_get_newline_type		(TeplFile *file);
 
-GtefCompressionType	gtef_file_get_compression_type		(GtefFile *file);
+TeplCompressionType	tepl_file_get_compression_type		(TeplFile *file);
 
-void		 	gtef_file_set_mount_operation_factory	(GtefFile                  *file,
-								 GtefMountOperationFactory  callback,
+void		 	tepl_file_set_mount_operation_factory	(TeplFile                  *file,
+								 TeplMountOperationFactory  callback,
 								 gpointer                   user_data,
 								 GDestroyNotify             notify);
 
-void		 	gtef_file_check_file_on_disk		(GtefFile *file);
+void		 	tepl_file_check_file_on_disk		(TeplFile *file);
 
-gboolean	 	gtef_file_is_local			(GtefFile *file);
+gboolean	 	tepl_file_is_local			(TeplFile *file);
 
-gboolean	 	gtef_file_is_externally_modified	(GtefFile *file);
+gboolean	 	tepl_file_is_externally_modified	(TeplFile *file);
 
-gboolean	 	gtef_file_is_deleted			(GtefFile *file);
+gboolean	 	tepl_file_is_deleted			(TeplFile *file);
 
-gboolean	 	gtef_file_is_readonly			(GtefFile *file);
-
-G_GNUC_INTERNAL
-void			_gtef_file_set_encoding			(GtefFile           *file,
-								 const GtefEncoding *encoding);
+gboolean	 	tepl_file_is_readonly			(TeplFile *file);
 
 G_GNUC_INTERNAL
-void			_gtef_file_set_newline_type		(GtefFile        *file,
-								 GtefNewlineType  newline_type);
+void			_tepl_file_set_encoding			(TeplFile           *file,
+								 const TeplEncoding *encoding);
 
 G_GNUC_INTERNAL
-void			_gtef_file_set_compression_type		(GtefFile            *file,
-								 GtefCompressionType  compression_type);
+void			_tepl_file_set_newline_type		(TeplFile        *file,
+								 TeplNewlineType  newline_type);
 
 G_GNUC_INTERNAL
-GMountOperation *	_gtef_file_create_mount_operation	(GtefFile *file);
+void			_tepl_file_set_compression_type		(TeplFile            *file,
+								 TeplCompressionType  compression_type);
 
 G_GNUC_INTERNAL
-void			_gtef_file_set_mounted			(GtefFile *file);
+GMountOperation *	_tepl_file_create_mount_operation	(TeplFile *file);
 
 G_GNUC_INTERNAL
-const gchar *		_gtef_file_get_etag			(GtefFile *file);
+void			_tepl_file_set_mounted			(TeplFile *file);
 
 G_GNUC_INTERNAL
-void			_gtef_file_set_etag			(GtefFile    *file,
+const gchar *		_tepl_file_get_etag			(TeplFile *file);
+
+G_GNUC_INTERNAL
+void			_tepl_file_set_etag			(TeplFile    *file,
 								 const gchar *etag);
 
 G_GNUC_INTERNAL
-void			_gtef_file_set_externally_modified	(GtefFile *file,
+void			_tepl_file_set_externally_modified	(TeplFile *file,
 								 gboolean  externally_modified);
 
 G_GNUC_INTERNAL
-void			_gtef_file_set_deleted			(GtefFile *file,
+void			_tepl_file_set_deleted			(TeplFile *file,
 								 gboolean  deleted);
 
 G_GNUC_INTERNAL
-void			_gtef_file_set_readonly			(GtefFile *file,
+void			_tepl_file_set_readonly			(TeplFile *file,
 								 gboolean  readonly);
 
 G_END_DECLS
 
-#endif /* GTEF_FILE_H */
+#endif /* TEPL_FILE_H */

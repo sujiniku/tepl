@@ -1,15 +1,15 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2005 - Paolo Maggi
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -21,7 +21,7 @@
 /* Modified version of GeditProgressInfoBar. */
 
 #include "config.h"
-#include "gtef-progress-info-bar.h"
+#include "tepl-progress-info-bar.h"
 #include <glib/gi18n-lib.h>
 
 enum
@@ -33,18 +33,18 @@ enum
 
 static GParamSpec *properties[N_PROPERTIES];
 
-struct _GtefProgressInfoBar
+struct _TeplProgressInfoBar
 {
-	GtefInfoBar parent_instance;
+	TeplInfoBar parent_instance;
 
 	GtkLabel *label;
 	GtkProgressBar *progress_bar;
 };
 
-G_DEFINE_TYPE (GtefProgressInfoBar, _gtef_progress_info_bar, GTEF_TYPE_INFO_BAR)
+G_DEFINE_TYPE (TeplProgressInfoBar, _tepl_progress_info_bar, TEPL_TYPE_INFO_BAR)
 
 static void
-set_has_cancel_button (GtefProgressInfoBar *info_bar,
+set_has_cancel_button (TeplProgressInfoBar *info_bar,
 		       gboolean             has_cancel_button)
 {
 	if (has_cancel_button)
@@ -56,12 +56,12 @@ set_has_cancel_button (GtefProgressInfoBar *info_bar,
 }
 
 static void
-_gtef_progress_info_bar_set_property (GObject      *object,
+_tepl_progress_info_bar_set_property (GObject      *object,
 				      guint         prop_id,
 				      const GValue *value,
 				      GParamSpec   *pspec)
 {
-	GtefProgressInfoBar *bar = GTEF_PROGRESS_INFO_BAR (object);
+	TeplProgressInfoBar *bar = TEPL_PROGRESS_INFO_BAR (object);
 
 	switch (prop_id)
 	{
@@ -76,11 +76,11 @@ _gtef_progress_info_bar_set_property (GObject      *object,
 }
 
 static void
-_gtef_progress_info_bar_class_init (GtefProgressInfoBarClass *klass)
+_tepl_progress_info_bar_class_init (TeplProgressInfoBarClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->set_property = _gtef_progress_info_bar_set_property;
+	object_class->set_property = _tepl_progress_info_bar_set_property;
 
 	properties[PROP_HAS_CANCEL_BUTTON] =
 		g_param_spec_boolean ("has-cancel-button",
@@ -95,7 +95,7 @@ _gtef_progress_info_bar_class_init (GtefProgressInfoBarClass *klass)
 }
 
 static void
-_gtef_progress_info_bar_init (GtefProgressInfoBar *info_bar)
+_tepl_progress_info_bar_init (TeplProgressInfoBar *info_bar)
 {
 	GtkGrid *vgrid;
 	GtkWidget *content_area;
@@ -104,7 +104,7 @@ _gtef_progress_info_bar_init (GtefProgressInfoBar *info_bar)
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (vgrid), GTK_ORIENTATION_VERTICAL);
 	gtk_grid_set_row_spacing (vgrid, 6);
 
-	info_bar->label = gtef_info_bar_create_label ();
+	info_bar->label = tepl_info_bar_create_label ();
 	gtk_container_add (GTK_CONTAINER (vgrid),
 			   GTK_WIDGET (info_bar->label));
 
@@ -120,56 +120,56 @@ _gtef_progress_info_bar_init (GtefProgressInfoBar *info_bar)
 	gtk_widget_show_all (GTK_WIDGET (vgrid));
 }
 
-GtefProgressInfoBar *
-_gtef_progress_info_bar_new (const gchar *markup,
+TeplProgressInfoBar *
+_tepl_progress_info_bar_new (const gchar *markup,
 			     gboolean     has_cancel_button)
 {
-	GtefProgressInfoBar *info_bar;
+	TeplProgressInfoBar *info_bar;
 
 	g_return_val_if_fail (markup != NULL, NULL);
 
-	info_bar = g_object_new (GTEF_TYPE_PROGRESS_INFO_BAR,
+	info_bar = g_object_new (TEPL_TYPE_PROGRESS_INFO_BAR,
 				 "has-cancel-button", has_cancel_button,
 				 NULL);
 
-	_gtef_progress_info_bar_set_markup (info_bar, markup);
+	_tepl_progress_info_bar_set_markup (info_bar, markup);
 
 	return info_bar;
 }
 
 void
-_gtef_progress_info_bar_set_markup (GtefProgressInfoBar *info_bar,
+_tepl_progress_info_bar_set_markup (TeplProgressInfoBar *info_bar,
 				    const gchar         *markup)
 {
-	g_return_if_fail (GTEF_IS_PROGRESS_INFO_BAR (info_bar));
+	g_return_if_fail (TEPL_IS_PROGRESS_INFO_BAR (info_bar));
 	g_return_if_fail (markup != NULL);
 
 	gtk_label_set_markup (info_bar->label, markup);
 }
 
 void
-_gtef_progress_info_bar_set_text (GtefProgressInfoBar *info_bar,
+_tepl_progress_info_bar_set_text (TeplProgressInfoBar *info_bar,
 				  const gchar         *text)
 {
-	g_return_if_fail (GTEF_IS_PROGRESS_INFO_BAR (info_bar));
+	g_return_if_fail (TEPL_IS_PROGRESS_INFO_BAR (info_bar));
 	g_return_if_fail (text != NULL);
 
 	gtk_label_set_text (info_bar->label, text);
 }
 
 void
-_gtef_progress_info_bar_set_fraction (GtefProgressInfoBar *info_bar,
+_tepl_progress_info_bar_set_fraction (TeplProgressInfoBar *info_bar,
 				      gdouble              fraction)
 {
-	g_return_if_fail (GTEF_IS_PROGRESS_INFO_BAR (info_bar));
+	g_return_if_fail (TEPL_IS_PROGRESS_INFO_BAR (info_bar));
 
 	gtk_progress_bar_set_fraction (info_bar->progress_bar, fraction);
 }
 
 void
-_gtef_progress_info_bar_pulse (GtefProgressInfoBar *info_bar)
+_tepl_progress_info_bar_pulse (TeplProgressInfoBar *info_bar)
 {
-	g_return_if_fail (GTEF_IS_PROGRESS_INFO_BAR (info_bar));
+	g_return_if_fail (TEPL_IS_PROGRESS_INFO_BAR (info_bar));
 
 	gtk_progress_bar_pulse (info_bar->progress_bar);
 }

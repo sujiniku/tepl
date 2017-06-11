@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,37 +17,37 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GTEF_H
-#define GTEF_H
+#ifndef TEPL_H
+#define TEPL_H
 
-#define GTEF_H_INSIDE
+#define TEPL_H_INSIDE
 
-#include <gtef/gtef-types.h>
-#include <gtef/gtef-enum-types.h>
+#include <tepl/tepl-types.h>
+#include <tepl/tepl-enum-types.h>
 
-#include <gtef/gtef-action-info.h>
-#include <gtef/gtef-action-info-store.h>
-#include <gtef/gtef-action-info-central-store.h>
-#include <gtef/gtef-action-map.h>
-#include <gtef/gtef-application.h>
-#include <gtef/gtef-application-window.h>
-#include <gtef/gtef-buffer.h>
-#include <gtef/gtef-encoding.h>
-#include <gtef/gtef-file.h>
-#include <gtef/gtef-file-loader.h>
-#include <gtef/gtef-file-metadata.h>
-#include <gtef/gtef-file-saver.h>
-#include <gtef/gtef-fold-region.h>
-#include <gtef/gtef-gutter-renderer-folds.h>
-#include <gtef/gtef-info-bar.h>
-#include <gtef/gtef-iter.h>
-#include <gtef/gtef-menu-item.h>
-#include <gtef/gtef-menu-shell.h>
-#include <gtef/gtef-metadata-manager.h>
-#include <gtef/gtef-tab.h>
-#include <gtef/gtef-utils.h>
-#include <gtef/gtef-view.h>
+#include <tepl/tepl-action-info.h>
+#include <tepl/tepl-action-info-store.h>
+#include <tepl/tepl-action-info-central-store.h>
+#include <tepl/tepl-action-map.h>
+#include <tepl/tepl-application.h>
+#include <tepl/tepl-application-window.h>
+#include <tepl/tepl-buffer.h>
+#include <tepl/tepl-encoding.h>
+#include <tepl/tepl-file.h>
+#include <tepl/tepl-file-loader.h>
+#include <tepl/tepl-file-metadata.h>
+#include <tepl/tepl-file-saver.h>
+#include <tepl/tepl-fold-region.h>
+#include <tepl/tepl-gutter-renderer-folds.h>
+#include <tepl/tepl-info-bar.h>
+#include <tepl/tepl-iter.h>
+#include <tepl/tepl-menu-item.h>
+#include <tepl/tepl-menu-shell.h>
+#include <tepl/tepl-metadata-manager.h>
+#include <tepl/tepl-tab.h>
+#include <tepl/tepl-utils.h>
+#include <tepl/tepl-view.h>
 
-#undef GTEF_H_INSIDE
+#undef TEPL_H_INSIDE
 
-#endif /* GTEF_H */
+#endif /* TEPL_H */

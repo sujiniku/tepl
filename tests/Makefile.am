@@ -5,7 +5,7 @@ AM_CPPFLAGS = 			\
 
 AM_LDFLAGS = $(WARN_LDFLAGS)
 
-LDADD = $(top_builddir)/gtef/libgtef-core.la	\
+LDADD = $(top_builddir)/tepl/libtepl-core.la	\
 	$(DEP_LIBS)
 
 noinst_PROGRAMS = $(TEST_PROGS)
@@ -16,8 +16,8 @@ test_fold_region_SOURCES = test-fold-region.c
 
 TEST_PROGS += test-gutter-renderer-folds
 test_gutter_renderer_folds_SOURCES =		\
-	gtef-gutter-renderer-folds-sub.c	\
-	gtef-gutter-renderer-folds-sub.h	\
+	tepl-gutter-renderer-folds-sub.c	\
+	tepl-gutter-renderer-folds-sub.h	\
 	test-gutter-renderer-folds.c
 
 TEST_PROGS += test-menu

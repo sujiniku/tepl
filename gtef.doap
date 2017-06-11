@@ -4,16 +4,16 @@
          xmlns:foaf="http://xmlns.com/foaf/0.1/"
          xmlns:gnome="http://api.gnome.org/doap-extensions#"
          xmlns="http://usefulinc.com/ns/doap#">
-  <name xml:lang="en">Gtef</name>
+  <name xml:lang="en">Tepl</name>
   <shortdesc xml:lang="en">GTK+ Text Editor Framework</shortdesc>
-  <description xml:lang="en">Gtef is a library that eases the development of
-GtkSourceView-based text editors and IDEs. Gtef is the acronym for “GTK+ Text
+  <description xml:lang="en">Tepl is a library that eases the development of
+GtkSourceView-based text editors and IDEs. Tepl is the acronym for “GTK+ Text
 Editor Framework”.</description>
 
-  <homepage rdf:resource="https://wiki.gnome.org/Projects/Gtef" />
+  <homepage rdf:resource="https://wiki.gnome.org/Projects/Tepl" />
   <mailing-list rdf:resource="https://mail.gnome.org/mailman/listinfo/gnome-devtools" />
-  <download-page rdf:resource="https://download.gnome.org/sources/gtef/" />
-  <bug-database rdf:resource="https://bugzilla.gnome.org/browse.cgi?product=gtef" />
+  <download-page rdf:resource="https://download.gnome.org/sources/tepl/" />
+  <bug-database rdf:resource="https://bugzilla.gnome.org/browse.cgi?product=tepl" />
 
   <programming-language>C</programming-language>
 

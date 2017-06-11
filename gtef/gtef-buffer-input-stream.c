@@ -1,15 +1,15 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2010 - Ignacio Casal Quinteiro
  * Copyright 2014, 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -18,9 +18,9 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gtef-buffer-input-stream.h"
+#include "tepl-buffer-input-stream.h"
 #include <string.h>
-#include "gtef-enum-types.h"
+#include "tepl-enum-types.h"
 
 /* Code coming from GtkSourceView. */
 
@@ -31,13 +31,13 @@
  * thread.
  */
 
-struct _GtefBufferInputStreamPrivate
+struct _TeplBufferInputStreamPrivate
 {
 	GtkTextBuffer *buffer;
 	GtkTextMark *pos;
 	gint bytes_partial;
 
-	GtefNewlineType newline_type;
+	TeplNewlineType newline_type;
 
 	guint newline_added : 1;
 	guint is_initialized : 1;
@@ -52,18 +52,18 @@ enum
 	PROP_ADD_TRAILING_NEWLINE
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE (GtefBufferInputStream, _gtef_buffer_input_stream, G_TYPE_INPUT_STREAM);
+G_DEFINE_TYPE_WITH_PRIVATE (TeplBufferInputStream, _tepl_buffer_input_stream, G_TYPE_INPUT_STREAM);
 
 static gsize
-get_new_line_size (GtefBufferInputStream *stream)
+get_new_line_size (TeplBufferInputStream *stream)
 {
 	switch (stream->priv->newline_type)
 	{
-		case GTEF_NEWLINE_TYPE_CR:
-		case GTEF_NEWLINE_TYPE_LF:
+		case TEPL_NEWLINE_TYPE_CR:
+		case TEPL_NEWLINE_TYPE_LF:
 			return 1;
 
-		case GTEF_NEWLINE_TYPE_CR_LF:
+		case TEPL_NEWLINE_TYPE_CR_LF:
 			return 2;
 
 		default:
@@ -75,17 +75,17 @@ get_new_line_size (GtefBufferInputStream *stream)
 }
 
 static const gchar *
-get_new_line (GtefBufferInputStream *stream)
+get_new_line (TeplBufferInputStream *stream)
 {
 	switch (stream->priv->newline_type)
 	{
-		case GTEF_NEWLINE_TYPE_LF:
+		case TEPL_NEWLINE_TYPE_LF:
 			return "\n";
 
-		case GTEF_NEWLINE_TYPE_CR:
+		case TEPL_NEWLINE_TYPE_CR:
 			return "\r";
 
-		case GTEF_NEWLINE_TYPE_CR_LF:
+		case TEPL_NEWLINE_TYPE_CR_LF:
 			return "\r\n";
 
 		default:
@@ -97,7 +97,7 @@ get_new_line (GtefBufferInputStream *stream)
 }
 
 static gsize
-read_line (GtefBufferInputStream *stream,
+read_line (TeplBufferInputStream *stream,
 	   gchar                 *outbuf,
 	   gsize                  space_left)
 {
@@ -223,17 +223,17 @@ read_line (GtefBufferInputStream *stream,
 }
 
 static gssize
-_gtef_buffer_input_stream_read (GInputStream  *input_stream,
+_tepl_buffer_input_stream_read (GInputStream  *input_stream,
 				void          *buffer,
 				gsize          count,
 				GCancellable  *cancellable,
 				GError       **error)
 {
-	GtefBufferInputStream *stream;
+	TeplBufferInputStream *stream;
 	GtkTextIter iter;
 	gssize space_left, read, n;
 
-	stream = GTEF_BUFFER_INPUT_STREAM (input_stream);
+	stream = TEPL_BUFFER_INPUT_STREAM (input_stream);
 
 	if (count < 6)
 	{
@@ -306,11 +306,11 @@ _gtef_buffer_input_stream_read (GInputStream  *input_stream,
 }
 
 static gboolean
-_gtef_buffer_input_stream_close (GInputStream  *input_stream,
+_tepl_buffer_input_stream_close (GInputStream  *input_stream,
 				 GCancellable  *cancellable,
 				 GError       **error)
 {
-	GtefBufferInputStream *stream = GTEF_BUFFER_INPUT_STREAM (input_stream);
+	TeplBufferInputStream *stream = TEPL_BUFFER_INPUT_STREAM (input_stream);
 
 	stream->priv->newline_added = FALSE;
 
@@ -324,12 +324,12 @@ _gtef_buffer_input_stream_close (GInputStream  *input_stream,
 }
 
 static void
-_gtef_buffer_input_stream_set_property (GObject      *object,
+_tepl_buffer_input_stream_set_property (GObject      *object,
 					guint         prop_id,
 					const GValue *value,
 					GParamSpec   *pspec)
 {
-	GtefBufferInputStream *stream = GTEF_BUFFER_INPUT_STREAM (object);
+	TeplBufferInputStream *stream = TEPL_BUFFER_INPUT_STREAM (object);
 
 	switch (prop_id)
 	{
@@ -353,12 +353,12 @@ _gtef_buffer_input_stream_set_property (GObject      *object,
 }
 
 static void
-_gtef_buffer_input_stream_get_property (GObject    *object,
+_tepl_buffer_input_stream_get_property (GObject    *object,
 					guint       prop_id,
 					GValue     *value,
 					GParamSpec *pspec)
 {
-	GtefBufferInputStream *stream = GTEF_BUFFER_INPUT_STREAM (object);
+	TeplBufferInputStream *stream = TEPL_BUFFER_INPUT_STREAM (object);
 
 	switch (prop_id)
 	{
@@ -381,27 +381,27 @@ _gtef_buffer_input_stream_get_property (GObject    *object,
 }
 
 static void
-_gtef_buffer_input_stream_dispose (GObject *object)
+_tepl_buffer_input_stream_dispose (GObject *object)
 {
-	GtefBufferInputStream *stream = GTEF_BUFFER_INPUT_STREAM (object);
+	TeplBufferInputStream *stream = TEPL_BUFFER_INPUT_STREAM (object);
 
 	g_clear_object (&stream->priv->buffer);
 
-	G_OBJECT_CLASS (_gtef_buffer_input_stream_parent_class)->dispose (object);
+	G_OBJECT_CLASS (_tepl_buffer_input_stream_parent_class)->dispose (object);
 }
 
 static void
-_gtef_buffer_input_stream_class_init (GtefBufferInputStreamClass *klass)
+_tepl_buffer_input_stream_class_init (TeplBufferInputStreamClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 	GInputStreamClass *stream_class = G_INPUT_STREAM_CLASS (klass);
 
-	gobject_class->get_property = _gtef_buffer_input_stream_get_property;
-	gobject_class->set_property = _gtef_buffer_input_stream_set_property;
-	gobject_class->dispose = _gtef_buffer_input_stream_dispose;
+	gobject_class->get_property = _tepl_buffer_input_stream_get_property;
+	gobject_class->set_property = _tepl_buffer_input_stream_set_property;
+	gobject_class->dispose = _tepl_buffer_input_stream_dispose;
 
-	stream_class->read_fn = _gtef_buffer_input_stream_read;
-	stream_class->close_fn = _gtef_buffer_input_stream_close;
+	stream_class->read_fn = _tepl_buffer_input_stream_read;
+	stream_class->close_fn = _tepl_buffer_input_stream_close;
 
 	g_object_class_install_property (gobject_class,
 					 PROP_BUFFER,
@@ -414,7 +414,7 @@ _gtef_buffer_input_stream_class_init (GtefBufferInputStreamClass *klass)
 							      G_PARAM_STATIC_STRINGS));
 
 	/**
-	 * GtefBufferInputStream:newline-type:
+	 * TeplBufferInputStream:newline-type:
 	 *
 	 * The :newline-type property determines what is considered
 	 * as a line ending when reading complete lines from the stream.
@@ -425,13 +425,13 @@ _gtef_buffer_input_stream_class_init (GtefBufferInputStreamClass *klass)
 							    "Newline type",
 							    "",
 							    GTK_SOURCE_TYPE_NEWLINE_TYPE,
-							    GTEF_NEWLINE_TYPE_LF,
+							    TEPL_NEWLINE_TYPE_LF,
 							    G_PARAM_READWRITE |
 							    G_PARAM_STATIC_STRINGS |
 							    G_PARAM_CONSTRUCT_ONLY));
 
 	/**
-	 * GtefBufferInputStream:add-trailing-newline:
+	 * TeplBufferInputStream:add-trailing-newline:
 	 *
 	 * The :add-trailing-newline property specifies whether or not to
 	 * add a trailing newline when reading the buffer.
@@ -448,27 +448,27 @@ _gtef_buffer_input_stream_class_init (GtefBufferInputStreamClass *klass)
 }
 
 static void
-_gtef_buffer_input_stream_init (GtefBufferInputStream *stream)
+_tepl_buffer_input_stream_init (TeplBufferInputStream *stream)
 {
-	stream->priv = _gtef_buffer_input_stream_get_instance_private (stream);
+	stream->priv = _tepl_buffer_input_stream_get_instance_private (stream);
 }
 
 /**
- * _gtef_buffer_input_stream_new:
+ * _tepl_buffer_input_stream_new:
  * @buffer: a #GtkTextBuffer
  *
  * Reads the data from @buffer.
  *
  * Returns: a new input stream to read @buffer
  */
-GtefBufferInputStream *
-_gtef_buffer_input_stream_new (GtkTextBuffer   *buffer,
-			       GtefNewlineType  type,
+TeplBufferInputStream *
+_tepl_buffer_input_stream_new (GtkTextBuffer   *buffer,
+			       TeplNewlineType  type,
 			       gboolean         add_trailing_newline)
 {
 	g_return_val_if_fail (GTK_IS_TEXT_BUFFER (buffer), NULL);
 
-	return g_object_new (GTEF_TYPE_BUFFER_INPUT_STREAM,
+	return g_object_new (TEPL_TYPE_BUFFER_INPUT_STREAM,
 			     "buffer", buffer,
 			     "newline-type", type,
 			     "add-trailing-newline", add_trailing_newline,
@@ -476,9 +476,9 @@ _gtef_buffer_input_stream_new (GtkTextBuffer   *buffer,
 }
 
 gsize
-_gtef_buffer_input_stream_get_total_size (GtefBufferInputStream *stream)
+_tepl_buffer_input_stream_get_total_size (TeplBufferInputStream *stream)
 {
-	g_return_val_if_fail (GTEF_IS_BUFFER_INPUT_STREAM (stream), 0);
+	g_return_val_if_fail (TEPL_IS_BUFFER_INPUT_STREAM (stream), 0);
 
 	if (stream->priv->buffer == NULL)
 	{
@@ -489,9 +489,9 @@ _gtef_buffer_input_stream_get_total_size (GtefBufferInputStream *stream)
 }
 
 gsize
-_gtef_buffer_input_stream_tell (GtefBufferInputStream *stream)
+_tepl_buffer_input_stream_tell (TeplBufferInputStream *stream)
 {
-	g_return_val_if_fail (GTEF_IS_BUFFER_INPUT_STREAM (stream), 0);
+	g_return_val_if_fail (TEPL_IS_BUFFER_INPUT_STREAM (stream), 0);
 
 	/* FIXME: is this potentially inefficient? If yes, we could keep
 	   track of the offset internally, assuming the mark doesn't move

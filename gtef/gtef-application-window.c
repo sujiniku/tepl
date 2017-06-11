@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -18,29 +18,29 @@
  */
 
 #include "config.h"
-#include "gtef-application-window.h"
+#include "tepl-application-window.h"
 #include <glib/gi18n-lib.h>
-#include "gtef-application.h"
-#include "gtef-action-info.h"
-#include "gtef-action-info-central-store.h"
-#include "gtef-menu-item.h"
-#include "gtef-menu-shell.h"
-#include "gtef-utils.h"
+#include "tepl-application.h"
+#include "tepl-action-info.h"
+#include "tepl-action-info-central-store.h"
+#include "tepl-menu-item.h"
+#include "tepl-menu-shell.h"
+#include "tepl-utils.h"
 
 /**
  * SECTION:application-window
  * @Short_description: An extension of GtkApplicationWindow
- * @Title: GtefApplicationWindow
+ * @Title: TeplApplicationWindow
  *
- * #GtefApplicationWindow extends the #GtkApplicationWindow class.
+ * #TeplApplicationWindow extends the #GtkApplicationWindow class.
  *
- * Note that #GtefApplicationWindow extends the #GtkApplicationWindow class but
+ * Note that #TeplApplicationWindow extends the #GtkApplicationWindow class but
  * without subclassing it, because several libraries might want to extend
  * #GtkApplicationWindow and an application needs to be able to use all those
  * extensions at the same time.
  */
 
-struct _GtefApplicationWindowPrivate
+struct _TeplApplicationWindowPrivate
 {
 	GtkApplicationWindow *gtk_window;
 	GtkStatusbar *statusbar;
@@ -54,30 +54,30 @@ enum
 	N_PROPERTIES
 };
 
-#define GTEF_APPLICATION_WINDOW_KEY "gtef-application-window-key"
-#define MENU_SHELL_STATUSBAR_CONTEXT_ID_KEY "gtef-menu-shell-statusbar-context-id-key"
-#define MENU_SHELL_FOR_RECENT_CHOOSER_KEY "gtef-menu-shell-for-recent-chooser-key"
+#define TEPL_APPLICATION_WINDOW_KEY "tepl-application-window-key"
+#define MENU_SHELL_STATUSBAR_CONTEXT_ID_KEY "tepl-menu-shell-statusbar-context-id-key"
+#define MENU_SHELL_FOR_RECENT_CHOOSER_KEY "tepl-menu-shell-for-recent-chooser-key"
 
 static GParamSpec *properties[N_PROPERTIES];
 
-G_DEFINE_TYPE_WITH_PRIVATE (GtefApplicationWindow, gtef_application_window, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (TeplApplicationWindow, tepl_application_window, G_TYPE_OBJECT)
 
 static void
-gtef_application_window_get_property (GObject    *object,
+tepl_application_window_get_property (GObject    *object,
 				      guint       prop_id,
 				      GValue     *value,
 				      GParamSpec *pspec)
 {
-	GtefApplicationWindow *gtef_window = GTEF_APPLICATION_WINDOW (object);
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (object);
 
 	switch (prop_id)
 	{
 		case PROP_APPLICATION_WINDOW:
-			g_value_set_object (value, gtef_application_window_get_application_window (gtef_window));
+			g_value_set_object (value, tepl_application_window_get_application_window (tepl_window));
 			break;
 
 		case PROP_STATUSBAR:
-			g_value_set_object (value, gtef_application_window_get_statusbar (gtef_window));
+			g_value_set_object (value, tepl_application_window_get_statusbar (tepl_window));
 			break;
 
 		default:
@@ -87,22 +87,22 @@ gtef_application_window_get_property (GObject    *object,
 }
 
 static void
-gtef_application_window_set_property (GObject      *object,
+tepl_application_window_set_property (GObject      *object,
 				      guint         prop_id,
 				      const GValue *value,
 				      GParamSpec   *pspec)
 {
-	GtefApplicationWindow *gtef_window = GTEF_APPLICATION_WINDOW (object);
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (object);
 
 	switch (prop_id)
 	{
 		case PROP_APPLICATION_WINDOW:
-			g_assert (gtef_window->priv->gtk_window == NULL);
-			gtef_window->priv->gtk_window = g_value_get_object (value);
+			g_assert (tepl_window->priv->gtk_window == NULL);
+			tepl_window->priv->gtk_window = g_value_get_object (value);
 			break;
 
 		case PROP_STATUSBAR:
-			gtef_application_window_set_statusbar (gtef_window, g_value_get_object (value));
+			tepl_application_window_set_statusbar (tepl_window, g_value_get_object (value));
 			break;
 
 		default:
@@ -112,26 +112,26 @@ gtef_application_window_set_property (GObject      *object,
 }
 
 static void
-gtef_application_window_dispose (GObject *object)
+tepl_application_window_dispose (GObject *object)
 {
-	GtefApplicationWindow *gtef_window = GTEF_APPLICATION_WINDOW (object);
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (object);
 
-	gtef_window->priv->gtk_window = NULL;
+	tepl_window->priv->gtk_window = NULL;
 
-	G_OBJECT_CLASS (gtef_application_window_parent_class)->dispose (object);
+	G_OBJECT_CLASS (tepl_application_window_parent_class)->dispose (object);
 }
 
 static void
-gtef_application_window_class_init (GtefApplicationWindowClass *klass)
+tepl_application_window_class_init (TeplApplicationWindowClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->get_property = gtef_application_window_get_property;
-	object_class->set_property = gtef_application_window_set_property;
-	object_class->dispose = gtef_application_window_dispose;
+	object_class->get_property = tepl_application_window_get_property;
+	object_class->set_property = tepl_application_window_set_property;
+	object_class->dispose = tepl_application_window_dispose;
 
 	/**
-	 * GtefApplicationWindow:application-window:
+	 * TeplApplicationWindow:application-window:
 	 *
 	 * The #GtkApplicationWindow.
 	 *
@@ -147,7 +147,7 @@ gtef_application_window_class_init (GtefApplicationWindowClass *klass)
 				     G_PARAM_STATIC_STRINGS);
 
 	/**
-	 * GtefApplicationWindow:statusbar:
+	 * TeplApplicationWindow:statusbar:
 	 *
 	 * The #GtkStatusbar. %NULL by default.
 	 *
@@ -165,93 +165,93 @@ gtef_application_window_class_init (GtefApplicationWindowClass *klass)
 }
 
 static void
-gtef_application_window_init (GtefApplicationWindow *gtef_window)
+tepl_application_window_init (TeplApplicationWindow *tepl_window)
 {
-	gtef_window->priv = gtef_application_window_get_instance_private (gtef_window);
+	tepl_window->priv = tepl_application_window_get_instance_private (tepl_window);
 }
 
 /**
- * gtef_application_window_get_from_gtk_application_window:
+ * tepl_application_window_get_from_gtk_application_window:
  * @gtk_window: a #GtkApplicationWindow.
  *
- * Returns the #GtefApplicationWindow of @gtk_window. The returned object is
+ * Returns the #TeplApplicationWindow of @gtk_window. The returned object is
  * guaranteed to be the same for the lifetime of @gtk_window.
  *
- * Returns: (transfer none): the #GtefApplicationWindow of @gtk_window.
+ * Returns: (transfer none): the #TeplApplicationWindow of @gtk_window.
  * Since: 2.0
  */
-GtefApplicationWindow *
-gtef_application_window_get_from_gtk_application_window (GtkApplicationWindow *gtk_window)
+TeplApplicationWindow *
+tepl_application_window_get_from_gtk_application_window (GtkApplicationWindow *gtk_window)
 {
-	GtefApplicationWindow *gtef_window;
+	TeplApplicationWindow *tepl_window;
 
 	g_return_val_if_fail (GTK_IS_APPLICATION_WINDOW (gtk_window), NULL);
 
-	gtef_window = g_object_get_data (G_OBJECT (gtk_window), GTEF_APPLICATION_WINDOW_KEY);
+	tepl_window = g_object_get_data (G_OBJECT (gtk_window), TEPL_APPLICATION_WINDOW_KEY);
 
-	if (gtef_window == NULL)
+	if (tepl_window == NULL)
 	{
-		gtef_window = g_object_new (GTEF_TYPE_APPLICATION_WINDOW,
+		tepl_window = g_object_new (TEPL_TYPE_APPLICATION_WINDOW,
 					    "application-window", gtk_window,
 					    NULL);
 
 		g_object_set_data_full (G_OBJECT (gtk_window),
-					GTEF_APPLICATION_WINDOW_KEY,
-					gtef_window,
+					TEPL_APPLICATION_WINDOW_KEY,
+					tepl_window,
 					g_object_unref);
 	}
 
-	g_return_val_if_fail (GTEF_IS_APPLICATION_WINDOW (gtef_window), NULL);
-	return gtef_window;
+	g_return_val_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window), NULL);
+	return tepl_window;
 }
 
 /**
- * gtef_application_window_get_application_window:
- * @gtef_window: a #GtefApplicationWindow.
+ * tepl_application_window_get_application_window:
+ * @tepl_window: a #TeplApplicationWindow.
  *
- * Returns: (transfer none): the #GtkApplicationWindow of @gtef_window.
+ * Returns: (transfer none): the #GtkApplicationWindow of @tepl_window.
  * Since: 2.0
  */
 GtkApplicationWindow *
-gtef_application_window_get_application_window (GtefApplicationWindow *gtef_window)
+tepl_application_window_get_application_window (TeplApplicationWindow *tepl_window)
 {
-	g_return_val_if_fail (GTEF_IS_APPLICATION_WINDOW (gtef_window), NULL);
+	g_return_val_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window), NULL);
 
-	return gtef_window->priv->gtk_window;
+	return tepl_window->priv->gtk_window;
 }
 
 /**
- * gtef_application_window_get_statusbar:
- * @gtef_window: a #GtefApplicationWindow.
+ * tepl_application_window_get_statusbar:
+ * @tepl_window: a #TeplApplicationWindow.
  *
- * Returns: (transfer none) (nullable): the #GtefApplicationWindow:statusbar.
+ * Returns: (transfer none) (nullable): the #TeplApplicationWindow:statusbar.
  * Since: 2.0
  */
 GtkStatusbar *
-gtef_application_window_get_statusbar (GtefApplicationWindow *gtef_window)
+tepl_application_window_get_statusbar (TeplApplicationWindow *tepl_window)
 {
-	g_return_val_if_fail (GTEF_IS_APPLICATION_WINDOW (gtef_window), NULL);
+	g_return_val_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window), NULL);
 
-	return gtef_window->priv->statusbar;
+	return tepl_window->priv->statusbar;
 }
 
 /**
- * gtef_application_window_set_statusbar:
- * @gtef_window: a #GtefApplicationWindow.
+ * tepl_application_window_set_statusbar:
+ * @tepl_window: a #TeplApplicationWindow.
  * @statusbar: (nullable): a #GtkStatusbar, or %NULL.
  *
- * Sets the #GtefApplicationWindow:statusbar property.
+ * Sets the #TeplApplicationWindow:statusbar property.
  *
  * Since: 2.0
  */
 void
-gtef_application_window_set_statusbar (GtefApplicationWindow *gtef_window,
+tepl_application_window_set_statusbar (TeplApplicationWindow *tepl_window,
 				       GtkStatusbar          *statusbar)
 {
-	g_return_if_fail (GTEF_IS_APPLICATION_WINDOW (gtef_window));
+	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));
 	g_return_if_fail (statusbar == NULL || GTK_IS_STATUSBAR (statusbar));
 
-	if (gtef_window->priv->statusbar == statusbar)
+	if (tepl_window->priv->statusbar == statusbar)
 	{
 		return;
 	}
@@ -261,28 +261,28 @@ gtef_application_window_set_statusbar (GtefApplicationWindow *gtef_window,
 		g_object_ref_sink (statusbar);
 	}
 
-	if (gtef_window->priv->statusbar != NULL)
+	if (tepl_window->priv->statusbar != NULL)
 	{
-		g_object_unref (gtef_window->priv->statusbar);
+		g_object_unref (tepl_window->priv->statusbar);
 	}
 
-	gtef_window->priv->statusbar = statusbar;
-	g_object_notify_by_pspec (G_OBJECT (gtef_window), properties[PROP_STATUSBAR]);
+	tepl_window->priv->statusbar = statusbar;
+	g_object_notify_by_pspec (G_OBJECT (tepl_window), properties[PROP_STATUSBAR]);
 }
 
 /* Returns: %TRUE if a context ID exists and has been set to @context_id. */
 static gboolean
-get_statusbar_context_id_for_menu_shell (GtefApplicationWindow *gtef_window,
-					 GtefMenuShell         *gtef_menu_shell,
+get_statusbar_context_id_for_menu_shell (TeplApplicationWindow *tepl_window,
+					 TeplMenuShell         *tepl_menu_shell,
 					 gboolean               create,
 					 guint                 *context_id)
 {
 	gpointer data;
 
-	g_assert (gtef_window->priv->statusbar != NULL);
+	g_assert (tepl_window->priv->statusbar != NULL);
 	g_assert (context_id != NULL);
 
-	data = g_object_get_data (G_OBJECT (gtef_menu_shell), MENU_SHELL_STATUSBAR_CONTEXT_ID_KEY);
+	data = g_object_get_data (G_OBJECT (tepl_menu_shell), MENU_SHELL_STATUSBAR_CONTEXT_ID_KEY);
 
 	if (data == NULL && !create)
 	{
@@ -291,10 +291,10 @@ get_statusbar_context_id_for_menu_shell (GtefApplicationWindow *gtef_window,
 
 	if (data == NULL)
 	{
-		*context_id = gtk_statusbar_get_context_id (gtef_window->priv->statusbar,
+		*context_id = gtk_statusbar_get_context_id (tepl_window->priv->statusbar,
 							    "Show long description of menu items.");
 
-		g_object_set_data (G_OBJECT (gtef_menu_shell),
+		g_object_set_data (G_OBJECT (tepl_menu_shell),
 				   MENU_SHELL_STATUSBAR_CONTEXT_ID_KEY,
 				   GUINT_TO_POINTER (*context_id));
 	}
@@ -308,20 +308,20 @@ get_statusbar_context_id_for_menu_shell (GtefApplicationWindow *gtef_window,
 
 /* Free the return value with g_free(). */
 static gchar *
-get_menu_item_long_description (GtefMenuShell *gtef_menu_shell,
+get_menu_item_long_description (TeplMenuShell *tepl_menu_shell,
 				GtkMenuItem   *menu_item)
 {
 	const gchar *long_description;
 	gpointer data;
 	gboolean is_for_recent_chooser;
 
-	long_description = gtef_menu_item_get_long_description (menu_item);
+	long_description = tepl_menu_item_get_long_description (menu_item);
 	if (long_description != NULL)
 	{
 		return g_strdup (long_description);
 	}
 
-	data = g_object_get_data (G_OBJECT (gtef_menu_shell), MENU_SHELL_FOR_RECENT_CHOOSER_KEY);
+	data = g_object_get_data (G_OBJECT (tepl_menu_shell), MENU_SHELL_FOR_RECENT_CHOOSER_KEY);
 	is_for_recent_chooser = data != NULL ? GPOINTER_TO_INT (data) : FALSE;
 
 	if (is_for_recent_chooser)
@@ -334,9 +334,9 @@ get_menu_item_long_description (GtefMenuShell *gtef_menu_shell,
 		gchar *nicer_filename;
 		gchar *ret;
 
-		gtk_menu_shell = gtef_menu_shell_get_menu_shell (gtef_menu_shell);
+		gtk_menu_shell = tepl_menu_shell_get_menu_shell (tepl_menu_shell);
 		recent_chooser_menu = GTK_RECENT_CHOOSER_MENU (gtk_menu_shell);
-		uri = gtef_utils_recent_chooser_menu_get_item_uri (recent_chooser_menu, menu_item);
+		uri = tepl_utils_recent_chooser_menu_get_item_uri (recent_chooser_menu, menu_item);
 
 		if (uri == NULL)
 		{
@@ -349,7 +349,7 @@ get_menu_item_long_description (GtefMenuShell *gtef_menu_shell,
 		parse_name = g_file_get_parse_name (file);
 		g_object_unref (file);
 
-		nicer_filename = _gtef_utils_replace_home_dir_with_tilde (parse_name);
+		nicer_filename = _tepl_utils_replace_home_dir_with_tilde (parse_name);
 		g_free (parse_name);
 
 		/* Translators: %s is a filename. */
@@ -363,31 +363,31 @@ get_menu_item_long_description (GtefMenuShell *gtef_menu_shell,
 }
 
 static void
-menu_item_selected_cb (GtefMenuShell *gtef_menu_shell,
+menu_item_selected_cb (TeplMenuShell *tepl_menu_shell,
 		       GtkMenuItem   *menu_item,
 		       gpointer       user_data)
 {
-	GtefApplicationWindow *gtef_window = GTEF_APPLICATION_WINDOW (user_data);
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
 	gchar *long_description;
 	guint context_id;
 
-	if (gtef_window->priv->statusbar == NULL)
+	if (tepl_window->priv->statusbar == NULL)
 	{
 		return;
 	}
 
-	long_description = get_menu_item_long_description (gtef_menu_shell, menu_item);
+	long_description = get_menu_item_long_description (tepl_menu_shell, menu_item);
 	if (long_description == NULL)
 	{
 		return;
 	}
 
-	get_statusbar_context_id_for_menu_shell (gtef_window,
-						 gtef_menu_shell,
+	get_statusbar_context_id_for_menu_shell (tepl_window,
+						 tepl_menu_shell,
 						 TRUE,
 						 &context_id);
 
-	gtk_statusbar_push (gtef_window->priv->statusbar,
+	gtk_statusbar_push (tepl_window->priv->statusbar,
 			    context_id,
 			    long_description);
 
@@ -395,24 +395,24 @@ menu_item_selected_cb (GtefMenuShell *gtef_menu_shell,
 }
 
 static void
-menu_item_deselected_cb (GtefMenuShell *gtef_menu_shell,
+menu_item_deselected_cb (TeplMenuShell *tepl_menu_shell,
 			 GtkMenuItem   *menu_item,
 			 gpointer       user_data)
 {
-	GtefApplicationWindow *gtef_window = GTEF_APPLICATION_WINDOW (user_data);
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
 	const gchar *long_description;
 	gpointer data;
 	gboolean is_for_recent_chooser;
 	guint context_id;
 
-	if (gtef_window->priv->statusbar == NULL)
+	if (tepl_window->priv->statusbar == NULL)
 	{
 		return;
 	}
 
-	long_description = gtef_menu_item_get_long_description (menu_item);
+	long_description = tepl_menu_item_get_long_description (menu_item);
 
-	data = g_object_get_data (G_OBJECT (gtef_menu_shell), MENU_SHELL_FOR_RECENT_CHOOSER_KEY);
+	data = g_object_get_data (G_OBJECT (tepl_menu_shell), MENU_SHELL_FOR_RECENT_CHOOSER_KEY);
 	is_for_recent_chooser = data != NULL ? GPOINTER_TO_INT (data) : FALSE;
 
 	if (long_description == NULL && !is_for_recent_chooser)
@@ -420,127 +420,127 @@ menu_item_deselected_cb (GtefMenuShell *gtef_menu_shell,
 		return;
 	}
 
-	if (get_statusbar_context_id_for_menu_shell (gtef_window,
-						     gtef_menu_shell,
+	if (get_statusbar_context_id_for_menu_shell (tepl_window,
+						     tepl_menu_shell,
 						     FALSE,
 						     &context_id))
 	{
-		gtk_statusbar_pop (gtef_window->priv->statusbar, context_id);
+		gtk_statusbar_pop (tepl_window->priv->statusbar, context_id);
 	}
 }
 
 static void
-statusbar_notify_cb (GtefApplicationWindow *gtef_window,
+statusbar_notify_cb (TeplApplicationWindow *tepl_window,
 		     GParamSpec            *pspec,
 		     gpointer               user_data)
 {
-	GtefMenuShell *gtef_menu_shell = GTEF_MENU_SHELL (user_data);
+	TeplMenuShell *tepl_menu_shell = TEPL_MENU_SHELL (user_data);
 
-	g_object_set_data (G_OBJECT (gtef_menu_shell),
+	g_object_set_data (G_OBJECT (tepl_menu_shell),
 			   MENU_SHELL_STATUSBAR_CONTEXT_ID_KEY,
 			   NULL);
 }
 
 /**
- * gtef_application_window_connect_menu_to_statusbar:
- * @gtef_window: a #GtefApplicationWindow.
- * @gtef_menu_shell: a #GtefMenuShell.
+ * tepl_application_window_connect_menu_to_statusbar:
+ * @tepl_window: a #TeplApplicationWindow.
+ * @tepl_menu_shell: a #TeplMenuShell.
  *
- * Connect to the #GtefMenuShell::menu-item-selected and
- * #GtefMenuShell::menu-item-deselected signals of @gtef_menu_shell to push/pop
+ * Connect to the #TeplMenuShell::menu-item-selected and
+ * #TeplMenuShell::menu-item-deselected signals of @tepl_menu_shell to push/pop
  * the long description of #GtkMenuItem's to the
- * #GtefApplicationWindow:statusbar.
+ * #TeplApplicationWindow:statusbar.
  *
- * The long description is retrieved with gtef_menu_item_get_long_description().
- * So gtef_menu_item_set_long_description() must have been called, which is the
+ * The long description is retrieved with tepl_menu_item_get_long_description().
+ * So tepl_menu_item_set_long_description() must have been called, which is the
  * case if the #GtkMenuItem has been created with the functions available in
- * #GtefActionInfoStore.
+ * #TeplActionInfoStore.
  *
  * Since: 2.0
  */
 void
-gtef_application_window_connect_menu_to_statusbar (GtefApplicationWindow *gtef_window,
-						   GtefMenuShell         *gtef_menu_shell)
+tepl_application_window_connect_menu_to_statusbar (TeplApplicationWindow *tepl_window,
+						   TeplMenuShell         *tepl_menu_shell)
 {
-	g_return_if_fail (GTEF_IS_APPLICATION_WINDOW (gtef_window));
-	g_return_if_fail (GTEF_IS_MENU_SHELL (gtef_menu_shell));
+	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));
+	g_return_if_fail (TEPL_IS_MENU_SHELL (tepl_menu_shell));
 
-	g_signal_connect_object (gtef_menu_shell,
+	g_signal_connect_object (tepl_menu_shell,
 				 "menu-item-selected",
 				 G_CALLBACK (menu_item_selected_cb),
-				 gtef_window,
+				 tepl_window,
 				 0);
 
-	g_signal_connect_object (gtef_menu_shell,
+	g_signal_connect_object (tepl_menu_shell,
 				 "menu-item-deselected",
 				 G_CALLBACK (menu_item_deselected_cb),
-				 gtef_window,
+				 tepl_window,
 				 0);
 
-	g_signal_connect_object (gtef_window,
+	g_signal_connect_object (tepl_window,
 				 "notify::statusbar",
 				 G_CALLBACK (statusbar_notify_cb),
-				 gtef_menu_shell,
+				 tepl_menu_shell,
 				 0);
 }
 
 /**
- * gtef_application_window_connect_recent_chooser_menu_to_statusbar:
- * @gtef_window: a #GtefApplicationWindow.
+ * tepl_application_window_connect_recent_chooser_menu_to_statusbar:
+ * @tepl_window: a #TeplApplicationWindow.
  * @menu: a #GtkRecentChooserMenu.
  *
  * An alternative to gtk_recent_chooser_set_show_tips(). Shows the full path in
- * the #GtefApplicationWindow:statusbar when a #GtkMenuItem of @menu is
+ * the #TeplApplicationWindow:statusbar when a #GtkMenuItem of @menu is
  * selected.
  *
  * The full path is retrieved with
- * gtef_utils_recent_chooser_menu_get_item_uri().
+ * tepl_utils_recent_chooser_menu_get_item_uri().
  *
  * Since: 2.0
  */
 void
-gtef_application_window_connect_recent_chooser_menu_to_statusbar (GtefApplicationWindow *gtef_window,
+tepl_application_window_connect_recent_chooser_menu_to_statusbar (TeplApplicationWindow *tepl_window,
 								  GtkRecentChooserMenu  *menu)
 {
-	GtefMenuShell *gtef_menu_shell;
+	TeplMenuShell *tepl_menu_shell;
 
-	g_return_if_fail (GTEF_IS_APPLICATION_WINDOW (gtef_window));
+	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));
 	g_return_if_fail (GTK_IS_RECENT_CHOOSER_MENU (menu));
 
-	gtef_menu_shell = gtef_menu_shell_get_from_gtk_menu_shell (GTK_MENU_SHELL (menu));
+	tepl_menu_shell = tepl_menu_shell_get_from_gtk_menu_shell (GTK_MENU_SHELL (menu));
 
-	g_object_set_data (G_OBJECT (gtef_menu_shell),
+	g_object_set_data (G_OBJECT (tepl_menu_shell),
 			   MENU_SHELL_FOR_RECENT_CHOOSER_KEY,
 			   GINT_TO_POINTER (TRUE));
 
-	gtef_application_window_connect_menu_to_statusbar (gtef_window, gtef_menu_shell);
+	tepl_application_window_connect_menu_to_statusbar (tepl_window, tepl_menu_shell);
 }
 
 static void
 open_recent_file_cb (GtkRecentChooser *recent_chooser,
 		     gpointer          user_data)
 {
-	GtefApplicationWindow *gtef_window = GTEF_APPLICATION_WINDOW (user_data);
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
 	GtkApplication *gtk_app;
-	GtefApplication *gtef_app;
+	TeplApplication *tepl_app;
 	gchar *uri;
 	GFile *file;
 
-	gtk_app = gtk_window_get_application (GTK_WINDOW (gtef_window->priv->gtk_window));
-	gtef_app = gtef_application_get_from_gtk_application (gtk_app);
+	gtk_app = gtk_window_get_application (GTK_WINDOW (tepl_window->priv->gtk_window));
+	tepl_app = tepl_application_get_from_gtk_application (gtk_app);
 
 	uri = gtk_recent_chooser_get_current_uri (recent_chooser);
 	file = g_file_new_for_uri (uri);
 
-	gtef_application_open_simple (gtef_app, file);
+	tepl_application_open_simple (tepl_app, file);
 
 	g_free (uri);
 	g_object_unref (file);
 }
 
 /**
- * gtef_application_window_create_open_recent_menu_item:
- * @gtef_window: a #GtefApplicationWindow.
+ * tepl_application_window_create_open_recent_menu_item:
+ * @tepl_window: a #TeplApplicationWindow.
  *
  * Creates a #GtkMenuItem with a simple and generic #GtkRecentChooserMenu as
  * submenu.
@@ -552,17 +552,17 @@ open_recent_file_cb (GtkRecentChooser *recent_chooser,
  * #GtkRecentChooserMenu.
  *
  * The #GtkRecentChooserMenu is connected to the statusbar with
- * gtef_application_window_connect_recent_chooser_menu_to_statusbar().
+ * tepl_application_window_connect_recent_chooser_menu_to_statusbar().
  *
  * When the #GtkRecentChooser::item-activated signal is emitted,
- * gtef_application_open_simple() is called, so the #GApplication must have the
+ * tepl_application_open_simple() is called, so the #GApplication must have the
  * %G_APPLICATION_HANDLES_OPEN flag set.
  *
  * Returns: (transfer floating): a new #GtkMenuItem.
  * Since: 2.0
  */
 GtkWidget *
-gtef_application_window_create_open_recent_menu_item (GtefApplicationWindow *gtef_window)
+tepl_application_window_create_open_recent_menu_item (TeplApplicationWindow *tepl_window)
 {
 	GtkMenuItem *menu_item;
 	gchar *long_description;
@@ -570,14 +570,14 @@ gtef_application_window_create_open_recent_menu_item (GtefApplicationWindow *gte
 	GtkRecentChooser *recent_chooser;
 	GtkRecentFilter *filter;
 
-	g_return_val_if_fail (GTEF_IS_APPLICATION_WINDOW (gtef_window), NULL);
+	g_return_val_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window), NULL);
 
 	menu_item = GTK_MENU_ITEM (gtk_menu_item_new_with_mnemonic (_("Open _Recent")));
 
 	/* Translators: %s is the application name. */
 	long_description = g_strdup_printf (_("Open a file recently used with %s"),
 					    g_get_application_name ());
-	gtef_menu_item_set_long_description (menu_item, long_description);
+	tepl_menu_item_set_long_description (menu_item, long_description);
 	g_free (long_description);
 
 	recent_chooser_menu = GTK_RECENT_CHOOSER_MENU (gtk_recent_chooser_menu_new ());
@@ -591,12 +591,12 @@ gtef_application_window_create_open_recent_menu_item (GtefApplicationWindow *gte
 	gtk_recent_filter_add_application (filter, g_get_application_name ());
 	gtk_recent_chooser_set_filter (recent_chooser, filter);
 
-	gtef_application_window_connect_recent_chooser_menu_to_statusbar (gtef_window, recent_chooser_menu);
+	tepl_application_window_connect_recent_chooser_menu_to_statusbar (tepl_window, recent_chooser_menu);
 
 	g_signal_connect_object (recent_chooser,
 				 "item-activated",
 				 G_CALLBACK (open_recent_file_cb),
-				 gtef_window,
+				 tepl_window,
 				 0);
 
 	return GTK_WIDGET (menu_item);

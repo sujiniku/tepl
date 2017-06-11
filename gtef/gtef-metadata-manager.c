@@ -1,15 +1,15 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2003-2007 - Paolo Maggi
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -21,7 +21,7 @@
 /**
  * SECTION:metadata-manager
  * @Short_description: Metadata support on platforms that don't support GVfs metadata
- * @Title: GtefMetadataManager
+ * @Title: TeplMetadataManager
  *
  * The metadata manager permits to save/load metadata on platforms that don't
  * support GVfs metadata, like (at the time of writing) Windows.
@@ -31,13 +31,13 @@
  * A better implementation would be to use SQLite.
  */
 
-#include "gtef-metadata-manager.h"
+#include "tepl-metadata-manager.h"
 #include <libxml/xmlreader.h>
 #include <string.h>
 
 #define MAX_ITEMS 50
 
-typedef struct _GtefMetadataManager GtefMetadataManager;
+typedef struct _TeplMetadataManager TeplMetadataManager;
 
 typedef struct _Item Item;
 
@@ -49,7 +49,7 @@ struct _Item
 	GHashTable *values;
 };
 
-struct _GtefMetadataManager
+struct _TeplMetadataManager
 {
 	guint timeout_id;
 
@@ -63,9 +63,9 @@ struct _GtefMetadataManager
 	guint unit_test_mode : 1;
 };
 
-static gboolean gtef_metadata_manager_save (gpointer data);
+static gboolean tepl_metadata_manager_save (gpointer data);
 
-static GtefMetadataManager *gtef_metadata_manager = NULL;
+static TeplMetadataManager *tepl_metadata_manager = NULL;
 
 #define METADATA_PREFIX "metadata::"
 
@@ -91,27 +91,27 @@ item_free (gpointer data)
 }
 
 static void
-gtef_metadata_manager_arm_timeout (void)
+tepl_metadata_manager_arm_timeout (void)
 {
-	if (gtef_metadata_manager->unit_test_mode)
+	if (tepl_metadata_manager->unit_test_mode)
 	{
-		gtef_metadata_manager_save (NULL);
+		tepl_metadata_manager_save (NULL);
 		return;
 	}
 
-	if (gtef_metadata_manager->timeout_id == 0)
+	if (tepl_metadata_manager->timeout_id == 0)
 	{
-		gtef_metadata_manager->timeout_id =
+		tepl_metadata_manager->timeout_id =
 			g_timeout_add_seconds_full (G_PRIORITY_DEFAULT_IDLE,
 						    2,
-						    (GSourceFunc)gtef_metadata_manager_save,
+						    (GSourceFunc)tepl_metadata_manager_save,
 						    NULL,
 						    NULL);
 	}
 }
 
 /**
- * gtef_metadata_manager_init:
+ * tepl_metadata_manager_init:
  * @metadata_path: the filename where the metadata is stored.
  *
  * This function initializes the metadata manager.
@@ -125,30 +125,30 @@ gtef_metadata_manager_arm_timeout (void)
  * Since: 1.0
  */
 void
-gtef_metadata_manager_init (const gchar *metadata_path)
+tepl_metadata_manager_init (const gchar *metadata_path)
 {
-	if (gtef_metadata_manager != NULL)
+	if (tepl_metadata_manager != NULL)
 	{
 		return;
 	}
 
-	gtef_metadata_manager = g_new0 (GtefMetadataManager, 1);
+	tepl_metadata_manager = g_new0 (TeplMetadataManager, 1);
 
-	gtef_metadata_manager->values_loaded = FALSE;
+	tepl_metadata_manager->values_loaded = FALSE;
 
-	gtef_metadata_manager->items =
+	tepl_metadata_manager->items =
 		g_hash_table_new_full (g_str_hash,
 				       g_str_equal,
 				       g_free,
 				       item_free);
 
-	gtef_metadata_manager->metadata_path = g_strdup (metadata_path);
+	tepl_metadata_manager->metadata_path = g_strdup (metadata_path);
 
-	gtef_metadata_manager->unit_test_mode = FALSE;
+	tepl_metadata_manager->unit_test_mode = FALSE;
 }
 
 /**
- * gtef_metadata_manager_shutdown:
+ * tepl_metadata_manager_shutdown:
  *
  * This function saves synchronously metadata if they need to be saved, and
  * frees the internal data of the metadata manager.
@@ -156,25 +156,25 @@ gtef_metadata_manager_init (const gchar *metadata_path)
  * Since: 1.0
  */
 void
-gtef_metadata_manager_shutdown (void)
+tepl_metadata_manager_shutdown (void)
 {
-	if (gtef_metadata_manager == NULL)
+	if (tepl_metadata_manager == NULL)
 		return;
 
-	if (gtef_metadata_manager->timeout_id != 0)
+	if (tepl_metadata_manager->timeout_id != 0)
 	{
-		g_source_remove (gtef_metadata_manager->timeout_id);
-		gtef_metadata_manager->timeout_id = 0;
-		gtef_metadata_manager_save (NULL);
+		g_source_remove (tepl_metadata_manager->timeout_id);
+		tepl_metadata_manager->timeout_id = 0;
+		tepl_metadata_manager_save (NULL);
 	}
 
-	if (gtef_metadata_manager->items != NULL)
-		g_hash_table_destroy (gtef_metadata_manager->items);
+	if (tepl_metadata_manager->items != NULL)
+		g_hash_table_destroy (tepl_metadata_manager->items);
 
-	g_free (gtef_metadata_manager->metadata_path);
+	g_free (tepl_metadata_manager->metadata_path);
 
-	g_free (gtef_metadata_manager);
-	gtef_metadata_manager = NULL;
+	g_free (tepl_metadata_manager);
+	tepl_metadata_manager = NULL;
 }
 
 static void
@@ -236,7 +236,7 @@ parseItem (xmlDocPtr doc, xmlNodePtr cur)
 		cur = cur->next;
 	}
 
-	g_hash_table_insert (gtef_metadata_manager->items,
+	g_hash_table_insert (tepl_metadata_manager->items,
 			     g_strdup ((gchar *)uri),
 			     item);
 
@@ -251,25 +251,25 @@ load_values (void)
 	xmlDocPtr doc;
 	xmlNodePtr cur;
 
-	g_return_val_if_fail (gtef_metadata_manager != NULL, FALSE);
-	g_return_val_if_fail (gtef_metadata_manager->values_loaded == FALSE, FALSE);
+	g_return_val_if_fail (tepl_metadata_manager != NULL, FALSE);
+	g_return_val_if_fail (tepl_metadata_manager->values_loaded == FALSE, FALSE);
 
-	gtef_metadata_manager->values_loaded = TRUE;
+	tepl_metadata_manager->values_loaded = TRUE;
 
 	xmlKeepBlanksDefault (0);
 
-	if (gtef_metadata_manager->metadata_path == NULL)
+	if (tepl_metadata_manager->metadata_path == NULL)
 	{
 		return FALSE;
 	}
 
 	/* TODO: avoid races */
-	if (!g_file_test (gtef_metadata_manager->metadata_path, G_FILE_TEST_EXISTS))
+	if (!g_file_test (tepl_metadata_manager->metadata_path, G_FILE_TEST_EXISTS))
 	{
 		return TRUE;
 	}
 
-	doc = xmlParseFile (gtef_metadata_manager->metadata_path);
+	doc = xmlParseFile (tepl_metadata_manager->metadata_path);
 
 	if (doc == NULL)
 	{
@@ -280,7 +280,7 @@ load_values (void)
 	if (cur == NULL)
 	{
 		g_message ("The metadata file '%s' is empty",
-		           g_path_get_basename (gtef_metadata_manager->metadata_path));
+		           g_path_get_basename (tepl_metadata_manager->metadata_path));
 		xmlFreeDoc (doc);
 
 		return TRUE;
@@ -289,7 +289,7 @@ load_values (void)
 	if (xmlStrcmp (cur->name, (const xmlChar *) "metadata"))
 	{
 		g_message ("File '%s' is of the wrong type",
-		           g_path_get_basename (gtef_metadata_manager->metadata_path));
+		           g_path_get_basename (tepl_metadata_manager->metadata_path));
 		xmlFreeDoc (doc);
 
 		return FALSE;
@@ -371,7 +371,7 @@ get_oldest (const gchar *key, const gpointer value, const gchar ** key_to_remove
 	else
 	{
 		const Item *item_to_remove =
-			g_hash_table_lookup (gtef_metadata_manager->items,
+			g_hash_table_lookup (tepl_metadata_manager->items,
 					     *key_to_remove);
 
 		g_return_if_fail (item_to_remove != NULL);
@@ -386,28 +386,28 @@ get_oldest (const gchar *key, const gpointer value, const gchar ** key_to_remove
 static void
 resize_items (void)
 {
-	while (g_hash_table_size (gtef_metadata_manager->items) > MAX_ITEMS)
+	while (g_hash_table_size (tepl_metadata_manager->items) > MAX_ITEMS)
 	{
 		gpointer key_to_remove = NULL;
 
-		g_hash_table_foreach (gtef_metadata_manager->items,
+		g_hash_table_foreach (tepl_metadata_manager->items,
 				      (GHFunc)get_oldest,
 				      &key_to_remove);
 
 		g_return_if_fail (key_to_remove != NULL);
 
-		g_hash_table_remove (gtef_metadata_manager->items,
+		g_hash_table_remove (tepl_metadata_manager->items,
 				     key_to_remove);
 	}
 }
 
 static gboolean
-gtef_metadata_manager_save (gpointer data)
+tepl_metadata_manager_save (gpointer data)
 {
 	xmlDocPtr  doc;
 	xmlNodePtr root;
 
-	gtef_metadata_manager->timeout_id = 0;
+	tepl_metadata_manager->timeout_id = 0;
 
 	resize_items ();
 
@@ -421,22 +421,22 @@ gtef_metadata_manager_save (gpointer data)
 	root = xmlNewDocNode (doc, NULL, (const xmlChar *)"metadata", NULL);
 	xmlDocSetRootElement (doc, root);
 
-	g_hash_table_foreach (gtef_metadata_manager->items,
+	g_hash_table_foreach (tepl_metadata_manager->items,
 			      (GHFunc)save_item,
 			      root);
 
 	/* FIXME: lock file - Paolo */
-	if (gtef_metadata_manager->metadata_path != NULL)
+	if (tepl_metadata_manager->metadata_path != NULL)
 	{
 		gchar *cache_dir;
 		int res;
 
 		/* make sure the cache dir exists */
-		cache_dir = g_path_get_dirname (gtef_metadata_manager->metadata_path);
+		cache_dir = g_path_get_dirname (tepl_metadata_manager->metadata_path);
 		res = g_mkdir_with_parents (cache_dir, 0755);
 		if (res != -1)
 		{
-			xmlSaveFormatFile (gtef_metadata_manager->metadata_path,
+			xmlSaveFormatFile (tepl_metadata_manager->metadata_path,
 			                   doc,
 			                   1);
 		}
@@ -471,7 +471,7 @@ foreach_key_cb (gpointer _key,
 
 /* Returns: (transfer full) (nullable) */
 GFileInfo *
-_gtef_metadata_manager_get_all_metadata_for_location (GFile *location)
+_tepl_metadata_manager_get_all_metadata_for_location (GFile *location)
 {
 	gchar *uri;
 	Item *item;
@@ -479,7 +479,7 @@ _gtef_metadata_manager_get_all_metadata_for_location (GFile *location)
 
 	g_return_val_if_fail (G_IS_FILE (location), NULL);
 
-	if (!gtef_metadata_manager->values_loaded)
+	if (!tepl_metadata_manager->values_loaded)
 	{
 		gboolean ok;
 
@@ -492,7 +492,7 @@ _gtef_metadata_manager_get_all_metadata_for_location (GFile *location)
 	}
 
 	uri = g_file_get_uri (location);
-	item = g_hash_table_lookup (gtef_metadata_manager->items, uri);
+	item = g_hash_table_lookup (tepl_metadata_manager->items, uri);
 	g_free (uri);
 
 	if (item == NULL)
@@ -515,7 +515,7 @@ _gtef_metadata_manager_get_all_metadata_for_location (GFile *location)
 }
 
 void
-_gtef_metadata_manager_set_metadata_for_location (GFile     *location,
+_tepl_metadata_manager_set_metadata_for_location (GFile     *location,
 						  GFileInfo *metadata)
 {
 	gchar **attributes_list;
@@ -526,7 +526,7 @@ _gtef_metadata_manager_set_metadata_for_location (GFile     *location,
 	g_return_if_fail (G_IS_FILE (location));
 	g_return_if_fail (G_IS_FILE_INFO (metadata));
 
-	if (!gtef_metadata_manager->values_loaded)
+	if (!tepl_metadata_manager->values_loaded)
 	{
 		gboolean ok;
 
@@ -547,13 +547,13 @@ _gtef_metadata_manager_set_metadata_for_location (GFile     *location,
 
 	uri = g_file_get_uri (location);
 
-	item = g_hash_table_lookup (gtef_metadata_manager->items, uri);
+	item = g_hash_table_lookup (tepl_metadata_manager->items, uri);
 
 	if (item == NULL)
 	{
 		item = g_new0 (Item, 1);
 
-		g_hash_table_insert (gtef_metadata_manager->items,
+		g_hash_table_insert (tepl_metadata_manager->items,
 				     g_strdup (uri),
 				     item);
 	}
@@ -604,18 +604,18 @@ _gtef_metadata_manager_set_metadata_for_location (GFile     *location,
 	g_strfreev (attributes_list);
 	g_free (uri);
 
-	gtef_metadata_manager_arm_timeout ();
+	tepl_metadata_manager_arm_timeout ();
 }
 
 void
-_gtef_metadata_manager_set_unit_test_mode (void)
+_tepl_metadata_manager_set_unit_test_mode (void)
 {
-	gtef_metadata_manager->unit_test_mode = TRUE;
+	tepl_metadata_manager->unit_test_mode = TRUE;
 
-	if (gtef_metadata_manager->timeout_id != 0)
+	if (tepl_metadata_manager->timeout_id != 0)
 	{
-		g_source_remove (gtef_metadata_manager->timeout_id);
-		gtef_metadata_manager->timeout_id = 0;
-		gtef_metadata_manager_save (NULL);
+		g_source_remove (tepl_metadata_manager->timeout_id);
+		tepl_metadata_manager->timeout_id = 0;
+		tepl_metadata_manager_save (NULL);
 	}
 }

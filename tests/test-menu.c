@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,14 +17,14 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtef/gtef.h>
+#include <tepl/tepl.h>
 
 static void
-add_action_info_entries (GtefApplication *gtef_app)
+add_action_info_entries (TeplApplication *tepl_app)
 {
-	GtefActionInfoStore *store;
+	TeplActionInfoStore *store;
 
-	const GtefActionInfoEntry entries[] =
+	const TeplActionInfoEntry entries[] =
 	{
 		/* action, icon, label, accel, tooltip */
 
@@ -35,9 +35,9 @@ add_action_info_entries (GtefApplication *gtef_app)
 		  "About this application" },
 	};
 
-	store = gtef_application_get_app_action_info_store (gtef_app);
+	store = tepl_application_get_app_action_info_store (tepl_app);
 
-	gtef_action_info_store_add_entries (store,
+	tepl_action_info_store_add_entries (store,
 					    entries,
 					    G_N_ELEMENTS (entries),
 					    NULL);
@@ -68,7 +68,7 @@ add_action_entries (GApplication *app)
 		{ "about", about_activate_cb },
 	};
 
-	gtef_action_map_add_action_entries_check_dups (G_ACTION_MAP (app),
+	tepl_action_map_add_action_entries_check_dups (G_ACTION_MAP (app),
 						       entries,
 						       G_N_ELEMENTS (entries),
 						       app);
@@ -78,34 +78,34 @@ static void
 startup_cb (GApplication *g_app,
 	    gpointer      user_data)
 {
-	GtefApplication *gtef_app;
+	TeplApplication *tepl_app;
 
-	gtef_app = gtef_application_get_from_gtk_application (GTK_APPLICATION (g_app));
+	tepl_app = tepl_application_get_from_gtk_application (GTK_APPLICATION (g_app));
 
-	add_action_info_entries (gtef_app);
+	add_action_info_entries (tepl_app);
 	add_action_entries (g_app);
 }
 
-static GtefActionInfoStore *
+static TeplActionInfoStore *
 get_action_info_store (void)
 {
-	GtefApplication *app;
+	TeplApplication *app;
 
-	app = gtef_application_get_default ();
+	app = tepl_application_get_default ();
 
-	return gtef_application_get_app_action_info_store (app);
+	return tepl_application_get_app_action_info_store (app);
 }
 
 static GtkWidget *
 create_file_submenu (void)
 {
-	GtefActionInfoStore *store;
+	TeplActionInfoStore *store;
 	GtkMenuShell *file_submenu;
 
 	store = get_action_info_store ();
 	file_submenu = GTK_MENU_SHELL (gtk_menu_new ());
 
-	gtk_menu_shell_append (file_submenu, gtef_action_info_store_create_menu_item (store, "app.quit"));
+	gtk_menu_shell_append (file_submenu, tepl_action_info_store_create_menu_item (store, "app.quit"));
 
 	return GTK_WIDGET (file_submenu);
 }
@@ -113,13 +113,13 @@ create_file_submenu (void)
 static GtkWidget *
 create_help_submenu (void)
 {
-	GtefActionInfoStore *store;
+	TeplActionInfoStore *store;
 	GtkMenuShell *help_submenu;
 
 	store = get_action_info_store ();
 	help_submenu = GTK_MENU_SHELL (gtk_menu_new ());
 
-	gtk_menu_shell_append (help_submenu, gtef_action_info_store_create_menu_item (store, "app.about"));
+	gtk_menu_shell_append (help_submenu, tepl_action_info_store_create_menu_item (store, "app.about"));
 
 	return GTK_WIDGET (help_submenu);
 }
@@ -130,7 +130,7 @@ create_menu_bar (void)
 	GtkWidget *file_menu_item;
 	GtkWidget *help_menu_item;
 	GtkMenuBar *menu_bar;
-	GtefActionInfoStore *store;
+	TeplActionInfoStore *store;
 
 	file_menu_item = gtk_menu_item_new_with_mnemonic ("_File");
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (file_menu_item),
@@ -145,7 +145,7 @@ create_menu_bar (void)
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), help_menu_item);
 
 	store = get_action_info_store ();
-	gtef_action_info_store_check_all_used (store);
+	tepl_action_info_store_check_all_used (store);
 
 	return menu_bar;
 }
@@ -183,7 +183,7 @@ main (gint    argc,
 	GtkApplication *app;
 	gint status;
 
-	app = gtk_application_new ("org.gnome.gtef.test-menu", G_APPLICATION_FLAGS_NONE);
+	app = gtk_application_new ("org.gnome.tepl.test-menu", G_APPLICATION_FLAGS_NONE);
 
 	g_signal_connect (app,
 			  "startup",

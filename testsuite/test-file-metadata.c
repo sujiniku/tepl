@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,16 +17,16 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtef/gtef.h>
+#include <tepl/tepl.h>
 #include <glib/gstdio.h>
 
-#define TEST_KEY "gtef-test-key"
-#define TEST_OTHER_KEY "gtef-test-other-key"
+#define TEST_KEY "tepl-test-key"
+#define TEST_OTHER_KEY "tepl-test-other-key"
 
 static gchar *
 get_metadata_manager_path (void)
 {
-	return g_build_filename (g_get_tmp_dir (), "gtef-metadata-manager-store.xml", NULL);
+	return g_build_filename (g_get_tmp_dir (), "tepl-metadata-manager-store.xml", NULL);
 }
 
 static void
@@ -35,8 +35,8 @@ setup_unit_test (void)
 	gchar *path;
 
 	path = get_metadata_manager_path ();
-	gtef_metadata_manager_init (path);
-	_gtef_metadata_manager_set_unit_test_mode ();
+	tepl_metadata_manager_init (path);
+	_tepl_metadata_manager_set_unit_test_mode ();
 	g_free (path);
 }
 
@@ -45,23 +45,23 @@ teardown_unit_test (void)
 {
 	gchar *path;
 
-	gtef_metadata_manager_shutdown ();
+	tepl_metadata_manager_shutdown ();
 
 	path = get_metadata_manager_path ();
 	g_unlink (path);
 	g_free (path);
 }
 
-static GtefFile *
+static TeplFile *
 create_file (gboolean use_gvfs_metadata)
 {
-	GtefFile *file;
-	GtefFileMetadata *metadata;
+	TeplFile *file;
+	TeplFileMetadata *metadata;
 
-	file = gtef_file_new ();
+	file = tepl_file_new ();
 
-	metadata = gtef_file_get_file_metadata (file);
-	_gtef_file_metadata_set_use_gvfs_metadata (metadata, use_gvfs_metadata);
+	metadata = tepl_file_get_file_metadata (file);
+	_tepl_file_metadata_set_use_gvfs_metadata (metadata, use_gvfs_metadata);
 
 	return file;
 }
@@ -69,37 +69,37 @@ create_file (gboolean use_gvfs_metadata)
 static void
 do_test_get_set_metadata (gboolean use_gvfs_metadata)
 {
-	GtefFile *file;
-	GtefFileMetadata *metadata;
+	TeplFile *file;
+	TeplFileMetadata *metadata;
 	gchar *value;
 
 	file = create_file (use_gvfs_metadata);
-	metadata = gtef_file_get_file_metadata (file);
+	metadata = tepl_file_get_file_metadata (file);
 
-	value = gtef_file_metadata_get (metadata, TEST_KEY);
+	value = tepl_file_metadata_get (metadata, TEST_KEY);
 	g_assert (value == NULL);
 
-	gtef_file_metadata_set (metadata, TEST_KEY, "zippy");
-	value = gtef_file_metadata_get (metadata, TEST_KEY);
+	tepl_file_metadata_set (metadata, TEST_KEY, "zippy");
+	value = tepl_file_metadata_get (metadata, TEST_KEY);
 	g_assert_cmpstr (value, ==, "zippy");
 	g_free (value);
 
-	value = gtef_file_metadata_get (metadata, TEST_OTHER_KEY);
+	value = tepl_file_metadata_get (metadata, TEST_OTHER_KEY);
 	g_assert (value == NULL);
 
-	gtef_file_metadata_set (metadata, TEST_KEY, "zippiness");
-	value = gtef_file_metadata_get (metadata, TEST_KEY);
+	tepl_file_metadata_set (metadata, TEST_KEY, "zippiness");
+	value = tepl_file_metadata_get (metadata, TEST_KEY);
 	g_assert_cmpstr (value, ==, "zippiness");
 	g_free (value);
 
 	/* Unset */
-	gtef_file_metadata_set (metadata, TEST_KEY, NULL);
-	value = gtef_file_metadata_get (metadata, TEST_KEY);
+	tepl_file_metadata_set (metadata, TEST_KEY, NULL);
+	value = tepl_file_metadata_get (metadata, TEST_KEY);
 	g_assert (value == NULL);
 
 	/* Unset non-set metadata */
-	gtef_file_metadata_set (metadata, TEST_OTHER_KEY, NULL);
-	value = gtef_file_metadata_get (metadata, TEST_OTHER_KEY);
+	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, NULL);
+	value = tepl_file_metadata_get (metadata, TEST_OTHER_KEY);
 	g_assert (value == NULL);
 
 	g_object_unref (file);
@@ -117,8 +117,8 @@ test_get_set_metadata (void)
 static void
 do_test_load_save_metadata_sync (gboolean use_gvfs_metadata)
 {
-	GtefFile *file;
-	GtefFileMetadata *metadata;
+	TeplFile *file;
+	TeplFileMetadata *metadata;
 	gchar *value;
 	gchar *path;
 	GFile *location;
@@ -126,32 +126,32 @@ do_test_load_save_metadata_sync (gboolean use_gvfs_metadata)
 	gboolean ok;
 
 	file = create_file (use_gvfs_metadata);
-	metadata = gtef_file_get_file_metadata (file);
+	metadata = tepl_file_get_file_metadata (file);
 
 	/* NULL location */
 
-	gtef_file_metadata_set (metadata, TEST_KEY, "epica");
+	tepl_file_metadata_set (metadata, TEST_KEY, "epica");
 
-	ok = gtef_file_metadata_load (metadata, NULL, &error);
+	ok = tepl_file_metadata_load (metadata, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (!ok);
 
-	ok = gtef_file_metadata_save (metadata, NULL, &error);
+	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (!ok);
 
-	value = gtef_file_metadata_get (metadata, TEST_KEY);
+	value = tepl_file_metadata_get (metadata, TEST_KEY);
 	g_assert_cmpstr (value, ==, "epica");
 	g_free (value);
 
 	/* Save metadata */
 
-	path = g_build_filename (g_get_tmp_dir (), "gtef-metadata-test-sync", NULL);
+	path = g_build_filename (g_get_tmp_dir (), "tepl-metadata-test-sync", NULL);
 	location = g_file_new_for_path (path);
 
-	gtef_file_set_location (file, location);
+	tepl_file_set_location (file, location);
 
-	ok = gtef_file_metadata_save (metadata, NULL, &error);
+	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	if (use_gvfs_metadata)
 	{
 		g_assert (error != NULL); /* No such file or directory */
@@ -167,7 +167,7 @@ do_test_load_save_metadata_sync (gboolean use_gvfs_metadata)
 	g_file_set_contents (path, "blum", -1, &error);
 	g_assert_no_error (error);
 
-	ok = gtef_file_metadata_save (metadata, NULL, &error);
+	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ok);
 
@@ -176,34 +176,34 @@ do_test_load_save_metadata_sync (gboolean use_gvfs_metadata)
 	/* Load metadata */
 
 	file = create_file (use_gvfs_metadata);
-	metadata = gtef_file_get_file_metadata (file);
-	gtef_file_set_location (file, location);
+	metadata = tepl_file_get_file_metadata (file);
+	tepl_file_set_location (file, location);
 
-	gtef_file_metadata_set (metadata, TEST_OTHER_KEY, "embrace");
+	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, "embrace");
 
-	ok = gtef_file_metadata_load (metadata, NULL, &error);
+	ok = tepl_file_metadata_load (metadata, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ok);
 
-	value = gtef_file_metadata_get (metadata, TEST_OTHER_KEY);
+	value = tepl_file_metadata_get (metadata, TEST_OTHER_KEY);
 	g_assert (value == NULL);
 
-	value = gtef_file_metadata_get (metadata, TEST_KEY);
+	value = tepl_file_metadata_get (metadata, TEST_KEY);
 	g_assert_cmpstr (value, ==, "epica");
 	g_free (value);
 
 	/* Unset */
 
-	gtef_file_metadata_set (metadata, TEST_KEY, NULL);
-	ok = gtef_file_metadata_save (metadata, NULL, &error);
+	tepl_file_metadata_set (metadata, TEST_KEY, NULL);
+	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ok);
 
-	ok = gtef_file_metadata_load (metadata, NULL, &error);
+	ok = tepl_file_metadata_load (metadata, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ok);
 
-	value = gtef_file_metadata_get (metadata, TEST_KEY);
+	value = tepl_file_metadata_get (metadata, TEST_KEY);
 	g_assert (value == NULL);
 
 	/* Clean-up */
@@ -211,7 +211,7 @@ do_test_load_save_metadata_sync (gboolean use_gvfs_metadata)
 	g_file_delete (location, NULL, &error);
 	g_assert_no_error (error);
 
-	ok = gtef_file_metadata_load (metadata, NULL, &error);
+	ok = tepl_file_metadata_load (metadata, NULL, &error);
 	if (use_gvfs_metadata)
 	{
 		g_assert (error != NULL); /* No such file or directory */
@@ -243,31 +243,31 @@ load_metadata_async_cb (GObject      *source_object,
 			GAsyncResult *result,
 			gpointer      user_data)
 {
-	GtefFileMetadata *metadata = GTEF_FILE_METADATA (source_object);
-	GtefFile *file;
+	TeplFileMetadata *metadata = TEPL_FILE_METADATA (source_object);
+	TeplFile *file;
 	gchar *value;
 	GFile *location;
 	GError *error = NULL;
 	gboolean ok;
 
-	file = gtef_file_metadata_get_file (metadata);
+	file = tepl_file_metadata_get_file (metadata);
 
-	ok = gtef_file_metadata_load_finish (metadata, result, &error);
+	ok = tepl_file_metadata_load_finish (metadata, result, &error);
 	g_assert_no_error (error);
 	g_assert (ok);
 
-	value = gtef_file_metadata_get (metadata, TEST_KEY);
+	value = tepl_file_metadata_get (metadata, TEST_KEY);
 	g_assert_cmpstr (value, ==, "in flames");
 	g_free (value);
 
 	/* Unset and clean-up */
 
-	gtef_file_metadata_set (metadata, TEST_KEY, NULL);
-	ok = gtef_file_metadata_save (metadata, NULL, &error);
+	tepl_file_metadata_set (metadata, TEST_KEY, NULL);
+	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ok);
 
-	location = gtef_file_get_location (file);
+	location = tepl_file_get_location (file);
 	g_file_delete (location, NULL, &error);
 	g_assert_no_error (error);
 
@@ -280,17 +280,17 @@ save_metadata_async_cb (GObject      *source_object,
 			GAsyncResult *result,
 			gpointer      user_data)
 {
-	GtefFileMetadata *metadata = GTEF_FILE_METADATA (source_object);
+	TeplFileMetadata *metadata = TEPL_FILE_METADATA (source_object);
 	GError *error = NULL;
 	gboolean ok;
 
-	ok = gtef_file_metadata_save_finish (metadata, result, &error);
+	ok = tepl_file_metadata_save_finish (metadata, result, &error);
 	g_assert_no_error (error);
 	g_assert (ok);
 
-	gtef_file_metadata_set (metadata, TEST_KEY, NULL);
+	tepl_file_metadata_set (metadata, TEST_KEY, NULL);
 
-	gtef_file_metadata_load_async (metadata,
+	tepl_file_metadata_load_async (metadata,
 				       G_PRIORITY_DEFAULT,
 				       NULL,
 				       load_metadata_async_cb,
@@ -301,28 +301,28 @@ save_metadata_async_cb (GObject      *source_object,
 static void
 do_test_load_save_metadata_async (gboolean use_gvfs_metadata)
 {
-	GtefFile *file;
-	GtefFileMetadata *metadata;
+	TeplFile *file;
+	TeplFileMetadata *metadata;
 	gchar *path;
 	GFile *location;
 	GError *error = NULL;
 
 	file = create_file (use_gvfs_metadata);
-	metadata = gtef_file_get_file_metadata (file);
+	metadata = tepl_file_get_file_metadata (file);
 
-	path = g_build_filename (g_get_tmp_dir (), "gtef-metadata-test-async", NULL);
+	path = g_build_filename (g_get_tmp_dir (), "tepl-metadata-test-async", NULL);
 
 	location = g_file_new_for_path (path);
-	gtef_file_set_location (file, location);
+	tepl_file_set_location (file, location);
 	g_object_unref (location);
 
 	g_file_set_contents (path, "blum", -1, &error);
 	g_assert_no_error (error);
 	g_free (path);
 
-	gtef_file_metadata_set (metadata, TEST_KEY, "in flames");
+	tepl_file_metadata_set (metadata, TEST_KEY, "in flames");
 
-	gtef_file_metadata_save_async (metadata,
+	tepl_file_metadata_save_async (metadata,
 				       G_PRIORITY_DEFAULT,
 				       NULL,
 				       save_metadata_async_cb,
@@ -346,8 +346,8 @@ test_load_save_metadata_async (void)
 static void
 do_test_set_without_load (gboolean use_gvfs_metadata)
 {
-	GtefFile *file;
-	GtefFileMetadata *metadata;
+	TeplFile *file;
+	TeplFileMetadata *metadata;
 	gchar *path;
 	GFile *location;
 	gchar *value;
@@ -355,17 +355,17 @@ do_test_set_without_load (gboolean use_gvfs_metadata)
 	gboolean ok;
 
 	file = create_file (use_gvfs_metadata);
-	metadata = gtef_file_get_file_metadata (file);
-	path = g_build_filename (g_get_tmp_dir (), "gtef-metadata-test-set-without-load", NULL);
+	metadata = tepl_file_get_file_metadata (file);
+	path = g_build_filename (g_get_tmp_dir (), "tepl-metadata-test-set-without-load", NULL);
 	location = g_file_new_for_path (path);
-	gtef_file_set_location (file, location);
+	tepl_file_set_location (file, location);
 
 	g_file_set_contents (path, "blom", -1, &error);
 	g_assert_no_error (error);
 
 	/* Set and save one metadata */
-	gtef_file_metadata_set (metadata, TEST_KEY, "dimmu");
-	ok = gtef_file_metadata_save (metadata, NULL, &error);
+	tepl_file_metadata_set (metadata, TEST_KEY, "dimmu");
+	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ok);
 
@@ -373,31 +373,31 @@ do_test_set_without_load (gboolean use_gvfs_metadata)
 
 	/* Set and save another metadata, independently */
 	file = create_file (use_gvfs_metadata);
-	metadata = gtef_file_get_file_metadata (file);
-	gtef_file_set_location (file, location);
-	gtef_file_metadata_set (metadata, TEST_OTHER_KEY, "borgir");
-	ok = gtef_file_metadata_save (metadata, NULL, &error);
+	metadata = tepl_file_get_file_metadata (file);
+	tepl_file_set_location (file, location);
+	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, "borgir");
+	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ok);
 
 	/* Load */
-	ok = gtef_file_metadata_load (metadata, NULL, &error);
+	ok = tepl_file_metadata_load (metadata, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ok);
 
 	/* Check that the two metadata are present */
-	value = gtef_file_metadata_get (metadata, TEST_KEY);
+	value = tepl_file_metadata_get (metadata, TEST_KEY);
 	g_assert_cmpstr (value, ==, "dimmu");
 	g_free (value);
 
-	value = gtef_file_metadata_get (metadata, TEST_OTHER_KEY);
+	value = tepl_file_metadata_get (metadata, TEST_OTHER_KEY);
 	g_assert_cmpstr (value, ==, "borgir");
 	g_free (value);
 
 	/* Clean-up */
-	gtef_file_metadata_set (metadata, TEST_KEY, NULL);
-	gtef_file_metadata_set (metadata, TEST_OTHER_KEY, NULL);
-	ok = gtef_file_metadata_save (metadata, NULL, &error);
+	tepl_file_metadata_set (metadata, TEST_KEY, NULL);
+	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, NULL);
+	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ok);
 

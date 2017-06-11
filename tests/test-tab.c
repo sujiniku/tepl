@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,9 +17,9 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtef/gtef.h>
-#include "gtef/gtef-progress-info-bar.h"
-#include "gtef/gtef-io-error-info-bar.h"
+#include <tepl/tepl.h>
+#include "tepl/tepl-progress-info-bar.h"
+#include "tepl/tepl-io-error-info-bar.h"
 #include <stdlib.h>
 
 static void
@@ -32,57 +32,57 @@ info_bar_response_cb (GtkInfoBar *info_bar,
 
 static void
 basic_cb (GtkButton *button,
-	  GtefTab   *tab)
+	  TeplTab   *tab)
 {
-	GtefInfoBar *info_bar;
+	TeplInfoBar *info_bar;
 	GtkWidget *entry;
 
-	info_bar = gtef_info_bar_new_simple (GTK_MESSAGE_WARNING,
+	info_bar = tepl_info_bar_new_simple (GTK_MESSAGE_WARNING,
 					     "Primary message.",
 					     "Secondary message.");
 
 	entry = gtk_entry_new ();
 	gtk_widget_show (entry);
-	gtef_info_bar_add_content_widget (info_bar, entry);
+	tepl_info_bar_add_content_widget (info_bar, entry);
 
-	gtef_info_bar_add_close_button (info_bar);
+	tepl_info_bar_add_close_button (info_bar);
 
-	gtef_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
+	tepl_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
 	gtk_widget_show (GTK_WIDGET (info_bar));
 }
 
 static void
 progress_cb (GtkButton *button,
-	     GtefTab   *tab)
+	     TeplTab   *tab)
 {
-	GtefProgressInfoBar *info_bar;
+	TeplProgressInfoBar *info_bar;
 
-	info_bar = _gtef_progress_info_bar_new ("File loading... The full and very long path is: "
+	info_bar = _tepl_progress_info_bar_new ("File loading... The full and very long path is: "
 						"/home/seb/a/very/long/path/like/this/is/beautiful"
 						"/but/is/it/correctly/wrapped/in/the/info/bar/that"
 						"/is/the/question",
 						TRUE);
 
-	_gtef_progress_info_bar_set_fraction (info_bar, 0.3);
+	_tepl_progress_info_bar_set_fraction (info_bar, 0.3);
 
 	g_signal_connect (info_bar,
 			  "response",
 			  G_CALLBACK (info_bar_response_cb),
 			  NULL);
 
-	gtef_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
+	tepl_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
 	gtk_widget_show (GTK_WIDGET (info_bar));
 }
 
 static void
-add_io_loading_error_info_bar (GtefTab *tab,
+add_io_loading_error_info_bar (TeplTab *tab,
 			       GError  *error)
 {
 	GFile *location;
 	GtkSourceFile *file;
 	GtkSourceBuffer *buffer;
 	GtkSourceFileLoader *loader;
-	GtefIoErrorInfoBar *info_bar;
+	TeplIoErrorInfoBar *info_bar;
 
 	location = g_file_new_for_path ("/home/seb/test.c");
 	file = gtk_source_file_new ();
@@ -90,15 +90,15 @@ add_io_loading_error_info_bar (GtefTab *tab,
 	buffer = gtk_source_buffer_new (NULL);
 	loader = gtk_source_file_loader_new (buffer, file);
 
-	info_bar = _gtef_io_error_info_bar_new ();
-	_gtef_io_error_info_bar_set_loading_error (info_bar, loader, error);
+	info_bar = _tepl_io_error_info_bar_new ();
+	_tepl_io_error_info_bar_set_loading_error (info_bar, loader, error);
 
 	g_signal_connect (info_bar,
 			  "response",
 			  G_CALLBACK (info_bar_response_cb),
 			  NULL);
 
-	gtef_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
+	tepl_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
 	gtk_widget_show (GTK_WIDGET (info_bar));
 
 	g_object_unref (location);
@@ -109,7 +109,7 @@ add_io_loading_error_info_bar (GtefTab *tab,
 
 static void
 permission_denied_cb (GtkButton *button,
-		      GtefTab   *tab)
+		      TeplTab   *tab)
 {
 	GError *error = g_error_new (G_IO_ERROR, G_IO_ERROR_PERMISSION_DENIED, "blah");
 	add_io_loading_error_info_bar (tab, error);
@@ -118,7 +118,7 @@ permission_denied_cb (GtkButton *button,
 
 static void
 not_found_cb (GtkButton *button,
-	      GtefTab   *tab)
+	      TeplTab   *tab)
 {
 	GError *error = g_error_new (G_IO_ERROR, G_IO_ERROR_NOT_FOUND, "blah");
 	add_io_loading_error_info_bar (tab, error);
@@ -127,7 +127,7 @@ not_found_cb (GtkButton *button,
 
 static void
 conversion_fallback_cb (GtkButton *button,
-			GtefTab   *tab)
+			TeplTab   *tab)
 {
 	GError *error = g_error_new (GTK_SOURCE_FILE_LOADER_ERROR,
 				     GTK_SOURCE_FILE_LOADER_ERROR_CONVERSION_FALLBACK,
@@ -137,7 +137,7 @@ conversion_fallback_cb (GtkButton *button,
 }
 
 static GtkWidget *
-create_side_panel (GtefTab *tab)
+create_side_panel (TeplTab *tab)
 {
 	GtkGrid *vgrid;
 	GtkWidget *basic;
@@ -193,14 +193,14 @@ create_side_panel (GtefTab *tab)
 	return GTK_WIDGET (vgrid);
 }
 
-static GtefTab *
+static TeplTab *
 create_tab (void)
 {
 	GtkWidget *view;
 	GtkWidget *scrolled_window;
-	GtefTab *tab;
+	TeplTab *tab;
 
-	view = gtef_view_new ();
+	view = tepl_view_new ();
 
 	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_container_add (GTK_CONTAINER (scrolled_window), view);
@@ -213,12 +213,12 @@ create_tab (void)
 	 * gtk_widget_queue_resize() which takes the natural size of the
 	 * scrolled window. Setting a size request fixes the problem.
 	 * FIXME: some app authors will probably forget to do it, so it would be
-	 * better if the Gtef framework handles it, by being aware that the
-	 * GtefTab contains a scrolled window.
+	 * better if the Tepl framework handles it, by being aware that the
+	 * TeplTab contains a scrolled window.
 	 */
 	gtk_widget_set_size_request (scrolled_window, 400, 40);
 
-	tab = gtef_tab_new (scrolled_window);
+	tab = tepl_tab_new (scrolled_window);
 	gtk_widget_show_all (GTK_WIDGET (tab));
 
 	return tab;
@@ -228,7 +228,7 @@ static GtkWidget *
 create_window_content (void)
 {
 	GtkGrid *hgrid;
-	GtefTab *tab;
+	TeplTab *tab;
 	GtkWidget *side_panel;
 
 	hgrid = GTK_GRID (gtk_grid_new ());

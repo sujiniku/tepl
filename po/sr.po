@@ -1,11 +1,11 @@
-# Serbian translation for gtef.
-# Copyright (C) 2017 gtef's COPYRIGHT HOLDER
-# This file is distributed under the same license as the gtef package.
+# Serbian translation for tepl.
+# Copyright (C) 2017 tepl's COPYRIGHT HOLDER
+# This file is distributed under the same license as the tepl package.
 # MirosNik <miroslavnikolic@rocketmail.com>, 2017.
 # Мирослав Николић <miroslavnikolic@rocketmail.com>, 2017.
 msgid ""
 msgstr ""
-"Project-Id-Version: gtef master\n"
+"Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-12 14:35+0000\n"
 "PO-Revision-Date: 2017-03-13 15:14+0200\n"
@@ -19,229 +19,229 @@ msgstr ""
 "n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. Translators: %s is a filename.
-#: gtef/gtef-application-window.c:356
+#: tepl/tepl-application-window.c:356
 #, c-format
 msgid "Open “%s”"
 msgstr "Отварам „%s“"
 
-#: gtef/gtef-application-window.c:575
+#: tepl/tepl-application-window.c:575
 msgid "Open _Recent"
 msgstr "Отвори _скорашње"
 
 #. Translators: %s is the application name.
-#: gtef/gtef-application-window.c:578
+#: tepl/tepl-application-window.c:578
 #, c-format
 msgid "Open a file recently used with %s"
 msgstr "Отворите датотеку коју је недавно користио „%s“"
 
 #. UTF-8 first, so that it's the first encoding returned by
-#. * gtef_encoding_get_all().
+#. * tepl_encoding_get_all().
 #.
-#: gtef/gtef-encoding.c:115 gtef/gtef-encoding.c:132 gtef/gtef-encoding.c:133
-#: gtef/gtef-encoding.c:134 gtef/gtef-encoding.c:135 gtef/gtef-encoding.c:136
-#: gtef/gtef-encoding.c:137 gtef/gtef-encoding.c:138
+#: tepl/tepl-encoding.c:115 tepl/tepl-encoding.c:132 tepl/tepl-encoding.c:133
+#: tepl/tepl-encoding.c:134 tepl/tepl-encoding.c:135 tepl/tepl-encoding.c:136
+#: tepl/tepl-encoding.c:137 tepl/tepl-encoding.c:138
 msgid "Unicode"
 msgstr "Уникод"
 
 #. FIXME GEOSTD8 ?
-#: gtef/gtef-encoding.c:117 gtef/gtef-encoding.c:129 gtef/gtef-encoding.c:157
-#: gtef/gtef-encoding.c:180
+#: tepl/tepl-encoding.c:117 tepl/tepl-encoding.c:129 tepl/tepl-encoding.c:157
+#: tepl/tepl-encoding.c:180
 msgid "Western"
 msgstr "Западни"
 
-#: gtef/gtef-encoding.c:118 gtef/gtef-encoding.c:158 gtef/gtef-encoding.c:178
+#: tepl/tepl-encoding.c:118 tepl/tepl-encoding.c:158 tepl/tepl-encoding.c:178
 msgid "Central European"
 msgstr "Централноевропски"
 
-#: gtef/gtef-encoding.c:119
+#: tepl/tepl-encoding.c:119
 msgid "South European"
 msgstr "Јужноевропски"
 
-#: gtef/gtef-encoding.c:120 gtef/gtef-encoding.c:127 gtef/gtef-encoding.c:185
+#: tepl/tepl-encoding.c:120 tepl/tepl-encoding.c:127 tepl/tepl-encoding.c:185
 msgid "Baltic"
 msgstr "Балтички"
 
-#: gtef/gtef-encoding.c:121 gtef/gtef-encoding.c:159 gtef/gtef-encoding.c:166
-#: gtef/gtef-encoding.c:168 gtef/gtef-encoding.c:169 gtef/gtef-encoding.c:179
+#: tepl/tepl-encoding.c:121 tepl/tepl-encoding.c:159 tepl/tepl-encoding.c:166
+#: tepl/tepl-encoding.c:168 tepl/tepl-encoding.c:169 tepl/tepl-encoding.c:179
 msgid "Cyrillic"
 msgstr "Ћирилични"
 
-#: gtef/gtef-encoding.c:122 gtef/gtef-encoding.c:162 gtef/gtef-encoding.c:184
+#: tepl/tepl-encoding.c:122 tepl/tepl-encoding.c:162 tepl/tepl-encoding.c:184
 msgid "Arabic"
 msgstr "Арапски"
 
-#: gtef/gtef-encoding.c:123 gtef/gtef-encoding.c:181
+#: tepl/tepl-encoding.c:123 tepl/tepl-encoding.c:181
 msgid "Greek"
 msgstr "Грчки"
 
-#: gtef/gtef-encoding.c:124
+#: tepl/tepl-encoding.c:124
 msgid "Hebrew Visual"
 msgstr "Хебрејски визуелни"
 
-#: gtef/gtef-encoding.c:125 gtef/gtef-encoding.c:160 gtef/gtef-encoding.c:182
+#: tepl/tepl-encoding.c:125 tepl/tepl-encoding.c:160 tepl/tepl-encoding.c:182
 msgid "Turkish"
 msgstr "Турски"
 
-#: gtef/gtef-encoding.c:126
+#: tepl/tepl-encoding.c:126
 msgid "Nordic"
 msgstr "Нордијски"
 
-#: gtef/gtef-encoding.c:128
+#: tepl/tepl-encoding.c:128
 msgid "Celtic"
 msgstr "Келтски"
 
-#: gtef/gtef-encoding.c:130
+#: tepl/tepl-encoding.c:130
 msgid "Romanian"
 msgstr "Румунски"
 
-#: gtef/gtef-encoding.c:140
+#: tepl/tepl-encoding.c:140
 msgid "Armenian"
 msgstr "Јерменски"
 
-#: gtef/gtef-encoding.c:141 gtef/gtef-encoding.c:142 gtef/gtef-encoding.c:150
+#: tepl/tepl-encoding.c:141 tepl/tepl-encoding.c:142 tepl/tepl-encoding.c:150
 msgid "Chinese Traditional"
 msgstr "Кинески традиционални"
 
-#: gtef/gtef-encoding.c:143
+#: tepl/tepl-encoding.c:143
 msgid "Cyrillic/Russian"
 msgstr "Ћирилични/Руски"
 
-#: gtef/gtef-encoding.c:145 gtef/gtef-encoding.c:146 gtef/gtef-encoding.c:147
-#: gtef/gtef-encoding.c:164 gtef/gtef-encoding.c:172
+#: tepl/tepl-encoding.c:145 tepl/tepl-encoding.c:146 tepl/tepl-encoding.c:147
+#: tepl/tepl-encoding.c:164 tepl/tepl-encoding.c:172
 msgid "Japanese"
 msgstr "Јапански"
 
-#: gtef/gtef-encoding.c:149 gtef/gtef-encoding.c:165 gtef/gtef-encoding.c:167
-#: gtef/gtef-encoding.c:175
+#: tepl/tepl-encoding.c:149 tepl/tepl-encoding.c:165 tepl/tepl-encoding.c:167
+#: tepl/tepl-encoding.c:175
 msgid "Korean"
 msgstr "Корејски"
 
-#: gtef/gtef-encoding.c:152 gtef/gtef-encoding.c:153 gtef/gtef-encoding.c:154
+#: tepl/tepl-encoding.c:152 tepl/tepl-encoding.c:153 tepl/tepl-encoding.c:154
 msgid "Chinese Simplified"
 msgstr "Кинески поједностављени"
 
-#: gtef/gtef-encoding.c:155
+#: tepl/tepl-encoding.c:155
 msgid "Georgian"
 msgstr "Грузијски"
 
-#: gtef/gtef-encoding.c:161 gtef/gtef-encoding.c:183
+#: tepl/tepl-encoding.c:161 tepl/tepl-encoding.c:183
 msgid "Hebrew"
 msgstr "Хебрејски"
 
-#: gtef/gtef-encoding.c:170
+#: tepl/tepl-encoding.c:170
 msgid "Cyrillic/Ukrainian"
 msgstr "Ћирилични/Украјински"
 
-#: gtef/gtef-encoding.c:173 gtef/gtef-encoding.c:176 gtef/gtef-encoding.c:186
+#: tepl/tepl-encoding.c:173 tepl/tepl-encoding.c:176 tepl/tepl-encoding.c:186
 msgid "Vietnamese"
 msgstr "Вијетнамски"
 
-#: gtef/gtef-encoding.c:174
+#: tepl/tepl-encoding.c:174
 msgid "Thai"
 msgstr "Тајландски"
 
-#: gtef/gtef-encoding.c:365
+#: tepl/tepl-encoding.c:365
 msgid "Unknown"
 msgstr "Непознат"
 
-#. Translators: This is the sorted list of encodings used by Gtef for
+#. Translators: This is the sorted list of encodings used by Tepl for
 #. * automatic detection of the file encoding. You may want to customize
 #. * it adding encodings that are common in your country, for instance the
 #. * GB18030 encoding for the Chinese translation. You may also want to
 #. * remove the ISO-8859-15 encoding (covering English and most Western
 #. * European languages) if you think people in your country will rarely
-#. * use it. 'CURRENT' is a magic value used by Gtef and it represents
+#. * use it. 'CURRENT' is a magic value used by Tepl and it represents
 #. * the encoding for the current locale, so please don't translate the
 #. * 'CURRENT' term. Keep the same format: square brackets, single quotes,
 #. * commas.
 #.
-#: gtef/gtef-encoding.c:640
+#: tepl/tepl-encoding.c:640
 msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 
-#: gtef/gtef-encoding-converter.c:302
+#: tepl/tepl-encoding-converter.c:302
 #, c-format
 msgid "Conversion from character set “%s” to “%s” is not supported."
 msgstr "Претварање из скупа знакова „%s“ у „%s“ још није подржано."
 
-#: gtef/gtef-encoding-converter.c:311
+#: tepl/tepl-encoding-converter.c:311
 #, c-format
 msgid "Could not open converter from “%s” to “%s”: %s"
 msgstr "Не могу да отворим претварач из „%s“ у „%s“: %s"
 
-#: gtef/gtef-encoding-converter.c:368
+#: tepl/tepl-encoding-converter.c:368
 msgid "The input data contains an invalid sequence."
 msgstr "Улазни подаци садрже неисправан низ."
 
-#: gtef/gtef-encoding-converter.c:377
+#: tepl/tepl-encoding-converter.c:377
 #, c-format
 msgid "Error when converting data: %s"
 msgstr "Грешка приликом претварања података: %s"
 
-#: gtef/gtef-encoding-converter.c:556
+#: tepl/tepl-encoding-converter.c:556
 msgid "The input data ends with an incomplete multi-byte sequence."
 msgstr "Улазни подаци се завршавају непотпуним вишебајтним низом."
 
-#: gtef/gtef-encoding-converter.c:579
+#: tepl/tepl-encoding-converter.c:579
 msgid "The input content ends with incomplete data."
 msgstr "Улаз садржи крај са непотпуним подацима."
 
-#: gtef/gtef-file.c:413
+#: tepl/tepl-file.c:413
 #, c-format
 msgid "Untitled File %d"
 msgstr "Неименована датотека %d"
 
-#: gtef/gtef-file-content-loader.c:334
+#: tepl/tepl-file-content-loader.c:334
 #, c-format
 msgid "The file is too big. Maximum %s can be loaded."
 msgstr "Датотека је превелика. Највише %s може бити учитано."
 
-#: gtef/gtef-file-loader.c:925
+#: tepl/tepl-file-loader.c:925
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Не могу аутоматски да одредим кодирање знакова."
 
-#: gtef/gtef-file-saver.c:776
+#: tepl/tepl-file-saver.c:776
 msgid "The file is externally modified."
 msgstr "Датотека је измењена споља."
 
-#: gtef/gtef-file-saver.c:1310
+#: tepl/tepl-file-saver.c:1310
 msgid "The buffer contains invalid characters."
 msgstr "Међумеморија садржи неисправне знаке."
 
-#: gtef/gtef-io-error-info-bar.c:74
+#: tepl/tepl-io-error-info-bar.c:74
 #, c-format
 msgid "Could not find the file “%s”."
 msgstr "Не могу да нађем датотеку „%s“."
 
-#: gtef/gtef-io-error-info-bar.c:77 gtef/gtef-io-error-info-bar.c:104
-#: gtef/gtef-io-error-info-bar.c:111
+#: tepl/tepl-io-error-info-bar.c:77 tepl/tepl-io-error-info-bar.c:104
+#: tepl/tepl-io-error-info-bar.c:111
 msgid "Please check that you typed the location correctly and try again."
 msgstr "Проверите да ли сте исправно укуцали место и пробајте поново."
 
 #. Translators: %s is a URI scheme (like for example
 #. * http:, ftp:, etc.).
 #.
-#: gtef/gtef-io-error-info-bar.c:90
+#: tepl/tepl-io-error-info-bar.c:90
 #, c-format
 msgid "Unable to handle “%s:” locations."
 msgstr "Не могу да радим са „%s:“ местима."
 
-#: gtef/gtef-io-error-info-bar.c:98
+#: tepl/tepl-io-error-info-bar.c:98
 msgid "The location of the file cannot be accessed."
 msgstr "Не могу да приступим месту датотеке."
 
-#: gtef/gtef-io-error-info-bar.c:102
+#: tepl/tepl-io-error-info-bar.c:102
 #, c-format
 msgid "“%s” is a directory."
 msgstr "„%s“ је директоријум."
 
-#: gtef/gtef-io-error-info-bar.c:109
+#: tepl/tepl-io-error-info-bar.c:109
 #, c-format
 msgid "“%s” is not a valid location."
 msgstr "„%s“ није исправно место."
 
 #. Translators: %s is a hostname.
-#: gtef/gtef-io-error-info-bar.c:141
+#: tepl/tepl-io-error-info-bar.c:141
 #, c-format
 msgid ""
 "Host “%s” could not be found. Please check that your proxy settings are "
@@ -251,7 +251,7 @@ msgstr ""
 "посредника исправна и пробајте поново."
 
 #. Use the same string as INVALID_HOST.
-#: gtef/gtef-io-error-info-bar.c:150
+#: tepl/tepl-io-error-info-bar.c:150
 msgid ""
 "Hostname was invalid. Please check that you typed the location correctly and "
 "try again."
@@ -259,34 +259,34 @@ msgstr ""
 "Назив домаћина беше неисправан. Проверите да ли сте исправно укуцали место и "
 "пробајте поново."
 
-#: gtef/gtef-io-error-info-bar.c:159
+#: tepl/tepl-io-error-info-bar.c:159
 #, c-format
 msgid "“%s” is not a regular file."
 msgstr "„%s“ није обична датотека."
 
-#: gtef/gtef-io-error-info-bar.c:164
+#: tepl/tepl-io-error-info-bar.c:164
 msgid "Connection timed out. Please try again."
 msgstr "Истекло је време за везу. Пробајте поново."
 
-#: gtef/gtef-io-error-info-bar.c:168
+#: tepl/tepl-io-error-info-bar.c:168
 #, c-format
 msgid "Unexpected error: %s"
 msgstr "Неочекивана грешка: %s"
 
-#: gtef/gtef-io-error-info-bar.c:179 gtef/gtef-io-error-info-bar.c:212
-#: gtef/gtef-progress-info-bar.c:53
+#: tepl/tepl-io-error-info-bar.c:179 tepl/tepl-io-error-info-bar.c:212
+#: tepl/tepl-progress-info-bar.c:53
 msgid "_Cancel"
 msgstr "_Откажи"
 
-#: gtef/gtef-io-error-info-bar.c:185 gtef/gtef-io-error-info-bar.c:195
+#: tepl/tepl-io-error-info-bar.c:185 tepl/tepl-io-error-info-bar.c:195
 msgid "_Retry"
 msgstr "_Покушај поново"
 
-#: gtef/gtef-io-error-info-bar.c:201
+#: tepl/tepl-io-error-info-bar.c:201
 msgid "Edit Any_way"
 msgstr "Уреди _ипак"
 
-#: gtef/gtef-io-error-info-bar.c:270
+#: tepl/tepl-io-error-info-bar.c:270
 msgid ""
 "The number of followed links is limited and the actual file could not be "
 "found within this limit."
@@ -294,11 +294,11 @@ msgstr ""
 "Број праћених веза је ограничен, а стварну датотеку не могу пронаћи у овом "
 "опсегу."
 
-#: gtef/gtef-io-error-info-bar.c:275
+#: tepl/tepl-io-error-info-bar.c:275
 msgid "You do not have the permissions necessary to open the file."
 msgstr "Немате потребна овлашћења да отворите датотеку."
 
-#: gtef/gtef-io-error-info-bar.c:285
+#: tepl/tepl-io-error-info-bar.c:285
 msgid ""
 "Unable to detect the character encoding.\n"
 "Please check that you are not trying to open a binary file.\n"
@@ -308,12 +308,12 @@ msgstr ""
 "Проверите да не покушавате да отворите бинарну датотеку.\n"
 "Изабери кодирање знакова из изборника и покушајте поново."
 
-#: gtef/gtef-io-error-info-bar.c:294
+#: tepl/tepl-io-error-info-bar.c:294
 #, c-format
 msgid "There was a problem opening the file “%s”."
 msgstr "Дошло је до проблема при отварању датотеке „%s“."
 
-#: gtef/gtef-io-error-info-bar.c:296
+#: tepl/tepl-io-error-info-bar.c:296
 msgid ""
 "The file you opened has some invalid characters. If you continue editing "
 "this file you could corrupt it.\n"
@@ -323,12 +323,12 @@ msgstr ""
 "уређујете можете да је оштетите.\n"
 "Такође можете да изаберете други кодни распоред и да покушате поново."
 
-#: gtef/gtef-io-error-info-bar.c:312
+#: tepl/tepl-io-error-info-bar.c:312
 #, c-format
 msgid "Could not open the file “%s” using the “%s” character encoding."
 msgstr "Не могу да отворим датотеку „%s“ користећи „%s“ кодирање знакова."
 
-#: gtef/gtef-io-error-info-bar.c:316
+#: tepl/tepl-io-error-info-bar.c:316
 msgid ""
 "Please check that you are not trying to open a binary file.\n"
 "Select a different character encoding from the menu and try again."
@@ -336,7 +336,7 @@ msgstr ""
 "Проверите да не покушавате да отворите бинарну датотеку.\n"
 "Изабери други кодни распоред из изборника и покушајте поново."
 
-#: gtef/gtef-io-error-info-bar.c:329
+#: tepl/tepl-io-error-info-bar.c:329
 #, c-format
 msgid "Could not open the file “%s”."
 msgstr "Не могу да отворим датотеку „%s“."

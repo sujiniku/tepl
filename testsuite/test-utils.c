@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,7 +17,7 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtef/gtef.h>
+#include <tepl/tepl.h>
 
 static void
 test_replace_home_dir_with_tilde (void)
@@ -27,16 +27,16 @@ test_replace_home_dir_with_tilde (void)
 	gchar *after;
 
 	before = g_build_filename (homedir, "blah", NULL);
-	after = _gtef_utils_replace_home_dir_with_tilde (before);
+	after = _tepl_utils_replace_home_dir_with_tilde (before);
 	g_assert_cmpstr (after, ==, "~/blah");
 	g_free (before);
 	g_free (after);
 
-	after = _gtef_utils_replace_home_dir_with_tilde (homedir);
+	after = _tepl_utils_replace_home_dir_with_tilde (homedir);
 	g_assert_cmpstr (after, ==, "~");
 	g_free (after);
 
-	after = _gtef_utils_replace_home_dir_with_tilde ("/blah");
+	after = _tepl_utils_replace_home_dir_with_tilde ("/blah");
 	g_assert_cmpstr (after, ==, "/blah");
 	g_free (after);
 }
@@ -47,14 +47,14 @@ test_decode_uri (void)
 	gchar *host;
 	gboolean ret;
 
-	/* Basic test, for what is used in Gtef (the host). */
-	ret = _gtef_utils_decode_uri ("smb://example.net/home/file.c",
+	/* Basic test, for what is used in Tepl (the host). */
+	ret = _tepl_utils_decode_uri ("smb://example.net/home/file.c",
 				      NULL, NULL, &host, NULL, NULL);
 	g_assert (ret);
 	g_assert_cmpstr (host, ==, "example.net");
 	g_free (host);
 
-	ret = _gtef_utils_decode_uri ("smb://154.23.201.4/home/file.c",
+	ret = _tepl_utils_decode_uri ("smb://154.23.201.4/home/file.c",
 				      NULL, NULL, &host, NULL, NULL);
 	g_assert (ret);
 	g_assert_cmpstr (host, ==, "154.23.201.4");
@@ -68,25 +68,25 @@ test_get_fallback_basename_for_display (void)
 	gchar *basename;
 
 	location = g_file_new_for_path ("/home/seb/blom");
-	basename = _gtef_utils_get_fallback_basename_for_display (location);
+	basename = _tepl_utils_get_fallback_basename_for_display (location);
 	g_assert_cmpstr (basename, ==, "blom");
 	g_object_unref (location);
 	g_free (basename);
 
 	location = g_file_new_for_uri ("ssh://swilmet@example.net/home/swilmet/bloum");
-	basename = _gtef_utils_get_fallback_basename_for_display (location);
+	basename = _tepl_utils_get_fallback_basename_for_display (location);
 	g_assert_cmpstr (basename, ==, "bloum");
 	g_object_unref (location);
 	g_free (basename);
 
 	location = g_file_new_for_uri ("https://example.net");
-	basename = _gtef_utils_get_fallback_basename_for_display (location);
+	basename = _tepl_utils_get_fallback_basename_for_display (location);
 	g_assert_cmpstr (basename, ==, "https://example.net");
 	g_object_unref (location);
 	g_free (basename);
 
 	location = g_file_new_for_uri ("https://bugzilla.gnome.org/page.cgi?id=browse.html&product=gtksourceview");
-	basename = _gtef_utils_get_fallback_basename_for_display (location);
+	basename = _tepl_utils_get_fallback_basename_for_display (location);
 	g_assert_cmpstr (basename, ==, "page.cgi?id=browse.html&product=gtksourceview");
 	g_object_unref (location);
 	g_free (basename);
@@ -123,16 +123,16 @@ test_strv_copy (void)
 	gchar **strv_copy;
 
 	/* NULL */
-	strv_copy = _gtef_utils_strv_copy (NULL);
+	strv_copy = _tepl_utils_strv_copy (NULL);
 	g_assert (strv_copy == NULL);
 
 	/* Empty */
-	strv_copy = _gtef_utils_strv_copy (stack_strv_empty);
+	strv_copy = _tepl_utils_strv_copy (stack_strv_empty);
 	check_strv_equal (stack_strv_empty, (const gchar * const *)strv_copy);
 	g_strfreev (strv_copy);
 
 	/* Non-empty */
-	strv_copy = _gtef_utils_strv_copy (stack_strv_nonempty);
+	strv_copy = _tepl_utils_strv_copy (stack_strv_nonempty);
 	check_strv_equal (stack_strv_nonempty, (const gchar * const *)strv_copy);
 	g_strfreev (strv_copy);
 
@@ -145,7 +145,7 @@ test_strv_copy (void)
 
 	heap_strv = (gchar **)g_ptr_array_free (ptr_array, FALSE);
 
-	strv_copy = _gtef_utils_strv_copy ((const gchar * const *)heap_strv);
+	strv_copy = _tepl_utils_strv_copy ((const gchar * const *)heap_strv);
 	check_strv_equal ((const gchar * const *)heap_strv,
 			  (const gchar * const *)strv_copy);
 	g_strfreev (strv_copy);

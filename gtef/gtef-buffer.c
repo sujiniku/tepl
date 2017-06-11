@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,31 +17,31 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gtef-buffer.h"
-#include "gtef-file.h"
-#include "gtef-utils.h"
+#include "tepl-buffer.h"
+#include "tepl-file.h"
+#include "tepl-utils.h"
 
 /**
  * SECTION:buffer
- * @Short_description: Stores the text for display in a GtefView
- * @Title: GtefBuffer
+ * @Short_description: Stores the text for display in a TeplView
+ * @Title: TeplBuffer
  *
- * #GtefBuffer is a subclass of #GtkSourceBuffer, to add more features useful
+ * #TeplBuffer is a subclass of #GtkSourceBuffer, to add more features useful
  * for a text editor.
  *
- * It also adds an association to a #GtefFile that can be retrieved with
- * gtef_buffer_get_file(). The association cannot change.
+ * It also adds an association to a #TeplFile that can be retrieved with
+ * tepl_buffer_get_file(). The association cannot change.
  *
- * The properties and signals have the gtef namespace, to avoid potential
+ * The properties and signals have the tepl namespace, to avoid potential
  * conflicts in the future if the property or signal is moved to
  * #GtkSourceBuffer.
  */
 
-typedef struct _GtefBufferPrivate GtefBufferPrivate;
+typedef struct _TeplBufferPrivate TeplBufferPrivate;
 
-struct _GtefBufferPrivate
+struct _TeplBufferPrivate
 {
-	GtefFile *file;
+	TeplFile *file;
 
 	GtkTextTag *invalid_char_tag;
 
@@ -52,30 +52,30 @@ struct _GtefBufferPrivate
 enum
 {
 	PROP_0,
-	PROP_GTEF_TITLE,
-	PROP_GTEF_STYLE_SCHEME_ID,
+	PROP_TEPL_TITLE,
+	PROP_TEPL_STYLE_SCHEME_ID,
 	N_PROPERTIES
 };
 
 enum
 {
-	SIGNAL_GTEF_CURSOR_MOVED,
+	SIGNAL_TEPL_CURSOR_MOVED,
 	N_SIGNALS
 };
 
 static GParamSpec *properties[N_PROPERTIES];
 static guint signals[N_SIGNALS];
 
-G_DEFINE_TYPE_WITH_PRIVATE (GtefBuffer, gtef_buffer, GTK_SOURCE_TYPE_BUFFER)
+G_DEFINE_TYPE_WITH_PRIVATE (TeplBuffer, tepl_buffer, GTK_SOURCE_TYPE_BUFFER)
 
 static void
-update_invalid_char_tag_style (GtefBuffer *buffer)
+update_invalid_char_tag_style (TeplBuffer *buffer)
 {
-	GtefBufferPrivate *priv;
+	TeplBufferPrivate *priv;
 	GtkSourceStyleScheme *style_scheme;
 	GtkSourceStyle *style = NULL;
 
-	priv = gtef_buffer_get_instance_private (buffer);
+	priv = tepl_buffer_get_instance_private (buffer);
 
 	if (priv->invalid_char_tag == NULL)
 	{
@@ -93,21 +93,21 @@ update_invalid_char_tag_style (GtefBuffer *buffer)
 }
 
 static void
-gtef_buffer_get_property (GObject    *object,
+tepl_buffer_get_property (GObject    *object,
 			  guint       prop_id,
 			  GValue     *value,
 			  GParamSpec *pspec)
 {
-	GtefBuffer *buffer = GTEF_BUFFER (object);
+	TeplBuffer *buffer = TEPL_BUFFER (object);
 
 	switch (prop_id)
 	{
-		case PROP_GTEF_TITLE:
-			g_value_take_string (value, gtef_buffer_get_title (buffer));
+		case PROP_TEPL_TITLE:
+			g_value_take_string (value, tepl_buffer_get_title (buffer));
 			break;
 
-		case PROP_GTEF_STYLE_SCHEME_ID:
-			g_value_take_string (value, gtef_buffer_get_style_scheme_id (buffer));
+		case PROP_TEPL_STYLE_SCHEME_ID:
+			g_value_take_string (value, tepl_buffer_get_style_scheme_id (buffer));
 			break;
 
 		default:
@@ -117,17 +117,17 @@ gtef_buffer_get_property (GObject    *object,
 }
 
 static void
-gtef_buffer_set_property (GObject      *object,
+tepl_buffer_set_property (GObject      *object,
 			  guint         prop_id,
 			  const GValue *value,
 			  GParamSpec   *pspec)
 {
-	GtefBuffer *buffer = GTEF_BUFFER (object);
+	TeplBuffer *buffer = TEPL_BUFFER (object);
 
 	switch (prop_id)
 	{
-		case PROP_GTEF_STYLE_SCHEME_ID:
-			gtef_buffer_set_style_scheme_id (buffer, g_value_get_string (value));
+		case PROP_TEPL_STYLE_SCHEME_ID:
+			tepl_buffer_set_style_scheme_id (buffer, g_value_get_string (value));
 			break;
 
 		default:
@@ -137,9 +137,9 @@ gtef_buffer_set_property (GObject      *object,
 }
 
 static void
-gtef_buffer_dispose (GObject *object)
+tepl_buffer_dispose (GObject *object)
 {
-	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (GTEF_BUFFER (object));
+	TeplBufferPrivate *priv = tepl_buffer_get_instance_private (TEPL_BUFFER (object));
 
 	g_clear_object (&priv->file);
 
@@ -149,25 +149,25 @@ gtef_buffer_dispose (GObject *object)
 		priv->idle_cursor_moved_id = 0;
 	}
 
-	G_OBJECT_CLASS (gtef_buffer_parent_class)->dispose (object);
+	G_OBJECT_CLASS (tepl_buffer_parent_class)->dispose (object);
 }
 
 static gboolean
 idle_cursor_moved_cb (gpointer user_data)
 {
-	GtefBuffer *buffer = GTEF_BUFFER (user_data);
-	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (buffer);
+	TeplBuffer *buffer = TEPL_BUFFER (user_data);
+	TeplBufferPrivate *priv = tepl_buffer_get_instance_private (buffer);
 
-	g_signal_emit (buffer, signals[SIGNAL_GTEF_CURSOR_MOVED], 0);
+	g_signal_emit (buffer, signals[SIGNAL_TEPL_CURSOR_MOVED], 0);
 
 	priv->idle_cursor_moved_id = 0;
 	return G_SOURCE_REMOVE;
 }
 
 static void
-install_idle_cursor_moved (GtefBuffer *buffer)
+install_idle_cursor_moved (TeplBuffer *buffer)
 {
-	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (buffer);
+	TeplBufferPrivate *priv = tepl_buffer_get_instance_private (buffer);
 
 	if (priv->idle_cursor_moved_id == 0)
 	{
@@ -185,26 +185,26 @@ install_idle_cursor_moved (GtefBuffer *buffer)
 }
 
 static void
-gtef_buffer_begin_user_action (GtkTextBuffer *buffer)
+tepl_buffer_begin_user_action (GtkTextBuffer *buffer)
 {
-	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (GTEF_BUFFER (buffer));
+	TeplBufferPrivate *priv = tepl_buffer_get_instance_private (TEPL_BUFFER (buffer));
 
 	priv->n_nested_user_actions++;
 
-	if (GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->begin_user_action != NULL)
+	if (GTK_TEXT_BUFFER_CLASS (tepl_buffer_parent_class)->begin_user_action != NULL)
 	{
-		GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->begin_user_action (buffer);
+		GTK_TEXT_BUFFER_CLASS (tepl_buffer_parent_class)->begin_user_action (buffer);
 	}
 }
 
 static void
-gtef_buffer_end_user_action (GtkTextBuffer *buffer)
+tepl_buffer_end_user_action (GtkTextBuffer *buffer)
 {
-	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (GTEF_BUFFER (buffer));
+	TeplBufferPrivate *priv = tepl_buffer_get_instance_private (TEPL_BUFFER (buffer));
 
-	if (GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->end_user_action != NULL)
+	if (GTK_TEXT_BUFFER_CLASS (tepl_buffer_parent_class)->end_user_action != NULL)
 	{
-		GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->end_user_action (buffer);
+		GTK_TEXT_BUFFER_CLASS (tepl_buffer_parent_class)->end_user_action (buffer);
 	}
 
 	g_return_if_fail (priv->n_nested_user_actions > 0);
@@ -212,101 +212,101 @@ gtef_buffer_end_user_action (GtkTextBuffer *buffer)
 
 	if (priv->n_nested_user_actions == 0)
 	{
-		install_idle_cursor_moved (GTEF_BUFFER (buffer));
+		install_idle_cursor_moved (TEPL_BUFFER (buffer));
 	}
 }
 
 static void
-gtef_buffer_mark_set (GtkTextBuffer     *buffer,
+tepl_buffer_mark_set (GtkTextBuffer     *buffer,
 		      const GtkTextIter *location,
 		      GtkTextMark       *mark)
 {
-	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (GTEF_BUFFER (buffer));
+	TeplBufferPrivate *priv = tepl_buffer_get_instance_private (TEPL_BUFFER (buffer));
 
-	if (GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->mark_set != NULL)
+	if (GTK_TEXT_BUFFER_CLASS (tepl_buffer_parent_class)->mark_set != NULL)
 	{
-		GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->mark_set (buffer, location, mark);
+		GTK_TEXT_BUFFER_CLASS (tepl_buffer_parent_class)->mark_set (buffer, location, mark);
 	}
 
 	if (priv->n_nested_user_actions == 0 &&
 	    mark == gtk_text_buffer_get_insert (buffer))
 	{
-		install_idle_cursor_moved (GTEF_BUFFER (buffer));
+		install_idle_cursor_moved (TEPL_BUFFER (buffer));
 	}
 }
 
 static void
-gtef_buffer_changed (GtkTextBuffer *buffer)
+tepl_buffer_changed (GtkTextBuffer *buffer)
 {
-	GtefBufferPrivate *priv = gtef_buffer_get_instance_private (GTEF_BUFFER (buffer));
+	TeplBufferPrivate *priv = tepl_buffer_get_instance_private (TEPL_BUFFER (buffer));
 
-	if (GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->changed != NULL)
+	if (GTK_TEXT_BUFFER_CLASS (tepl_buffer_parent_class)->changed != NULL)
 	{
-		GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->changed (buffer);
+		GTK_TEXT_BUFFER_CLASS (tepl_buffer_parent_class)->changed (buffer);
 	}
 
 	if (priv->n_nested_user_actions == 0)
 	{
-		install_idle_cursor_moved (GTEF_BUFFER (buffer));
+		install_idle_cursor_moved (TEPL_BUFFER (buffer));
 	}
 }
 
 static void
-gtef_buffer_modified_changed (GtkTextBuffer *buffer)
+tepl_buffer_modified_changed (GtkTextBuffer *buffer)
 {
-	if (GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->modified_changed != NULL)
+	if (GTK_TEXT_BUFFER_CLASS (tepl_buffer_parent_class)->modified_changed != NULL)
 	{
-		GTK_TEXT_BUFFER_CLASS (gtef_buffer_parent_class)->modified_changed (buffer);
+		GTK_TEXT_BUFFER_CLASS (tepl_buffer_parent_class)->modified_changed (buffer);
 	}
 
-	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_GTEF_TITLE]);
+	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TEPL_TITLE]);
 }
 
 static void
-gtef_buffer_class_init (GtefBufferClass *klass)
+tepl_buffer_class_init (TeplBufferClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GtkTextBufferClass *text_buffer_class = GTK_TEXT_BUFFER_CLASS (klass);
 
-	object_class->get_property = gtef_buffer_get_property;
-	object_class->set_property = gtef_buffer_set_property;
-	object_class->dispose = gtef_buffer_dispose;
+	object_class->get_property = tepl_buffer_get_property;
+	object_class->set_property = tepl_buffer_set_property;
+	object_class->dispose = tepl_buffer_dispose;
 
-	text_buffer_class->begin_user_action = gtef_buffer_begin_user_action;
-	text_buffer_class->end_user_action = gtef_buffer_end_user_action;
-	text_buffer_class->mark_set = gtef_buffer_mark_set;
-	text_buffer_class->changed = gtef_buffer_changed;
-	text_buffer_class->modified_changed = gtef_buffer_modified_changed;
+	text_buffer_class->begin_user_action = tepl_buffer_begin_user_action;
+	text_buffer_class->end_user_action = tepl_buffer_end_user_action;
+	text_buffer_class->mark_set = tepl_buffer_mark_set;
+	text_buffer_class->changed = tepl_buffer_changed;
+	text_buffer_class->modified_changed = tepl_buffer_modified_changed;
 
 	/**
-	 * GtefBuffer:gtef-title:
+	 * TeplBuffer:tepl-title:
 	 *
-	 * The buffer title. See gtef_buffer_get_title().
+	 * The buffer title. See tepl_buffer_get_title().
 	 *
 	 * Since: 2.0
 	 */
-	properties[PROP_GTEF_TITLE] =
-		g_param_spec_string ("gtef-title",
-				     "Gtef Title",
+	properties[PROP_TEPL_TITLE] =
+		g_param_spec_string ("tepl-title",
+				     "Tepl Title",
 				     "",
 				     NULL,
 				     G_PARAM_READABLE |
 				     G_PARAM_STATIC_STRINGS);
 
 	/**
-	 * GtefBuffer:gtef-style-scheme-id:
+	 * TeplBuffer:tepl-style-scheme-id:
 	 *
 	 * The #GtkSourceBuffer:style-scheme ID, as a string. This property is
 	 * useful for binding it to a #GSettings key.
 	 *
 	 * When the #GtkSourceBuffer:style-scheme is %NULL,
-	 * #GtefBuffer:gtef-style-scheme-id contains the empty string.
+	 * #TeplBuffer:tepl-style-scheme-id contains the empty string.
 	 *
 	 * Since: 2.0
 	 */
-	properties[PROP_GTEF_STYLE_SCHEME_ID] =
-		g_param_spec_string ("gtef-style-scheme-id",
-				     "Gtef Style Scheme ID",
+	properties[PROP_TEPL_STYLE_SCHEME_ID] =
+		g_param_spec_string ("tepl-style-scheme-id",
+				     "Tepl Style Scheme ID",
 				     "",
 				     "",
 				     G_PARAM_READWRITE |
@@ -315,10 +315,10 @@ gtef_buffer_class_init (GtefBufferClass *klass)
 	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
 
 	/**
-	 * GtefBuffer::gtef-cursor-moved:
-	 * @buffer: the #GtefBuffer emitting the signal.
+	 * TeplBuffer::tepl-cursor-moved:
+	 * @buffer: the #TeplBuffer emitting the signal.
 	 *
-	 * The ::gtef-cursor-moved signal is emitted when the insert mark is
+	 * The ::tepl-cursor-moved signal is emitted when the insert mark is
 	 * moved explicitely or when the buffer changes (insert/delete).
 	 *
 	 * A typical use-case for this signal is to update the cursor position
@@ -326,21 +326,21 @@ gtef_buffer_class_init (GtefBufferClass *klass)
 	 *
 	 * Since: 2.0
 	 */
-	signals[SIGNAL_GTEF_CURSOR_MOVED] =
-		g_signal_new ("gtef-cursor-moved",
+	signals[SIGNAL_TEPL_CURSOR_MOVED] =
+		g_signal_new ("tepl-cursor-moved",
 			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_FIRST,
-			      G_STRUCT_OFFSET (GtefBufferClass, gtef_cursor_moved),
+			      G_STRUCT_OFFSET (TeplBufferClass, tepl_cursor_moved),
 			      NULL, NULL, NULL,
 			      G_TYPE_NONE, 0);
 }
 
 static void
-short_name_notify_cb (GtefFile   *file,
+short_name_notify_cb (TeplFile   *file,
 		      GParamSpec *pspec,
-		      GtefBuffer *buffer)
+		      TeplBuffer *buffer)
 {
-	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_GTEF_TITLE]);
+	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TEPL_TITLE]);
 }
 
 static void
@@ -348,19 +348,19 @@ style_scheme_notify_cb (GtkSourceBuffer *buffer,
 			GParamSpec      *pspec,
 			gpointer         user_data)
 {
-	update_invalid_char_tag_style (GTEF_BUFFER (buffer));
+	update_invalid_char_tag_style (TEPL_BUFFER (buffer));
 
-	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_GTEF_STYLE_SCHEME_ID]);
+	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TEPL_STYLE_SCHEME_ID]);
 }
 
 static void
-gtef_buffer_init (GtefBuffer *buffer)
+tepl_buffer_init (TeplBuffer *buffer)
 {
-	GtefBufferPrivate *priv;
+	TeplBufferPrivate *priv;
 
-	priv = gtef_buffer_get_instance_private (buffer);
+	priv = tepl_buffer_get_instance_private (buffer);
 
-	priv->file = gtef_file_new ();
+	priv->file = tepl_file_new ();
 
 	g_signal_connect_object (priv->file,
 				 "notify::short-name",
@@ -375,41 +375,41 @@ gtef_buffer_init (GtefBuffer *buffer)
 }
 
 /**
- * gtef_buffer_new:
+ * tepl_buffer_new:
  *
- * Returns: a new #GtefBuffer.
+ * Returns: a new #TeplBuffer.
  * Since: 1.0
  */
-GtefBuffer *
-gtef_buffer_new (void)
+TeplBuffer *
+tepl_buffer_new (void)
 {
-	return g_object_new (GTEF_TYPE_BUFFER, NULL);
+	return g_object_new (TEPL_TYPE_BUFFER, NULL);
 }
 
 /**
- * gtef_buffer_get_file:
- * @buffer: a #GtefBuffer.
+ * tepl_buffer_get_file:
+ * @buffer: a #TeplBuffer.
  *
- * Returns the #GtefFile of @buffer. The returned object is guaranteed to be the
+ * Returns the #TeplFile of @buffer. The returned object is guaranteed to be the
  * same for the lifetime of @buffer.
  *
- * Returns: (transfer none): the associated #GtefFile.
+ * Returns: (transfer none): the associated #TeplFile.
  * Since: 1.0
  */
-GtefFile *
-gtef_buffer_get_file (GtefBuffer *buffer)
+TeplFile *
+tepl_buffer_get_file (TeplBuffer *buffer)
 {
-	GtefBufferPrivate *priv;
+	TeplBufferPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), NULL);
+	g_return_val_if_fail (TEPL_IS_BUFFER (buffer), NULL);
 
-	priv = gtef_buffer_get_instance_private (buffer);
+	priv = tepl_buffer_get_instance_private (buffer);
 	return priv->file;
 }
 
 /**
- * gtef_buffer_is_untouched:
- * @buffer: a #GtefBuffer.
+ * tepl_buffer_is_untouched:
+ * @buffer: a #TeplBuffer.
  *
  * Returns whether @buffer is untouched.
  *
@@ -418,35 +418,35 @@ gtef_buffer_get_file (GtefBuffer *buffer)
  *
  * For this function to return %TRUE, the @buffer must be empty, non-modified,
  * the undo/redo #GtkSourceBuffer history must be empty, and the
- * #GtefFile:location must be %NULL.
+ * #TeplFile:location must be %NULL.
  *
  * Returns: %TRUE if @buffer has not been touched, %FALSE otherwise.
  * Since: 1.0
  */
 gboolean
-gtef_buffer_is_untouched (GtefBuffer *buffer)
+tepl_buffer_is_untouched (TeplBuffer *buffer)
 {
-	GtefBufferPrivate *priv;
+	TeplBufferPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), FALSE);
+	g_return_val_if_fail (TEPL_IS_BUFFER (buffer), FALSE);
 
-	priv = gtef_buffer_get_instance_private (buffer);
+	priv = tepl_buffer_get_instance_private (buffer);
 
 	return (gtk_text_buffer_get_char_count (GTK_TEXT_BUFFER (buffer)) == 0 &&
 		!gtk_text_buffer_get_modified (GTK_TEXT_BUFFER (buffer)) &&
 		!gtk_source_buffer_can_undo (GTK_SOURCE_BUFFER (buffer)) &&
 		!gtk_source_buffer_can_redo (GTK_SOURCE_BUFFER (buffer)) &&
-		gtef_file_get_location (priv->file) == NULL);
+		tepl_file_get_location (priv->file) == NULL);
 }
 
 /**
- * gtef_buffer_get_title:
- * @buffer: a #GtefBuffer.
+ * tepl_buffer_get_title:
+ * @buffer: a #TeplBuffer.
  *
  * Returns a title suitable for a #GtkWindow title. It contains (in that order):
  * - '*' if the buffer is modified;
- * - the #GtefFile:short-name;
- * - the directory path in parenthesis if the #GtefFile:location isn't
+ * - the #TeplFile:short-name;
+ * - the directory path in parenthesis if the #TeplFile:location isn't
  *   %NULL.
  *
  * Returns: the @buffer title. Free the return value with g_free() when no
@@ -454,19 +454,19 @@ gtef_buffer_is_untouched (GtefBuffer *buffer)
  * Since: 1.0
  */
 gchar *
-gtef_buffer_get_title (GtefBuffer *buffer)
+tepl_buffer_get_title (TeplBuffer *buffer)
 {
-	GtefBufferPrivate *priv;
+	TeplBufferPrivate *priv;
 	GFile *location;
 	const gchar *short_name;
 	gchar *title;
 
-	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), NULL);
+	g_return_val_if_fail (TEPL_IS_BUFFER (buffer), NULL);
 
-	priv = gtef_buffer_get_instance_private (buffer);
+	priv = tepl_buffer_get_instance_private (buffer);
 
-	location = gtef_file_get_location (priv->file);
-	short_name = gtef_file_get_short_name (priv->file);
+	location = tepl_file_get_location (priv->file);
+	short_name = tepl_file_get_short_name (priv->file);
 
 	if (location == NULL ||
 	    !g_file_has_parent (location, NULL))
@@ -481,7 +481,7 @@ gtef_buffer_get_title (GtefBuffer *buffer)
 
 		parent = g_file_get_parent (location);
 		directory = g_file_get_parse_name (parent);
-		directory_tilde = _gtef_utils_replace_home_dir_with_tilde (directory);
+		directory_tilde = _tepl_utils_replace_home_dir_with_tilde (directory);
 
 		title = g_strdup_printf ("%s (%s)", short_name, directory_tilde);
 
@@ -504,19 +504,19 @@ gtef_buffer_get_title (GtefBuffer *buffer)
 }
 
 /**
- * gtef_buffer_get_style_scheme_id:
- * @buffer: a #GtefBuffer.
+ * tepl_buffer_get_style_scheme_id:
+ * @buffer: a #TeplBuffer.
  *
- * Returns: the #GtefBuffer:gtef-style-scheme-id. Free with g_free().
+ * Returns: the #TeplBuffer:tepl-style-scheme-id. Free with g_free().
  * Since: 2.0
  */
 gchar *
-gtef_buffer_get_style_scheme_id (GtefBuffer *buffer)
+tepl_buffer_get_style_scheme_id (TeplBuffer *buffer)
 {
 	GtkSourceStyleScheme *style_scheme;
 	const gchar *id;
 
-	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), g_strdup (""));
+	g_return_val_if_fail (TEPL_IS_BUFFER (buffer), g_strdup (""));
 
 	style_scheme = gtk_source_buffer_get_style_scheme (GTK_SOURCE_BUFFER (buffer));
 
@@ -531,11 +531,11 @@ gtef_buffer_get_style_scheme_id (GtefBuffer *buffer)
 }
 
 /**
- * gtef_buffer_set_style_scheme_id:
- * @buffer: a #GtefBuffer.
+ * tepl_buffer_set_style_scheme_id:
+ * @buffer: a #TeplBuffer.
  * @style_scheme_id: the new value.
  *
- * Sets the #GtefBuffer:gtef-style-scheme-id property.
+ * Sets the #TeplBuffer:tepl-style-scheme-id property.
  *
  * The #GtkSourceStyleScheme is taken from the default
  * #GtkSourceStyleSchemeManager as returned by
@@ -544,13 +544,13 @@ gtef_buffer_get_style_scheme_id (GtefBuffer *buffer)
  * Since: 2.0
  */
 void
-gtef_buffer_set_style_scheme_id (GtefBuffer  *buffer,
+tepl_buffer_set_style_scheme_id (TeplBuffer  *buffer,
 				 const gchar *style_scheme_id)
 {
 	GtkSourceStyleSchemeManager *manager;
 	GtkSourceStyleScheme *style_scheme;
 
-	g_return_if_fail (GTEF_IS_BUFFER (buffer));
+	g_return_if_fail (TEPL_IS_BUFFER (buffer));
 	g_return_if_fail (style_scheme_id != NULL);
 
 	manager = gtk_source_style_scheme_manager_get_default ();
@@ -559,25 +559,25 @@ gtef_buffer_set_style_scheme_id (GtefBuffer  *buffer,
 }
 
 /**
- * gtef_buffer_get_selection_type:
- * @buffer: a #GtefBuffer.
+ * tepl_buffer_get_selection_type:
+ * @buffer: a #TeplBuffer.
  *
- * Returns: the current #GtefSelectionType.
+ * Returns: the current #TeplSelectionType.
  * Since: 1.0
  */
-GtefSelectionType
-gtef_buffer_get_selection_type (GtefBuffer *buffer)
+TeplSelectionType
+tepl_buffer_get_selection_type (TeplBuffer *buffer)
 {
 	GtkTextIter start;
 	GtkTextIter end;
 	gint start_line;
 	gint end_line;
 
-	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), GTEF_SELECTION_TYPE_NO_SELECTION);
+	g_return_val_if_fail (TEPL_IS_BUFFER (buffer), TEPL_SELECTION_TYPE_NO_SELECTION);
 
 	if (!gtk_text_buffer_get_selection_bounds (GTK_TEXT_BUFFER (buffer), &start, &end))
 	{
-		return GTEF_SELECTION_TYPE_NO_SELECTION;
+		return TEPL_SELECTION_TYPE_NO_SELECTION;
 	}
 
 	start_line = gtk_text_iter_get_line (&start);
@@ -585,10 +585,10 @@ gtef_buffer_get_selection_type (GtefBuffer *buffer)
 
 	if (start_line == end_line)
 	{
-		return GTEF_SELECTION_TYPE_ON_SAME_LINE;
+		return TEPL_SELECTION_TYPE_ON_SAME_LINE;
 	}
 
-	return GTEF_SELECTION_TYPE_MULTIPLE_LINES;
+	return TEPL_SELECTION_TYPE_MULTIPLE_LINES;
 }
 
 static void
@@ -604,17 +604,17 @@ text_tag_set_highest_priority (GtkTextTag    *tag,
 }
 
 void
-_gtef_buffer_set_as_invalid_character (GtefBuffer        *buffer,
+_tepl_buffer_set_as_invalid_character (TeplBuffer        *buffer,
 				       const GtkTextIter *start,
 				       const GtkTextIter *end)
 {
-	GtefBufferPrivate *priv;
+	TeplBufferPrivate *priv;
 
-	g_return_if_fail (GTEF_IS_BUFFER (buffer));
+	g_return_if_fail (TEPL_IS_BUFFER (buffer));
 	g_return_if_fail (start != NULL);
 	g_return_if_fail (end != NULL);
 
-	priv = gtef_buffer_get_instance_private (buffer);
+	priv = tepl_buffer_get_instance_private (buffer);
 
 	if (priv->invalid_char_tag == NULL)
 	{
@@ -638,14 +638,14 @@ _gtef_buffer_set_as_invalid_character (GtefBuffer        *buffer,
 }
 
 gboolean
-_gtef_buffer_has_invalid_chars (GtefBuffer *buffer)
+_tepl_buffer_has_invalid_chars (TeplBuffer *buffer)
 {
-	GtefBufferPrivate *priv;
+	TeplBufferPrivate *priv;
 	GtkTextIter start;
 
-	g_return_val_if_fail (GTEF_IS_BUFFER (buffer), FALSE);
+	g_return_val_if_fail (TEPL_IS_BUFFER (buffer), FALSE);
 
-	priv = gtef_buffer_get_instance_private (buffer);
+	priv = tepl_buffer_get_instance_private (buffer);
 
 	if (priv->invalid_char_tag == NULL)
 	{

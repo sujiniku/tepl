@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,64 +17,64 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GTEF_ACTION_INFO_STORE_H
-#define GTEF_ACTION_INFO_STORE_H
+#ifndef TEPL_ACTION_INFO_STORE_H
+#define TEPL_ACTION_INFO_STORE_H
 
-#if !defined (GTEF_H_INSIDE) && !defined (GTEF_COMPILATION)
-#error "Only <gtef/gtef.h> can be included directly."
+#if !defined (TEPL_H_INSIDE) && !defined (TEPL_COMPILATION)
+#error "Only <tepl/tepl.h> can be included directly."
 #endif
 
 #include <gtk/gtk.h>
-#include <gtef/gtef-types.h>
+#include <tepl/tepl-types.h>
 
 G_BEGIN_DECLS
 
-#define GTEF_TYPE_ACTION_INFO_STORE             (gtef_action_info_store_get_type ())
-#define GTEF_ACTION_INFO_STORE(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTEF_TYPE_ACTION_INFO_STORE, GtefActionInfoStore))
-#define GTEF_ACTION_INFO_STORE_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), GTEF_TYPE_ACTION_INFO_STORE, GtefActionInfoStoreClass))
-#define GTEF_IS_ACTION_INFO_STORE(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTEF_TYPE_ACTION_INFO_STORE))
-#define GTEF_IS_ACTION_INFO_STORE_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), GTEF_TYPE_ACTION_INFO_STORE))
-#define GTEF_ACTION_INFO_STORE_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GTEF_TYPE_ACTION_INFO_STORE, GtefActionInfoStoreClass))
+#define TEPL_TYPE_ACTION_INFO_STORE             (tepl_action_info_store_get_type ())
+#define TEPL_ACTION_INFO_STORE(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), TEPL_TYPE_ACTION_INFO_STORE, TeplActionInfoStore))
+#define TEPL_ACTION_INFO_STORE_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), TEPL_TYPE_ACTION_INFO_STORE, TeplActionInfoStoreClass))
+#define TEPL_IS_ACTION_INFO_STORE(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TEPL_TYPE_ACTION_INFO_STORE))
+#define TEPL_IS_ACTION_INFO_STORE_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), TEPL_TYPE_ACTION_INFO_STORE))
+#define TEPL_ACTION_INFO_STORE_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), TEPL_TYPE_ACTION_INFO_STORE, TeplActionInfoStoreClass))
 
-typedef struct _GtefActionInfoStoreClass    GtefActionInfoStoreClass;
-typedef struct _GtefActionInfoStorePrivate  GtefActionInfoStorePrivate;
+typedef struct _TeplActionInfoStoreClass    TeplActionInfoStoreClass;
+typedef struct _TeplActionInfoStorePrivate  TeplActionInfoStorePrivate;
 
-struct _GtefActionInfoStore
+struct _TeplActionInfoStore
 {
 	GObject parent;
 
-	GtefActionInfoStorePrivate *priv;
+	TeplActionInfoStorePrivate *priv;
 };
 
-struct _GtefActionInfoStoreClass
+struct _TeplActionInfoStoreClass
 {
 	GObjectClass parent_class;
 
 	gpointer padding[12];
 };
 
-GType			gtef_action_info_store_get_type			(void) G_GNUC_CONST;
+GType			tepl_action_info_store_get_type			(void) G_GNUC_CONST;
 
-GtefActionInfoStore *	gtef_action_info_store_new			(GtkApplication *application);
+TeplActionInfoStore *	tepl_action_info_store_new			(GtkApplication *application);
 
-GtkApplication *	gtef_action_info_store_get_application		(GtefActionInfoStore *store);
+GtkApplication *	tepl_action_info_store_get_application		(TeplActionInfoStore *store);
 
-void			gtef_action_info_store_add			(GtefActionInfoStore *store,
-									 GtefActionInfo      *info);
+void			tepl_action_info_store_add			(TeplActionInfoStore *store,
+									 TeplActionInfo      *info);
 
-void			gtef_action_info_store_add_entries		(GtefActionInfoStore       *store,
-									 const GtefActionInfoEntry *entries,
+void			tepl_action_info_store_add_entries		(TeplActionInfoStore       *store,
+									 const TeplActionInfoEntry *entries,
 									 gint                       n_entries,
 									 const gchar               *translation_domain);
 
-const GtefActionInfo *	gtef_action_info_store_lookup			(GtefActionInfoStore *store,
+const TeplActionInfo *	tepl_action_info_store_lookup			(TeplActionInfoStore *store,
 									 const gchar         *action_name);
 
-GtkWidget *		gtef_action_info_store_create_menu_item		(GtefActionInfoStore *store,
+GtkWidget *		tepl_action_info_store_create_menu_item		(TeplActionInfoStore *store,
 									 const gchar         *action_name);
 
-void			gtef_action_info_store_check_all_used		(GtefActionInfoStore *store);
+void			tepl_action_info_store_check_all_used		(TeplActionInfoStore *store);
 
 G_END_DECLS
 
-#endif /* GTEF_ACTION_INFO_STORE_H */
+#endif /* TEPL_ACTION_INFO_STORE_H */

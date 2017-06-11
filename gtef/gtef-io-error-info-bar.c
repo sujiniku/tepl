@@ -1,15 +1,15 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2005 - Paolo Maggi
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -19,13 +19,13 @@
  */
 
 #include "config.h"
-#include "gtef-io-error-info-bar.h"
+#include "tepl-io-error-info-bar.h"
 #include <glib/gi18n-lib.h>
-#include "gtef-utils.h"
+#include "tepl-utils.h"
 
 /* Verbose error reporting for file I/O operations (load, save, etc.). */
 
-G_DEFINE_TYPE (GtefIoErrorInfoBar, _gtef_io_error_info_bar, GTEF_TYPE_INFO_BAR)
+G_DEFINE_TYPE (TeplIoErrorInfoBar, _tepl_io_error_info_bar, TEPL_TYPE_INFO_BAR)
 
 static gboolean
 is_recoverable_error (const GError *error)
@@ -128,7 +128,7 @@ parse_error (const GError  *error,
 
 		if (uri != NULL)
 		{
-			_gtef_utils_decode_uri (uri, NULL, NULL, &host, NULL, NULL);
+			_tepl_utils_decode_uri (uri, NULL, NULL, &host, NULL, NULL);
 		}
 
 		if (host != NULL)
@@ -170,7 +170,7 @@ parse_error (const GError  *error,
 }
 
 static void
-set_io_loading_error (GtefIoErrorInfoBar *info_bar,
+set_io_loading_error (TeplIoErrorInfoBar *info_bar,
 		      gboolean            recoverable_error)
 {
 	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), GTK_MESSAGE_ERROR);
@@ -188,7 +188,7 @@ set_io_loading_error (GtefIoErrorInfoBar *info_bar,
 }
 
 static void
-set_conversion_error (GtefIoErrorInfoBar *info_bar,
+set_conversion_error (TeplIoErrorInfoBar *info_bar,
 		      gboolean            edit_anyway)
 {
 	gtk_info_bar_add_button (GTK_INFO_BAR (info_bar),
@@ -214,23 +214,23 @@ set_conversion_error (GtefIoErrorInfoBar *info_bar,
 }
 
 static void
-_gtef_io_error_info_bar_class_init (GtefIoErrorInfoBarClass *klass)
+_tepl_io_error_info_bar_class_init (TeplIoErrorInfoBarClass *klass)
 {
 }
 
 static void
-_gtef_io_error_info_bar_init (GtefIoErrorInfoBar *info_bar)
+_tepl_io_error_info_bar_init (TeplIoErrorInfoBar *info_bar)
 {
 }
 
-GtefIoErrorInfoBar *
-_gtef_io_error_info_bar_new (void)
+TeplIoErrorInfoBar *
+_tepl_io_error_info_bar_new (void)
 {
-	return g_object_new (GTEF_TYPE_IO_ERROR_INFO_BAR, NULL);
+	return g_object_new (TEPL_TYPE_IO_ERROR_INFO_BAR, NULL);
 }
 
 void
-_gtef_io_error_info_bar_set_loading_error (GtefIoErrorInfoBar  *info_bar,
+_tepl_io_error_info_bar_set_loading_error (TeplIoErrorInfoBar  *info_bar,
 					   GtkSourceFileLoader *loader,
 					   const GError        *error)
 {
@@ -242,7 +242,7 @@ _gtef_io_error_info_bar_set_loading_error (GtefIoErrorInfoBar  *info_bar,
 	gboolean edit_anyway = FALSE;
 	gboolean convert_error = FALSE;
 
-	g_return_if_fail (GTEF_IS_IO_ERROR_INFO_BAR (info_bar));
+	g_return_if_fail (TEPL_IS_IO_ERROR_INFO_BAR (info_bar));
 	g_return_if_fail (GTK_SOURCE_IS_FILE_LOADER (loader));
 	g_return_if_fail (error != NULL);
 	g_return_if_fail (error->domain == GTK_SOURCE_FILE_LOADER_ERROR ||
@@ -338,12 +338,12 @@ _gtef_io_error_info_bar_set_loading_error (GtefIoErrorInfoBar  *info_bar,
 		set_io_loading_error (info_bar, is_recoverable_error (error));
 	}
 
-	gtef_info_bar_add_primary_message (GTEF_INFO_BAR (info_bar),
+	tepl_info_bar_add_primary_message (TEPL_INFO_BAR (info_bar),
 					   primary_text);
 
 	if (secondary_text != NULL)
 	{
-		gtef_info_bar_add_secondary_message (GTEF_INFO_BAR (info_bar),
+		tepl_info_bar_add_secondary_message (TEPL_INFO_BAR (info_bar),
 						     secondary_text);
 	}
 

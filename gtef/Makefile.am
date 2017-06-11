@@ -2,180 +2,180 @@
 
 AM_CPPFLAGS =				\
 	-DDATADIR=\""$(datadir)"\"	\
-	-DG_LOG_DOMAIN=\"Gtef\"		\
-	-DGTEF_COMPILATION		\
+	-DG_LOG_DOMAIN=\"Tepl\"		\
+	-DTEPL_COMPILATION		\
 	-I$(top_builddir)		\
 	-I$(top_srcdir)			\
 	$(WARN_CFLAGS)			\
 	$(CODE_COVERAGE_CPPFLAGS)	\
 	$(DEP_CFLAGS)
 
-gtef_public_headers =				\
-	gtef.h					\
-	gtef-action-info.h			\
-	gtef-action-info-central-store.h	\
-	gtef-action-info-store.h		\
-	gtef-action-map.h			\
-	gtef-application.h			\
-	gtef-application-window.h		\
-	gtef-buffer.h				\
-	gtef-encoding.h				\
-	gtef-file.h				\
-	gtef-file-loader.h			\
-	gtef-file-metadata.h			\
-	gtef-file-saver.h			\
-	gtef-fold-region.h			\
-	gtef-gutter-renderer-folds.h		\
-	gtef-info-bar.h				\
-	gtef-iter.h				\
-	gtef-menu-item.h			\
-	gtef-menu-shell.h			\
-	gtef-metadata-manager.h			\
-	gtef-types.h				\
-	gtef-tab.h				\
-	gtef-utils.h				\
-	gtef-view.h
+tepl_public_headers =				\
+	tepl.h					\
+	tepl-action-info.h			\
+	tepl-action-info-central-store.h	\
+	tepl-action-info-store.h		\
+	tepl-action-map.h			\
+	tepl-application.h			\
+	tepl-application-window.h		\
+	tepl-buffer.h				\
+	tepl-encoding.h				\
+	tepl-file.h				\
+	tepl-file-loader.h			\
+	tepl-file-metadata.h			\
+	tepl-file-saver.h			\
+	tepl-fold-region.h			\
+	tepl-gutter-renderer-folds.h		\
+	tepl-info-bar.h				\
+	tepl-iter.h				\
+	tepl-menu-item.h			\
+	tepl-menu-shell.h			\
+	tepl-metadata-manager.h			\
+	tepl-types.h				\
+	tepl-tab.h				\
+	tepl-utils.h				\
+	tepl-view.h
 
-gtef_public_c_files =				\
-	gtef-action-info.c			\
-	gtef-action-info-central-store.c	\
-	gtef-action-info-store.c		\
-	gtef-action-map.c			\
-	gtef-application.c			\
-	gtef-application-window.c		\
-	gtef-buffer.c				\
-	gtef-encoding.c				\
-	gtef-file.c				\
-	gtef-file-loader.c			\
-	gtef-file-metadata.c			\
-	gtef-file-saver.c			\
-	gtef-fold-region.c			\
-	gtef-gutter-renderer-folds.c		\
-	gtef-info-bar.c				\
-	gtef-iter.c				\
-	gtef-menu-item.c			\
-	gtef-menu-shell.c			\
-	gtef-metadata-manager.c			\
-	gtef-tab.c				\
-	gtef-utils.c				\
-	gtef-view.c
+tepl_public_c_files =				\
+	tepl-action-info.c			\
+	tepl-action-info-central-store.c	\
+	tepl-action-info-store.c		\
+	tepl-action-map.c			\
+	tepl-application.c			\
+	tepl-application-window.c		\
+	tepl-buffer.c				\
+	tepl-encoding.c				\
+	tepl-file.c				\
+	tepl-file-loader.c			\
+	tepl-file-metadata.c			\
+	tepl-file-saver.c			\
+	tepl-fold-region.c			\
+	tepl-gutter-renderer-folds.c		\
+	tepl-info-bar.c				\
+	tepl-iter.c				\
+	tepl-menu-item.c			\
+	tepl-menu-shell.c			\
+	tepl-metadata-manager.c			\
+	tepl-tab.c				\
+	tepl-utils.c				\
+	tepl-view.c
 
-gtef_private_headers =			\
+tepl_private_headers =			\
 	gconstructor.h			\
-	gtef-buffer-input-stream.h	\
-	gtef-encoding-converter.h	\
-	gtef-encoding-private.h		\
-	gtef-file-content-loader.h	\
-	gtef-io-error-info-bar.h	\
-	gtef-progress-info-bar.h
+	tepl-buffer-input-stream.h	\
+	tepl-encoding-converter.h	\
+	tepl-encoding-private.h		\
+	tepl-file-content-loader.h	\
+	tepl-io-error-info-bar.h	\
+	tepl-progress-info-bar.h
 
-gtef_private_c_files =			\
-	gtef-buffer-input-stream.c	\
-	gtef-encoding-converter.c	\
-	gtef-file-content-loader.c	\
-	gtef-init.c			\
-	gtef-io-error-info-bar.c	\
-	gtef-progress-info-bar.c
+tepl_private_c_files =			\
+	tepl-buffer-input-stream.c	\
+	tepl-encoding-converter.c	\
+	tepl-file-content-loader.c	\
+	tepl-init.c			\
+	tepl-io-error-info-bar.c	\
+	tepl-progress-info-bar.c
 
-gtef_built_public_headers =		\
-	gtef-enum-types.h
+tepl_built_public_headers =		\
+	tepl-enum-types.h
 
-gtef_built_public_c_files =		\
-	gtef-enum-types.c
+tepl_built_public_c_files =		\
+	tepl-enum-types.c
 
 # Helper Libtool library, so that the private functions can be used in unit
 # tests.
-noinst_LTLIBRARIES = libgtef-core.la
+noinst_LTLIBRARIES = libtepl-core.la
 
-libgtef_core_la_SOURCES =		\
-	$(gtef_private_c_files)		\
-	$(gtef_private_headers)		\
-	$(gtef_public_c_files)		\
-	$(gtef_public_headers)
+libtepl_core_la_SOURCES =		\
+	$(tepl_private_c_files)		\
+	$(tepl_private_headers)		\
+	$(tepl_public_c_files)		\
+	$(tepl_public_headers)
 
-nodist_libgtef_core_la_SOURCES =	\
-	$(gtef_built_public_c_files)	\
-	$(gtef_built_public_headers)
+nodist_libtepl_core_la_SOURCES =	\
+	$(tepl_built_public_c_files)	\
+	$(tepl_built_public_headers)
 
 BUILT_SOURCES =				\
-	$(gtef_built_public_c_files)	\
-	$(gtef_built_public_headers)
+	$(tepl_built_public_c_files)	\
+	$(tepl_built_public_headers)
 
-libgtef_core_la_CFLAGS =	\
+libtepl_core_la_CFLAGS =	\
 	$(CODE_COVERAGE_CFLAGS)
 
-libgtef_core_la_LDFLAGS =	\
+libtepl_core_la_LDFLAGS =	\
 	-no-undefined		\
 	$(WARN_LDFLAGS)
 
-libgtef_core_la_LIBADD =	\
+libtepl_core_la_LIBADD =	\
 	$(CODE_COVERAGE_LIBS)
 
 # The real library.
-lib_LTLIBRARIES = libgtef-@GTEF_API_VERSION@.la
+lib_LTLIBRARIES = libtepl-@TEPL_API_VERSION@.la
 
-libgtef_@GTEF_API_VERSION@_la_SOURCES =
+libtepl_@TEPL_API_VERSION@_la_SOURCES =
 
-libgtef_@GTEF_API_VERSION@_la_LIBADD =	\
-	libgtef-core.la			\
+libtepl_@TEPL_API_VERSION@_la_LIBADD =	\
+	libtepl-core.la			\
 	$(DEP_LIBS)
 
-libgtef_@GTEF_API_VERSION@_la_LDFLAGS =		\
-	-version-info $(GTEF_LT_VERSION)	\
+libtepl_@TEPL_API_VERSION@_la_LDFLAGS =		\
+	-version-info $(TEPL_LT_VERSION)	\
 	-no-undefined				\
-	-export-symbols-regex "^gtef_.*"	\
+	-export-symbols-regex "^tepl_.*"	\
 	$(WARN_LDFLAGS)
 
-libgtef_includedir = $(includedir)/gtef-@GTEF_API_VERSION@/gtef
-libgtef_include_HEADERS = $(gtef_public_headers)
-nodist_libgtef_include_HEADERS = $(gtef_built_public_headers)
+libtepl_includedir = $(includedir)/tepl-@TEPL_API_VERSION@/tepl
+libtepl_include_HEADERS = $(tepl_public_headers)
+nodist_libtepl_include_HEADERS = $(tepl_built_public_headers)
 
-ENUM_TYPES = $(gtef_public_headers)
+ENUM_TYPES = $(tepl_public_headers)
 
-gtef-enum-types.h: gtef-enum-types.h.template $(ENUM_TYPES) $(GLIB_MKENUMS)
-	$(AM_V_GEN) (cd $(srcdir) && $(GLIB_MKENUMS) --template gtef-enum-types.h.template $(ENUM_TYPES)) > $@
+tepl-enum-types.h: tepl-enum-types.h.template $(ENUM_TYPES) $(GLIB_MKENUMS)
+	$(AM_V_GEN) (cd $(srcdir) && $(GLIB_MKENUMS) --template tepl-enum-types.h.template $(ENUM_TYPES)) > $@
 
-gtef-enum-types.c: gtef-enum-types.c.template $(ENUM_TYPES) $(GLIB_MKENUMS)
-	$(AM_V_GEN) (cd $(srcdir) && $(GLIB_MKENUMS) --template gtef-enum-types.c.template $(ENUM_TYPES)) > $@
+tepl-enum-types.c: tepl-enum-types.c.template $(ENUM_TYPES) $(GLIB_MKENUMS)
+	$(AM_V_GEN) (cd $(srcdir) && $(GLIB_MKENUMS) --template tepl-enum-types.c.template $(ENUM_TYPES)) > $@
 
 EXTRA_DIST =				\
-	gtef-enum-types.c.template	\
-	gtef-enum-types.h.template
+	tepl-enum-types.c.template	\
+	tepl-enum-types.h.template
 
 CLEANFILES = $(BUILT_SOURCES)
 
 if HAVE_INTROSPECTION
 -include $(INTROSPECTION_MAKEFILE)
-INTROSPECTION_GIRS = Gtef-@GTEF_API_VERSION@.gir
+INTROSPECTION_GIRS = Tepl-@TEPL_API_VERSION@.gir
 
 INTROSPECTION_SCANNER_ENV = CC="$(CC)"
 
-Gtef-@GTEF_API_VERSION@.gir: libgtef-@GTEF_API_VERSION@.la
+Tepl-@TEPL_API_VERSION@.gir: libtepl-@TEPL_API_VERSION@.la
 INTROSPECTION_SCANNER_ARGS =		\
 	-I$(top_srcdir)			\
 	-I$(top_builddir)		\
-	--c-include=gtef/gtef.h		\
+	--c-include=tepl/tepl.h		\
 	--warn-all
-Gtef_@GTEF_API_VERSION@_gir_NAMESPACE = Gtef
-Gtef_@GTEF_API_VERSION@_gir_VERSION = @GTEF_API_VERSION@
-Gtef_@GTEF_API_VERSION@_gir_CFLAGS = $(DEP_CFLAGS)
-Gtef_@GTEF_API_VERSION@_gir_SCANNERFLAGS = $(WARN_SCANNERFLAGS)
-Gtef_@GTEF_API_VERSION@_gir_LIBS = libgtef-@GTEF_API_VERSION@.la
-Gtef_@GTEF_API_VERSION@_gir_FILES =	\
-	$(gtef_public_headers)		\
-	$(gtef_public_c_files)		\
-	$(gtef_built_public_headers)	\
-	$(gtef_built_public_c_files)
+Tepl_@TEPL_API_VERSION@_gir_NAMESPACE = Tepl
+Tepl_@TEPL_API_VERSION@_gir_VERSION = @TEPL_API_VERSION@
+Tepl_@TEPL_API_VERSION@_gir_CFLAGS = $(DEP_CFLAGS)
+Tepl_@TEPL_API_VERSION@_gir_SCANNERFLAGS = $(WARN_SCANNERFLAGS)
+Tepl_@TEPL_API_VERSION@_gir_LIBS = libtepl-@TEPL_API_VERSION@.la
+Tepl_@TEPL_API_VERSION@_gir_FILES =	\
+	$(tepl_public_headers)		\
+	$(tepl_public_c_files)		\
+	$(tepl_built_public_headers)	\
+	$(tepl_built_public_c_files)
 
-Gtef_@GTEF_API_VERSION@_gir_INCLUDES = Gtk-3.0 GtkSource-3.0
-Gtef_@GTEF_API_VERSION@_gir_PACKAGES = gtk+-3.0 gtksourceview-3.0
-Gtef_@GTEF_API_VERSION@_gir_EXPORT_PACKAGES = gtef-@GTEF_API_VERSION@
+Tepl_@TEPL_API_VERSION@_gir_INCLUDES = Gtk-3.0 GtkSource-3.0
+Tepl_@TEPL_API_VERSION@_gir_PACKAGES = gtk+-3.0 gtksourceview-3.0
+Tepl_@TEPL_API_VERSION@_gir_EXPORT_PACKAGES = tepl-@TEPL_API_VERSION@
 
 girdir = $(datadir)/gir-1.0
-gir_DATA = Gtef-@GTEF_API_VERSION@.gir
+gir_DATA = Tepl-@TEPL_API_VERSION@.gir
 
 typelibdir = $(libdir)/girepository-1.0
-typelib_DATA = Gtef-@GTEF_API_VERSION@.typelib
+typelib_DATA = Tepl-@TEPL_API_VERSION@.typelib
 
 CLEANFILES +=		\
 	$(gir_DATA)	\
@@ -186,24 +186,24 @@ endif # HAVE_INTROSPECTION
 if ENABLE_VAPIGEN
 -include $(VAPIGEN_MAKEFILE)
 
-gtef-@GTEF_API_VERSION@.vapi: Gtef-@GTEF_API_VERSION@.gir
+tepl-@TEPL_API_VERSION@.vapi: Tepl-@TEPL_API_VERSION@.gir
 
-VAPIGEN_VAPIS = gtef-@GTEF_API_VERSION@.vapi
+VAPIGEN_VAPIS = tepl-@TEPL_API_VERSION@.vapi
 
-gtef_@GTEF_API_VERSION@_vapi_DEPS = gtk+-3.0 gtksourceview-3.0
+tepl_@TEPL_API_VERSION@_vapi_DEPS = gtk+-3.0 gtksourceview-3.0
 
-gtef-@GTEF_API_VERSION@.deps:
-	$(AM_V_GEN) for pkg in $(gtef_@GTEF_API_VERSION@_vapi_DEPS); do \
+tepl-@TEPL_API_VERSION@.deps:
+	$(AM_V_GEN) for pkg in $(tepl_@TEPL_API_VERSION@_vapi_DEPS); do \
 		echo $$pkg >> $@; \
 	done
 
-gtef_@GTEF_API_VERSION@_vapi_METADATADIRS = $(srcdir)
-gtef_@GTEF_API_VERSION@_vapi_FILES = Gtef-@GTEF_API_VERSION@.gir
+tepl_@TEPL_API_VERSION@_vapi_METADATADIRS = $(srcdir)
+tepl_@TEPL_API_VERSION@_vapi_FILES = Tepl-@TEPL_API_VERSION@.gir
 
 vapidir = $(datadir)/vala/vapi
 vapi_DATA =				\
-	gtef-@GTEF_API_VERSION@.vapi	\
-	gtef-@GTEF_API_VERSION@.deps
+	tepl-@TEPL_API_VERSION@.vapi	\
+	tepl-@TEPL_API_VERSION@.deps
 
 CLEANFILES += $(vapi_DATA)
 

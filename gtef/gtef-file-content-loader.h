@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,58 +17,58 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GTEF_FILE_CONTENT_LOADER_H
-#define GTEF_FILE_CONTENT_LOADER_H
+#ifndef TEPL_FILE_CONTENT_LOADER_H
+#define TEPL_FILE_CONTENT_LOADER_H
 
 #include <gio/gio.h>
 
 G_BEGIN_DECLS
 
 /* 50MB, not 50MiB because the UI shows the value in MB. */
-#define GTEF_FILE_CONTENT_LOADER_DEFAULT_MAX_SIZE (50 * 1000 * 1000)
+#define TEPL_FILE_CONTENT_LOADER_DEFAULT_MAX_SIZE (50 * 1000 * 1000)
 
 /* Should be small enough for slow network connections, to report progress. */
-#define GTEF_FILE_CONTENT_LOADER_DEFAULT_CHUNK_SIZE (8 * 1024)
+#define TEPL_FILE_CONTENT_LOADER_DEFAULT_CHUNK_SIZE (8 * 1024)
 
-#define GTEF_TYPE_FILE_CONTENT_LOADER             (_gtef_file_content_loader_get_type ())
-#define GTEF_FILE_CONTENT_LOADER(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTEF_TYPE_FILE_CONTENT_LOADER, GtefFileContentLoader))
-#define GTEF_FILE_CONTENT_LOADER_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), GTEF_TYPE_FILE_CONTENT_LOADER, GtefFileContentLoaderClass))
-#define GTEF_IS_FILE_CONTENT_LOADER(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTEF_TYPE_FILE_CONTENT_LOADER))
-#define GTEF_IS_FILE_CONTENT_LOADER_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), GTEF_TYPE_FILE_CONTENT_LOADER))
-#define GTEF_FILE_CONTENT_LOADER_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GTEF_TYPE_FILE_CONTENT_LOADER, GtefFileContentLoaderClass))
+#define TEPL_TYPE_FILE_CONTENT_LOADER             (_tepl_file_content_loader_get_type ())
+#define TEPL_FILE_CONTENT_LOADER(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), TEPL_TYPE_FILE_CONTENT_LOADER, TeplFileContentLoader))
+#define TEPL_FILE_CONTENT_LOADER_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), TEPL_TYPE_FILE_CONTENT_LOADER, TeplFileContentLoaderClass))
+#define TEPL_IS_FILE_CONTENT_LOADER(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TEPL_TYPE_FILE_CONTENT_LOADER))
+#define TEPL_IS_FILE_CONTENT_LOADER_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), TEPL_TYPE_FILE_CONTENT_LOADER))
+#define TEPL_FILE_CONTENT_LOADER_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), TEPL_TYPE_FILE_CONTENT_LOADER, TeplFileContentLoaderClass))
 
-typedef struct _GtefFileContentLoader         GtefFileContentLoader;
-typedef struct _GtefFileContentLoaderClass    GtefFileContentLoaderClass;
-typedef struct _GtefFileContentLoaderPrivate  GtefFileContentLoaderPrivate;
+typedef struct _TeplFileContentLoader         TeplFileContentLoader;
+typedef struct _TeplFileContentLoaderClass    TeplFileContentLoaderClass;
+typedef struct _TeplFileContentLoaderPrivate  TeplFileContentLoaderPrivate;
 
-struct _GtefFileContentLoader
+struct _TeplFileContentLoader
 {
 	GObject parent;
 
-	GtefFileContentLoaderPrivate *priv;
+	TeplFileContentLoaderPrivate *priv;
 };
 
-struct _GtefFileContentLoaderClass
+struct _TeplFileContentLoaderClass
 {
 	GObjectClass parent_class;
 };
 
 G_GNUC_INTERNAL
-GType			_gtef_file_content_loader_get_type		(void);
+GType			_tepl_file_content_loader_get_type		(void);
 
 G_GNUC_INTERNAL
-GtefFileContentLoader *	_gtef_file_content_loader_new_from_file		(GFile *location);
+TeplFileContentLoader *	_tepl_file_content_loader_new_from_file		(GFile *location);
 
 G_GNUC_INTERNAL
-void			_gtef_file_content_loader_set_max_size		(GtefFileContentLoader *loader,
+void			_tepl_file_content_loader_set_max_size		(TeplFileContentLoader *loader,
 									 gint64                 max_size);
 
 G_GNUC_INTERNAL
-void			_gtef_file_content_loader_set_chunk_size	(GtefFileContentLoader *loader,
+void			_tepl_file_content_loader_set_chunk_size	(TeplFileContentLoader *loader,
 									 gint64                 chunk_size);
 
 G_GNUC_INTERNAL
-void			_gtef_file_content_loader_load_async		(GtefFileContentLoader *loader,
+void			_tepl_file_content_loader_load_async		(TeplFileContentLoader *loader,
 									 gint                   io_priority,
 									 GCancellable          *cancellable,
 									 GFileProgressCallback  progress_callback,
@@ -78,19 +78,19 @@ void			_gtef_file_content_loader_load_async		(GtefFileContentLoader *loader,
 									 gpointer               user_data);
 
 G_GNUC_INTERNAL
-gboolean		_gtef_file_content_loader_load_finish		(GtefFileContentLoader  *loader,
+gboolean		_tepl_file_content_loader_load_finish		(TeplFileContentLoader  *loader,
 									 GAsyncResult           *result,
 									 GError                **error);
 
 G_GNUC_INTERNAL
-GQueue *		_gtef_file_content_loader_get_content		(GtefFileContentLoader *loader);
+GQueue *		_tepl_file_content_loader_get_content		(TeplFileContentLoader *loader);
 
 G_GNUC_INTERNAL
-const gchar *		_gtef_file_content_loader_get_etag		(GtefFileContentLoader *loader);
+const gchar *		_tepl_file_content_loader_get_etag		(TeplFileContentLoader *loader);
 
 G_GNUC_INTERNAL
-gboolean		_gtef_file_content_loader_get_readonly		(GtefFileContentLoader *loader);
+gboolean		_tepl_file_content_loader_get_readonly		(TeplFileContentLoader *loader);
 
 G_END_DECLS
 
-#endif /* GTEF_FILE_CONTENT_LOADER_H */
+#endif /* TEPL_FILE_CONTENT_LOADER_H */

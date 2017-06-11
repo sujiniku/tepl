@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -31,7 +31,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-static HMODULE gtef_dll;
+static HMODULE tepl_dll;
 #endif
 
 #ifdef OS_OSX
@@ -95,7 +95,7 @@ get_locale_dir (void)
 #if defined (G_OS_WIN32)
 	gchar *win32_dir;
 
-	win32_dir = g_win32_get_package_installation_directory_of_module (gtef_dll);
+	win32_dir = g_win32_get_package_installation_directory_of_module (tepl_dll);
 
 	locale_dir = g_build_filename (win32_dir, "share", "locale", NULL);
 
@@ -110,7 +110,7 @@ get_locale_dir (void)
 }
 
 static void
-gtef_init (void)
+tepl_init (void)
 {
 	gchar *locale_dir;
 
@@ -135,8 +135,8 @@ DllMain (HINSTANCE hinstDLL,
 	switch (fdwReason)
 	{
 		case DLL_PROCESS_ATTACH:
-			gtef_dll = hinstDLL;
-			gtef_init ();
+			tepl_dll = hinstDLL;
+			tepl_init ();
 			break;
 
 		case DLL_THREAD_DETACH:
@@ -151,14 +151,14 @@ DllMain (HINSTANCE hinstDLL,
 #elif defined (G_HAS_CONSTRUCTORS)
 
 #  ifdef G_DEFINE_CONSTRUCTOR_NEEDS_PRAGMA
-#    pragma G_DEFINE_CONSTRUCTOR_PRAGMA_ARGS(gtef_constructor)
+#    pragma G_DEFINE_CONSTRUCTOR_PRAGMA_ARGS(tepl_constructor)
 #  endif
-G_DEFINE_CONSTRUCTOR (gtef_constructor)
+G_DEFINE_CONSTRUCTOR (tepl_constructor)
 
 static void
-gtef_constructor (void)
+tepl_constructor (void)
 {
-	gtef_init ();
+	tepl_init ();
 }
 
 #else

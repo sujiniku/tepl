@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,20 +17,20 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gtef-info-bar.h"
+#include "tepl-info-bar.h"
 
 /**
  * SECTION:info-bar
  * @Short_description: Subclass of GtkInfoBar
- * @Title: GtefInfoBar
+ * @Title: TeplInfoBar
  *
- * #GtefInfoBar is a subclass of #GtkInfoBar with a vertical action area and
+ * #TeplInfoBar is a subclass of #GtkInfoBar with a vertical action area and
  * functions to ease the creation of info bars.
  */
 
-typedef struct _GtefInfoBarPrivate GtefInfoBarPrivate;
+typedef struct _TeplInfoBarPrivate TeplInfoBarPrivate;
 
-struct _GtefInfoBarPrivate
+struct _TeplInfoBarPrivate
 {
 	/* Left: icon. Right: content_vgrid. */
 	GtkGrid *content_hgrid;
@@ -41,14 +41,14 @@ struct _GtefInfoBarPrivate
 	guint close_button_added : 1;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE (GtefInfoBar, gtef_info_bar, GTK_TYPE_INFO_BAR)
+G_DEFINE_TYPE_WITH_PRIVATE (TeplInfoBar, tepl_info_bar, GTK_TYPE_INFO_BAR)
 
 static void
-gtef_info_bar_response (GtkInfoBar *gtk_info_bar,
+tepl_info_bar_response (GtkInfoBar *gtk_info_bar,
 			gint        response_id)
 {
-	GtefInfoBar *info_bar = GTEF_INFO_BAR (gtk_info_bar);
-	GtefInfoBarPrivate *priv = gtef_info_bar_get_instance_private (info_bar);
+	TeplInfoBar *info_bar = TEPL_INFO_BAR (gtk_info_bar);
+	TeplInfoBarPrivate *priv = tepl_info_bar_get_instance_private (info_bar);
 
 	if (response_id == GTK_RESPONSE_CLOSE &&
 	    priv->close_button_added)
@@ -59,29 +59,29 @@ gtef_info_bar_response (GtkInfoBar *gtk_info_bar,
 		return;
 	}
 
-	if (GTK_INFO_BAR_CLASS (gtef_info_bar_parent_class)->response != NULL)
+	if (GTK_INFO_BAR_CLASS (tepl_info_bar_parent_class)->response != NULL)
 	{
-		GTK_INFO_BAR_CLASS (gtef_info_bar_parent_class)->response (gtk_info_bar,
+		GTK_INFO_BAR_CLASS (tepl_info_bar_parent_class)->response (gtk_info_bar,
 									   response_id);
 	}
 }
 
 static void
-gtef_info_bar_class_init (GtefInfoBarClass *klass)
+tepl_info_bar_class_init (TeplInfoBarClass *klass)
 {
 	GtkInfoBarClass *info_bar_class = GTK_INFO_BAR_CLASS (klass);
 
-	info_bar_class->response = gtef_info_bar_response;
+	info_bar_class->response = tepl_info_bar_response;
 }
 
 static void
-gtef_info_bar_init (GtefInfoBar *info_bar)
+tepl_info_bar_init (TeplInfoBar *info_bar)
 {
-	GtefInfoBarPrivate *priv;
+	TeplInfoBarPrivate *priv;
 	GtkWidget *action_area;
 	GtkWidget *content_area;
 
-	priv = gtef_info_bar_get_instance_private (info_bar);
+	priv = tepl_info_bar_get_instance_private (info_bar);
 
 	/* Change the buttons orientation to be vertical.
 	 * With a small window, if 3 or more buttons are shown horizontally,
@@ -124,54 +124,54 @@ gtef_info_bar_init (GtefInfoBar *info_bar)
 }
 
 /**
- * gtef_info_bar_new:
+ * tepl_info_bar_new:
  *
- * Returns: a new #GtefInfoBar.
+ * Returns: a new #TeplInfoBar.
  * Since: 1.0
  */
-GtefInfoBar *
-gtef_info_bar_new (void)
+TeplInfoBar *
+tepl_info_bar_new (void)
 {
-	return g_object_new (GTEF_TYPE_INFO_BAR, NULL);
+	return g_object_new (TEPL_TYPE_INFO_BAR, NULL);
 }
 
 /**
- * gtef_info_bar_new_simple:
+ * tepl_info_bar_new_simple:
  * @msg_type: the message type.
  * @primary_msg: the primary message.
  * @secondary_msg: (nullable): the secondary message, or %NULL.
  *
- * Creates a new #GtefInfoBar with an icon (depending on @msg_type), a primary
+ * Creates a new #TeplInfoBar with an icon (depending on @msg_type), a primary
  * message and a secondary message.
  *
- * Returns: a new #GtefInfoBar.
+ * Returns: a new #TeplInfoBar.
  * Since: 2.0
  */
-GtefInfoBar *
-gtef_info_bar_new_simple (GtkMessageType  msg_type,
+TeplInfoBar *
+tepl_info_bar_new_simple (GtkMessageType  msg_type,
 			  const gchar    *primary_msg,
 			  const gchar    *secondary_msg)
 {
-	GtefInfoBar *info_bar;
+	TeplInfoBar *info_bar;
 
 	g_return_val_if_fail (primary_msg != NULL, NULL);
 
-	info_bar = gtef_info_bar_new ();
+	info_bar = tepl_info_bar_new ();
 
 	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), msg_type);
-	gtef_info_bar_add_icon (info_bar);
-	gtef_info_bar_add_primary_message (info_bar, primary_msg);
+	tepl_info_bar_add_icon (info_bar);
+	tepl_info_bar_add_primary_message (info_bar, primary_msg);
 
 	if (secondary_msg != NULL)
 	{
-		gtef_info_bar_add_secondary_message (info_bar, secondary_msg);
+		tepl_info_bar_add_secondary_message (info_bar, secondary_msg);
 	}
 
 	return info_bar;
 }
 
 static const gchar *
-get_icon_name (GtefInfoBar *info_bar)
+get_icon_name (TeplInfoBar *info_bar)
 {
 	GtkMessageType msg_type;
 
@@ -201,27 +201,27 @@ get_icon_name (GtefInfoBar *info_bar)
 }
 
 /**
- * gtef_info_bar_add_icon:
- * @info_bar: a #GtefInfoBar.
+ * tepl_info_bar_add_icon:
+ * @info_bar: a #TeplInfoBar.
  *
  * Adds an icon on the left, determined by the message type. So before calling
  * this function, gtk_info_bar_set_message_type() must have been called.
  *
- * The icon is not updated when the message type changes. Another #GtefInfoBar
+ * The icon is not updated when the message type changes. Another #TeplInfoBar
  * must be created in that case.
  *
  * Since: 2.0
  */
 void
-gtef_info_bar_add_icon (GtefInfoBar *info_bar)
+tepl_info_bar_add_icon (TeplInfoBar *info_bar)
 {
-	GtefInfoBarPrivate *priv;
+	TeplInfoBarPrivate *priv;
 	const gchar *icon_name;
 	GtkWidget *image;
 
-	g_return_if_fail (GTEF_IS_INFO_BAR (info_bar));
+	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 
-	priv = gtef_info_bar_get_instance_private (info_bar);
+	priv = tepl_info_bar_get_instance_private (info_bar);
 
 	icon_name = get_icon_name (info_bar);
 	if (icon_name == NULL)
@@ -242,30 +242,30 @@ gtef_info_bar_add_icon (GtefInfoBar *info_bar)
 }
 
 /**
- * gtef_info_bar_add_primary_message:
- * @info_bar: a #GtefInfoBar.
+ * tepl_info_bar_add_primary_message:
+ * @info_bar: a #TeplInfoBar.
  * @primary_msg: a primary message.
  *
  * Adds a primary message.
  * Since: 2.0
  */
 void
-gtef_info_bar_add_primary_message (GtefInfoBar *info_bar,
+tepl_info_bar_add_primary_message (TeplInfoBar *info_bar,
 				   const gchar *primary_msg)
 {
-	GtefInfoBarPrivate *priv;
+	TeplInfoBarPrivate *priv;
 	gchar *primary_msg_escaped;
 	gchar *primary_markup;
 	GtkLabel *primary_label;
 
-	g_return_if_fail (GTEF_IS_INFO_BAR (info_bar));
+	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 	g_return_if_fail (primary_msg != NULL);
 
-	priv = gtef_info_bar_get_instance_private (info_bar);
+	priv = tepl_info_bar_get_instance_private (info_bar);
 
 	primary_msg_escaped = g_markup_escape_text (primary_msg, -1);
 	primary_markup = g_strdup_printf ("<b>%s</b>", primary_msg_escaped);
-	primary_label = gtef_info_bar_create_label ();
+	primary_label = tepl_info_bar_create_label ();
 	gtk_label_set_markup (primary_label, primary_markup);
 	g_free (primary_markup);
 	g_free (primary_msg_escaped);
@@ -276,30 +276,30 @@ gtef_info_bar_add_primary_message (GtefInfoBar *info_bar,
 }
 
 /**
- * gtef_info_bar_add_secondary_message:
- * @info_bar: a #GtefInfoBar.
+ * tepl_info_bar_add_secondary_message:
+ * @info_bar: a #TeplInfoBar.
  * @secondary_msg: a secondary message.
  *
  * Adds a secondary message.
  * Since: 2.0
  */
 void
-gtef_info_bar_add_secondary_message (GtefInfoBar *info_bar,
+tepl_info_bar_add_secondary_message (TeplInfoBar *info_bar,
 				     const gchar *secondary_msg)
 {
-	GtefInfoBarPrivate *priv;
+	TeplInfoBarPrivate *priv;
 	gchar *secondary_msg_escaped;
 	gchar *secondary_markup;
 	GtkLabel *secondary_label;
 
-	g_return_if_fail (GTEF_IS_INFO_BAR (info_bar));
+	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 	g_return_if_fail (secondary_msg != NULL);
 
-	priv = gtef_info_bar_get_instance_private (info_bar);
+	priv = tepl_info_bar_get_instance_private (info_bar);
 
 	secondary_msg_escaped = g_markup_escape_text (secondary_msg, -1);
 	secondary_markup = g_strdup_printf ("<small>%s</small>", secondary_msg_escaped);
-	secondary_label = gtef_info_bar_create_label ();
+	secondary_label = tepl_info_bar_create_label ();
 	gtk_label_set_markup (secondary_label, secondary_markup);
 	g_free (secondary_markup);
 	g_free (secondary_msg_escaped);
@@ -310,37 +310,37 @@ gtef_info_bar_add_secondary_message (GtefInfoBar *info_bar,
 }
 
 /**
- * gtef_info_bar_add_content_widget:
- * @info_bar: a #GtefInfoBar.
+ * tepl_info_bar_add_content_widget:
+ * @info_bar: a #TeplInfoBar.
  * @content: a #GtkWidget.
  *
  * Adds @content to @info_bar.
  *
- * #GtefInfoBar has an internal container, to be able to add the icon and add
+ * #TeplInfoBar has an internal container, to be able to add the icon and add
  * primary or secondary messages. The internal container is added to the content
  * area, as returned by gtk_info_bar_get_content_area(). So if you use a
- * #GtefInfoBar and you need to add a custom #GtkWidget, it is better to use
+ * #TeplInfoBar and you need to add a custom #GtkWidget, it is better to use
  * this function instead of adding the #GtkWidget directly to the content area.
  *
  * Since: 2.0
  */
 void
-gtef_info_bar_add_content_widget (GtefInfoBar *info_bar,
+tepl_info_bar_add_content_widget (TeplInfoBar *info_bar,
 				  GtkWidget   *content)
 {
-	GtefInfoBarPrivate *priv;
+	TeplInfoBarPrivate *priv;
 
-	g_return_if_fail (GTEF_IS_INFO_BAR (info_bar));
+	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 	g_return_if_fail (GTK_IS_WIDGET (content));
 
-	priv = gtef_info_bar_get_instance_private (info_bar);
+	priv = tepl_info_bar_get_instance_private (info_bar);
 
 	gtk_container_add (GTK_CONTAINER (priv->content_vgrid), content);
 }
 
 /**
- * gtef_info_bar_add_close_button:
- * @info_bar: a #GtefInfoBar.
+ * tepl_info_bar_add_close_button:
+ * @info_bar: a #TeplInfoBar.
  *
  * Calls gtk_info_bar_set_show_close_button(), and additionnally closes the
  * @info_bar when the #GtkInfoBar::response signal is received with the
@@ -349,13 +349,13 @@ gtef_info_bar_add_content_widget (GtefInfoBar *info_bar,
  * Since: 2.0
  */
 void
-gtef_info_bar_add_close_button (GtefInfoBar *info_bar)
+tepl_info_bar_add_close_button (TeplInfoBar *info_bar)
 {
-	GtefInfoBarPrivate *priv;
+	TeplInfoBarPrivate *priv;
 
-	g_return_if_fail (GTEF_IS_INFO_BAR (info_bar));
+	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 
-	priv = gtef_info_bar_get_instance_private (info_bar);
+	priv = tepl_info_bar_get_instance_private (info_bar);
 
 	gtk_info_bar_set_show_close_button (GTK_INFO_BAR (info_bar), TRUE);
 
@@ -363,7 +363,7 @@ gtef_info_bar_add_close_button (GtefInfoBar *info_bar)
 }
 
 /**
- * gtef_info_bar_create_label:
+ * tepl_info_bar_create_label:
  *
  * Utility function to create a #GtkLabel suitable for a #GtkInfoBar. The
  * wrapping and alignment is configured. The label is also set as selectable,
@@ -373,7 +373,7 @@ gtef_info_bar_add_close_button (GtefInfoBar *info_bar)
  * Since: 1.0
  */
 GtkLabel *
-gtef_info_bar_create_label (void)
+tepl_info_bar_create_label (void)
 {
 	GtkLabel *label;
 

@@ -1,10 +1,10 @@
-How to contribute to Gtef
+How to contribute to Tepl
 =========================
 
-Gtef follows the same guidelines and code conventions as GtkSourceView:
+Tepl follows the same guidelines and code conventions as GtkSourceView:
 
     https://git.gnome.org/browse/gtksourceview/tree/HACKING
 
-The bugzilla product of Gtef is available at:
+The bugzilla product of Tepl is available at:
 
-    https://bugzilla.gnome.org/page.cgi?id=browse.html&product=gtef
+    https://bugzilla.gnome.org/page.cgi?id=browse.html&product=tepl

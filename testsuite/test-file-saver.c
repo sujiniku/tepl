@@ -1,15 +1,15 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2010 - Jesse van den Kieboom
  * Copyright 2014, 2017 - Sébastien Wilmet
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -21,7 +21,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <glib/gprintf.h>
-#include <gtef/gtef.h>
+#include <tepl/tepl.h>
 
 #define ENABLE_REMOTE_TESTS	FALSE
 
@@ -46,7 +46,7 @@ typedef void (*SavedCallback) (SaverTestData *data);
 
 struct _SaverTestData
 {
-	GtefFileSaver *saver;
+	TeplFileSaver *saver;
 	GFile *location;
 	const gchar *expected_file_contents;
 	SavedCallback saved_callback;
@@ -80,13 +80,13 @@ read_file (GFile *location)
 }
 
 static void
-save_file_cb (GtefFileSaver *saver,
+save_file_cb (TeplFileSaver *saver,
 	      GAsyncResult  *result,
 	      SaverTestData *data)
 {
 	GError *error = NULL;
 
-	gtef_file_saver_save_finish (saver, result, &error);
+	tepl_file_saver_save_finish (saver, result, &error);
 
 	g_assert_no_error (error);
 
@@ -111,7 +111,7 @@ save_file (SaverTestData *data)
 {
 	data->file_existed = g_file_query_exists (data->location, NULL);
 
-	gtef_file_saver_save_async (data->saver,
+	tepl_file_saver_save_async (data->saver,
 				    G_PRIORITY_DEFAULT,
 				    NULL, NULL, NULL, NULL,
 				    (GAsyncReadyCallback) save_file_cb,
@@ -166,26 +166,26 @@ static void
 test_saver (const gchar     *filename_or_uri,
 	    const gchar     *buffer_contents,
 	    const gchar     *expected_file_contents,
-	    GtefNewlineType  newline_type,
+	    TeplNewlineType  newline_type,
 	    SavedCallback    saved_callback,
 	    gpointer         userdata)
 {
 	GFile *location;
-	GtefBuffer *buffer;
-	GtefFile *file;
-	GtefFileSaver *saver;
+	TeplBuffer *buffer;
+	TeplFile *file;
+	TeplFileSaver *saver;
 	SaverTestData *data;
 
 	location = g_file_new_for_commandline_arg (filename_or_uri);
 
-	buffer = gtef_buffer_new ();
+	buffer = tepl_buffer_new ();
 	gtk_text_buffer_set_text (GTK_TEXT_BUFFER (buffer), buffer_contents, -1);
 
-	file = gtef_file_new ();
-	saver = gtef_file_saver_new_with_target (buffer, file, location);
+	file = tepl_file_new ();
+	saver = tepl_file_saver_new_with_target (buffer, file, location);
 
-	gtef_file_saver_set_newline_type (saver, newline_type);
-	gtef_file_saver_set_encoding (saver, NULL);
+	tepl_file_saver_set_newline_type (saver, newline_type);
+	tepl_file_saver_set_encoding (saver, NULL);
 
 	data = g_slice_new (SaverTestData);
 	data->saver = saver;
@@ -206,41 +206,41 @@ test_saver (const gchar     *filename_or_uri,
 
 typedef struct
 {
-	GtefNewlineType type;
+	TeplNewlineType type;
 	const gchar *text;
 	const gchar *result;
 } NewLineTestData;
 
 static NewLineTestData newline_test_data[] = {
-	{GTEF_NEWLINE_TYPE_LF, "\nhello\nworld", "\nhello\nworld\n"},
-	{GTEF_NEWLINE_TYPE_LF, "\nhello\nworld\n", "\nhello\nworld\n\n"},
-	{GTEF_NEWLINE_TYPE_LF, "\nhello\nworld\n\n", "\nhello\nworld\n\n\n"},
-	{GTEF_NEWLINE_TYPE_LF, "\r\nhello\r\nworld", "\nhello\nworld\n"},
-	{GTEF_NEWLINE_TYPE_LF, "\r\nhello\r\nworld\r\n", "\nhello\nworld\n\n"},
-	{GTEF_NEWLINE_TYPE_LF, "\rhello\rworld", "\nhello\nworld\n"},
-	{GTEF_NEWLINE_TYPE_LF, "\rhello\rworld\r", "\nhello\nworld\n\n"},
-	{GTEF_NEWLINE_TYPE_LF, "\nhello\r\nworld", "\nhello\nworld\n"},
-	{GTEF_NEWLINE_TYPE_LF, "\nhello\r\nworld\r", "\nhello\nworld\n\n"},
+	{TEPL_NEWLINE_TYPE_LF, "\nhello\nworld", "\nhello\nworld\n"},
+	{TEPL_NEWLINE_TYPE_LF, "\nhello\nworld\n", "\nhello\nworld\n\n"},
+	{TEPL_NEWLINE_TYPE_LF, "\nhello\nworld\n\n", "\nhello\nworld\n\n\n"},
+	{TEPL_NEWLINE_TYPE_LF, "\r\nhello\r\nworld", "\nhello\nworld\n"},
+	{TEPL_NEWLINE_TYPE_LF, "\r\nhello\r\nworld\r\n", "\nhello\nworld\n\n"},
+	{TEPL_NEWLINE_TYPE_LF, "\rhello\rworld", "\nhello\nworld\n"},
+	{TEPL_NEWLINE_TYPE_LF, "\rhello\rworld\r", "\nhello\nworld\n\n"},
+	{TEPL_NEWLINE_TYPE_LF, "\nhello\r\nworld", "\nhello\nworld\n"},
+	{TEPL_NEWLINE_TYPE_LF, "\nhello\r\nworld\r", "\nhello\nworld\n\n"},
 
-	{GTEF_NEWLINE_TYPE_CR_LF, "\nhello\nworld", "\r\nhello\r\nworld\r\n"},
-	{GTEF_NEWLINE_TYPE_CR_LF, "\nhello\nworld\n", "\r\nhello\r\nworld\r\n\r\n"},
-	{GTEF_NEWLINE_TYPE_CR_LF, "\nhello\nworld\n\n", "\r\nhello\r\nworld\r\n\r\n\r\n"},
-	{GTEF_NEWLINE_TYPE_CR_LF, "\r\nhello\r\nworld", "\r\nhello\r\nworld\r\n"},
-	{GTEF_NEWLINE_TYPE_CR_LF, "\r\nhello\r\nworld\r\n", "\r\nhello\r\nworld\r\n\r\n"},
-	{GTEF_NEWLINE_TYPE_CR_LF, "\rhello\rworld", "\r\nhello\r\nworld\r\n"},
-	{GTEF_NEWLINE_TYPE_CR_LF, "\rhello\rworld\r", "\r\nhello\r\nworld\r\n\r\n"},
-	{GTEF_NEWLINE_TYPE_CR_LF, "\nhello\r\nworld", "\r\nhello\r\nworld\r\n"},
-	{GTEF_NEWLINE_TYPE_CR_LF, "\nhello\r\nworld\r", "\r\nhello\r\nworld\r\n\r\n"},
+	{TEPL_NEWLINE_TYPE_CR_LF, "\nhello\nworld", "\r\nhello\r\nworld\r\n"},
+	{TEPL_NEWLINE_TYPE_CR_LF, "\nhello\nworld\n", "\r\nhello\r\nworld\r\n\r\n"},
+	{TEPL_NEWLINE_TYPE_CR_LF, "\nhello\nworld\n\n", "\r\nhello\r\nworld\r\n\r\n\r\n"},
+	{TEPL_NEWLINE_TYPE_CR_LF, "\r\nhello\r\nworld", "\r\nhello\r\nworld\r\n"},
+	{TEPL_NEWLINE_TYPE_CR_LF, "\r\nhello\r\nworld\r\n", "\r\nhello\r\nworld\r\n\r\n"},
+	{TEPL_NEWLINE_TYPE_CR_LF, "\rhello\rworld", "\r\nhello\r\nworld\r\n"},
+	{TEPL_NEWLINE_TYPE_CR_LF, "\rhello\rworld\r", "\r\nhello\r\nworld\r\n\r\n"},
+	{TEPL_NEWLINE_TYPE_CR_LF, "\nhello\r\nworld", "\r\nhello\r\nworld\r\n"},
+	{TEPL_NEWLINE_TYPE_CR_LF, "\nhello\r\nworld\r", "\r\nhello\r\nworld\r\n\r\n"},
 
-	{GTEF_NEWLINE_TYPE_CR, "\nhello\nworld", "\rhello\rworld\r"},
-	{GTEF_NEWLINE_TYPE_CR, "\nhello\nworld\n", "\rhello\rworld\r\r"},
-	{GTEF_NEWLINE_TYPE_CR, "\nhello\nworld\n\n", "\rhello\rworld\r\r\r"},
-	{GTEF_NEWLINE_TYPE_CR, "\r\nhello\r\nworld", "\rhello\rworld\r"},
-	{GTEF_NEWLINE_TYPE_CR, "\r\nhello\r\nworld\r\n", "\rhello\rworld\r\r"},
-	{GTEF_NEWLINE_TYPE_CR, "\rhello\rworld", "\rhello\rworld\r"},
-	{GTEF_NEWLINE_TYPE_CR, "\rhello\rworld\r", "\rhello\rworld\r\r"},
-	{GTEF_NEWLINE_TYPE_CR, "\nhello\r\nworld", "\rhello\rworld\r"},
-	{GTEF_NEWLINE_TYPE_CR, "\nhello\r\nworld\r", "\rhello\rworld\r\r"}
+	{TEPL_NEWLINE_TYPE_CR, "\nhello\nworld", "\rhello\rworld\r"},
+	{TEPL_NEWLINE_TYPE_CR, "\nhello\nworld\n", "\rhello\rworld\r\r"},
+	{TEPL_NEWLINE_TYPE_CR, "\nhello\nworld\n\n", "\rhello\rworld\r\r\r"},
+	{TEPL_NEWLINE_TYPE_CR, "\r\nhello\r\nworld", "\rhello\rworld\r"},
+	{TEPL_NEWLINE_TYPE_CR, "\r\nhello\r\nworld\r\n", "\rhello\rworld\r\r"},
+	{TEPL_NEWLINE_TYPE_CR, "\rhello\rworld", "\rhello\rworld\r"},
+	{TEPL_NEWLINE_TYPE_CR, "\rhello\rworld\r", "\rhello\rworld\r\r"},
+	{TEPL_NEWLINE_TYPE_CR, "\nhello\r\nworld", "\rhello\rworld\r"},
+	{TEPL_NEWLINE_TYPE_CR, "\nhello\r\nworld\r", "\rhello\rworld\r\r"}
 };
 
 static void
@@ -285,21 +285,21 @@ test_local (void)
 	test_saver (default_local_uri,
 	            "hello world",
 		    "hello world\n",
-	            GTEF_NEWLINE_TYPE_LF,
+	            TEPL_NEWLINE_TYPE_LF,
 		    NULL,
 		    NULL);
 
 	test_saver (default_local_uri,
 	            "hello world\r\n",
 		    "hello world\n\n",
-	            GTEF_NEWLINE_TYPE_LF,
+	            TEPL_NEWLINE_TYPE_LF,
 		    NULL,
 		    NULL);
 
 	test_saver (default_local_uri,
 	            "hello world\n",
 		    "hello world\n\n",
-	            GTEF_NEWLINE_TYPE_LF,
+	            TEPL_NEWLINE_TYPE_LF,
 		    NULL,
 		    NULL);
 	g_free (default_local_uri);
@@ -317,21 +317,21 @@ test_remote (void)
 	test_saver (DEFAULT_REMOTE_URI,
 	            "hello world",
 		    "hello world\n",
-	            GTEF_NEWLINE_TYPE_LF,
+	            TEPL_NEWLINE_TYPE_LF,
 		    NULL,
 		    NULL);
 
 	test_saver (DEFAULT_REMOTE_URI,
 	            "hello world\r\n",
 		    "hello world\n\n",
-	            GTEF_NEWLINE_TYPE_LF,
+	            TEPL_NEWLINE_TYPE_LF,
 		    NULL,
 		    NULL);
 
 	test_saver (DEFAULT_REMOTE_URI,
 	            "hello world\n",
 		    "hello world\n\n",
-	            GTEF_NEWLINE_TYPE_LF,
+	            TEPL_NEWLINE_TYPE_LF,
 		    NULL,
 		    NULL);
 }
@@ -409,7 +409,7 @@ test_permissions (const gchar *uri,
 	test_saver (uri,
 	            DEFAULT_CONTENT,
 		    DEFAULT_CONTENT_RESULT,
-	            GTEF_NEWLINE_TYPE_LF,
+	            TEPL_NEWLINE_TYPE_LF,
 		    check_permissions_saved,
 		    GINT_TO_POINTER ((gint)permissions));
 
@@ -445,7 +445,7 @@ test_local_unowned_directory (void)
 	test_saver (unowned_local_uri,
 	            DEFAULT_CONTENT,
 		    DEFAULT_CONTENT_RESULT,
-	            GTEF_NEWLINE_TYPE_LF,
+	            TEPL_NEWLINE_TYPE_LF,
 		    NULL,
 		    NULL);
 	g_free (unowned_local_uri);
@@ -462,7 +462,7 @@ test_remote_unowned_directory (void)
 	test_saver (unowned_remote_uri,
 	            DEFAULT_CONTENT,
 		    DEFAULT_CONTENT_RESULT,
-	            GTEF_NEWLINE_TYPE_LF,
+	            TEPL_NEWLINE_TYPE_LF,
 		    NULL,
 		    NULL);
 	g_free (unowned_remote_uri);
@@ -510,7 +510,7 @@ test_unowned_group (const gchar *uri)
 	test_saver (uri,
 	            DEFAULT_CONTENT,
 		    DEFAULT_CONTENT_RESULT,
-	            GTEF_NEWLINE_TYPE_LF,
+	            TEPL_NEWLINE_TYPE_LF,
 		    test_unowned_group_permissions,
 		    NULL);
 }

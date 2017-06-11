@@ -1,15 +1,15 @@
-SUBDIRS = po gtef tests testsuite docs
+SUBDIRS = po tepl tests testsuite docs
 
 @CODE_COVERAGE_RULES@
 
 AM_DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-introspection --enable-vala
 
-pkgconfig_DATA = gtef-$(GTEF_API_VERSION).pc
+pkgconfig_DATA = tepl-$(TEPL_API_VERSION).pc
 DISTCLEANFILES = $(pkgconfig_DATA)
 
 EXTRA_DIST =		\
-	gtef.doap	\
-	gtef.pc.in	\
+	tepl.doap	\
+	tepl.pc.in	\
 	HACKING
 
 MAINTAINERCLEANFILES = \

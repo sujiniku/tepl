@@ -1,5 +1,5 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * From gedit-view.c:
  * Copyright 1998, 1999 - Alex Roberts, Evan Lawrence
@@ -8,12 +8,12 @@
  *
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -22,68 +22,68 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gtef-view.h"
-#include "gtef-buffer.h"
+#include "tepl-view.h"
+#include "tepl-buffer.h"
 
 /**
  * SECTION:view
- * @Short_description: Widget that displays a GtefBuffer
- * @Title: GtefView
+ * @Short_description: Widget that displays a TeplBuffer
+ * @Title: TeplView
  *
- * #GtefView is a subclass of #GtkSourceView, to add more features useful for a
+ * #TeplView is a subclass of #GtkSourceView, to add more features useful for a
  * text editor.
  */
 
 #define SCROLL_MARGIN 0.02
 
-G_DEFINE_TYPE (GtefView, gtef_view, GTK_SOURCE_TYPE_VIEW)
+G_DEFINE_TYPE (TeplView, tepl_view, GTK_SOURCE_TYPE_VIEW)
 
 static GtkTextBuffer *
-gtef_view_create_buffer (GtkTextView *view)
+tepl_view_create_buffer (GtkTextView *view)
 {
-	return GTK_TEXT_BUFFER (gtef_buffer_new ());
+	return GTK_TEXT_BUFFER (tepl_buffer_new ());
 }
 
 static void
-gtef_view_class_init (GtefViewClass *klass)
+tepl_view_class_init (TeplViewClass *klass)
 {
 	GtkTextViewClass *text_view_class = GTK_TEXT_VIEW_CLASS (klass);
 
-	text_view_class->create_buffer = gtef_view_create_buffer;
+	text_view_class->create_buffer = tepl_view_create_buffer;
 }
 
 static void
-gtef_view_init (GtefView *view)
+tepl_view_init (TeplView *view)
 {
 }
 
 /**
- * gtef_view_new:
+ * tepl_view_new:
  *
- * Returns: a new #GtefView.
+ * Returns: a new #TeplView.
  * Since: 1.0
  */
 GtkWidget *
-gtef_view_new (void)
+tepl_view_new (void)
 {
-	return g_object_new (GTEF_TYPE_VIEW, NULL);
+	return g_object_new (TEPL_TYPE_VIEW, NULL);
 }
 
 /**
- * gtef_view_cut_clipboard:
- * @view: a #GtefView.
+ * tepl_view_cut_clipboard:
+ * @view: a #TeplView.
  *
  * Cuts the clipboard and then scrolls to the cursor position.
  *
  * Since: 1.0
  */
 void
-gtef_view_cut_clipboard (GtefView *view)
+tepl_view_cut_clipboard (TeplView *view)
 {
 	GtkTextBuffer *buffer;
 	GtkClipboard *clipboard;
 
-	g_return_if_fail (GTEF_IS_VIEW (view));
+	g_return_if_fail (TEPL_IS_VIEW (view));
 
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
 
@@ -103,20 +103,20 @@ gtef_view_cut_clipboard (GtefView *view)
 }
 
 /**
- * gtef_view_copy_clipboard:
- * @view: a #GtefView.
+ * tepl_view_copy_clipboard:
+ * @view: a #TeplView.
  *
  * Copies the clipboard.
  *
  * Since: 1.0
  */
 void
-gtef_view_copy_clipboard (GtefView *view)
+tepl_view_copy_clipboard (TeplView *view)
 {
 	GtkTextBuffer *buffer;
 	GtkClipboard *clipboard;
 
-	g_return_if_fail (GTEF_IS_VIEW (view));
+	g_return_if_fail (TEPL_IS_VIEW (view));
 
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
 
@@ -129,20 +129,20 @@ gtef_view_copy_clipboard (GtefView *view)
 }
 
 /**
- * gtef_view_paste_clipboard:
- * @view: a #GtefView.
+ * tepl_view_paste_clipboard:
+ * @view: a #TeplView.
  *
  * Pastes the clipboard and then scrolls to the cursor position.
  *
  * Since: 1.0
  */
 void
-gtef_view_paste_clipboard (GtefView *view)
+tepl_view_paste_clipboard (TeplView *view)
 {
 	GtkTextBuffer *buffer;
 	GtkClipboard *clipboard;
 
-	g_return_if_fail (GTEF_IS_VIEW (view));
+	g_return_if_fail (TEPL_IS_VIEW (view));
 
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
 
@@ -163,8 +163,8 @@ gtef_view_paste_clipboard (GtefView *view)
 }
 
 /**
- * gtef_view_delete_selection:
- * @view: a #GtefView.
+ * tepl_view_delete_selection:
+ * @view: a #TeplView.
  *
  * Deletes the text currently selected in the #GtkTextBuffer associated
  * to the view and then scrolls to the cursor position.
@@ -172,11 +172,11 @@ gtef_view_paste_clipboard (GtefView *view)
  * Since: 1.0
  */
 void
-gtef_view_delete_selection (GtefView *view)
+tepl_view_delete_selection (TeplView *view)
 {
 	GtkTextBuffer *buffer;
 
-	g_return_if_fail (GTEF_IS_VIEW (view));
+	g_return_if_fail (TEPL_IS_VIEW (view));
 
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
 
@@ -193,21 +193,21 @@ gtef_view_delete_selection (GtefView *view)
 }
 
 /**
- * gtef_view_select_all:
- * @view: a #GtefView.
+ * tepl_view_select_all:
+ * @view: a #TeplView.
  *
  * Selects all the text.
  *
  * Since: 1.0
  */
 void
-gtef_view_select_all (GtefView *view)
+tepl_view_select_all (TeplView *view)
 {
 	GtkTextBuffer *buffer;
 	GtkTextIter start;
 	GtkTextIter end;
 
-	g_return_if_fail (GTEF_IS_VIEW (view));
+	g_return_if_fail (TEPL_IS_VIEW (view));
 
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
 
@@ -216,19 +216,19 @@ gtef_view_select_all (GtefView *view)
 }
 
 /**
- * gtef_view_scroll_to_cursor:
- * @view: a #GtefView.
+ * tepl_view_scroll_to_cursor:
+ * @view: a #TeplView.
  *
  * Scrolls the @view to the cursor position.
  *
  * Since: 1.0
  */
 void
-gtef_view_scroll_to_cursor (GtefView *view)
+tepl_view_scroll_to_cursor (TeplView *view)
 {
 	GtkTextBuffer *buffer;
 
-	g_return_if_fail (GTEF_IS_VIEW (view));
+	g_return_if_fail (TEPL_IS_VIEW (view));
 
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
 
@@ -241,8 +241,8 @@ gtef_view_scroll_to_cursor (GtefView *view)
 }
 
 /**
- * gtef_view_goto_line:
- * @view: a #GtefView.
+ * tepl_view_goto_line:
+ * @view: a #TeplView.
  * @line: a line number, counting from 0.
  *
  * Places the cursor at the position returned by
@@ -253,14 +253,14 @@ gtef_view_scroll_to_cursor (GtefView *view)
  * Since: 2.0
  */
 gboolean
-gtef_view_goto_line (GtefView *view,
+tepl_view_goto_line (TeplView *view,
 		     gint      line)
 {
 	GtkTextBuffer *buffer;
 	GtkTextIter iter;
 	gboolean line_exists;
 
-	g_return_val_if_fail (GTEF_IS_VIEW (view), FALSE);
+	g_return_val_if_fail (TEPL_IS_VIEW (view), FALSE);
 
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
 
@@ -268,14 +268,14 @@ gtef_view_goto_line (GtefView *view,
 	line_exists = gtk_text_iter_get_line (&iter) == line;
 
 	gtk_text_buffer_place_cursor (buffer, &iter);
-	gtef_view_scroll_to_cursor (view);
+	tepl_view_scroll_to_cursor (view);
 
 	return line_exists;
 }
 
 /**
- * gtef_view_goto_line_offset:
- * @view: a #GtefView.
+ * tepl_view_goto_line_offset:
+ * @view: a #TeplView.
  * @line: a line number, counting from 0.
  * @line_offset: the line offset, in characters (not bytes).
  *
@@ -287,7 +287,7 @@ gtef_view_goto_line (GtefView *view,
  * Since: 2.0
  */
 gboolean
-gtef_view_goto_line_offset (GtefView *view,
+tepl_view_goto_line_offset (TeplView *view,
 			    gint      line,
 			    gint      line_offset)
 {
@@ -295,7 +295,7 @@ gtef_view_goto_line_offset (GtefView *view,
 	GtkTextIter iter;
 	gboolean pos_exists;
 
-	g_return_val_if_fail (GTEF_IS_VIEW (view), FALSE);
+	g_return_val_if_fail (TEPL_IS_VIEW (view), FALSE);
 
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
 
@@ -308,14 +308,14 @@ gtef_view_goto_line_offset (GtefView *view,
 		      gtk_text_iter_get_line_offset (&iter) == line_offset);
 
 	gtk_text_buffer_place_cursor (buffer, &iter);
-	gtef_view_scroll_to_cursor (view);
+	tepl_view_scroll_to_cursor (view);
 
 	return pos_exists;
 }
 
 /**
- * gtef_view_select_lines:
- * @view: a #GtefView.
+ * tepl_view_select_lines:
+ * @view: a #TeplView.
  * @start_line: start of the region to select.
  * @end_line: end of the region to select.
  *
@@ -328,7 +328,7 @@ gtef_view_goto_line_offset (GtefView *view,
  * Since: 2.0
  */
 void
-gtef_view_select_lines (GtefView *view,
+tepl_view_select_lines (TeplView *view,
 			gint      start_line,
 			gint      end_line)
 {
@@ -336,7 +336,7 @@ gtef_view_select_lines (GtefView *view,
 	GtkTextIter start_iter;
 	GtkTextIter end_iter;
 
-	g_return_if_fail (GTEF_IS_VIEW (view));
+	g_return_if_fail (TEPL_IS_VIEW (view));
 
 	if (end_line < start_line)
 	{
@@ -360,5 +360,5 @@ gtef_view_select_lines (GtefView *view,
 
 	gtk_text_buffer_select_range (buffer, &start_iter, &end_iter);
 
-	gtef_view_scroll_to_cursor (view);
+	tepl_view_scroll_to_cursor (view);
 }

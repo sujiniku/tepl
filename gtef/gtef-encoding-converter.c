@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -18,7 +18,7 @@
  */
 
 #include "config.h"
-#include "gtef-encoding-converter.h"
+#include "tepl-encoding-converter.h"
 #include <errno.h>
 #include <string.h>
 #include <gio/gio.h>
@@ -27,7 +27,7 @@
 /* A higher-level, more convenient API for character encoding streaming
  * conversion based on iconv.
  *
- * A #GtefEncodingConverter object can be opened/closed several times, for
+ * A #TeplEncodingConverter object can be opened/closed several times, for
  * different conversions.
  *
  * Even if from_codeset and to_codeset are the same, this class can be useful
@@ -39,7 +39,7 @@
  *   callback is called.
  */
 
-struct _GtefEncodingConverterPrivate
+struct _TeplEncodingConverterPrivate
 {
 	GIConv conv;
 
@@ -54,7 +54,7 @@ struct _GtefEncodingConverterPrivate
 	gint64 outbuf_size;
 	gsize outbytes_left;
 
-	GtefEncodingConversionCallback callback;
+	TeplEncodingConversionCallback callback;
 	gpointer callback_user_data;
 
 	/* On incomplete input, store the remaining inbuf so that it can be used
@@ -85,23 +85,23 @@ typedef enum _Result
 
 static GParamSpec *properties[N_PROPERTIES];
 
-G_DEFINE_TYPE_WITH_PRIVATE (GtefEncodingConverter, _gtef_encoding_converter, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (TeplEncodingConverter, _tepl_encoding_converter, G_TYPE_OBJECT)
 
 static void
-check_invariants (GtefEncodingConverter *converter)
+check_invariants (TeplEncodingConverter *converter)
 {
 	g_assert_cmpint (converter->priv->outbuf_size, >=, MIN_OUTBUF_SIZE);
 	g_assert_cmpint (converter->priv->outbytes_left, <, converter->priv->outbuf_size);
 }
 
 static gboolean
-is_opened (GtefEncodingConverter *converter)
+is_opened (TeplEncodingConverter *converter)
 {
 	return converter->priv->conv != (GIConv)-1;
 }
 
 static gboolean
-outbuf_is_empty (GtefEncodingConverter *converter)
+outbuf_is_empty (TeplEncodingConverter *converter)
 {
 	check_invariants (converter);
 
@@ -110,7 +110,7 @@ outbuf_is_empty (GtefEncodingConverter *converter)
 }
 
 static gsize
-get_outbuf_used_length (GtefEncodingConverter *converter)
+get_outbuf_used_length (TeplEncodingConverter *converter)
 {
 	check_invariants (converter);
 
@@ -118,7 +118,7 @@ get_outbuf_used_length (GtefEncodingConverter *converter)
 }
 
 static void
-flush_outbuf (GtefEncodingConverter *converter)
+flush_outbuf (TeplEncodingConverter *converter)
 {
 	if (outbuf_is_empty (converter))
 	{
@@ -141,7 +141,7 @@ flush_outbuf (GtefEncodingConverter *converter)
 }
 
 static void
-close_conv (GtefEncodingConverter *converter)
+close_conv (TeplEncodingConverter *converter)
 {
 	if (converter->priv->conv != (GIConv)-1)
 	{
@@ -157,17 +157,17 @@ close_conv (GtefEncodingConverter *converter)
 }
 
 static void
-_gtef_encoding_converter_get_property (GObject    *object,
+_tepl_encoding_converter_get_property (GObject    *object,
 				       guint       prop_id,
 				       GValue     *value,
 				       GParamSpec *pspec)
 {
-	GtefEncodingConverter *converter = GTEF_ENCODING_CONVERTER (object);
+	TeplEncodingConverter *converter = TEPL_ENCODING_CONVERTER (object);
 
 	switch (prop_id)
 	{
 		case PROP_BUFFER_SIZE:
-			g_value_set_int64 (value, _gtef_encoding_converter_get_buffer_size (converter));
+			g_value_set_int64 (value, _tepl_encoding_converter_get_buffer_size (converter));
 			break;
 
 		default:
@@ -177,12 +177,12 @@ _gtef_encoding_converter_get_property (GObject    *object,
 }
 
 static void
-_gtef_encoding_converter_set_property (GObject      *object,
+_tepl_encoding_converter_set_property (GObject      *object,
 				       guint         prop_id,
 				       const GValue *value,
 				       GParamSpec   *pspec)
 {
-	GtefEncodingConverter *converter = GTEF_ENCODING_CONVERTER (object);
+	TeplEncodingConverter *converter = TEPL_ENCODING_CONVERTER (object);
 
 	switch (prop_id)
 	{
@@ -197,27 +197,27 @@ _gtef_encoding_converter_set_property (GObject      *object,
 }
 
 static void
-_gtef_encoding_converter_finalize (GObject *object)
+_tepl_encoding_converter_finalize (GObject *object)
 {
-	GtefEncodingConverter *converter = GTEF_ENCODING_CONVERTER (object);
+	TeplEncodingConverter *converter = TEPL_ENCODING_CONVERTER (object);
 
 	close_conv (converter);
 	g_free (converter->priv->outbuf);
 
-	G_OBJECT_CLASS (_gtef_encoding_converter_parent_class)->finalize (object);
+	G_OBJECT_CLASS (_tepl_encoding_converter_parent_class)->finalize (object);
 }
 
 static void
-_gtef_encoding_converter_class_init (GtefEncodingConverterClass *klass)
+_tepl_encoding_converter_class_init (TeplEncodingConverterClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->get_property = _gtef_encoding_converter_get_property;
-	object_class->set_property = _gtef_encoding_converter_set_property;
-	object_class->finalize = _gtef_encoding_converter_finalize;
+	object_class->get_property = _tepl_encoding_converter_get_property;
+	object_class->set_property = _tepl_encoding_converter_set_property;
+	object_class->finalize = _tepl_encoding_converter_finalize;
 
 	/**
-	 * GtefEncodingConverter:buffer-size:
+	 * TeplEncodingConverter:buffer-size:
 	 *
 	 * The buffer size, in bytes. When the buffer is full, the callback is
 	 * called to empty the buffer.
@@ -237,15 +237,15 @@ _gtef_encoding_converter_class_init (GtefEncodingConverterClass *klass)
 }
 
 static void
-_gtef_encoding_converter_init (GtefEncodingConverter *converter)
+_tepl_encoding_converter_init (TeplEncodingConverter *converter)
 {
-	converter->priv = _gtef_encoding_converter_get_instance_private (converter);
+	converter->priv = _tepl_encoding_converter_get_instance_private (converter);
 
 	converter->priv->conv = (GIConv)-1;
 }
 
-GtefEncodingConverter *
-_gtef_encoding_converter_new (gint64 buffer_size)
+TeplEncodingConverter *
+_tepl_encoding_converter_new (gint64 buffer_size)
 {
 	g_return_val_if_fail (buffer_size == -1 || buffer_size >= MIN_OUTBUF_SIZE, NULL);
 
@@ -254,37 +254,37 @@ _gtef_encoding_converter_new (gint64 buffer_size)
 		buffer_size = DEFAULT_OUTBUF_SIZE;
 	}
 
-	return g_object_new (GTEF_TYPE_ENCODING_CONVERTER,
+	return g_object_new (TEPL_TYPE_ENCODING_CONVERTER,
 			     "buffer-size", buffer_size,
 			     NULL);
 }
 
 gint64
-_gtef_encoding_converter_get_buffer_size (GtefEncodingConverter *converter)
+_tepl_encoding_converter_get_buffer_size (TeplEncodingConverter *converter)
 {
-	g_return_val_if_fail (GTEF_IS_ENCODING_CONVERTER (converter), 0);
+	g_return_val_if_fail (TEPL_IS_ENCODING_CONVERTER (converter), 0);
 
 	return converter->priv->outbuf_size;
 }
 
 void
-_gtef_encoding_converter_set_callback (GtefEncodingConverter          *converter,
-				       GtefEncodingConversionCallback  callback,
+_tepl_encoding_converter_set_callback (TeplEncodingConverter          *converter,
+				       TeplEncodingConversionCallback  callback,
 				       gpointer                        user_data)
 {
-	g_return_if_fail (GTEF_IS_ENCODING_CONVERTER (converter));
+	g_return_if_fail (TEPL_IS_ENCODING_CONVERTER (converter));
 
 	converter->priv->callback = callback;
 	converter->priv->callback_user_data = user_data;
 }
 
 gboolean
-_gtef_encoding_converter_open (GtefEncodingConverter  *converter,
+_tepl_encoding_converter_open (TeplEncodingConverter  *converter,
 			       const gchar            *to_codeset,
 			       const gchar            *from_codeset,
 			       GError                **error)
 {
-	g_return_val_if_fail (GTEF_IS_ENCODING_CONVERTER (converter), FALSE);
+	g_return_val_if_fail (TEPL_IS_ENCODING_CONVERTER (converter), FALSE);
 	g_return_val_if_fail (to_codeset != NULL, FALSE);
 	g_return_val_if_fail (from_codeset != NULL, FALSE);
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
@@ -328,7 +328,7 @@ _gtef_encoding_converter_open (GtefEncodingConverter  *converter,
 }
 
 static Result
-read_inbuf (GtefEncodingConverter  *converter,
+read_inbuf (TeplEncodingConverter  *converter,
 	    gchar                 **inbuf,
 	    gsize                  *inbytes_left,
 	    GError                **error)
@@ -395,7 +395,7 @@ read_inbuf (GtefEncodingConverter  *converter,
  * until it succeeds. That way, it's just tiny allocations.
  */
 static Result
-handle_remaining_inbuf (GtefEncodingConverter  *converter,
+handle_remaining_inbuf (TeplEncodingConverter  *converter,
 			gchar                 **inbuf,
 			gsize                  *inbytes_left,
 			GError                **error)
@@ -460,13 +460,13 @@ handle_remaining_inbuf (GtefEncodingConverter  *converter,
 
 /*
  * The callback is called when the internal buffer is filled, it doesn't
- * necessarily happen each time _gtef_encoding_converter_feed() is called, and
+ * necessarily happen each time _tepl_encoding_converter_feed() is called, and
  * the callback can be called several times during a single feed.
  *
  * Returns: %TRUE on success, %FALSE on error.
  */
 gboolean
-_gtef_encoding_converter_feed (GtefEncodingConverter  *converter,
+_tepl_encoding_converter_feed (TeplEncodingConverter  *converter,
 			       const gchar            *chunk,
 			       gssize                  size,
 			       GError                **error)
@@ -475,7 +475,7 @@ _gtef_encoding_converter_feed (GtefEncodingConverter  *converter,
 	gsize inbytes_left;
 	Result result;
 
-	g_return_val_if_fail (GTEF_IS_ENCODING_CONVERTER (converter), FALSE);
+	g_return_val_if_fail (TEPL_IS_ENCODING_CONVERTER (converter), FALSE);
 	g_return_val_if_fail (size >= -1, FALSE);
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 	g_return_val_if_fail (is_opened (converter), FALSE);
@@ -538,12 +538,12 @@ _gtef_encoding_converter_feed (GtefEncodingConverter  *converter,
  * the last chunk ended with an incomplete multi-byte char.
  */
 gboolean
-_gtef_encoding_converter_close (GtefEncodingConverter  *converter,
+_tepl_encoding_converter_close (TeplEncodingConverter  *converter,
 				GError                **error)
 {
 	gboolean ok = TRUE;
 
-	g_return_val_if_fail (GTEF_IS_ENCODING_CONVERTER (converter), FALSE);
+	g_return_val_if_fail (TEPL_IS_ENCODING_CONVERTER (converter), FALSE);
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 	g_return_val_if_fail (is_opened (converter), FALSE);
 

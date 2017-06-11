@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - David Rabel <david.rabel@noresoft.com>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,7 +17,7 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtef/gtef.h>
+#include <tepl/tepl.h>
 
 static GtkTextBuffer *
 test_create_and_fill_buffer (guint lines)
@@ -34,7 +34,7 @@ test_create_and_fill_buffer (guint lines)
 	return buffer;
 }
 
-static GtefFoldRegion *
+static TeplFoldRegion *
 test_create_fold_region (GtkTextBuffer *buffer,
 			 guint 		start_line,
 			 guint 		end_line)
@@ -45,7 +45,7 @@ test_create_fold_region (GtkTextBuffer *buffer,
 	gtk_text_buffer_get_iter_at_line (buffer, &start_iter, start_line);
 	gtk_text_buffer_get_iter_at_line (buffer, &end_iter, end_line);
 
-	return gtef_fold_region_new (buffer, &start_iter, &end_iter);
+	return tepl_fold_region_new (buffer, &start_iter, &end_iter);
 }
 
 static guint
@@ -61,7 +61,7 @@ test_next_visible_line (GtkTextBuffer *buffer,
 }
 
 static void
-test_set_bounds_with_line_number (GtefFoldRegion *fold_region,
+test_set_bounds_with_line_number (TeplFoldRegion *fold_region,
 				  guint           start_line,
 				  guint		  end_line)
 {
@@ -69,24 +69,24 @@ test_set_bounds_with_line_number (GtefFoldRegion *fold_region,
 	GtkTextIter end_iter;
 	GtkTextBuffer *buffer;
 
-	buffer = gtef_fold_region_get_buffer (fold_region);
+	buffer = tepl_fold_region_get_buffer (fold_region);
 
 	gtk_text_buffer_get_iter_at_line (buffer, &start_iter, start_line);
 	gtk_text_buffer_get_iter_at_line (buffer, &end_iter, end_line);
 
-	gtef_fold_region_set_bounds (fold_region, &start_iter, &end_iter);
+	tepl_fold_region_set_bounds (fold_region, &start_iter, &end_iter);
 }
 
 static void
 test_fold (void)
 {
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 
 	buffer = test_create_and_fill_buffer (6);
 
 	fold_region = test_create_fold_region (buffer, 1, 3);
-	gtef_fold_region_set_folded (fold_region, TRUE);
+	tepl_fold_region_set_folded (fold_region, TRUE);
 
 	g_assert (test_next_visible_line (buffer, 1) == 4);
 
@@ -98,13 +98,13 @@ static void
 test_unfold (void)
 {
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 
 	buffer = test_create_and_fill_buffer (6);
 
 	fold_region = test_create_fold_region (buffer, 1, 3);
-	gtef_fold_region_set_folded (fold_region, TRUE);
-	gtef_fold_region_set_folded (fold_region, FALSE);
+	tepl_fold_region_set_folded (fold_region, TRUE);
+	tepl_fold_region_set_folded (fold_region, FALSE);
 
 	g_assert (test_next_visible_line (buffer, 1) == 2);
 
@@ -116,24 +116,24 @@ static void
 test_toggle (void)
 {
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 	gboolean folded;
 
 	buffer = test_create_and_fill_buffer (6);
 
 	fold_region = test_create_fold_region (buffer, 1, 3);
 
-	folded = gtef_fold_region_get_folded (fold_region);
+	folded = tepl_fold_region_get_folded (fold_region);
 	g_assert (folded == FALSE);
 
 	folded = !folded;
-	gtef_fold_region_set_folded (fold_region, folded);
-	folded = gtef_fold_region_get_folded (fold_region);
+	tepl_fold_region_set_folded (fold_region, folded);
+	folded = tepl_fold_region_get_folded (fold_region);
 	g_assert (folded == TRUE);
 
 	folded = !folded;
-	gtef_fold_region_set_folded (fold_region, folded);
-	folded = gtef_fold_region_get_folded (fold_region);
+	tepl_fold_region_set_folded (fold_region, folded);
+	folded = tepl_fold_region_get_folded (fold_region);
 	g_assert (folded == FALSE);
 
 	g_object_unref (fold_region);
@@ -144,13 +144,13 @@ static void
 test_set_bounds (void)
 {
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 
 	buffer = test_create_and_fill_buffer (6);
 
 	fold_region = test_create_fold_region (buffer, 1, 3);
 	test_set_bounds_with_line_number (fold_region, 2, 4);
-	gtef_fold_region_set_folded (fold_region, TRUE);
+	tepl_fold_region_set_folded (fold_region, TRUE);
 
 	g_assert (test_next_visible_line (buffer, 1) == 2);
 	g_assert (test_next_visible_line (buffer, 2) == 5);
@@ -163,12 +163,12 @@ static void
 test_set_bounds_while_folded (void)
 {
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 
 	buffer = test_create_and_fill_buffer (6);
 
 	fold_region = test_create_fold_region (buffer, 1, 3);
-	gtef_fold_region_set_folded (fold_region, TRUE);
+	tepl_fold_region_set_folded (fold_region, TRUE);
 	test_set_bounds_with_line_number (fold_region, 2, 4);
 
 	g_assert (test_next_visible_line (buffer, 1) == 2);
@@ -182,7 +182,7 @@ static void
 test_get_bounds (void)
 {
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 	GtkTextIter start_iter;
 	GtkTextIter end_iter;
 	guint start_line;
@@ -191,9 +191,9 @@ test_get_bounds (void)
 	buffer = test_create_and_fill_buffer (6);
 
 	fold_region = test_create_fold_region (buffer, 1, 3);
-	gtef_fold_region_set_folded (fold_region, TRUE);
+	tepl_fold_region_set_folded (fold_region, TRUE);
 
-	gtef_fold_region_get_bounds (fold_region, &start_iter, &end_iter);
+	tepl_fold_region_get_bounds (fold_region, &start_iter, &end_iter);
 	start_line = gtk_text_iter_get_line (&start_iter);
 	end_line = gtk_text_iter_get_line (&end_iter);
 
@@ -207,12 +207,12 @@ static void
 test_unref_while_folded (void)
 {
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 
 	buffer = test_create_and_fill_buffer (6);
 
 	fold_region = test_create_fold_region (buffer, 1, 3);
-	gtef_fold_region_set_folded (fold_region, TRUE);
+	tepl_fold_region_set_folded (fold_region, TRUE);
 	g_clear_object (&fold_region);
 
 	g_assert (test_next_visible_line (buffer, 1) == 2);
@@ -224,7 +224,7 @@ static void
 test_clear_buffer (void)
 {
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 	GtkTextIter start_iter;
 	GtkTextIter end_iter;
 
@@ -234,7 +234,7 @@ test_clear_buffer (void)
 
 	gtk_text_buffer_set_text (buffer, "", -1);
 
-	gtef_fold_region_get_bounds (fold_region, &start_iter, &end_iter);
+	tepl_fold_region_get_bounds (fold_region, &start_iter, &end_iter);
 
 	g_assert (gtk_text_iter_get_line (&start_iter) == 0);
 	g_assert (gtk_text_iter_get_line (&end_iter) == 0);
@@ -247,7 +247,7 @@ static void
 test_bounds_at_middle_of_line (void)
 {
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 	GtkTextIter start_iter;
 	GtkTextIter end_iter;
 
@@ -259,9 +259,9 @@ test_bounds_at_middle_of_line (void)
 	gtk_text_iter_forward_chars (&start_iter, 3);
 	gtk_text_iter_forward_chars (&end_iter, 3);
 
-	fold_region = gtef_fold_region_new (buffer, &start_iter, &end_iter);
+	fold_region = tepl_fold_region_new (buffer, &start_iter, &end_iter);
 
-	gtef_fold_region_set_folded (fold_region, TRUE);
+	tepl_fold_region_set_folded (fold_region, TRUE);
 	g_assert (test_next_visible_line (buffer, 1) == 4);
 
 	g_object_unref (fold_region);
@@ -272,7 +272,7 @@ static void
 test_bounds_at_end_of_line (void)
 {
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 	GtkTextIter start_iter;
 	GtkTextIter end_iter;
 
@@ -286,9 +286,9 @@ test_bounds_at_end_of_line (void)
 	gtk_text_iter_forward_line (&end_iter);
 	gtk_text_iter_backward_char (&end_iter);
 
-	fold_region = gtef_fold_region_new (buffer, &start_iter, &end_iter);
+	fold_region = tepl_fold_region_new (buffer, &start_iter, &end_iter);
 
-	gtef_fold_region_set_folded (fold_region, TRUE);
+	tepl_fold_region_set_folded (fold_region, TRUE);
 	g_assert (test_next_visible_line (buffer, 1) == 4);
 
 	g_object_unref (fold_region);
@@ -299,17 +299,17 @@ static void
 test_double_fold (void)
 {
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 
 	buffer = test_create_and_fill_buffer (6);
 
 	fold_region = test_create_fold_region (buffer, 1, 3);
-	gtef_fold_region_set_folded (fold_region, TRUE);
-	gtef_fold_region_set_folded (fold_region, TRUE);
+	tepl_fold_region_set_folded (fold_region, TRUE);
+	tepl_fold_region_set_folded (fold_region, TRUE);
 
 	g_assert (test_next_visible_line (buffer, 1) == 4);
 
-	gtef_fold_region_set_folded (fold_region, FALSE);
+	tepl_fold_region_set_folded (fold_region, FALSE);
 
 	g_assert (test_next_visible_line (buffer, 1) == 2);
 
@@ -321,18 +321,18 @@ static void
 test_double_unfold (void)
 {
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 
 	buffer = test_create_and_fill_buffer (6);
 
 	fold_region = test_create_fold_region (buffer, 1, 3);
-	gtef_fold_region_set_folded (fold_region, TRUE);
-	gtef_fold_region_set_folded (fold_region, FALSE);
-	gtef_fold_region_set_folded (fold_region, FALSE);
+	tepl_fold_region_set_folded (fold_region, TRUE);
+	tepl_fold_region_set_folded (fold_region, FALSE);
+	tepl_fold_region_set_folded (fold_region, FALSE);
 
 	g_assert (test_next_visible_line (buffer, 1) == 2);
 
-	gtef_fold_region_set_folded (fold_region, TRUE);
+	tepl_fold_region_set_folded (fold_region, TRUE);
 
 	g_assert (test_next_visible_line (buffer, 1) == 4);
 
@@ -344,38 +344,38 @@ static void
 test_overlapping_regions (void)
 {
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region1;
-	GtefFoldRegion *fold_region2;
+	TeplFoldRegion *fold_region1;
+	TeplFoldRegion *fold_region2;
 
 	buffer = test_create_and_fill_buffer (6);
 
 	fold_region1 = test_create_fold_region (buffer, 1, 3);
 	fold_region2 = test_create_fold_region (buffer, 2, 4);
 
-	gtef_fold_region_set_folded (fold_region1, TRUE);
+	tepl_fold_region_set_folded (fold_region1, TRUE);
 	g_assert (test_next_visible_line (buffer, 1) == 4);
-	gtef_fold_region_set_folded (fold_region2, TRUE);
+	tepl_fold_region_set_folded (fold_region2, TRUE);
 	g_assert (test_next_visible_line (buffer, 1) == 5);
 
-	gtef_fold_region_set_folded (fold_region1, FALSE);
-	gtef_fold_region_set_folded (fold_region2, FALSE);
+	tepl_fold_region_set_folded (fold_region1, FALSE);
+	tepl_fold_region_set_folded (fold_region2, FALSE);
 
-	gtef_fold_region_set_folded (fold_region2, TRUE);
+	tepl_fold_region_set_folded (fold_region2, TRUE);
 	g_assert (test_next_visible_line (buffer, 2) == 5);
-	gtef_fold_region_set_folded (fold_region1, TRUE);
+	tepl_fold_region_set_folded (fold_region1, TRUE);
 	g_assert (test_next_visible_line (buffer, 1) == 5);
 
-	gtef_fold_region_set_folded (fold_region1, FALSE);
+	tepl_fold_region_set_folded (fold_region1, FALSE);
 	g_assert (test_next_visible_line (buffer, 2) == 5);
-	gtef_fold_region_set_folded (fold_region2, FALSE);
+	tepl_fold_region_set_folded (fold_region2, FALSE);
 	g_assert (test_next_visible_line (buffer, 2) == 3);
 
-	gtef_fold_region_set_folded (fold_region1, TRUE);
-	gtef_fold_region_set_folded (fold_region2, TRUE);
+	tepl_fold_region_set_folded (fold_region1, TRUE);
+	tepl_fold_region_set_folded (fold_region2, TRUE);
 
-	gtef_fold_region_set_folded (fold_region2, FALSE);
+	tepl_fold_region_set_folded (fold_region2, FALSE);
 	g_assert (test_next_visible_line (buffer, 1) == 4);
-	gtef_fold_region_set_folded (fold_region1, FALSE);
+	tepl_fold_region_set_folded (fold_region1, FALSE);
 	g_assert (test_next_visible_line (buffer, 2) == 3);
 
 	g_object_unref (fold_region1);
@@ -387,21 +387,21 @@ static void
 test_call_other_methods_before_set_bounds (void)
 {
 	GtkTextBuffer *buffer;
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 	GtkTextIter start_iter;
 	GtkTextIter end_iter;
 
 	buffer = test_create_and_fill_buffer (6);
 
-	fold_region = g_object_new (GTEF_TYPE_FOLD_REGION,
+	fold_region = g_object_new (TEPL_TYPE_FOLD_REGION,
 				    "buffer", buffer,
 				    NULL);
 
-	gtef_fold_region_set_folded (fold_region, TRUE);
-	gtef_fold_region_set_folded (fold_region, FALSE);
-	gtef_fold_region_get_folded (fold_region);
-	gtef_fold_region_get_buffer (fold_region);
-	gtef_fold_region_get_bounds (fold_region, &start_iter, &end_iter);
+	tepl_fold_region_set_folded (fold_region, TRUE);
+	tepl_fold_region_set_folded (fold_region, FALSE);
+	tepl_fold_region_get_folded (fold_region);
+	tepl_fold_region_get_buffer (fold_region);
+	tepl_fold_region_get_bounds (fold_region, &start_iter, &end_iter);
 
 	g_object_unref (fold_region);
 	g_object_unref (buffer);

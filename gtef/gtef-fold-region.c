@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016 - David Rabel <david.rabel@noresoft.com>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,19 +17,19 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gtef-fold-region.h"
+#include "tepl-fold-region.h"
 
 /**
  * SECTION:fold-region
  * @Short_description: Foldable region in a #GtkTextBuffer
- * @Title: GtefFoldRegion
+ * @Title: TeplFoldRegion
  *
- * #GtefFoldRegion represents a region in a #GtkTextBuffer that can be folded.
+ * #TeplFoldRegion represents a region in a #GtkTextBuffer that can be folded.
  *
  * When a region is being folded, a #GtkTextTag with the #GtkTextTag:invisible
  * property is applied to the folded region. The actual start and end position
  * of this #GtkTextTag is respectively at the next new line after the start and
- * end position of the bounds handed over to gtef_fold_region_set_bounds().
+ * end position of the bounds handed over to tepl_fold_region_set_bounds().
  */
 
 enum
@@ -40,9 +40,9 @@ enum
 	N_PROPERTIES
 };
 
-typedef struct _GtefFoldRegionPrivate GtefFoldRegionPrivate;
+typedef struct _TeplFoldRegionPrivate TeplFoldRegionPrivate;
 
-struct _GtefFoldRegionPrivate
+struct _TeplFoldRegionPrivate
 {
 	GtkTextBuffer *buffer;
 
@@ -59,12 +59,12 @@ struct _GtefFoldRegionPrivate
 
 static GParamSpec *properties[N_PROPERTIES];
 
-G_DEFINE_TYPE_WITH_PRIVATE (GtefFoldRegion, gtef_fold_region, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (TeplFoldRegion, tepl_fold_region, G_TYPE_OBJECT)
 
 static void
-apply_tag (GtefFoldRegion *fold_region)
+apply_tag (TeplFoldRegion *fold_region)
 {
-	GtefFoldRegionPrivate *priv = gtef_fold_region_get_instance_private (fold_region);
+	TeplFoldRegionPrivate *priv = tepl_fold_region_get_instance_private (fold_region);
 	GtkTextIter start_iter;
 	GtkTextIter end_iter;
 
@@ -102,9 +102,9 @@ apply_tag (GtefFoldRegion *fold_region)
 }
 
 static void
-destroy_tag (GtefFoldRegion *fold_region)
+destroy_tag (TeplFoldRegion *fold_region)
 {
-	GtefFoldRegionPrivate *priv = gtef_fold_region_get_instance_private (fold_region);
+	TeplFoldRegionPrivate *priv = tepl_fold_region_get_instance_private (fold_region);
 
 	gtk_text_tag_table_remove (priv->tag_table, priv->tag);
 
@@ -113,21 +113,21 @@ destroy_tag (GtefFoldRegion *fold_region)
 }
 
 static void
-gtef_fold_region_get_property (GObject    *object,
+tepl_fold_region_get_property (GObject    *object,
                                guint       prop_id,
                                GValue     *value,
                                GParamSpec *pspec)
 {
-	GtefFoldRegion *fold_region = GTEF_FOLD_REGION (object);
+	TeplFoldRegion *fold_region = TEPL_FOLD_REGION (object);
 
 	switch (prop_id)
 	{
 		case PROP_BUFFER:
-			g_value_set_object (value, gtef_fold_region_get_buffer (fold_region));
+			g_value_set_object (value, tepl_fold_region_get_buffer (fold_region));
 			break;
 
 		case PROP_FOLDED:
-			g_value_set_boolean (value, gtef_fold_region_get_folded (fold_region));
+			g_value_set_boolean (value, tepl_fold_region_get_folded (fold_region));
 			break;
 
 		default:
@@ -137,13 +137,13 @@ gtef_fold_region_get_property (GObject    *object,
 }
 
 static void
-gtef_fold_region_set_property (GObject       *object,
+tepl_fold_region_set_property (GObject       *object,
                                guint          prop_id,
                                const GValue  *value,
                                GParamSpec    *pspec)
 {
-	GtefFoldRegion *fold_region = GTEF_FOLD_REGION (object);
-	GtefFoldRegionPrivate *priv = gtef_fold_region_get_instance_private (fold_region);
+	TeplFoldRegion *fold_region = TEPL_FOLD_REGION (object);
+	TeplFoldRegionPrivate *priv = tepl_fold_region_get_instance_private (fold_region);
 
 	switch (prop_id)
 	{
@@ -155,7 +155,7 @@ gtef_fold_region_set_property (GObject       *object,
 			break;
 
 		case PROP_FOLDED:
-			gtef_fold_region_set_folded (fold_region, g_value_get_boolean (value));
+			tepl_fold_region_set_folded (fold_region, g_value_get_boolean (value));
 			break;
 
 		default:
@@ -165,10 +165,10 @@ gtef_fold_region_set_property (GObject       *object,
 }
 
 static void
-gtef_fold_region_dispose (GObject *object)
+tepl_fold_region_dispose (GObject *object)
 {
-	GtefFoldRegion *fold_region = GTEF_FOLD_REGION (object);
-	GtefFoldRegionPrivate *priv = gtef_fold_region_get_instance_private (fold_region);
+	TeplFoldRegion *fold_region = TEPL_FOLD_REGION (object);
+	TeplFoldRegionPrivate *priv = tepl_fold_region_get_instance_private (fold_region);
 
 	if (priv->tag != NULL &&
 	    priv->tag_table != NULL)
@@ -200,23 +200,23 @@ gtef_fold_region_dispose (GObject *object)
 	priv->start_mark = NULL;
 	priv->end_mark = NULL;
 
-	G_OBJECT_CLASS (gtef_fold_region_parent_class)->dispose (object);
+	G_OBJECT_CLASS (tepl_fold_region_parent_class)->dispose (object);
 }
 
 static void
-gtef_fold_region_class_init (GtefFoldRegionClass *klass)
+tepl_fold_region_class_init (TeplFoldRegionClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->get_property = gtef_fold_region_get_property;
-	object_class->set_property = gtef_fold_region_set_property;
-	object_class->dispose = gtef_fold_region_dispose;
+	object_class->get_property = tepl_fold_region_get_property;
+	object_class->set_property = tepl_fold_region_set_property;
+	object_class->dispose = tepl_fold_region_dispose;
 
 	/**
-	 * GtefFoldRegion:buffer:
+	 * TeplFoldRegion:buffer:
 	 *
 	 * The #GtkTextBuffer where the fold region is applied. The
-	 * #GtefFoldRegion object has a weak reference to the buffer.
+	 * #TeplFoldRegion object has a weak reference to the buffer.
 	 *
 	 * Since: 1.0
 	 */
@@ -230,9 +230,9 @@ gtef_fold_region_class_init (GtefFoldRegionClass *klass)
 				     G_PARAM_STATIC_STRINGS);
 
 	/**
-	 * GtefFoldRegion:folded:
+	 * TeplFoldRegion:folded:
 	 *
-	 * Whether the #GtefFoldRegion is folded or not.
+	 * Whether the #TeplFoldRegion is folded or not.
 	 *
 	 * Since: 1.0
 	 */
@@ -248,81 +248,81 @@ gtef_fold_region_class_init (GtefFoldRegionClass *klass)
 }
 
 static void
-gtef_fold_region_init (GtefFoldRegion *fold_region)
+tepl_fold_region_init (TeplFoldRegion *fold_region)
 {
 }
 
 /**
- * gtef_fold_region_new:
+ * tepl_fold_region_new:
  * @buffer: a #GtkTextBuffer.
  * @start: a #GtkTextIter.
  * @end: a #GtkTextIter.
  *
- * Returns: a new #GtefFoldRegion.
+ * Returns: a new #TeplFoldRegion.
  * Since: 1.0
  */
-GtefFoldRegion *
-gtef_fold_region_new (GtkTextBuffer     *buffer,
+TeplFoldRegion *
+tepl_fold_region_new (GtkTextBuffer     *buffer,
                       const GtkTextIter *start,
                       const GtkTextIter *end)
 {
-	GtefFoldRegion *fold_region;
+	TeplFoldRegion *fold_region;
 
 	g_return_val_if_fail (GTK_IS_TEXT_BUFFER (buffer), NULL);
 	g_return_val_if_fail (start != NULL, NULL);
 	g_return_val_if_fail (end != NULL, NULL);
 
-	fold_region = g_object_new (GTEF_TYPE_FOLD_REGION,
+	fold_region = g_object_new (TEPL_TYPE_FOLD_REGION,
 				    "buffer", buffer,
 				    NULL);
 
-	gtef_fold_region_set_bounds (fold_region, start, end);
+	tepl_fold_region_set_bounds (fold_region, start, end);
 
 	return fold_region;
 }
 
 /**
- * gtef_fold_region_get_buffer:
- * @fold_region: a #GtefFoldRegion.
+ * tepl_fold_region_get_buffer:
+ * @fold_region: a #TeplFoldRegion.
  *
  * Returns: (transfer none) (nullable): the #GtkTextBuffer where the fold region
  *   is applied.
  * Since: 1.0
  */
 GtkTextBuffer *
-gtef_fold_region_get_buffer (GtefFoldRegion *fold_region)
+tepl_fold_region_get_buffer (TeplFoldRegion *fold_region)
 {
-	GtefFoldRegionPrivate *priv;
+	TeplFoldRegionPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FOLD_REGION (fold_region), NULL);
+	g_return_val_if_fail (TEPL_IS_FOLD_REGION (fold_region), NULL);
 
-	priv = gtef_fold_region_get_instance_private (fold_region);
+	priv = tepl_fold_region_get_instance_private (fold_region);
 
 	return priv->buffer;
 }
 
 /**
- * gtef_fold_region_get_folded:
- * @fold_region: a #GtefFoldRegion.
+ * tepl_fold_region_get_folded:
+ * @fold_region: a #TeplFoldRegion.
  *
- * Returns: whether the #GtefFoldRegion is folded.
+ * Returns: whether the #TeplFoldRegion is folded.
  * Since: 1.0
  */
 gboolean
-gtef_fold_region_get_folded (GtefFoldRegion *fold_region)
+tepl_fold_region_get_folded (TeplFoldRegion *fold_region)
 {
-	GtefFoldRegionPrivate *priv;
+	TeplFoldRegionPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FOLD_REGION (fold_region), FALSE);
+	g_return_val_if_fail (TEPL_IS_FOLD_REGION (fold_region), FALSE);
 
-	priv = gtef_fold_region_get_instance_private (fold_region);
+	priv = tepl_fold_region_get_instance_private (fold_region);
 
 	return priv->tag != NULL;
 }
 
 /**
- * gtef_fold_region_set_folded:
- * @fold_region: a #GtefFoldRegion.
+ * tepl_fold_region_set_folded:
+ * @fold_region: a #TeplFoldRegion.
  * @folded: the new value.
  *
  * Folds or unfolds the region.
@@ -330,14 +330,14 @@ gtef_fold_region_get_folded (GtefFoldRegion *fold_region)
  * Since: 1.0
  */
 void
-gtef_fold_region_set_folded (GtefFoldRegion *fold_region,
+tepl_fold_region_set_folded (TeplFoldRegion *fold_region,
 			     gboolean        folded)
 {
-	GtefFoldRegionPrivate *priv;
+	TeplFoldRegionPrivate *priv;
 
-	g_return_if_fail (GTEF_IS_FOLD_REGION (fold_region));
+	g_return_if_fail (TEPL_IS_FOLD_REGION (fold_region));
 
-	priv = gtef_fold_region_get_instance_private (fold_region);
+	priv = tepl_fold_region_get_instance_private (fold_region);
 
 	if (priv->buffer == NULL)
 	{
@@ -351,7 +351,7 @@ gtef_fold_region_set_folded (GtefFoldRegion *fold_region,
 
 	folded = folded != FALSE;
 
-	if (folded == gtef_fold_region_get_folded (fold_region))
+	if (folded == tepl_fold_region_get_folded (fold_region))
 	{
 		return;
 	}
@@ -369,28 +369,28 @@ gtef_fold_region_set_folded (GtefFoldRegion *fold_region,
 }
 
 /**
- * gtef_fold_region_get_bounds:
- * @fold_region: a #GtefFoldRegion.
+ * tepl_fold_region_get_bounds:
+ * @fold_region: a #TeplFoldRegion.
  * @start: (out): iterator to initialize.
  * @end: (out): iterator to initialize.
  *
- * Obtains iterators pointing to the start and end of the #GtefFoldRegion.
+ * Obtains iterators pointing to the start and end of the #TeplFoldRegion.
  *
  * Returns: %TRUE on success, %FALSE otherwise.
  * Since: 1.0
  */
 gboolean
-gtef_fold_region_get_bounds (GtefFoldRegion *fold_region,
+tepl_fold_region_get_bounds (TeplFoldRegion *fold_region,
 			     GtkTextIter    *start,
 			     GtkTextIter    *end)
 {
-	GtefFoldRegionPrivate *priv;
+	TeplFoldRegionPrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FOLD_REGION (fold_region), FALSE);
+	g_return_val_if_fail (TEPL_IS_FOLD_REGION (fold_region), FALSE);
 	g_return_val_if_fail (start != NULL, FALSE);
 	g_return_val_if_fail (end != NULL, FALSE);
 
-	priv = gtef_fold_region_get_instance_private (fold_region);
+	priv = tepl_fold_region_get_instance_private (fold_region);
 
 	if (priv->buffer == NULL)
 	{
@@ -413,28 +413,28 @@ gtef_fold_region_get_bounds (GtefFoldRegion *fold_region,
 }
 
 /**
- * gtef_fold_region_set_bounds:
- * @fold_region: a #GtefFoldRegion.
+ * tepl_fold_region_set_bounds:
+ * @fold_region: a #TeplFoldRegion.
  * @start: a #GtkTextIter.
  * @end: a #GtkTextIter.
  *
- * Sets the start and end of the #GtefFoldRegion.
+ * Sets the start and end of the #TeplFoldRegion.
  *
  * Since: 1.0
  */
 void
-gtef_fold_region_set_bounds (GtefFoldRegion    *fold_region,
+tepl_fold_region_set_bounds (TeplFoldRegion    *fold_region,
 			     const GtkTextIter *start,
 			     const GtkTextIter *end)
 {
-	GtefFoldRegionPrivate *priv;
+	TeplFoldRegionPrivate *priv;
 
-	g_return_if_fail (GTEF_IS_FOLD_REGION (fold_region));
+	g_return_if_fail (TEPL_IS_FOLD_REGION (fold_region));
 	g_return_if_fail (start != NULL);
 	g_return_if_fail (end != NULL);
 	g_return_if_fail (gtk_text_iter_get_line (start) < gtk_text_iter_get_line (end));
 
-	priv = gtef_fold_region_get_instance_private (fold_region);
+	priv = tepl_fold_region_get_instance_private (fold_region);
 
 	if (priv->buffer == NULL)
 	{

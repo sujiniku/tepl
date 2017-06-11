@@ -1,14 +1,14 @@
 /*
- * This file is part of Gtef, a text editor library.
+ * This file is part of Tepl, a text editor library.
  *
  * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Gtef is free software; you can redistribute it and/or modify it under
+ * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Gtef is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -18,51 +18,51 @@
  */
 
 #include "config.h"
-#include "gtef-file.h"
+#include "tepl-file.h"
 #include <glib/gi18n-lib.h>
-#include "gtef-encoding.h"
-#include "gtef-file-metadata.h"
-#include "gtef-utils.h"
-#include "gtef-enum-types.h"
+#include "tepl-encoding.h"
+#include "tepl-file-metadata.h"
+#include "tepl-utils.h"
+#include "tepl-enum-types.h"
 
 /**
  * SECTION:file
- * @Short_description: On-disk representation of a GtefBuffer
- * @Title: GtefFile
- * @See_also: #GtefFileLoader, #GtefFileSaver, #GtefFileMetadata
+ * @Short_description: On-disk representation of a TeplBuffer
+ * @Title: TeplFile
+ * @See_also: #TeplFileLoader, #TeplFileSaver, #TeplFileMetadata
  *
- * A #GtefFile object is the on-disk representation of a #GtefBuffer.
+ * A #TeplFile object is the on-disk representation of a #TeplBuffer.
  *
- * With a #GtefFile, you can create and configure a #GtefFileLoader
- * and #GtefFileSaver which take by default the values of the
- * #GtefFile properties (except for the file loader which auto-detect some
- * properties). On a successful load or save operation, the #GtefFile
- * properties are updated. If an operation fails, the #GtefFile properties
+ * With a #TeplFile, you can create and configure a #TeplFileLoader
+ * and #TeplFileSaver which take by default the values of the
+ * #TeplFile properties (except for the file loader which auto-detect some
+ * properties). On a successful load or save operation, the #TeplFile
+ * properties are updated. If an operation fails, the #TeplFile properties
  * have still the previous valid values.
  *
- * #GtefFile is a fork of #GtkSourceFile. #GtefFileLoader is a new
+ * #TeplFile is a fork of #GtkSourceFile. #TeplFileLoader is a new
  * implementation for file loading, but it needs to call private functions of
- * #GtefFile in order to update its properties. So it was not possible for
- * #GtefFileLoader to use #GtkSourceFile. So the whole file loading and saving
+ * #TeplFile in order to update its properties. So it was not possible for
+ * #TeplFileLoader to use #GtkSourceFile. So the whole file loading and saving
  * API of GtkSourceView has been forked; hopefully the new implementation will
  * be folded back to GtkSourceView in a later version.
  */
 
-typedef struct _GtefFilePrivate GtefFilePrivate;
+typedef struct _TeplFilePrivate TeplFilePrivate;
 
-struct _GtefFilePrivate
+struct _TeplFilePrivate
 {
-	GtefFileMetadata *metadata;
+	TeplFileMetadata *metadata;
 
 	GFile *location;
-	GtefEncoding *encoding;
-	GtefNewlineType newline_type;
-	GtefCompressionType compression_type;
+	TeplEncoding *encoding;
+	TeplNewlineType newline_type;
+	TeplCompressionType compression_type;
 
 	gchar *short_name;
 	gint untitled_number;
 
-	GtefMountOperationFactory mount_operation_factory;
+	TeplMountOperationFactory mount_operation_factory;
 	gpointer mount_operation_userdata;
 	GDestroyNotify mount_operation_notify;
 
@@ -93,7 +93,7 @@ static GParamSpec *properties[N_PROPERTIES];
 /* The list is sorted. */
 static GSList *allocated_untitled_numbers;
 
-G_DEFINE_TYPE_WITH_PRIVATE (GtefFile, gtef_file, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (TeplFile, tepl_file, G_TYPE_OBJECT)
 
 static gint
 compare_untitled_numbers (gconstpointer a,
@@ -146,37 +146,37 @@ release_untitled_number (gint num)
 }
 
 static void
-gtef_file_get_property (GObject    *object,
+tepl_file_get_property (GObject    *object,
 			guint       prop_id,
 			GValue     *value,
 			GParamSpec *pspec)
 {
-	GtefFile *file = GTEF_FILE (object);
+	TeplFile *file = TEPL_FILE (object);
 
 	switch (prop_id)
 	{
 		case PROP_LOCATION:
-			g_value_set_object (value, gtef_file_get_location (file));
+			g_value_set_object (value, tepl_file_get_location (file));
 			break;
 
 		case PROP_ENCODING:
-			g_value_set_boxed (value, gtef_file_get_encoding (file));
+			g_value_set_boxed (value, tepl_file_get_encoding (file));
 			break;
 
 		case PROP_NEWLINE_TYPE:
-			g_value_set_enum (value, gtef_file_get_newline_type (file));
+			g_value_set_enum (value, tepl_file_get_newline_type (file));
 			break;
 
 		case PROP_COMPRESSION_TYPE:
-			g_value_set_enum (value, gtef_file_get_compression_type (file));
+			g_value_set_enum (value, tepl_file_get_compression_type (file));
 			break;
 
 		case PROP_READ_ONLY:
-			g_value_set_boolean (value, gtef_file_is_readonly (file));
+			g_value_set_boolean (value, tepl_file_is_readonly (file));
 			break;
 
 		case PROP_SHORT_NAME:
-			g_value_set_string (value, gtef_file_get_short_name (file));
+			g_value_set_string (value, tepl_file_get_short_name (file));
 			break;
 
 		default:
@@ -186,17 +186,17 @@ gtef_file_get_property (GObject    *object,
 }
 
 static void
-gtef_file_set_property (GObject      *object,
+tepl_file_set_property (GObject      *object,
 			guint         prop_id,
 			const GValue *value,
 			GParamSpec   *pspec)
 {
-	GtefFile *file = GTEF_FILE (object);
+	TeplFile *file = TEPL_FILE (object);
 
 	switch (prop_id)
 	{
 		case PROP_LOCATION:
-			gtef_file_set_location (file, g_value_get_object (value));
+			tepl_file_set_location (file, g_value_get_object (value));
 			break;
 
 		default:
@@ -206,9 +206,9 @@ gtef_file_set_property (GObject      *object,
 }
 
 static void
-gtef_file_dispose (GObject *object)
+tepl_file_dispose (GObject *object)
 {
-	GtefFilePrivate *priv = gtef_file_get_instance_private (GTEF_FILE (object));
+	TeplFilePrivate *priv = tepl_file_get_instance_private (TEPL_FILE (object));
 
 	g_clear_object (&priv->metadata);
 	g_clear_object (&priv->location);
@@ -219,15 +219,15 @@ gtef_file_dispose (GObject *object)
 		priv->mount_operation_notify = NULL;
 	}
 
-	G_OBJECT_CLASS (gtef_file_parent_class)->dispose (object);
+	G_OBJECT_CLASS (tepl_file_parent_class)->dispose (object);
 }
 
 static void
-gtef_file_finalize (GObject *object)
+tepl_file_finalize (GObject *object)
 {
-	GtefFilePrivate *priv = gtef_file_get_instance_private (GTEF_FILE (object));
+	TeplFilePrivate *priv = tepl_file_get_instance_private (TEPL_FILE (object));
 
-	gtef_encoding_free (priv->encoding);
+	tepl_encoding_free (priv->encoding);
 	g_free (priv->short_name);
 	g_free (priv->etag);
 
@@ -236,21 +236,21 @@ gtef_file_finalize (GObject *object)
 		release_untitled_number (priv->untitled_number);
 	}
 
-	G_OBJECT_CLASS (gtef_file_parent_class)->finalize (object);
+	G_OBJECT_CLASS (tepl_file_parent_class)->finalize (object);
 }
 
 static void
-gtef_file_class_init (GtefFileClass *klass)
+tepl_file_class_init (TeplFileClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->get_property = gtef_file_get_property;
-	object_class->set_property = gtef_file_set_property;
-	object_class->dispose = gtef_file_dispose;
-	object_class->finalize = gtef_file_finalize;
+	object_class->get_property = tepl_file_get_property;
+	object_class->set_property = tepl_file_set_property;
+	object_class->dispose = tepl_file_dispose;
+	object_class->finalize = tepl_file_finalize;
 
 	/**
-	 * GtefFile:location:
+	 * TeplFile:location:
 	 *
 	 * The location.
 	 *
@@ -266,7 +266,7 @@ gtef_file_class_init (GtefFileClass *klass)
 				     G_PARAM_STATIC_STRINGS);
 
 	/**
-	 * GtefFile:encoding:
+	 * TeplFile:encoding:
 	 *
 	 * The character encoding, initially %NULL. After a successful file
 	 * loading or saving operation, the encoding is non-%NULL.
@@ -277,12 +277,12 @@ gtef_file_class_init (GtefFileClass *klass)
 		g_param_spec_boxed ("encoding",
 				    "Encoding",
 				    "",
-				    GTEF_TYPE_ENCODING,
+				    TEPL_TYPE_ENCODING,
 				    G_PARAM_READABLE |
 				    G_PARAM_STATIC_STRINGS);
 
 	/**
-	 * GtefFile:newline-type:
+	 * TeplFile:newline-type:
 	 *
 	 * The line ending type.
 	 *
@@ -292,13 +292,13 @@ gtef_file_class_init (GtefFileClass *klass)
 		g_param_spec_enum ("newline-type",
 				   "Newline type",
 				   "",
-				   GTEF_TYPE_NEWLINE_TYPE,
-				   GTEF_NEWLINE_TYPE_LF,
+				   TEPL_TYPE_NEWLINE_TYPE,
+				   TEPL_NEWLINE_TYPE_LF,
 				   G_PARAM_READABLE |
 				   G_PARAM_STATIC_STRINGS);
 
 	/**
-	 * GtefFile:compression-type:
+	 * TeplFile:compression-type:
 	 *
 	 * The compression type.
 	 *
@@ -308,13 +308,13 @@ gtef_file_class_init (GtefFileClass *klass)
 		g_param_spec_enum ("compression-type",
 				   "Compression type",
 				   "",
-				   GTEF_TYPE_COMPRESSION_TYPE,
-				   GTEF_COMPRESSION_TYPE_NONE,
+				   TEPL_TYPE_COMPRESSION_TYPE,
+				   TEPL_COMPRESSION_TYPE_NONE,
 				   G_PARAM_READABLE |
 				   G_PARAM_STATIC_STRINGS);
 
 	/**
-	 * GtefFile:read-only:
+	 * TeplFile:read-only:
 	 *
 	 * Whether the file is read-only or not. The value of this property is
 	 * not updated automatically (there is no file monitors).
@@ -330,9 +330,9 @@ gtef_file_class_init (GtefFileClass *klass)
 				      G_PARAM_STATIC_STRINGS);
 
 	/**
-	 * GtefFile:short-name:
+	 * TeplFile:short-name:
 	 *
-	 * The file short name. See gtef_file_get_short_name().
+	 * The file short name. See tepl_file_get_short_name().
 	 *
 	 * Since: 1.0
 	 */
@@ -353,12 +353,12 @@ query_display_name_cb (GObject      *source_object,
 		       gpointer      user_data)
 {
 	GFile *location = G_FILE (source_object);
-	GtefFile *file = GTEF_FILE (user_data);
-	GtefFilePrivate *priv;
+	TeplFile *file = TEPL_FILE (user_data);
+	TeplFilePrivate *priv;
 	GFileInfo *info;
 	GError *error = NULL;
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 
 	info = g_file_query_info_finish (location, result, &error);
 
@@ -375,7 +375,7 @@ query_display_name_cb (GObject      *source_object,
 		g_clear_error (&error);
 
 		g_free (priv->short_name);
-		priv->short_name = _gtef_utils_get_fallback_basename_for_display (location);
+		priv->short_name = _tepl_utils_get_fallback_basename_for_display (location);
 	}
 	else
 	{
@@ -398,9 +398,9 @@ query_display_name_cb (GObject      *source_object,
 }
 
 static void
-update_short_name (GtefFile *file)
+update_short_name (TeplFile *file)
 {
-	GtefFilePrivate *priv = gtef_file_get_instance_private (file);
+	TeplFilePrivate *priv = tepl_file_get_instance_private (file);
 
 	if (priv->location == NULL)
 	{
@@ -425,7 +425,7 @@ update_short_name (GtefFile *file)
 	    !g_file_has_parent (priv->location, NULL))
 	{
 		g_free (priv->short_name);
-		priv->short_name = _gtef_utils_get_fallback_basename_for_display (priv->location);
+		priv->short_name = _tepl_utils_get_fallback_basename_for_display (priv->location);
 
 		if (priv->untitled_number > 0)
 		{
@@ -447,52 +447,52 @@ update_short_name (GtefFile *file)
 }
 
 static void
-gtef_file_init (GtefFile *file)
+tepl_file_init (TeplFile *file)
 {
-	GtefFilePrivate *priv = gtef_file_get_instance_private (file);
+	TeplFilePrivate *priv = tepl_file_get_instance_private (file);
 
-	priv->metadata = gtef_file_metadata_new (file);
+	priv->metadata = tepl_file_metadata_new (file);
 
 	priv->encoding = NULL;
-	priv->newline_type = GTEF_NEWLINE_TYPE_LF;
-	priv->compression_type = GTEF_COMPRESSION_TYPE_NONE;
+	priv->newline_type = TEPL_NEWLINE_TYPE_LF;
+	priv->compression_type = TEPL_COMPRESSION_TYPE_NONE;
 
 	update_short_name (file);
 }
 
 /**
- * gtef_file_new:
+ * tepl_file_new:
  *
- * Returns: a new #GtefFile object.
+ * Returns: a new #TeplFile object.
  * Since: 1.0
  */
-GtefFile *
-gtef_file_new (void)
+TeplFile *
+tepl_file_new (void)
 {
-	return g_object_new (GTEF_TYPE_FILE, NULL);
+	return g_object_new (TEPL_TYPE_FILE, NULL);
 }
 
 /**
- * gtef_file_get_file_metadata:
- * @file: a #GtefFile.
+ * tepl_file_get_file_metadata:
+ * @file: a #TeplFile.
  *
- * Returns: (transfer none): the associated #GtefFileMetadata.
+ * Returns: (transfer none): the associated #TeplFileMetadata.
  * Since: 1.0
  */
-GtefFileMetadata *
-gtef_file_get_file_metadata (GtefFile *file)
+TeplFileMetadata *
+tepl_file_get_file_metadata (TeplFile *file)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 	return priv->metadata;
 }
 
 /**
- * gtef_file_set_location:
- * @file: a #GtefFile.
+ * tepl_file_set_location:
+ * @file: a #TeplFile.
  * @location: (nullable): the new #GFile, or %NULL.
  *
  * Sets the location.
@@ -500,15 +500,15 @@ gtef_file_get_file_metadata (GtefFile *file)
  * Since: 1.0
  */
 void
-gtef_file_set_location (GtefFile *file,
+tepl_file_set_location (TeplFile *file,
 			GFile    *location)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_if_fail (GTEF_IS_FILE (file));
+	g_return_if_fail (TEPL_IS_FILE (file));
 	g_return_if_fail (location == NULL || G_IS_FILE (location));
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 
 	if (g_set_object (&priv->location, location))
 	{
@@ -526,28 +526,28 @@ gtef_file_set_location (GtefFile *file,
 }
 
 /**
- * gtef_file_get_location:
- * @file: a #GtefFile.
+ * tepl_file_get_location:
+ * @file: a #TeplFile.
  *
  * Returns: (transfer none): the #GFile.
  * Since: 1.0
  */
 GFile *
-gtef_file_get_location (GtefFile *file)
+tepl_file_get_location (TeplFile *file)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 	return priv->location;
 }
 
 /**
- * gtef_file_get_short_name:
- * @file: a #GtefFile.
+ * tepl_file_get_short_name:
+ * @file: a #TeplFile.
  *
- * Gets the @file short name. If the #GtefFile:location isn't %NULL,
+ * Gets the @file short name. If the #TeplFile:location isn't %NULL,
  * returns its display-name (see #G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME).
  * Otherwise returns "Untitled File N", with N the Nth untitled file of the
  * application, starting at 1. When an untitled file is closed, its number is
@@ -557,38 +557,38 @@ gtef_file_get_location (GtefFile *file)
  * Since: 1.0
  */
 const gchar *
-gtef_file_get_short_name (GtefFile *file)
+tepl_file_get_short_name (TeplFile *file)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 	return priv->short_name;
 }
 
 void
-_gtef_file_set_encoding (GtefFile           *file,
-			 const GtefEncoding *encoding)
+_tepl_file_set_encoding (TeplFile           *file,
+			 const TeplEncoding *encoding)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_if_fail (GTEF_IS_FILE (file));
+	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 
-	if (!gtef_encoding_equals (priv->encoding, encoding))
+	if (!tepl_encoding_equals (priv->encoding, encoding))
 	{
-		gtef_encoding_free (priv->encoding);
-		priv->encoding = gtef_encoding_copy (encoding);
+		tepl_encoding_free (priv->encoding);
+		priv->encoding = tepl_encoding_copy (encoding);
 
 		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_ENCODING]);
 	}
 }
 
 /**
- * gtef_file_get_encoding:
- * @file: a #GtefFile.
+ * tepl_file_get_encoding:
+ * @file: a #TeplFile.
  *
  * The encoding is initially %NULL. After a successful file loading or saving
  * operation, the encoding is non-%NULL.
@@ -596,26 +596,26 @@ _gtef_file_set_encoding (GtefFile           *file,
  * Returns: the character encoding.
  * Since: 1.0
  */
-const GtefEncoding *
-gtef_file_get_encoding (GtefFile *file)
+const TeplEncoding *
+tepl_file_get_encoding (TeplFile *file)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 	return priv->encoding;
 }
 
 void
-_gtef_file_set_newline_type (GtefFile        *file,
-			     GtefNewlineType  newline_type)
+_tepl_file_set_newline_type (TeplFile        *file,
+			     TeplNewlineType  newline_type)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_if_fail (GTEF_IS_FILE (file));
+	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 
 	if (priv->newline_type != newline_type)
 	{
@@ -625,32 +625,32 @@ _gtef_file_set_newline_type (GtefFile        *file,
 }
 
 /**
- * gtef_file_get_newline_type:
- * @file: a #GtefFile.
+ * tepl_file_get_newline_type:
+ * @file: a #TeplFile.
  *
  * Returns: the newline type.
  * Since: 1.0
  */
-GtefNewlineType
-gtef_file_get_newline_type (GtefFile *file)
+TeplNewlineType
+tepl_file_get_newline_type (TeplFile *file)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE (file), GTEF_NEWLINE_TYPE_DEFAULT);
+	g_return_val_if_fail (TEPL_IS_FILE (file), TEPL_NEWLINE_TYPE_DEFAULT);
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 	return priv->newline_type;
 }
 
 void
-_gtef_file_set_compression_type (GtefFile            *file,
-				 GtefCompressionType  compression_type)
+_tepl_file_set_compression_type (TeplFile            *file,
+				 TeplCompressionType  compression_type)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_if_fail (GTEF_IS_FILE (file));
+	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 
 	if (priv->compression_type != compression_type)
 	{
@@ -660,33 +660,33 @@ _gtef_file_set_compression_type (GtefFile            *file,
 }
 
 /**
- * gtef_file_get_compression_type:
- * @file: a #GtefFile.
+ * tepl_file_get_compression_type:
+ * @file: a #TeplFile.
  *
  * Returns: the compression type.
  * Since: 1.0
  */
-GtefCompressionType
-gtef_file_get_compression_type (GtefFile *file)
+TeplCompressionType
+tepl_file_get_compression_type (TeplFile *file)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE (file), GTEF_COMPRESSION_TYPE_NONE);
+	g_return_val_if_fail (TEPL_IS_FILE (file), TEPL_COMPRESSION_TYPE_NONE);
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 	return priv->compression_type;
 }
 
 /**
- * gtef_file_set_mount_operation_factory:
- * @file: a #GtefFile.
- * @callback: (scope notified): a #GtefMountOperationFactory to call when a
+ * tepl_file_set_mount_operation_factory:
+ * @file: a #TeplFile.
+ * @callback: (scope notified): a #TeplMountOperationFactory to call when a
  *   #GMountOperation is needed.
  * @user_data: (closure): the data to pass to the @callback function.
  * @notify: (nullable): function to call on @user_data when the @callback is no
  *   longer needed, or %NULL.
  *
- * Sets a #GtefMountOperationFactory function that will be called when a
+ * Sets a #TeplMountOperationFactory function that will be called when a
  * #GMountOperation must be created. This is useful for creating a
  * #GtkMountOperation with the parent #GtkWindow.
  *
@@ -696,16 +696,16 @@ gtef_file_get_compression_type (GtefFile *file)
  * Since: 1.0
  */
 void
-gtef_file_set_mount_operation_factory (GtefFile                  *file,
-				       GtefMountOperationFactory  callback,
+tepl_file_set_mount_operation_factory (TeplFile                  *file,
+				       TeplMountOperationFactory  callback,
 				       gpointer                   user_data,
 				       GDestroyNotify             notify)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_if_fail (GTEF_IS_FILE (file));
+	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 
 	if (priv->mount_operation_notify != NULL)
 	{
@@ -718,18 +718,18 @@ gtef_file_set_mount_operation_factory (GtefFile                  *file,
 }
 
 GMountOperation *
-_gtef_file_create_mount_operation (GtefFile *file)
+_tepl_file_create_mount_operation (TeplFile *file)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
 	if (file == NULL)
 	{
 		goto fallback;
 	}
 
-	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 
 	if (priv->mount_operation_factory != NULL)
 	{
@@ -742,67 +742,67 @@ fallback:
 
 /* Notify @file that its location has been mounted. */
 void
-_gtef_file_set_mounted (GtefFile *file)
+_tepl_file_set_mounted (TeplFile *file)
 {
-	g_return_if_fail (GTEF_IS_FILE (file));
+	g_return_if_fail (TEPL_IS_FILE (file));
 
 	/* Querying the display-name should work now. */
 	update_short_name (file);
 }
 
 const gchar *
-_gtef_file_get_etag (GtefFile *file)
+_tepl_file_get_etag (TeplFile *file)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
 	if (file == NULL)
 	{
 		return NULL;
 	}
 
-	g_return_val_if_fail (GTEF_IS_FILE (file), NULL);
+	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 	return priv->etag;
 }
 
 void
-_gtef_file_set_etag (GtefFile    *file,
+_tepl_file_set_etag (TeplFile    *file,
 		     const gchar *etag)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
 	if (file == NULL)
 	{
 		return;
 	}
 
-	g_return_if_fail (GTEF_IS_FILE (file));
+	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 
 	g_free (priv->etag);
 	priv->etag = g_strdup (etag);
 }
 
 /**
- * gtef_file_is_local:
- * @file: a #GtefFile.
+ * tepl_file_is_local:
+ * @file: a #TeplFile.
  *
- * Returns whether the file is local. If the #GtefFile:location is %NULL,
+ * Returns whether the file is local. If the #TeplFile:location is %NULL,
  * returns %FALSE.
  *
  * Returns: whether the file is local.
  * Since: 1.0
  */
 gboolean
-gtef_file_is_local (GtefFile *file)
+tepl_file_is_local (TeplFile *file)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE (file), FALSE);
+	g_return_val_if_fail (TEPL_IS_FILE (file), FALSE);
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 
 	if (priv->location == NULL)
 	{
@@ -813,30 +813,30 @@ gtef_file_is_local (GtefFile *file)
 }
 
 /**
- * gtef_file_check_file_on_disk:
- * @file: a #GtefFile.
+ * tepl_file_check_file_on_disk:
+ * @file: a #TeplFile.
  *
  * Checks synchronously the file on disk, to know whether the file is externally
  * modified, or has been deleted, and whether the file is read-only.
  *
- * #GtefFile doesn't create a #GFileMonitor to track those properties, so
+ * #TeplFile doesn't create a #GFileMonitor to track those properties, so
  * this function needs to be called instead. Creating lots of #GFileMonitor's
  * would take lots of resources.
  *
  * Since this function is synchronous, it is advised to call it only on local
- * files. See gtef_file_is_local().
+ * files. See tepl_file_is_local().
  *
  * Since: 1.0
  */
 void
-gtef_file_check_file_on_disk (GtefFile *file)
+tepl_file_check_file_on_disk (TeplFile *file)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 	GFileInfo *info;
 
-	g_return_if_fail (GTEF_IS_FILE (file));
+	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 
 	if (priv->location == NULL)
 	{
@@ -877,95 +877,95 @@ gtef_file_check_file_on_disk (GtefFile *file)
 
 		readonly = !g_file_info_get_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE);
 
-		_gtef_file_set_readonly (file, readonly);
+		_tepl_file_set_readonly (file, readonly);
 	}
 
 	g_object_unref (info);
 }
 
 void
-_gtef_file_set_externally_modified (GtefFile *file,
+_tepl_file_set_externally_modified (TeplFile *file,
 				    gboolean  externally_modified)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_if_fail (GTEF_IS_FILE (file));
+	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 
 	priv->externally_modified = externally_modified != FALSE;
 }
 
 /**
- * gtef_file_is_externally_modified:
- * @file: a #GtefFile.
+ * tepl_file_is_externally_modified:
+ * @file: a #TeplFile.
  *
  * Returns whether the file is externally modified. If the
- * #GtefFile:location is %NULL, returns %FALSE.
+ * #TeplFile:location is %NULL, returns %FALSE.
  *
  * To have an up-to-date value, you must first call
- * gtef_file_check_file_on_disk().
+ * tepl_file_check_file_on_disk().
  *
  * Returns: whether the file is externally modified.
  * Since: 1.0
  */
 gboolean
-gtef_file_is_externally_modified (GtefFile *file)
+tepl_file_is_externally_modified (TeplFile *file)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE (file), FALSE);
+	g_return_val_if_fail (TEPL_IS_FILE (file), FALSE);
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 	return priv->externally_modified;
 }
 
 void
-_gtef_file_set_deleted (GtefFile *file,
+_tepl_file_set_deleted (TeplFile *file,
 			gboolean  deleted)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_if_fail (GTEF_IS_FILE (file));
+	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 
 	priv->deleted = deleted != FALSE;
 }
 
 /**
- * gtef_file_is_deleted:
- * @file: a #GtefFile.
+ * tepl_file_is_deleted:
+ * @file: a #TeplFile.
  *
  * Returns whether the file has been deleted. If the
- * #GtefFile:location is %NULL, returns %FALSE.
+ * #TeplFile:location is %NULL, returns %FALSE.
  *
  * To have an up-to-date value, you must first call
- * gtef_file_check_file_on_disk().
+ * tepl_file_check_file_on_disk().
  *
  * Returns: whether the file has been deleted.
  * Since: 1.0
  */
 gboolean
-gtef_file_is_deleted (GtefFile *file)
+tepl_file_is_deleted (TeplFile *file)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE (file), FALSE);
+	g_return_val_if_fail (TEPL_IS_FILE (file), FALSE);
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 	return priv->deleted;
 }
 
 void
-_gtef_file_set_readonly (GtefFile *file,
+_tepl_file_set_readonly (TeplFile *file,
 			 gboolean  readonly)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_if_fail (GTEF_IS_FILE (file));
+	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 
 	readonly = readonly != FALSE;
 
@@ -977,25 +977,25 @@ _gtef_file_set_readonly (GtefFile *file,
 }
 
 /**
- * gtef_file_is_readonly:
- * @file: a #GtefFile.
+ * tepl_file_is_readonly:
+ * @file: a #TeplFile.
  *
  * Returns whether the file is read-only. If the
- * #GtefFile:location is %NULL, returns %FALSE.
+ * #TeplFile:location is %NULL, returns %FALSE.
  *
  * To have an up-to-date value, you must first call
- * gtef_file_check_file_on_disk().
+ * tepl_file_check_file_on_disk().
  *
  * Returns: whether the file is read-only.
  * Since: 1.0
  */
 gboolean
-gtef_file_is_readonly (GtefFile *file)
+tepl_file_is_readonly (TeplFile *file)
 {
-	GtefFilePrivate *priv;
+	TeplFilePrivate *priv;
 
-	g_return_val_if_fail (GTEF_IS_FILE (file), FALSE);
+	g_return_val_if_fail (TEPL_IS_FILE (file), FALSE);
 
-	priv = gtef_file_get_instance_private (file);
+	priv = tepl_file_get_instance_private (file);
 	return priv->readonly;
 }

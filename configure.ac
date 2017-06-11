@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.64)
 
 # Package version of the form 'major.minor.micro'.
-m4_define(tepl_package_version, 2.0.1)
+m4_define(tepl_package_version, 2.99.0)
 
 AC_INIT([tepl],
 	[tepl_package_version],
@@ -43,10 +43,10 @@ AC_SUBST(TEPL_LT_VERSION)
 # API version, used for parallel installability.
 # Not used in:
 # - po/Makevars
-# - the docs/reference/tepl-1.0-sections.txt filename
+# - the docs/reference/tepl-3.0-sections.txt filename
 # Because as far as I've tested, it is not easily feasible to not hardcode the
 # API version in those places (swilmet).
-TEPL_API_VERSION=2
+TEPL_API_VERSION=3
 AC_SUBST(TEPL_API_VERSION)
 
 # Dependencies

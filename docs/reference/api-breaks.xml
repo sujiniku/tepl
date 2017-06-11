@@ -17,13 +17,13 @@
       <listitem>
         <para>
           The <code>GtefBuffer::cursor-moved</code> signal has been renamed to
-          <link linkend="GtefBuffer-gtef-cursor-moved">GtefBuffer::gtef-cursor-moved</link>.
+          <code>GtefBuffer::gtef-cursor-moved</code>.
         </para>
       </listitem>
       <listitem>
         <para>
           The <code>GtefBuffer:title</code> property has been renamed to
-          <link linkend="GtefBuffer--gtef-title">GtefBuffer:gtef-title</link>.
+          <code>GtefBuffer:gtef-title</code>.
         </para>
       </listitem>
     </itemizedlist>

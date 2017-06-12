@@ -1,14 +1,14 @@
 Tepl - Text editor product line
 ===============================
 
-This is version 2.0.1 of Tepl.
+This is version 2.99.0 of Tepl.
 
 Tepl is a library that eases the development of GtkSourceView-based text
 editors and IDEs.
 
 Tepl was previously known as Gtef (GTK+ text editor framework). The project has
-been renamed to have a more beautiful name. The end of Tepl is pronounced like
-apple.
+been renamed in June 2017 to have a more beautiful name. The end of Tepl is
+pronounced like “apple”.
 
 The Tepl website:
 
@@ -18,12 +18,6 @@ Some background on why this project has been created:
 
     https://wiki.gnome.org/Apps/Gedit/ReusableCode
     https://wiki.gnome.org/Projects/GtkSourceView/TdiFramework
-
-The final goal is to create a Tabbed Document Interface (TDI) framework
-suitable for text editors.
-
-But the first short-term goal is to have a higher-level API to load and save a
-file. All the errors would be handled by Tepl, showing GtkInfoBars etc.
 
 Maybe some of the Tepl features will be moved to GtkSourceView when it's
 considered more stable. So Tepl can also be seen as an incubator for some

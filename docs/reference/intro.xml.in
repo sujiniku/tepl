@@ -11,12 +11,36 @@
   <title>Introduction</title>
 
   <para>
-    Tepl is a library that eases the development of GtkSourceView-based text
-    editors and IDEs. Tepl is the acronym for “Text editor product line”.
+    Tepl is a library that eases the development of
+    <ulink url="https://wiki.gnome.org/Projects/GtkSourceView">GtkSourceView</ulink>-based
+    text editors and IDEs. Tepl is the acronym for “Text editor product line”.
   </para>
 
   <para>
-    See the <ulink url="https://wiki.gnome.org/Projects/Tepl">Tepl website</ulink>.
+    Tepl was previously known as Gtef (GTK+ text editor framework). The project
+    has been renamed in June 2017 to have a more beautiful name. The end of Tepl
+    is pronounced like “apple”.
+  </para>
+
+  <para>
+    The Tepl library follows a product line approach (see the book
+    <ulink url="https://www.amazon.com/Feature-Oriented-Software-Product-Lines-Implementation/dp/3642375200/">Feature-Oriented
+    Software Product Lines: Concepts and Implementation</ulink>).
+    Instead of creating one general-purpose text editor or IDE with a plugin
+    system, the idea is to create several <emphasis>specialized</emphasis> text
+    editors. For example specialized for one programming language, or one
+    development platform, or a small group of related languages. By being
+    specialized, an application is potentially better at what it does. It
+    follows more closely the UNIX philosophy to do only one thing but doing it
+    well. And it better follows the GNOME philosophy: writing applications that
+    Just Works; when a user opens the text editor for the first time, it should
+    work out-of-the-box, without the need to find, install and configure
+    plugins. Of course it still makes sense to develop one general-purpose text
+    editor for the languages not yet covered by specialized text editors.
+  </para>
+
+  <para>
+    See also the <ulink url="https://wiki.gnome.org/Projects/Tepl">Tepl web page</ulink>.
   </para>
 
   <para>

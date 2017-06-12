@@ -10,42 +10,12 @@ Tepl was previously known as Gtef (GTK+ text editor framework). The project has
 been renamed in June 2017 to have a more beautiful name. The end of Tepl is
 pronounced like “apple”.
 
-The Tepl website:
-
-    https://wiki.gnome.org/Projects/Tepl
-
-Some background on why this project has been created:
-
-    https://wiki.gnome.org/Apps/Gedit/ReusableCode
-    https://wiki.gnome.org/Projects/GtkSourceView/TdiFramework
-
-Maybe some of the Tepl features will be moved to GtkSourceView when it's
-considered more stable. So Tepl can also be seen as an incubator for some
-GtkSourceView features.
-
 The Tepl library is free software and is released under the terms of the GNU
 Lesser General Public License, see the 'COPYING' file for more information.
 
-Warning - API/ABI stability
----------------------------
+The Tepl web page:
 
-Tepl uses the same versioning *scheme* as GNOME, but not the same version
-*numbers* at the same time. The package version has the form
-'major.minor.micro'. If 'minor' is an even number, it means that it is a stable
-version and that API/ABI stability is guaranteed, and that it is
-backward-compatible with previous stable minor versions that have the same
-major version (e.g. 1.2.x is backward-compatible with 1.0.x). When a new major
-version is released, it means that the API or ABI is not backward-compatible
-with previous major versions. Different major versions can be installed in
-parallel.
-
-To learn more about the GNOME versioning scheme:
-https://developer.gnome.org/programming-guidelines/stable/versioning.html.en
-
-Tepl contains more experimental APIs than GtkSourceView, sometimes even
-unfinished features. It means that - if needed - new major versions are
-released every 6 months, breaking the API to improve and design it
-incrementally.
+    https://wiki.gnome.org/Projects/Tepl
 
 Dependencies
 ------------

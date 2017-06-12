@@ -17,6 +17,10 @@
   </para>
 
   <para>
+    See the <ulink url="https://wiki.gnome.org/Projects/Tepl">Tepl web page</ulink>.
+  </para>
+
+  <para>
     Tepl was previously known as Gtef (GTK+ text editor framework). The project
     has been renamed in June 2017 to have a more beautiful name. The end of Tepl
     is pronounced like “apple”.
@@ -40,12 +44,41 @@
   </para>
 
   <para>
-    See also the <ulink url="https://wiki.gnome.org/Projects/Tepl">Tepl web page</ulink>.
+    Maybe some of the Tepl features will be moved to GtkSourceView when it's
+    considered more stable. So Tepl can also be seen as an incubator for some
+    GtkSourceView features.
   </para>
 
-  <para>
-    Tepl @TEPL_API_VERSION@ depends on GTK+ 3 and GtkSourceView 3.
-  </para>
+  <refsect1>
+    <title>Iterative API design and stability guarantees</title>
+
+    <para>
+      Tepl uses the same
+      <ulink url="https://developer.gnome.org/programming-guidelines/stable/versioning.html.en">versioning scheme</ulink>
+      as GNOME. API/ABI stability is guaranteed. For example Tepl 3.2 is
+      backward-compatible with Tepl 3.0 (those versions don't necessarily exist,
+      it's just an example). But the peculiarity of Tepl is that new major
+      versions are released more often, at most every 6 months if needed.
+      Different major versions can be installed in parallel, like GTK+&nbsp;2
+      and GTK+&nbsp;3.
+    </para>
+
+    <para>
+      New major versions are released more often because Tepl contains more
+      experimental APIs than GtkSourceView, sometimes even unfinished features.
+      API design is hard, it needs an iterative process. Instead of being stuck
+      for years with a non-optimal API, the Tepl developers want to be able to
+      break the API at any time, to iteratively improve it. Sometimes we see
+      possible improvements several years later.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>GTK+ and GtkSourceView dependencies</title>
+    <para>
+      Tepl @TEPL_API_VERSION@ depends on GTK+ 3 and GtkSourceView 3.
+    </para>
+  </refsect1>
 
   <refsect1>
     <title>pkg-config name</title>

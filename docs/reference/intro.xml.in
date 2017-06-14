@@ -56,6 +56,36 @@
   </para>
 
   <refsect1>
+    <title>Boundary between GtkSourceView and Tepl</title>
+
+    <para>
+      For the framework part of Tepl (not the toolkit part), there is a somewhat
+      clear boundary between GtkSourceView and Tepl: the top-level object in
+      GtkSourceView is the <link linkend="GtkSourceView">GtkSourceView</link>
+      widget (representing only one view, or one file), while the GtkSourceView
+      widget is at the bottom of the containment hierarchy in the Tepl
+      framework. The top-level object in Tepl is
+      <link linkend="TeplApplication">TeplApplication</link>, representing the
+      whole application which can contain several windows, with each window
+      containing one or several GtkSourceView widgets (typically with a Tabbed
+      Document Interface).
+    </para>
+
+    <!-- TODO Once the framework is complete, update paragraph. -->
+    <para>
+      So the GtkSourceView library is not aware that there can be several
+      documents opened in the application, while the Tepl framework – once
+      finished – will have a complete view of the application with regards to
+      the opened documents. It permits to implement higher-level APIs in Tepl.
+    </para>
+
+    <para>
+      For the toolkit part, both GtkSourceView and Tepl contain other classes
+      for peripheral, self-contained features.
+    </para>
+  </refsect1>
+
+  <refsect1>
     <title>Iterative API design and stability guarantees</title>
 
     <para>

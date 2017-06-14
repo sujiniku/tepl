@@ -44,6 +44,12 @@
   </para>
 
   <para>
+    The library contains a framework part (for now without a plugin system), and
+    other features are available more as a toolkit. Note that the library is far
+    from finished, it is under development.
+  </para>
+
+  <para>
     Maybe some of the Tepl features will be moved to GtkSourceView when it's
     considered more stable. So Tepl can also be seen as an incubator for some
     GtkSourceView features.

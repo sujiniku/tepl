@@ -7,10 +7,10 @@
  %gtkdocentities;
 ]>
 
-<part>
+<part id="api-breaks">
   <title>API Breaks</title>
 
-  <chapter>
+  <chapter id="api-breaks-1-to-2">
     <title>Gtef 1 -> Gtef 2</title>
 
     <itemizedlist>

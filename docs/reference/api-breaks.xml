@@ -28,4 +28,22 @@
       </listitem>
     </itemizedlist>
   </chapter>
+
+  <chapter id="api-breaks-2-to-3">
+    <title>Gtef 2 -> Tepl 3</title>
+
+    <itemizedlist>
+      <listitem>
+        <para>
+          The library has been renamed to Tepl (Text editor product line). So
+          the namespace of the code has changed.
+        </para>
+        <para>
+          The new version is Tepl&nbsp;3 and not Tepl&nbsp;1, to avoid confusion
+          with the git tags (the git repository is still the same), since the
+          repository already contains tags for versions 1 and 2.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </chapter>
 </part>

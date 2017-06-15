@@ -49,9 +49,3 @@ To build the latest version of Tepl plus its dependencies from Git, Jhbuild is
 recommended:
 
     https://wiki.gnome.org/Projects/Jhbuild
-
-Applications that use Tepl
---------------------------
-
-- gCSVedit: http://gcsvedit.sourceforge.net/
-- LaTeXila: https://wiki.gnome.org/Apps/LaTeXila

@@ -49,3 +49,8 @@ To build the latest version of Tepl plus its dependencies from Git, Jhbuild is
 recommended:
 
     https://wiki.gnome.org/Projects/Jhbuild
+
+How to contribute
+-----------------
+
+See the file 'HACKING'.

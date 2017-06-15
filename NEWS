@@ -1,3 +1,11 @@
+News in 2.99.1, 2017-06-15
+--------------------------
+* The library has been renamed from Gtef (GTK+ text editor framework) to Tepl
+  (Text editor product line), to have a more beautiful name. The end of Tepl is
+  pronounced like “apple”.
+* Write a more complete introduction in the reference manual.
+* Add Slovenian translation.
+
 News in 2.0.1, 2017-04-21
 -------------------------
 * The bugzilla product has been created.

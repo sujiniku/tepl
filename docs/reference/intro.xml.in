@@ -26,6 +26,11 @@
     pronounced like “apple”.
   </para>
 
+  <!-- TODO Do not forget to update the paragraph in the future. -->
+  <para>
+    Note that the library is far from finished, it is under development.
+  </para>
+
   <para>
     The Tepl library follows a product line approach (see the book
     <ulink url="https://www.amazon.com/Feature-Oriented-Software-Product-Lines-Implementation/dp/3642375200/">Feature-Oriented
@@ -44,9 +49,18 @@
   </para>
 
   <para>
-    The library contains a framework part (for now without a plugin system), and
-    other features are available more as a toolkit. Note that the library is far
-    from finished, it is under development.
+    Most of the features of the library are available as a toolkit, but the
+    interesting part of Tepl is that it contains also a framework (for now
+    without a plugin system). The goal of the framework is to provide
+    higher-level APIs, to be able to create a new text editor easily. An
+    application wanting to use Tepl is not forced to use the framework in its
+    entirety, it is possible to use just the toolkit parts. The library is
+    implemented this way to achieve maximum re-usability: the framework is less
+    re-usable because it makes some assumptions about the general architecture
+    of the application, but since the features are also available with a
+    lower-level API –&nbsp;as a toolkit&nbsp;– all text editors and IDEs based
+    on GtkSourceView (or even other types of applications) should be able to
+    benefit from the features implemented in Tepl.
   </para>
 
   <para>
@@ -59,9 +73,9 @@
     <title>Boundary between GtkSourceView and Tepl</title>
 
     <para>
-      For the framework part of Tepl (not the toolkit part), there is a somewhat
-      clear boundary between GtkSourceView and Tepl: the top-level object in
-      GtkSourceView is the <link linkend="GtkSourceView">GtkSourceView</link>
+      For the framework part of Tepl (not the toolkit parts), there is a
+      somewhat clear boundary between GtkSourceView and Tepl: the top-level
+      object in GtkSourceView is the <link linkend="GtkSourceView">GtkSourceView</link>
       widget (representing only one view, or one file), while the GtkSourceView
       widget is at the bottom of the containment hierarchy in the Tepl
       framework. The top-level object in Tepl is
@@ -74,14 +88,10 @@
     <!-- TODO Once the framework is complete, update paragraph. -->
     <para>
       So the GtkSourceView library is not aware that there can be several
-      documents opened in the application, while the Tepl framework – once
-      finished – will have a complete view of the application with regards to
-      the opened documents. It permits to implement higher-level APIs in Tepl.
-    </para>
-
-    <para>
-      For the toolkit part, both GtkSourceView and Tepl contain other classes
-      for peripheral, self-contained features.
+      documents opened in the application, while the Tepl framework –&nbsp;once
+      finished&nbsp;– will have a complete view of the application with regards
+      to the opened documents. It permits to implement higher-level APIs in
+      Tepl.
     </para>
   </refsect1>
 

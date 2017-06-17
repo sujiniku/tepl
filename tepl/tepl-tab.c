@@ -29,7 +29,9 @@
 struct _TeplTabPrivate
 {
 	TeplView *view;
-	GtkWidget *main_widget;
+
+	/* @scrolled_window contains @view. */
+	GtkScrolledWindow *scrolled_window;
 };
 
 enum
@@ -43,6 +45,28 @@ static GParamSpec *properties[N_PROPERTIES];
 
 G_DEFINE_TYPE_WITH_PRIVATE (TeplTab, tepl_tab, GTK_TYPE_GRID)
 
+static GtkScrolledWindow *
+create_scrolled_window (void)
+{
+	GtkWidget *scrolled_window;
+
+	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_widget_show (scrolled_window);
+
+	g_object_set (scrolled_window,
+		      "expand", TRUE,
+		      NULL);
+
+	/* If a size request is not set to the scrolled window, adding info bars
+	 * makes the GtkWindow height to grow, probably because there is a
+	 * gtk_widget_queue_resize() which takes the natural size of the
+	 * scrolled window. Setting a size request fixes the problem.
+	 */
+	gtk_widget_set_size_request (scrolled_window, 100, 40);
+
+	return GTK_SCROLLED_WINDOW (scrolled_window);
+}
+
 static void
 set_view (TeplTab  *tab,
 	  TeplView *view)
@@ -50,7 +74,16 @@ set_view (TeplTab  *tab,
 	g_return_if_fail (TEPL_IS_VIEW (view));
 
 	g_assert (tab->priv->view == NULL);
+	g_assert (tab->priv->scrolled_window == NULL);
+
 	tab->priv->view = g_object_ref_sink (view);
+	tab->priv->scrolled_window = create_scrolled_window ();
+
+	gtk_container_add (GTK_CONTAINER (tab->priv->scrolled_window),
+			   GTK_WIDGET (tab->priv->view));
+
+	gtk_container_add (GTK_CONTAINER (tab),
+			   GTK_WIDGET (tab->priv->scrolled_window));
 
 	g_object_notify_by_pspec (G_OBJECT (tab), properties[PROP_VIEW]);
 }
@@ -101,7 +134,6 @@ tepl_tab_dispose (GObject *object)
 	TeplTab *tab = TEPL_TAB (object);
 
 	g_clear_object (&tab->priv->view);
-	g_clear_object (&tab->priv->main_widget);
 
 	G_OBJECT_CLASS (tepl_tab_parent_class)->dispose (object);
 }
@@ -144,24 +176,19 @@ tepl_tab_init (TeplTab *tab)
 
 /**
  * tepl_tab_new:
- * @main_widget: the main #GtkWidget that will be contained in the #TeplTab.
+ * @view: the #TeplView that will be contained in the tab.
  *
  * Returns: a new #TeplTab.
- * Since: 1.0
+ * Since: 3.0
  */
 TeplTab *
-tepl_tab_new (GtkWidget *main_widget)
+tepl_tab_new (TeplView *view)
 {
-	TeplTab *tab;
+	g_return_val_if_fail (TEPL_IS_VIEW (view), NULL);
 
-	g_return_val_if_fail (GTK_IS_WIDGET (main_widget), NULL);
-
-	tab = g_object_new (TEPL_TYPE_TAB, NULL);
-
-	gtk_container_add (GTK_CONTAINER (tab), main_widget);
-	tab->priv->main_widget = g_object_ref_sink (main_widget);
-
-	return tab;
+	return g_object_new (TEPL_TYPE_TAB,
+			     "view", view,
+			     NULL);
 }
 
 /**
@@ -200,12 +227,12 @@ tepl_tab_add_info_bar (TeplTab    *tab,
 	g_return_if_fail (GTK_IS_INFO_BAR (info_bar));
 
 	gtk_grid_insert_next_to (GTK_GRID (tab),
-				 tab->priv->main_widget,
+				 GTK_WIDGET (tab->priv->scrolled_window),
 				 GTK_POS_TOP);
 
 	gtk_grid_attach_next_to (GTK_GRID (tab),
 				 GTK_WIDGET (info_bar),
-				 tab->priv->main_widget,
+				 GTK_WIDGET (tab->priv->scrolled_window),
 				 GTK_POS_TOP,
 				 1, 1);
 }

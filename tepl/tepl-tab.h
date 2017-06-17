@@ -55,7 +55,7 @@ struct _TeplTabClass
 
 GType			tepl_tab_get_type				(void);
 
-TeplTab *		tepl_tab_new					(GtkWidget *main_widget);
+TeplTab *		tepl_tab_new					(TeplView *view);
 
 TeplView *		tepl_tab_get_view				(TeplTab *tab);
 

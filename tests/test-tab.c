@@ -193,37 +193,6 @@ create_side_panel (TeplTab *tab)
 	return GTK_WIDGET (vgrid);
 }
 
-static TeplTab *
-create_tab (void)
-{
-	GtkWidget *view;
-	GtkWidget *scrolled_window;
-	TeplTab *tab;
-
-	view = tepl_view_new ();
-
-	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-	gtk_container_add (GTK_CONTAINER (scrolled_window), view);
-	g_object_set (scrolled_window,
-		      "expand", TRUE,
-		      NULL);
-
-	/* If a size request is not set to the scrolled window, adding info bars
-	 * makes the GtkWindow height to grow, probably because there is a
-	 * gtk_widget_queue_resize() which takes the natural size of the
-	 * scrolled window. Setting a size request fixes the problem.
-	 * FIXME: some app authors will probably forget to do it, so it would be
-	 * better if the Tepl framework handles it, by being aware that the
-	 * TeplTab contains a scrolled window.
-	 */
-	gtk_widget_set_size_request (scrolled_window, 400, 40);
-
-	tab = tepl_tab_new (scrolled_window);
-	gtk_widget_show_all (GTK_WIDGET (tab));
-
-	return tab;
-}
-
 static GtkWidget *
 create_window_content (void)
 {
@@ -238,7 +207,7 @@ create_window_content (void)
 		      "margin", 6,
 		      NULL);
 
-	tab = create_tab ();
+	tab = tepl_tab_new (TEPL_VIEW (tepl_view_new ()));
 	side_panel = create_side_panel (tab);
 
 	gtk_container_add (GTK_CONTAINER (hgrid), side_panel);

@@ -44,6 +44,13 @@
           repository already contains tags for versions 1 and 2.
         </para>
       </listitem>
+      <listitem>
+        <para>
+          The <link linkend="tepl-tab-new">tepl_tab_new()</link> function now
+          takes a <link linkend="TeplView">TeplView</link> parameter instead of
+          the main <link linkend="GtkWidget">GtkWidget</link> of the tab.
+        </para>
+      </listitem>
     </itemizedlist>
   </chapter>
 </part>

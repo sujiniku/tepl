@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -25,8 +25,6 @@
  * @Title: TeplTab
  */
 
-typedef struct _TeplTabPrivate TeplTabPrivate;
-
 struct _TeplTabPrivate
 {
 	GtkWidget *main_widget;
@@ -37,9 +35,9 @@ G_DEFINE_TYPE_WITH_PRIVATE (TeplTab, tepl_tab, GTK_TYPE_GRID)
 static void
 tepl_tab_dispose (GObject *object)
 {
-	TeplTabPrivate *priv = tepl_tab_get_instance_private (TEPL_TAB (object));
+	TeplTab *tab = TEPL_TAB (object);
 
-	g_clear_object (&priv->main_widget);
+	g_clear_object (&tab->priv->main_widget);
 
 	G_OBJECT_CLASS (tepl_tab_parent_class)->dispose (object);
 }
@@ -55,6 +53,8 @@ tepl_tab_class_init (TeplTabClass *klass)
 static void
 tepl_tab_init (TeplTab *tab)
 {
+	tab->priv = tepl_tab_get_instance_private (tab);
+
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (tab), GTK_ORIENTATION_VERTICAL);
 }
 
@@ -69,15 +69,13 @@ TeplTab *
 tepl_tab_new (GtkWidget *main_widget)
 {
 	TeplTab *tab;
-	TeplTabPrivate *priv;
 
 	g_return_val_if_fail (GTK_IS_WIDGET (main_widget), NULL);
 
 	tab = g_object_new (TEPL_TYPE_TAB, NULL);
-	priv = tepl_tab_get_instance_private (tab);
 
 	gtk_container_add (GTK_CONTAINER (tab), main_widget);
-	priv->main_widget = g_object_ref_sink (main_widget);
+	tab->priv->main_widget = g_object_ref_sink (main_widget);
 
 	return tab;
 }
@@ -99,20 +97,16 @@ void
 tepl_tab_add_info_bar (TeplTab    *tab,
 		       GtkInfoBar *info_bar)
 {
-	TeplTabPrivate *priv;
-
 	g_return_if_fail (TEPL_IS_TAB (tab));
 	g_return_if_fail (GTK_IS_INFO_BAR (info_bar));
 
-	priv = tepl_tab_get_instance_private (tab);
-
 	gtk_grid_insert_next_to (GTK_GRID (tab),
-				 priv->main_widget,
+				 tab->priv->main_widget,
 				 GTK_POS_TOP);
 
 	gtk_grid_attach_next_to (GTK_GRID (tab),
 				 GTK_WIDGET (info_bar),
-				 priv->main_widget,
+				 tab->priv->main_widget,
 				 GTK_POS_TOP,
 				 1, 1);
 }

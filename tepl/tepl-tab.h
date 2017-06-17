@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -25,13 +25,26 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <tepl/tepl-types.h>
 
 G_BEGIN_DECLS
 
-#define TEPL_TYPE_TAB (tepl_tab_get_type ())
-G_DECLARE_DERIVABLE_TYPE (TeplTab, tepl_tab,
-			  TEPL, TAB,
-			  GtkGrid)
+#define TEPL_TYPE_TAB             (tepl_tab_get_type ())
+#define TEPL_TAB(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), TEPL_TYPE_TAB, TeplTab))
+#define TEPL_TAB_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), TEPL_TYPE_TAB, TeplTabClass))
+#define TEPL_IS_TAB(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TEPL_TYPE_TAB))
+#define TEPL_IS_TAB_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), TEPL_TYPE_TAB))
+#define TEPL_TAB_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), TEPL_TYPE_TAB, TeplTabClass))
+
+typedef struct _TeplTabClass    TeplTabClass;
+typedef struct _TeplTabPrivate  TeplTabPrivate;
+
+struct _TeplTab
+{
+	GtkGrid parent;
+
+	TeplTabPrivate *priv;
+};
 
 struct _TeplTabClass
 {
@@ -39,6 +52,8 @@ struct _TeplTabClass
 
 	gpointer padding[12];
 };
+
+GType			tepl_tab_get_type				(void);
 
 TeplTab *		tepl_tab_new					(GtkWidget *main_widget);
 

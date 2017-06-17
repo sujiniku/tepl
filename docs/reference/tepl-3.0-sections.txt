@@ -348,8 +348,15 @@ tepl_tab_new
 tepl_tab_get_view
 tepl_tab_add_info_bar
 <SUBSECTION Standard>
+TEPL_IS_TAB
+TEPL_IS_TAB_CLASS
+TEPL_TAB
+TEPL_TAB_CLASS
+TEPL_TAB_GET_CLASS
 TEPL_TYPE_TAB
 TeplTabClass
+TeplTabPrivate
+tepl_tab_get_type
 </SECTION>
 
 <SECTION>

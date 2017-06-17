@@ -345,6 +345,7 @@ tepl_metadata_manager_shutdown
 <FILE>tab</FILE>
 TeplTab
 tepl_tab_new
+tepl_tab_get_view
 tepl_tab_add_info_bar
 <SUBSECTION Standard>
 TEPL_TYPE_TAB

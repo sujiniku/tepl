@@ -18,6 +18,7 @@
  */
 
 #include "tepl-tab.h"
+#include "tepl-view.h"
 
 /**
  * SECTION:tab
@@ -27,16 +28,79 @@
 
 struct _TeplTabPrivate
 {
+	TeplView *view;
 	GtkWidget *main_widget;
 };
 
+enum
+{
+	PROP_0,
+	PROP_VIEW,
+	N_PROPERTIES
+};
+
+static GParamSpec *properties[N_PROPERTIES];
+
 G_DEFINE_TYPE_WITH_PRIVATE (TeplTab, tepl_tab, GTK_TYPE_GRID)
+
+static void
+set_view (TeplTab  *tab,
+	  TeplView *view)
+{
+	g_return_if_fail (TEPL_IS_VIEW (view));
+
+	g_assert (tab->priv->view == NULL);
+	tab->priv->view = g_object_ref_sink (view);
+
+	g_object_notify_by_pspec (G_OBJECT (tab), properties[PROP_VIEW]);
+}
+
+static void
+tepl_tab_get_property (GObject    *object,
+                       guint       prop_id,
+                       GValue     *value,
+                       GParamSpec *pspec)
+{
+	TeplTab *tab = TEPL_TAB (object);
+
+	switch (prop_id)
+	{
+		case PROP_VIEW:
+			g_value_set_object (value, tepl_tab_get_view (tab));
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+			break;
+	}
+}
+
+static void
+tepl_tab_set_property (GObject      *object,
+                       guint         prop_id,
+                       const GValue *value,
+                       GParamSpec   *pspec)
+{
+	TeplTab *tab = TEPL_TAB (object);
+
+	switch (prop_id)
+	{
+		case PROP_VIEW:
+			set_view (tab, g_value_get_object (value));
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+			break;
+	}
+}
 
 static void
 tepl_tab_dispose (GObject *object)
 {
 	TeplTab *tab = TEPL_TAB (object);
 
+	g_clear_object (&tab->priv->view);
 	g_clear_object (&tab->priv->main_widget);
 
 	G_OBJECT_CLASS (tepl_tab_parent_class)->dispose (object);
@@ -47,7 +111,27 @@ tepl_tab_class_init (TeplTabClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
+	object_class->get_property = tepl_tab_get_property;
+	object_class->set_property = tepl_tab_set_property;
 	object_class->dispose = tepl_tab_dispose;
+
+	/**
+	 * TeplTab:view:
+	 *
+	 * The #TeplView contained in the tab.
+	 *
+	 * Since: 3.0
+	 */
+	properties[PROP_VIEW] =
+		g_param_spec_object ("view",
+				     "View",
+				     "",
+				     TEPL_TYPE_VIEW,
+				     G_PARAM_READWRITE |
+				     G_PARAM_CONSTRUCT_ONLY |
+				     G_PARAM_STATIC_STRINGS);
+
+	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
 }
 
 static void
@@ -78,6 +162,21 @@ tepl_tab_new (GtkWidget *main_widget)
 	tab->priv->main_widget = g_object_ref_sink (main_widget);
 
 	return tab;
+}
+
+/**
+ * tepl_tab_get_view:
+ * @tab: a #TeplTab.
+ *
+ * Returns: (transfer none): the #TeplView contained in @tab.
+ * Since: 3.0
+ */
+TeplView *
+tepl_tab_get_view (TeplTab *tab)
+{
+	g_return_val_if_fail (TEPL_IS_TAB (tab), NULL);
+
+	return tab->priv->view;
 }
 
 /**

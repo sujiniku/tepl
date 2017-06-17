@@ -57,6 +57,8 @@ GType			tepl_tab_get_type				(void);
 
 TeplTab *		tepl_tab_new					(GtkWidget *main_widget);
 
+TeplView *		tepl_tab_get_view				(TeplTab *tab);
+
 void			tepl_tab_add_info_bar				(TeplTab    *tab,
 									 GtkInfoBar *info_bar);
 

@@ -36,9 +36,6 @@
 struct _TeplTabPrivate
 {
 	TeplView *view;
-
-	/* @scrolled_window contains @view. */
-	GtkScrolledWindow *scrolled_window;
 };
 
 enum
@@ -78,14 +75,15 @@ static void
 tepl_tab_pack_view_default (TeplTab  *tab,
 			    TeplView *view)
 {
-	g_return_if_fail (tab->priv->scrolled_window == NULL);
-	tab->priv->scrolled_window = create_scrolled_window ();
+	GtkScrolledWindow *scrolled_window;
 
-	gtk_container_add (GTK_CONTAINER (tab->priv->scrolled_window),
+	scrolled_window = create_scrolled_window ();
+
+	gtk_container_add (GTK_CONTAINER (scrolled_window),
 			   GTK_WIDGET (view));
 
 	gtk_container_add (GTK_CONTAINER (tab),
-			   GTK_WIDGET (tab->priv->scrolled_window));
+			   GTK_WIDGET (scrolled_window));
 }
 
 static void
@@ -239,16 +237,40 @@ void
 tepl_tab_add_info_bar (TeplTab    *tab,
 		       GtkInfoBar *info_bar)
 {
+	GList *children;
+	GList *l;
+	GtkWidget *sibling = NULL;
+
 	g_return_if_fail (TEPL_IS_TAB (tab));
 	g_return_if_fail (GTK_IS_INFO_BAR (info_bar));
 
-	gtk_grid_insert_next_to (GTK_GRID (tab),
-				 GTK_WIDGET (tab->priv->scrolled_window),
-				 GTK_POS_TOP);
+	children = gtk_container_get_children (GTK_CONTAINER (tab));
 
-	gtk_grid_attach_next_to (GTK_GRID (tab),
-				 GTK_WIDGET (info_bar),
-				 GTK_WIDGET (tab->priv->scrolled_window),
-				 GTK_POS_TOP,
-				 1, 1);
+	for (l = children; l != NULL; l = l->next)
+	{
+		GtkWidget *child = l->data;
+
+		if (!GTK_IS_INFO_BAR (child))
+		{
+			sibling = child;
+			break;
+		}
+	}
+
+	g_list_free (children);
+
+	if (sibling != NULL)
+	{
+		gtk_grid_insert_next_to (GTK_GRID (tab), sibling, GTK_POS_TOP);
+
+		gtk_grid_attach_next_to (GTK_GRID (tab),
+					 GTK_WIDGET (info_bar),
+					 sibling,
+					 GTK_POS_TOP,
+					 1, 1);
+	}
+	else
+	{
+		gtk_container_add (GTK_CONTAINER (tab), GTK_WIDGET (info_bar));
+	}
 }

@@ -46,10 +46,23 @@ struct _TeplTab
 	TeplTabPrivate *priv;
 };
 
+/**
+ * TeplTabClass:
+ * @parent_class: The parent class.
+ * @pack_view: Virtual function pointer to add the #TeplView in the #TeplTab
+ * container. Called only once at object construction time, when the
+ * #TeplTab:view property is set. By default the #TeplView is added to a
+ * #GtkScrolledWindow and the #GtkScrolledWindow is added to the #TeplTab with
+ * gtk_container_add().
+ */
 struct _TeplTabClass
 {
 	GtkGridClass parent_class;
 
+	void	(* pack_view)		(TeplTab  *tab,
+					 TeplView *view);
+
+	/*< private >*/
 	gpointer padding[12];
 };
 

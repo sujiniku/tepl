@@ -68,22 +68,29 @@ create_scrolled_window (void)
 }
 
 static void
+tepl_tab_pack_view_default (TeplTab  *tab,
+			    TeplView *view)
+{
+	g_return_if_fail (tab->priv->scrolled_window == NULL);
+	tab->priv->scrolled_window = create_scrolled_window ();
+
+	gtk_container_add (GTK_CONTAINER (tab->priv->scrolled_window),
+			   GTK_WIDGET (view));
+
+	gtk_container_add (GTK_CONTAINER (tab),
+			   GTK_WIDGET (tab->priv->scrolled_window));
+}
+
+static void
 set_view (TeplTab  *tab,
 	  TeplView *view)
 {
 	g_return_if_fail (TEPL_IS_VIEW (view));
 
 	g_assert (tab->priv->view == NULL);
-	g_assert (tab->priv->scrolled_window == NULL);
-
 	tab->priv->view = g_object_ref_sink (view);
-	tab->priv->scrolled_window = create_scrolled_window ();
 
-	gtk_container_add (GTK_CONTAINER (tab->priv->scrolled_window),
-			   GTK_WIDGET (tab->priv->view));
-
-	gtk_container_add (GTK_CONTAINER (tab),
-			   GTK_WIDGET (tab->priv->scrolled_window));
+	TEPL_TAB_GET_CLASS (tab)->pack_view (tab, view);
 
 	g_object_notify_by_pspec (G_OBJECT (tab), properties[PROP_VIEW]);
 }
@@ -146,6 +153,8 @@ tepl_tab_class_init (TeplTabClass *klass)
 	object_class->get_property = tepl_tab_get_property;
 	object_class->set_property = tepl_tab_set_property;
 	object_class->dispose = tepl_tab_dispose;
+
+	klass->pack_view = tepl_tab_pack_view_default;
 
 	/**
 	 * TeplTab:view:

@@ -24,6 +24,13 @@
  * SECTION:tab
  * @Short_description: Contains a TeplView with GtkInfoBars on top
  * @Title: TeplTab
+ *
+ * A #GtkGrid container that contains a #TeplView, and one or several
+ * #GtkInfoBar's can be added on top. By default #TeplTab has a vertical
+ * #GtkOrientation.
+ *
+ * The way that the #TeplView is packed into the #TeplTab is customizable with
+ * the ::pack_view virtual function.
  */
 
 struct _TeplTabPrivate

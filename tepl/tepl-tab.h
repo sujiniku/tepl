@@ -74,14 +74,16 @@ struct _TeplTabClass
 	gpointer padding[12];
 };
 
-GType			tepl_tab_get_type				(void);
+GType		tepl_tab_get_type		(void);
 
-TeplTab *		tepl_tab_new					(TeplView *view);
+TeplTab *	tepl_tab_new			(TeplView *view);
 
-TeplView *		tepl_tab_get_view				(TeplTab *tab);
+TeplView *	tepl_tab_get_view		(TeplTab *tab);
 
-void			tepl_tab_add_info_bar				(TeplTab    *tab,
-									 GtkInfoBar *info_bar);
+TeplBuffer *	tepl_tab_get_buffer		(TeplTab *tab);
+
+void		tepl_tab_add_info_bar		(TeplTab    *tab,
+						 GtkInfoBar *info_bar);
 
 G_END_DECLS
 

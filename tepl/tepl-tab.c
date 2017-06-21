@@ -19,6 +19,7 @@
 
 #include "tepl-tab.h"
 #include "tepl-view.h"
+#include "tepl-buffer.h"
 
 /**
  * SECTION:tab
@@ -266,6 +267,24 @@ tepl_tab_get_view (TeplTab *tab)
 	g_return_val_if_fail (TEPL_IS_TAB (tab), NULL);
 
 	return tab->priv->view;
+}
+
+/**
+ * tepl_tab_get_buffer:
+ * @tab: a #TeplTab.
+ *
+ * A convenience function that calls gtk_text_view_get_buffer() on the
+ * #TeplTab:view associated with the @tab.
+ *
+ * Returns: (transfer none): the #TeplBuffer of the #TeplTab:view.
+ * Since: 3.0
+ */
+TeplBuffer *
+tepl_tab_get_buffer (TeplTab *tab)
+{
+	g_return_val_if_fail (TEPL_IS_TAB (tab), NULL);
+
+	return TEPL_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (tab->priv->view)));
 }
 
 /**

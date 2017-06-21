@@ -347,6 +347,7 @@ TeplTab
 TeplTabClass
 tepl_tab_new
 tepl_tab_get_view
+tepl_tab_get_buffer
 tepl_tab_add_info_bar
 <SUBSECTION Standard>
 TEPL_IS_TAB

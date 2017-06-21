@@ -22,15 +22,22 @@
 
 /**
  * SECTION:tab
- * @Short_description: Contains a TeplView with GtkInfoBars on top
+ * @Short_description: Contains a TeplView and GtkInfoBars
  * @Title: TeplTab
  *
- * A #GtkGrid container that contains a #TeplView, and one or several
- * #GtkInfoBar's can be added on top. By default #TeplTab has a vertical
- * #GtkOrientation.
+ * #TeplTab is meant to be the content of one tab in the text editor (if the
+ * text editor has a Tabbed Document Interface). It is a #GtkGrid container that
+ * contains the #TeplView and can contain one or several #GtkInfoBar's.
+ *
+ * By default:
+ * - #TeplTab has a vertical #GtkOrientation.
+ * - The main child widget of #TeplTab is a #GtkScrolledWindow which contains
+ *   the #TeplView.
+ * - #GtkInfoBar's are added on top of the #GtkScrolledWindow.
  *
  * The way that the #TeplView is packed into the #TeplTab is customizable with
- * the ::pack_view virtual function.
+ * the ::pack_view virtual function. Similarly, the way that #GtkInfoBar's are
+ * added can be customized with ::pack_info_bar.
  */
 
 struct _TeplTabPrivate
@@ -84,6 +91,45 @@ tepl_tab_pack_view_default (TeplTab  *tab,
 
 	gtk_container_add (GTK_CONTAINER (tab),
 			   GTK_WIDGET (scrolled_window));
+}
+
+static void
+tepl_tab_pack_info_bar_default (TeplTab    *tab,
+				GtkInfoBar *info_bar)
+{
+	GList *children;
+	GList *l;
+	GtkWidget *sibling = NULL;
+
+	children = gtk_container_get_children (GTK_CONTAINER (tab));
+
+	for (l = children; l != NULL; l = l->next)
+	{
+		GtkWidget *child = l->data;
+
+		if (!GTK_IS_INFO_BAR (child))
+		{
+			sibling = child;
+			break;
+		}
+	}
+
+	g_list_free (children);
+
+	if (sibling != NULL)
+	{
+		gtk_grid_insert_next_to (GTK_GRID (tab), sibling, GTK_POS_TOP);
+
+		gtk_grid_attach_next_to (GTK_GRID (tab),
+					 GTK_WIDGET (info_bar),
+					 sibling,
+					 GTK_POS_TOP,
+					 1, 1);
+	}
+	else
+	{
+		gtk_container_add (GTK_CONTAINER (tab), GTK_WIDGET (info_bar));
+	}
 }
 
 static void
@@ -160,11 +206,13 @@ tepl_tab_class_init (TeplTabClass *klass)
 	object_class->dispose = tepl_tab_dispose;
 
 	klass->pack_view = tepl_tab_pack_view_default;
+	klass->pack_info_bar = tepl_tab_pack_info_bar_default;
 
 	/**
 	 * TeplTab:view:
 	 *
-	 * The #TeplView contained in the tab.
+	 * The #TeplView contained in the tab. When this property is set, the
+	 * ::pack_view virtual function is called.
 	 *
 	 * Since: 3.0
 	 */
@@ -225,11 +273,9 @@ tepl_tab_get_view (TeplTab *tab)
  * @tab: a #TeplTab.
  * @info_bar: a #GtkInfoBar.
  *
- * Attaches @info_bar to @tab, above the main widget.
+ * Attaches @info_bar to @tab.
  *
- * If several info bars are added, the first one will be at the top, the second
- * one below the first info bar, etc. With the main widget of @tab at the
- * bottom.
+ * This function calls the ::pack_info_bar virtual function.
  *
  * Since: 1.0
  */
@@ -237,40 +283,8 @@ void
 tepl_tab_add_info_bar (TeplTab    *tab,
 		       GtkInfoBar *info_bar)
 {
-	GList *children;
-	GList *l;
-	GtkWidget *sibling = NULL;
-
 	g_return_if_fail (TEPL_IS_TAB (tab));
 	g_return_if_fail (GTK_IS_INFO_BAR (info_bar));
 
-	children = gtk_container_get_children (GTK_CONTAINER (tab));
-
-	for (l = children; l != NULL; l = l->next)
-	{
-		GtkWidget *child = l->data;
-
-		if (!GTK_IS_INFO_BAR (child))
-		{
-			sibling = child;
-			break;
-		}
-	}
-
-	g_list_free (children);
-
-	if (sibling != NULL)
-	{
-		gtk_grid_insert_next_to (GTK_GRID (tab), sibling, GTK_POS_TOP);
-
-		gtk_grid_attach_next_to (GTK_GRID (tab),
-					 GTK_WIDGET (info_bar),
-					 sibling,
-					 GTK_POS_TOP,
-					 1, 1);
-	}
-	else
-	{
-		gtk_container_add (GTK_CONTAINER (tab), GTK_WIDGET (info_bar));
-	}
+	TEPL_TAB_GET_CLASS (tab)->pack_info_bar (tab, info_bar);
 }

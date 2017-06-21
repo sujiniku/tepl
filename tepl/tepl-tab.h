@@ -50,10 +50,15 @@ struct _TeplTab
  * TeplTabClass:
  * @parent_class: The parent class.
  * @pack_view: Virtual function pointer to add the #TeplView in the #TeplTab
- * container. Called only once at object construction time, when the
- * #TeplTab:view property is set. By default the #TeplView is added to a
- * #GtkScrolledWindow and the #GtkScrolledWindow is added to the #TeplTab with
- * gtk_container_add().
+ *   container. Called only once at object construction time, when the
+ *   #TeplTab:view property is set. By default the #TeplView is added to a
+ *   #GtkScrolledWindow and the #GtkScrolledWindow is added to the #TeplTab with
+ *   gtk_container_add().
+ * @pack_info_bar: Virtual function pointer to add a #GtkInfoBar in the #TeplTab
+ *   container. By default the #GtkInfoBar is inserted above the first
+ *   non-#GtkInfoBar child widget of #TeplTab (so by default it is inserted
+ *   below other #GtkInfoBar's, but above the #GtkScrolledWindow containing the
+ *   #TeplView).
  */
 struct _TeplTabClass
 {
@@ -61,6 +66,9 @@ struct _TeplTabClass
 
 	void	(* pack_view)		(TeplTab  *tab,
 					 TeplView *view);
+
+	void	(* pack_info_bar)	(TeplTab    *tab,
+					 GtkInfoBar *info_bar);
 
 	/*< private >*/
 	gpointer padding[12];

@@ -135,6 +135,7 @@ set_view (TeplTab  *tab,
 	{
 		/* For tepl_tab_new(). */
 		view = TEPL_VIEW (tepl_view_new ());
+		gtk_widget_show (GTK_WIDGET (view));
 	}
 
 	g_return_if_fail (TEPL_IS_VIEW (view));

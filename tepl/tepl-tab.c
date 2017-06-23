@@ -137,6 +137,12 @@ static void
 set_view (TeplTab  *tab,
 	  TeplView *view)
 {
+	if (view == NULL)
+	{
+		/* For tepl_tab_new(). */
+		view = TEPL_VIEW (tepl_view_new ());
+	}
+
 	g_return_if_fail (TEPL_IS_VIEW (view));
 
 	g_assert (tab->priv->view == NULL);
@@ -235,6 +241,21 @@ tepl_tab_init (TeplTab *tab)
 	tab->priv = tepl_tab_get_instance_private (tab);
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (tab), GTK_ORIENTATION_VERTICAL);
+}
+
+/**
+ * tepl_tab_new:
+ *
+ * Creates a new #TeplTab with a new #TeplView. The new #TeplView can be
+ * retrieved afterwards with tepl_tab_get_view().
+ *
+ * Returns: a new #TeplTab.
+ * Since: 3.0
+ */
+TeplTab *
+tepl_tab_new (void)
+{
+	return g_object_new (TEPL_TYPE_TAB, NULL);
 }
 
 /**

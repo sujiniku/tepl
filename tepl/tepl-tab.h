@@ -76,6 +76,8 @@ struct _TeplTabClass
 
 GType		tepl_tab_get_type		(void);
 
+TeplTab *	tepl_tab_new			(void);
+
 TeplTab *	tepl_tab_new_with_view		(TeplView *view);
 
 TeplView *	tepl_tab_get_view		(TeplTab *tab);

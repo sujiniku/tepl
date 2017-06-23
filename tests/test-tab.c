@@ -207,7 +207,7 @@ create_window_content (void)
 		      "margin", 6,
 		      NULL);
 
-	tab = tepl_tab_new_with_view (TEPL_VIEW (tepl_view_new ()));
+	tab = tepl_tab_new ();
 	side_panel = create_side_panel (tab);
 
 	gtk_container_add (GTK_CONTAINER (hgrid), side_panel);

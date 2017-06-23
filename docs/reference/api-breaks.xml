@@ -46,9 +46,11 @@
       </listitem>
       <listitem>
         <para>
-          The <link linkend="tepl-tab-new">tepl_tab_new()</link> function now
-          takes a <link linkend="TeplView">TeplView</link> parameter instead of
-          the main <link linkend="GtkWidget">GtkWidget</link> of the tab.
+          The <link linkend="TeplTab">TeplTab</link> class has been revamped.
+          The <link linkend="tepl-tab-new">tepl_tab_new()</link> function
+          doesn't take a <link linkend="GtkWidget">GtkWidget</link> parameter
+          anymore, a <link linkend="TeplView">TeplView</link> is created
+          instead.
         </para>
       </listitem>
     </itemizedlist>

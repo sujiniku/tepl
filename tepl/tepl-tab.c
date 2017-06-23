@@ -61,16 +61,23 @@ G_DEFINE_TYPE_WITH_PRIVATE (TeplTab, tepl_tab, GTK_TYPE_GRID)
 static GtkScrolledWindow *
 create_scrolled_window (void)
 {
-	GtkWidget *scrolled_window;
+	GtkScrolledWindow *scrolled_window;
 
-	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-	gtk_widget_show (scrolled_window);
+	scrolled_window = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (NULL, NULL));
+
+	/* Disable overlay scrolling, it doesn't work well with GtkTextView. For
+	 * example to place the cursor with the mouse on the last character of a
+	 * line.
+	 */
+	gtk_scrolled_window_set_overlay_scrolling (scrolled_window, FALSE);
 
 	g_object_set (scrolled_window,
 		      "expand", TRUE,
 		      NULL);
 
-	return GTK_SCROLLED_WINDOW (scrolled_window);
+	gtk_widget_show (GTK_WIDGET (scrolled_window));
+
+	return scrolled_window;
 }
 
 static void

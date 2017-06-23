@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -383,6 +383,28 @@ tepl_info_bar_create_label (void)
 	gtk_label_set_line_wrap (label, TRUE);
 	gtk_label_set_line_wrap_mode (label, PANGO_WRAP_WORD_CHAR);
 	gtk_label_set_selectable (label, TRUE);
+
+	/* Since the wrapping is enabled, we need to set a minimum width.
+	 *
+	 * If a minimum width is not set, adding an info bar to a container
+	 * (e.g. a TeplTab) can make the GtkWindow height to grow. Because
+	 * without a minimum width (and without ellipsization), when the user
+	 * resizes the window (e.g. reducing the width) the widgets inside the
+	 * window must be able to be drawn. When the info bar must be drawn with
+	 * a width of e.g. 20 pixels, it takes a huge height because of the text
+	 * wrapping. So by setting a minimum width to the label, the maximum
+	 * height that the info bar can take is limited, so in most cases the
+	 * GtkWindow current height is sufficient to draw the info bar with its
+	 * maximum height.
+	 *
+	 * See:
+	 * https://wiki.gnome.org/HowDoI/Labels
+	 *
+	 * There is also a safety net in tepl_tab_add_info_bar() which calls
+	 * gtk_widget_set_size_request() on the GtkInfoBar, to set a minimum
+	 * width.
+	 */
+	gtk_label_set_width_chars (label, 30);
 
 	return label;
 }

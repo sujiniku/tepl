@@ -69,13 +69,6 @@ create_scrolled_window (void)
 		      "expand", TRUE,
 		      NULL);
 
-	/* If a size request is not set to the scrolled window, adding info bars
-	 * makes the GtkWindow height to grow, probably because there is a
-	 * gtk_widget_queue_resize() which takes the natural size of the
-	 * scrolled window. Setting a size request fixes the problem.
-	 */
-	gtk_widget_set_size_request (scrolled_window, 100, 40);
-
 	return GTK_SCROLLED_WINDOW (scrolled_window);
 }
 
@@ -323,8 +316,30 @@ void
 tepl_tab_add_info_bar (TeplTab    *tab,
 		       GtkInfoBar *info_bar)
 {
+	gint min_width;
+	gint min_height;
+
 	g_return_if_fail (TEPL_IS_TAB (tab));
 	g_return_if_fail (GTK_IS_INFO_BAR (info_bar));
+
+	gtk_widget_get_size_request (GTK_WIDGET (info_bar), &min_width, &min_height);
+
+	/* If min_width != -1, gtk_widget_set_size_request() has already been
+	 * called, so don't change the value.
+	 */
+	if (min_width == -1)
+	{
+		/* Safety net to avoid in most cases the GtkWindow height to
+		 * grow.
+		 *
+		 * The gtk_label_set_width_chars() call in
+		 * tepl_info_bar_create_label() fixes the problem at the root,
+		 * but we cannot enforce all GtkLabel of @info_bar to have been
+		 * created with tepl_info_bar_create_label(), so a safety net is
+		 * better.
+		 */
+		gtk_widget_set_size_request (GTK_WIDGET (info_bar), 300, min_height);
+	}
 
 	TEPL_TAB_GET_CLASS (tab)->pack_info_bar (tab, info_bar);
 }

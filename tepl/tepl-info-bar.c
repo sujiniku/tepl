@@ -379,6 +379,7 @@ tepl_info_bar_create_label (void)
 
 	label = GTK_LABEL (gtk_label_new (NULL));
 	gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_START);
+	gtk_label_set_xalign (label, 0.0);
 	gtk_label_set_line_wrap (label, TRUE);
 	gtk_label_set_line_wrap_mode (label, PANGO_WRAP_WORD_CHAR);
 	gtk_label_set_selectable (label, TRUE);

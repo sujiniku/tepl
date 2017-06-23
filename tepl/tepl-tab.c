@@ -238,14 +238,14 @@ tepl_tab_init (TeplTab *tab)
 }
 
 /**
- * tepl_tab_new:
+ * tepl_tab_new_with_view:
  * @view: the #TeplView that will be contained in the tab.
  *
  * Returns: a new #TeplTab.
  * Since: 3.0
  */
 TeplTab *
-tepl_tab_new (TeplView *view)
+tepl_tab_new_with_view (TeplView *view)
 {
 	g_return_val_if_fail (TEPL_IS_VIEW (view), NULL);
 

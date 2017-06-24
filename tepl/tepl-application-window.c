@@ -35,6 +35,9 @@
  *
  * #TeplApplicationWindow extends the #GtkApplicationWindow class.
  *
+ * An application needs to call tepl_application_window_set_tab_group() to
+ * benefit from the #TeplTabGroup interface implemented by this class.
+ *
  * Note that #TeplApplicationWindow extends the #GtkApplicationWindow class but
  * without subclassing it, because several libraries might want to extend
  * #GtkApplicationWindow and an application needs to be able to use all those
@@ -273,9 +276,9 @@ tepl_application_window_get_application_window (TeplApplicationWindow *tepl_wind
  * @tepl_window: a #TeplApplicationWindow.
  * @tab_group: a #TeplTabGroup.
  *
- * Sets the #TeplTabGroup of @tepl_window. This function can be called only once,
- * it is not possible to change the #TeplTabGroup (this restriction may be lifted
- * in the future if there is a compelling use-case).
+ * Sets the #TeplTabGroup of @tepl_window. This function can be called only
+ * once, it is not possible to change the #TeplTabGroup afterwards (this
+ * restriction may be lifted in the future if there is a compelling use-case).
  *
  * #TeplApplicationWindow implements the #TeplTabGroup interface by delegating
  * the requests to @tab_group.

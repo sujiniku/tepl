@@ -45,6 +45,7 @@ typedef struct _TeplGutterRendererFolds		TeplGutterRendererFolds;
 typedef struct _TeplInfoBar			TeplInfoBar;
 typedef struct _TeplMenuShell			TeplMenuShell;
 typedef struct _TeplTab				TeplTab;
+typedef struct _TeplTabList			TeplTabList;
 typedef struct _TeplView			TeplView;
 
 G_END_DECLS

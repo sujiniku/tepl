@@ -362,6 +362,24 @@ tepl_tab_get_type
 </SECTION>
 
 <SECTION>
+<FILE>tab-list</FILE>
+TeplTabList
+TeplTabListInterface
+tepl_tab_list_get_tabs
+tepl_tab_list_get_views
+tepl_tab_list_get_buffers
+tepl_tab_list_get_active_tab
+tepl_tab_list_get_active_view
+tepl_tab_list_get_active_buffer
+<SUBSECTION Standard>
+TEPL_IS_TAB_LIST
+TEPL_TAB_LIST
+TEPL_TAB_LIST_GET_INTERFACE
+TEPL_TYPE_TAB_LIST
+tepl_tab_list_get_type
+</SECTION>
+
+<SECTION>
 <FILE>utils</FILE>
 tepl_utils_recent_chooser_menu_get_item_uri
 </SECTION>

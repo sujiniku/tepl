@@ -62,7 +62,15 @@ enum
 
 static GParamSpec *properties[N_PROPERTIES];
 
-G_DEFINE_TYPE_WITH_PRIVATE (TeplApplicationWindow, tepl_application_window, G_TYPE_OBJECT)
+static void tepl_tab_list_interface_init (gpointer g_iface,
+					  gpointer iface_data);
+
+G_DEFINE_TYPE_WITH_CODE (TeplApplicationWindow,
+			 tepl_application_window,
+			 G_TYPE_OBJECT,
+			 G_ADD_PRIVATE (TeplApplicationWindow)
+			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_TAB_LIST,
+						tepl_tab_list_interface_init))
 
 static void
 tepl_application_window_get_property (GObject    *object,
@@ -168,6 +176,42 @@ tepl_application_window_class_init (TeplApplicationWindowClass *klass)
 	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
 }
 
+static GList *
+tepl_application_window_get_tabs (TeplTabList *tab_list)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (tab_list);
+
+	if (tepl_window->priv->tab_list == NULL)
+	{
+		return NULL;
+	}
+
+	return tepl_tab_list_get_tabs (tepl_window->priv->tab_list);
+}
+
+static TeplTab *
+tepl_application_window_get_active_tab (TeplTabList *tab_list)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (tab_list);
+
+	if (tepl_window->priv->tab_list == NULL)
+	{
+		return NULL;
+	}
+
+	return tepl_tab_list_get_active_tab (tepl_window->priv->tab_list);
+}
+
+static void
+tepl_tab_list_interface_init (gpointer g_iface,
+			      gpointer iface_data)
+{
+	TeplTabListInterface *interface = g_iface;
+
+	interface->get_tabs = tepl_application_window_get_tabs;
+	interface->get_active_tab = tepl_application_window_get_active_tab;
+}
+
 static void
 tepl_application_window_init (TeplApplicationWindow *tepl_window)
 {
@@ -232,6 +276,9 @@ tepl_application_window_get_application_window (TeplApplicationWindow *tepl_wind
  * Sets the #TeplTabList of @tepl_window. This function can be called only once,
  * it is not possible to change the #TeplTabList (this restriction may be lifted
  * in the future if there is a compelling use-case).
+ *
+ * #TeplApplicationWindow implements the #TeplTabList interface by delegating
+ * the requests to @tab_list.
  *
  * Since: 3.0
  */

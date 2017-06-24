@@ -120,6 +120,7 @@ tepl_application_window_dispose (GObject *object)
 
 	tepl_window->priv->gtk_window = NULL;
 	g_clear_object (&tepl_window->priv->tab_list);
+	g_clear_object (&tepl_window->priv->statusbar);
 
 	G_OBJECT_CLASS (tepl_application_window_parent_class)->dispose (object);
 }

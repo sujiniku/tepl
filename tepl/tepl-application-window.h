@@ -59,6 +59,9 @@ TeplApplicationWindow *	tepl_application_window_get_from_gtk_application_window	
 
 GtkApplicationWindow *	tepl_application_window_get_application_window		(TeplApplicationWindow *tepl_window);
 
+void			tepl_application_window_set_tab_list			(TeplApplicationWindow *tepl_window,
+										 TeplTabList           *tab_list);
+
 GtkStatusbar *		tepl_application_window_get_statusbar			(TeplApplicationWindow *tepl_window);
 
 void			tepl_application_window_set_statusbar			(TeplApplicationWindow *tepl_window,

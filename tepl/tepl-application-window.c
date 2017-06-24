@@ -25,6 +25,7 @@
 #include "tepl-action-info-central-store.h"
 #include "tepl-menu-item.h"
 #include "tepl-menu-shell.h"
+#include "tepl-tab-list.h"
 #include "tepl-utils.h"
 
 /**
@@ -43,6 +44,7 @@
 struct _TeplApplicationWindowPrivate
 {
 	GtkApplicationWindow *gtk_window;
+	TeplTabList *tab_list;
 	GtkStatusbar *statusbar;
 };
 
@@ -117,6 +119,7 @@ tepl_application_window_dispose (GObject *object)
 	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (object);
 
 	tepl_window->priv->gtk_window = NULL;
+	g_clear_object (&tepl_window->priv->tab_list);
 
 	G_OBJECT_CLASS (tepl_application_window_parent_class)->dispose (object);
 }
@@ -218,6 +221,34 @@ tepl_application_window_get_application_window (TeplApplicationWindow *tepl_wind
 	g_return_val_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window), NULL);
 
 	return tepl_window->priv->gtk_window;
+}
+
+/**
+ * tepl_application_window_set_tab_list:
+ * @tepl_window: a #TeplApplicationWindow.
+ * @tab_list: a #TeplTabList.
+ *
+ * Sets the #TeplTabList of @tepl_window. This function can be called only once,
+ * it is not possible to change the #TeplTabList (this restriction may be lifted
+ * in the future if there is a compelling use-case).
+ *
+ * Since: 3.0
+ */
+void
+tepl_application_window_set_tab_list (TeplApplicationWindow *tepl_window,
+				      TeplTabList           *tab_list)
+{
+	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));
+	g_return_if_fail (TEPL_IS_TAB_LIST (tab_list));
+
+	if (tepl_window->priv->tab_list != NULL)
+	{
+		g_warning ("%s(): the TeplTabList has already been set, it can be set only once.",
+			   G_STRFUNC);
+		return;
+	}
+
+	tepl_window->priv->tab_list = g_object_ref_sink (tab_list);
 }
 
 /**

@@ -140,7 +140,8 @@ tepl_tab_list_get_buffers (TeplTabList *tab_list)
  * tepl_tab_list_get_active_tab:
  * @tab_list: a #TeplTabList.
  *
- * Returns: (transfer none): the #TeplTab currently shown in @tab_list.
+ * Returns: (transfer none) (nullable): the #TeplTab currently shown in
+ * @tab_list.
  * Since: 3.0
  */
 TeplTab *
@@ -157,7 +158,7 @@ tepl_tab_list_get_active_tab (TeplTabList *tab_list)
  *
  * Convenience function.
  *
- * Returns: (transfer none): the #TeplView of the active tab.
+ * Returns: (transfer none) (nullable): the #TeplView of the active tab.
  * Since: 3.0
  */
 TeplView *
@@ -178,7 +179,7 @@ tepl_tab_list_get_active_view (TeplTabList *tab_list)
  *
  * Convenience function.
  *
- * Returns: (transfer none): the #TeplBuffer of the active tab.
+ * Returns: (transfer none) (nullable): the #TeplBuffer of the active tab.
  * Since: 3.0
  */
 TeplBuffer *

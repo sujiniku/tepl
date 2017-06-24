@@ -21,7 +21,7 @@
 #include "tepl-view.h"
 #include "tepl-buffer.h"
 #include "tepl-info-bar.h"
-#include "tepl-tab-list.h"
+#include "tepl-tab-group.h"
 
 /**
  * SECTION:tab
@@ -42,7 +42,7 @@
  * the ::pack_view virtual function. Similarly, the way that #GtkInfoBar's are
  * added can be customized with ::pack_info_bar.
  *
- * #TeplTab implements the #TeplTabList interface, for a list of only one tab.
+ * #TeplTab implements the #TeplTabGroup interface, for a group of only one tab.
  * It is useful for text editors that open each file in a separate window.
  */
 
@@ -60,15 +60,15 @@ enum
 
 static GParamSpec *properties[N_PROPERTIES];
 
-static void tepl_tab_list_interface_init (gpointer g_iface,
-					  gpointer iface_data);
+static void tepl_tab_group_interface_init (gpointer g_iface,
+					   gpointer iface_data);
 
 G_DEFINE_TYPE_WITH_CODE (TeplTab,
 			 tepl_tab,
 			 GTK_TYPE_GRID,
 			 G_ADD_PRIVATE (TeplTab)
-			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_TAB_LIST,
-						tepl_tab_list_interface_init))
+			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_TAB_GROUP,
+						tepl_tab_group_interface_init))
 
 static GtkScrolledWindow *
 create_scrolled_window (void)
@@ -250,22 +250,22 @@ tepl_tab_class_init (TeplTabClass *klass)
 }
 
 static GList *
-tepl_tab_get_tabs (TeplTabList *tab_list)
+tepl_tab_get_tabs (TeplTabGroup *tab_group)
 {
-	return g_list_append (NULL, TEPL_TAB (tab_list));
+	return g_list_append (NULL, TEPL_TAB (tab_group));
 }
 
 static TeplTab *
-tepl_tab_get_active_tab (TeplTabList *tab_list)
+tepl_tab_get_active_tab (TeplTabGroup *tab_group)
 {
-	return TEPL_TAB (tab_list);
+	return TEPL_TAB (tab_group);
 }
 
 static void
-tepl_tab_list_interface_init (gpointer g_iface,
-			      gpointer iface_data)
+tepl_tab_group_interface_init (gpointer g_iface,
+			       gpointer iface_data)
 {
-	TeplTabListInterface *interface = g_iface;
+	TeplTabGroupInterface *interface = g_iface;
 
 	interface->get_tabs = tepl_tab_get_tabs;
 	interface->get_active_tab = tepl_tab_get_active_tab;

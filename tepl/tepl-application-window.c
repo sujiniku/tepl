@@ -25,7 +25,7 @@
 #include "tepl-action-info-central-store.h"
 #include "tepl-menu-item.h"
 #include "tepl-menu-shell.h"
-#include "tepl-tab-list.h"
+#include "tepl-tab-group.h"
 #include "tepl-utils.h"
 
 /**
@@ -44,7 +44,7 @@
 struct _TeplApplicationWindowPrivate
 {
 	GtkApplicationWindow *gtk_window;
-	TeplTabList *tab_list;
+	TeplTabGroup *tab_group;
 	GtkStatusbar *statusbar;
 };
 
@@ -62,15 +62,15 @@ enum
 
 static GParamSpec *properties[N_PROPERTIES];
 
-static void tepl_tab_list_interface_init (gpointer g_iface,
-					  gpointer iface_data);
+static void tepl_tab_group_interface_init (gpointer g_iface,
+					   gpointer iface_data);
 
 G_DEFINE_TYPE_WITH_CODE (TeplApplicationWindow,
 			 tepl_application_window,
 			 G_TYPE_OBJECT,
 			 G_ADD_PRIVATE (TeplApplicationWindow)
-			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_TAB_LIST,
-						tepl_tab_list_interface_init))
+			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_TAB_GROUP,
+						tepl_tab_group_interface_init))
 
 static void
 tepl_application_window_get_property (GObject    *object,
@@ -127,7 +127,7 @@ tepl_application_window_dispose (GObject *object)
 	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (object);
 
 	tepl_window->priv->gtk_window = NULL;
-	g_clear_object (&tepl_window->priv->tab_list);
+	g_clear_object (&tepl_window->priv->tab_group);
 	g_clear_object (&tepl_window->priv->statusbar);
 
 	G_OBJECT_CLASS (tepl_application_window_parent_class)->dispose (object);
@@ -177,36 +177,36 @@ tepl_application_window_class_init (TeplApplicationWindowClass *klass)
 }
 
 static GList *
-tepl_application_window_get_tabs (TeplTabList *tab_list)
+tepl_application_window_get_tabs (TeplTabGroup *tab_group)
 {
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (tab_list);
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (tab_group);
 
-	if (tepl_window->priv->tab_list == NULL)
+	if (tepl_window->priv->tab_group == NULL)
 	{
 		return NULL;
 	}
 
-	return tepl_tab_list_get_tabs (tepl_window->priv->tab_list);
+	return tepl_tab_group_get_tabs (tepl_window->priv->tab_group);
 }
 
 static TeplTab *
-tepl_application_window_get_active_tab (TeplTabList *tab_list)
+tepl_application_window_get_active_tab (TeplTabGroup *tab_group)
 {
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (tab_list);
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (tab_group);
 
-	if (tepl_window->priv->tab_list == NULL)
+	if (tepl_window->priv->tab_group == NULL)
 	{
 		return NULL;
 	}
 
-	return tepl_tab_list_get_active_tab (tepl_window->priv->tab_list);
+	return tepl_tab_group_get_active_tab (tepl_window->priv->tab_group);
 }
 
 static void
-tepl_tab_list_interface_init (gpointer g_iface,
-			      gpointer iface_data)
+tepl_tab_group_interface_init (gpointer g_iface,
+			       gpointer iface_data)
 {
-	TeplTabListInterface *interface = g_iface;
+	TeplTabGroupInterface *interface = g_iface;
 
 	interface->get_tabs = tepl_application_window_get_tabs;
 	interface->get_active_tab = tepl_application_window_get_active_tab;
@@ -269,34 +269,34 @@ tepl_application_window_get_application_window (TeplApplicationWindow *tepl_wind
 }
 
 /**
- * tepl_application_window_set_tab_list:
+ * tepl_application_window_set_tab_group:
  * @tepl_window: a #TeplApplicationWindow.
- * @tab_list: a #TeplTabList.
+ * @tab_group: a #TeplTabGroup.
  *
- * Sets the #TeplTabList of @tepl_window. This function can be called only once,
- * it is not possible to change the #TeplTabList (this restriction may be lifted
+ * Sets the #TeplTabGroup of @tepl_window. This function can be called only once,
+ * it is not possible to change the #TeplTabGroup (this restriction may be lifted
  * in the future if there is a compelling use-case).
  *
- * #TeplApplicationWindow implements the #TeplTabList interface by delegating
- * the requests to @tab_list.
+ * #TeplApplicationWindow implements the #TeplTabGroup interface by delegating
+ * the requests to @tab_group.
  *
  * Since: 3.0
  */
 void
-tepl_application_window_set_tab_list (TeplApplicationWindow *tepl_window,
-				      TeplTabList           *tab_list)
+tepl_application_window_set_tab_group (TeplApplicationWindow *tepl_window,
+				       TeplTabGroup          *tab_group)
 {
 	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));
-	g_return_if_fail (TEPL_IS_TAB_LIST (tab_list));
+	g_return_if_fail (TEPL_IS_TAB_GROUP (tab_group));
 
-	if (tepl_window->priv->tab_list != NULL)
+	if (tepl_window->priv->tab_group != NULL)
 	{
-		g_warning ("%s(): the TeplTabList has already been set, it can be set only once.",
+		g_warning ("%s(): the TeplTabGroup has already been set, it can be set only once.",
 			   G_STRFUNC);
 		return;
 	}
 
-	tepl_window->priv->tab_list = g_object_ref_sink (tab_list);
+	tepl_window->priv->tab_group = g_object_ref_sink (tab_group);
 }
 
 /**

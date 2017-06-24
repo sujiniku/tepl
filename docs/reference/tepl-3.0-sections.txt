@@ -93,7 +93,7 @@ tepl_application_get_type
 TeplApplicationWindow
 tepl_application_window_get_from_gtk_application_window
 tepl_application_window_get_application_window
-tepl_application_window_set_tab_list
+tepl_application_window_set_tab_group
 tepl_application_window_get_statusbar
 tepl_application_window_set_statusbar
 tepl_application_window_connect_menu_to_statusbar
@@ -363,21 +363,21 @@ tepl_tab_get_type
 </SECTION>
 
 <SECTION>
-<FILE>tab-list</FILE>
-TeplTabList
-TeplTabListInterface
-tepl_tab_list_get_tabs
-tepl_tab_list_get_views
-tepl_tab_list_get_buffers
-tepl_tab_list_get_active_tab
-tepl_tab_list_get_active_view
-tepl_tab_list_get_active_buffer
+<FILE>tab-group</FILE>
+TeplTabGroup
+TeplTabGroupInterface
+tepl_tab_group_get_tabs
+tepl_tab_group_get_views
+tepl_tab_group_get_buffers
+tepl_tab_group_get_active_tab
+tepl_tab_group_get_active_view
+tepl_tab_group_get_active_buffer
 <SUBSECTION Standard>
-TEPL_IS_TAB_LIST
-TEPL_TAB_LIST
-TEPL_TAB_LIST_GET_INTERFACE
-TEPL_TYPE_TAB_LIST
-tepl_tab_list_get_type
+TEPL_IS_TAB_GROUP
+TEPL_TAB_GROUP
+TEPL_TAB_GROUP_GET_INTERFACE
+TEPL_TYPE_TAB_GROUP
+tepl_tab_group_get_type
 </SECTION>
 
 <SECTION>

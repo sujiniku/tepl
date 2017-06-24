@@ -18,16 +18,16 @@
  */
 
 #include "tepl-notebook.h"
-#include "tepl-tab-list.h"
+#include "tepl-tab-group.h"
 #include "tepl-tab.h"
 
 /**
  * SECTION:notebook
- * @Short_description: #GtkNotebook subclass implementing the #TeplTabList
+ * @Short_description: #GtkNotebook subclass implementing the #TeplTabGroup
  * interface
  * @Title: TeplNotebook
  *
- * #TeplNotebook is a subclass of #GtkNotebook that implements the #TeplTabList
+ * #TeplNotebook is a subclass of #GtkNotebook that implements the #TeplTabGroup
  * interface.
  */
 
@@ -36,15 +36,15 @@ struct _TeplNotebookPrivate
 	gint something;
 };
 
-static void tepl_tab_list_interface_init (gpointer g_iface,
-					  gpointer iface_data);
+static void tepl_tab_group_interface_init (gpointer g_iface,
+					   gpointer iface_data);
 
 G_DEFINE_TYPE_WITH_CODE (TeplNotebook,
 			 tepl_notebook,
 			 GTK_TYPE_NOTEBOOK,
 			 G_ADD_PRIVATE (TeplNotebook)
-			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_TAB_LIST,
-						tepl_tab_list_interface_init))
+			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_TAB_GROUP,
+						tepl_tab_group_interface_init))
 
 static void
 tepl_notebook_finalize (GObject *object)
@@ -62,9 +62,9 @@ tepl_notebook_class_init (TeplNotebookClass *klass)
 }
 
 static GList *
-tepl_notebook_get_tabs (TeplTabList *tab_list)
+tepl_notebook_get_tabs (TeplTabGroup *tab_group)
 {
-	GtkNotebook *notebook = GTK_NOTEBOOK (tab_list);
+	GtkNotebook *notebook = GTK_NOTEBOOK (tab_group);
 	GList *tabs = NULL;
 	gint n_pages;
 	gint page_num;
@@ -85,9 +85,9 @@ tepl_notebook_get_tabs (TeplTabList *tab_list)
 }
 
 static TeplTab *
-tepl_notebook_get_active_tab (TeplTabList *tab_list)
+tepl_notebook_get_active_tab (TeplTabGroup *tab_group)
 {
-	GtkNotebook *notebook = GTK_NOTEBOOK (tab_list);
+	GtkNotebook *notebook = GTK_NOTEBOOK (tab_group);
 	gint cur_page_num;
 	GtkWidget *cur_page_widget;
 
@@ -102,10 +102,10 @@ tepl_notebook_get_active_tab (TeplTabList *tab_list)
 }
 
 static void
-tepl_tab_list_interface_init (gpointer g_iface,
-			      gpointer iface_data)
+tepl_tab_group_interface_init (gpointer g_iface,
+			       gpointer iface_data)
 {
-	TeplTabListInterface *interface = g_iface;
+	TeplTabGroupInterface *interface = g_iface;
 
 	interface->get_tabs = tepl_notebook_get_tabs;
 	interface->get_active_tab = tepl_notebook_get_active_tab;

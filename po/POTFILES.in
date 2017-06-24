@@ -22,6 +22,6 @@ tepl/tepl-menu-shell.c
 tepl/tepl-metadata-manager.c
 tepl/tepl-notebook.c
 tepl/tepl-tab.c
-tepl/tepl-tab-list.c
+tepl/tepl-tab-group.c
 tepl/tepl-utils.c
 tepl/tepl-view.c

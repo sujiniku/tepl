@@ -21,7 +21,7 @@
       <title>Framework</title>
       <xi:include href="xml/application.xml"/>
       <xi:include href="xml/application-window.xml"/>
-      <xi:include href="xml/tab-list.xml"/>
+      <xi:include href="xml/tab-group.xml"/>
       <xi:include href="xml/notebook.xml"/>
       <xi:include href="xml/tab.xml"/>
       <xi:include href="xml/view.xml"/>

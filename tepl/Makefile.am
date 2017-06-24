@@ -34,7 +34,7 @@ tepl_public_headers =				\
 	tepl-notebook.h				\
 	tepl-types.h				\
 	tepl-tab.h				\
-	tepl-tab-list.h				\
+	tepl-tab-group.h			\
 	tepl-utils.h				\
 	tepl-view.h
 
@@ -60,7 +60,7 @@ tepl_public_c_files =				\
 	tepl-metadata-manager.c			\
 	tepl-notebook.c				\
 	tepl-tab.c				\
-	tepl-tab-list.c				\
+	tepl-tab-group.c			\
 	tepl-utils.c				\
 	tepl-view.c
 

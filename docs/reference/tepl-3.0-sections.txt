@@ -381,6 +381,22 @@ tepl_tab_list_get_type
 </SECTION>
 
 <SECTION>
+<FILE>notebook</FILE>
+TeplNotebook
+tepl_notebook_new
+<SUBSECTION Standard>
+TEPL_IS_NOTEBOOK
+TEPL_IS_NOTEBOOK_CLASS
+TEPL_NOTEBOOK
+TEPL_NOTEBOOK_CLASS
+TEPL_NOTEBOOK_GET_CLASS
+TEPL_TYPE_NOTEBOOK
+TeplNotebookClass
+TeplNotebookPrivate
+tepl_notebook_get_type
+</SECTION>
+
+<SECTION>
 <FILE>utils</FILE>
 tepl_utils_recent_chooser_menu_get_item_uri
 </SECTION>

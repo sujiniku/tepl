@@ -20,6 +20,7 @@ tepl/tepl-iter.c
 tepl/tepl-menu-item.c
 tepl/tepl-menu-shell.c
 tepl/tepl-metadata-manager.c
+tepl/tepl-notebook.c
 tepl/tepl-tab.c
 tepl/tepl-tab-list.c
 tepl/tepl-utils.c

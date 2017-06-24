@@ -31,6 +31,7 @@ tepl_public_headers =				\
 	tepl-menu-item.h			\
 	tepl-menu-shell.h			\
 	tepl-metadata-manager.h			\
+	tepl-notebook.h				\
 	tepl-types.h				\
 	tepl-tab.h				\
 	tepl-tab-list.h				\
@@ -57,6 +58,7 @@ tepl_public_c_files =				\
 	tepl-menu-item.c			\
 	tepl-menu-shell.c			\
 	tepl-metadata-manager.c			\
+	tepl-notebook.c				\
 	tepl-tab.c				\
 	tepl-tab-list.c				\
 	tepl-utils.c				\

@@ -40,7 +40,10 @@ typedef struct _TeplTabListInterface TeplTabListInterface;
  * TeplTabListInterface:
  * @parent_interface: The parent interface.
  * @get_tabs: Virtual function pointer for tepl_tab_list_get_tabs(). By default,
- *   %NULL is returned.
+ *   %NULL is returned. When implementing this vfunc, #GList nodes must be
+ *   created only for #TeplTab children; if the #TeplTabList contains a
+ *   non-#TeplTab child, it must be skipped. See the documentation of
+ *   tepl_tab_list_get_tabs().
  * @get_active_tab: Virtual function pointer for tepl_tab_list_get_active_tab().
  *   By default, %NULL is returned.
  *

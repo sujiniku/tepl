@@ -58,6 +58,13 @@ tepl_tab_list_default_init (TeplTabListInterface *interface)
  * tepl_tab_list_get_tabs:
  * @tab_list: a #TeplTabList.
  *
+ * Gets the list of #TeplTab's contained in @tab_list.
+ *
+ * If @tab_list contains non-#TeplTab children, those will not be present in the
+ * returned list. In other words, it is <emphasis>not</emphasis> guaranteed that
+ * the index of a #TeplTab in the returned #GList has the same child index in
+ * the @tab_list container.
+ *
  * Returns: (transfer container) (element-type TeplTab): the list of all the
  * #TeplTab's contained in @tab_list.
  * Since: 3.0
@@ -76,8 +83,8 @@ tepl_tab_list_get_tabs (TeplTabList *tab_list)
  *
  * Convenience function.
  *
- * Returns: (transfer container) (element-type TeplView): the list of all the
- * #TeplView's contained in @tab_list.
+ * Returns: (transfer container) (element-type TeplView): like
+ * tepl_tab_list_get_tabs(), but returns #TeplView's.
  * Since: 3.0
  */
 GList *
@@ -109,8 +116,8 @@ tepl_tab_list_get_views (TeplTabList *tab_list)
  *
  * Convenience function.
  *
- * Returns: (transfer container) (element-type TeplBuffer): the list of all the
- * #TeplBuffer's contained in @tab_list.
+ * Returns: (transfer container) (element-type TeplBuffer): like
+ * tepl_tab_list_get_tabs(), but returns #TeplBuffer's.
  * Since: 3.0
  */
 GList *

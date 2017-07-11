@@ -283,8 +283,8 @@ tepl_application_get_app_action_info_store (TeplApplication *tepl_app)
  * following actions:
  * - `"win.tepl-select-all"`
  *
- * To know what the #GAction's do, see the class description of
- * #TeplApplicationWindow.
+ * To know what the #GAction's do, see the [class description of
+ * TeplApplicationWindow][tepl-application-window-gactions].
  *
  * Returns: (transfer none): the #TeplActionInfoStore of the Tepl library.
  * Since: 3.0

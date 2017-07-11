@@ -44,10 +44,13 @@
  * #GtkApplicationWindow and an application needs to be able to use all those
  * extensions at the same time.
  *
- * # GActions
+ * # GActions # {#tepl-application-window-gactions}
  *
  * This class adds the following #GAction's to the #GtkApplicationWindow:
  * - `"win.tepl-select-all"`: calls tepl_view_select_all() on the active view.
+ *
+ * Corresponding #TeplActionInfo's are available with
+ * tepl_application_get_tepl_action_info_store().
  */
 
 struct _TeplApplicationWindowPrivate

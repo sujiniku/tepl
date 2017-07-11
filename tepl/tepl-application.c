@@ -17,7 +17,10 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "tepl-application.h"
+#include <glib/gi18n-lib.h>
+#include "tepl-action-info.h"
 #include "tepl-action-info-store.h"
 
 /**
@@ -38,6 +41,7 @@ struct _TeplApplicationPrivate
 {
 	GtkApplication *gtk_app;
 	TeplActionInfoStore *app_action_info_store;
+	TeplActionInfoStore *tepl_action_info_store;
 };
 
 enum
@@ -60,6 +64,33 @@ init_app_action_info_store (TeplApplication *tepl_app)
 	g_assert (tepl_app->priv->gtk_app != NULL);
 
 	tepl_app->priv->app_action_info_store = tepl_action_info_store_new (tepl_app->priv->gtk_app);
+}
+
+static void
+init_tepl_action_info_store (TeplApplication *tepl_app)
+{
+	const TeplActionInfoEntry entries[] =
+	{
+		/* When adding an item to this array, do not forget to update
+		 * the documentation of
+		 * tepl_application_get_tepl_action_info_store().
+		 */
+
+		/* action, icon, label, accel, tooltip */
+
+		{ "win.tepl-select-all", "edit-select-all", N_("Select _All"), "<Control>a",
+		  N_("Select all the text") },
+	};
+
+	g_return_if_fail (tepl_app->priv->tepl_action_info_store == NULL);
+	g_assert (tepl_app->priv->gtk_app != NULL);
+
+	tepl_app->priv->tepl_action_info_store = tepl_action_info_store_new (tepl_app->priv->gtk_app);
+
+	tepl_action_info_store_add_entries (tepl_app->priv->tepl_action_info_store,
+					    entries,
+					    G_N_ELEMENTS (entries),
+					    GETTEXT_PACKAGE);
 }
 
 static void
@@ -97,6 +128,7 @@ tepl_application_set_property (GObject      *object,
 			tepl_app->priv->gtk_app = g_value_get_object (value);
 
 			init_app_action_info_store (tepl_app);
+			init_tepl_action_info_store (tepl_app);
 			break;
 
 		default:
@@ -112,6 +144,7 @@ tepl_application_dispose (GObject *object)
 
 	tepl_app->priv->gtk_app = NULL;
 	g_clear_object (&tepl_app->priv->app_action_info_store);
+	g_clear_object (&tepl_app->priv->tepl_action_info_store);
 
 	G_OBJECT_CLASS (tepl_application_parent_class)->dispose (object);
 }
@@ -240,6 +273,28 @@ tepl_application_get_app_action_info_store (TeplApplication *tepl_app)
 	g_return_val_if_fail (TEPL_IS_APPLICATION (tepl_app), NULL);
 
 	return tepl_app->priv->app_action_info_store;
+}
+
+/**
+ * tepl_application_get_tepl_action_info_store:
+ * @tepl_app: a #TeplApplication.
+ *
+ * The returned #TeplActionInfoStore contains #TeplActionInfo's for the
+ * following actions:
+ * - `"win.tepl-select-all"`
+ *
+ * To know what the #GAction's do, see the class description of
+ * #TeplApplicationWindow.
+ *
+ * Returns: (transfer none): the #TeplActionInfoStore of the Tepl library.
+ * Since: 3.0
+ */
+TeplActionInfoStore *
+tepl_application_get_tepl_action_info_store (TeplApplication *tepl_app)
+{
+	g_return_val_if_fail (TEPL_IS_APPLICATION (tepl_app), NULL);
+
+	return tepl_app->priv->tepl_action_info_store;
 }
 
 /**

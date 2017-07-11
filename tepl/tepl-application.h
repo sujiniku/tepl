@@ -63,6 +63,8 @@ GtkApplication *	tepl_application_get_application		(TeplApplication *tepl_app);
 
 TeplActionInfoStore *	tepl_application_get_app_action_info_store	(TeplApplication *tepl_app);
 
+TeplActionInfoStore *	tepl_application_get_tepl_action_info_store	(TeplApplication *tepl_app);
+
 void			tepl_application_open_simple			(TeplApplication *tepl_app,
 									 GFile           *file);
 

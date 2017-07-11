@@ -23,13 +23,14 @@ CFILE_GLOB = $(top_srcdir)/tepl/*.c
 
 # Header files or dirs to ignore when scanning. Use base file/dir names
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h private_code
-IGNORE_HFILES =				\
-	tepl.h				\
-	tepl-buffer-input-stream.h	\
-	tepl-encoding-converter.h	\
-	tepl-encoding-private.h		\
-	tepl-file-content-loader.h	\
-	tepl-io-error-info-bar.h	\
+IGNORE_HFILES =					\
+	tepl.h					\
+	tepl-application-window-actions.h	\
+	tepl-buffer-input-stream.h		\
+	tepl-encoding-converter.h		\
+	tepl-encoding-private.h			\
+	tepl-file-content-loader.h		\
+	tepl-io-error-info-bar.h		\
 	tepl-progress-info-bar.h
 
 # Extra options to supply to gtkdoc-mkdb

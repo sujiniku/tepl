@@ -20,6 +20,7 @@
 #include "config.h"
 #include "tepl-application-window.h"
 #include <glib/gi18n-lib.h>
+#include "tepl-application-window-actions.h"
 #include "tepl-application.h"
 #include "tepl-action-info.h"
 #include "tepl-action-info-central-store.h"
@@ -42,6 +43,11 @@
  * without subclassing it, because several libraries might want to extend
  * #GtkApplicationWindow and an application needs to be able to use all those
  * extensions at the same time.
+ *
+ * # GActions
+ *
+ * This class adds the following #GAction's to the #GtkApplicationWindow:
+ * - `"win.tepl-select-all"`: calls tepl_view_select_all() on the active view.
  */
 
 struct _TeplApplicationWindowPrivate
@@ -125,6 +131,19 @@ tepl_application_window_set_property (GObject      *object,
 }
 
 static void
+tepl_application_window_constructed (GObject *object)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (object);
+
+	if (G_OBJECT_CLASS (tepl_application_window_parent_class)->constructed != NULL)
+	{
+		G_OBJECT_CLASS (tepl_application_window_parent_class)->constructed (object);
+	}
+
+	_tepl_application_window_add_actions (tepl_window);
+}
+
+static void
 tepl_application_window_dispose (GObject *object)
 {
 	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (object);
@@ -143,6 +162,7 @@ tepl_application_window_class_init (TeplApplicationWindowClass *klass)
 
 	object_class->get_property = tepl_application_window_get_property;
 	object_class->set_property = tepl_application_window_set_property;
+	object_class->constructed = tepl_application_window_constructed;
 	object_class->dispose = tepl_application_window_dispose;
 
 	/**

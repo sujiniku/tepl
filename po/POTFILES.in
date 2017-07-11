@@ -5,6 +5,7 @@ tepl/tepl-action-info-store.c
 tepl/tepl-action-map.c
 tepl/tepl-application.c
 tepl/tepl-application-window.c
+tepl/tepl-application-window-actions.c
 tepl/tepl-buffer.c
 tepl/tepl-buffer-input-stream.c
 tepl/tepl-encoding.c

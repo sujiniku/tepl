@@ -64,21 +64,23 @@ tepl_public_c_files =				\
 	tepl-utils.c				\
 	tepl-view.c
 
-tepl_private_headers =			\
-	gconstructor.h			\
-	tepl-buffer-input-stream.h	\
-	tepl-encoding-converter.h	\
-	tepl-encoding-private.h		\
-	tepl-file-content-loader.h	\
-	tepl-io-error-info-bar.h	\
+tepl_private_headers =				\
+	gconstructor.h				\
+	tepl-application-window-actions.h	\
+	tepl-buffer-input-stream.h		\
+	tepl-encoding-converter.h		\
+	tepl-encoding-private.h			\
+	tepl-file-content-loader.h		\
+	tepl-io-error-info-bar.h		\
 	tepl-progress-info-bar.h
 
-tepl_private_c_files =			\
-	tepl-buffer-input-stream.c	\
-	tepl-encoding-converter.c	\
-	tepl-file-content-loader.c	\
-	tepl-init.c			\
-	tepl-io-error-info-bar.c	\
+tepl_private_c_files =				\
+	tepl-application-window-actions.c	\
+	tepl-buffer-input-stream.c		\
+	tepl-encoding-converter.c		\
+	tepl-file-content-loader.c		\
+	tepl-init.c				\
+	tepl-io-error-info-bar.c		\
 	tepl-progress-info-bar.c
 
 tepl_built_public_headers =		\

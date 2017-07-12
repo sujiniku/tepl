@@ -27,7 +27,7 @@
 
 /**
  * SECTION:view
- * @Short_description: Widget that displays a TeplBuffer
+ * @Short_description: Subclass of #GtkSourceView
  * @Title: TeplView
  *
  * #TeplView is a subclass of #GtkSourceView, to add more features useful for a

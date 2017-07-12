@@ -23,7 +23,7 @@
 
 /**
  * SECTION:buffer
- * @Short_description: Stores the text for display in a TeplView
+ * @Short_description: Subclass of #GtkSourceBuffer
  * @Title: TeplBuffer
  *
  * #TeplBuffer is a subclass of #GtkSourceBuffer, to add more features useful

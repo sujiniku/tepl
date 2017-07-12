@@ -23,7 +23,7 @@
 
 /**
  * SECTION:notebook
- * @Short_description: #GtkNotebook subclass implementing the #TeplTabGroup
+ * @Short_description: Subclass of #GtkNotebook implementing the #TeplTabGroup
  * interface
  * @Title: TeplNotebook
  *

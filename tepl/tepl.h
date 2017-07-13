@@ -22,6 +22,8 @@
 
 #define TEPL_H_INSIDE
 
+#include <amtk/amtk.h>
+
 #include <tepl/tepl-types.h>
 #include <tepl/tepl-enum-types.h>
 

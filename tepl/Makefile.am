@@ -123,13 +123,14 @@ lib_LTLIBRARIES = libtepl-@TEPL_API_VERSION@.la
 libtepl_@TEPL_API_VERSION@_la_SOURCES =
 
 libtepl_@TEPL_API_VERSION@_la_LIBADD =	\
+	$(top_builddir)/amtk/libamtk.la	\
 	libtepl-core.la			\
 	$(DEP_LIBS)
 
 libtepl_@TEPL_API_VERSION@_la_LDFLAGS =		\
 	-version-info $(TEPL_LT_VERSION)	\
 	-no-undefined				\
-	-export-symbols-regex "^tepl_.*"	\
+	-export-symbols-regex "^(tepl|amtk)_.*"	\
 	$(WARN_LDFLAGS)
 
 libtepl_includedir = $(includedir)/tepl-@TEPL_API_VERSION@/tepl

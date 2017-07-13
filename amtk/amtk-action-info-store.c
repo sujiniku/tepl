@@ -44,7 +44,7 @@
  * store, to share action information (with translations) and possibly the
  * #GAction implementations as well. Application-specific #AmtkActionInfo's can
  * be added to the store returned by
- * amtk_application_get_app_action_info_store().
+ * tepl_application_get_app_action_info_store().
  *
  * A library #AmtkActionInfoStore must namespace the action names to not have
  * conflicts when a #AmtkActionInfo is added to the #AmtkActionInfoCentralStore.
@@ -459,7 +459,7 @@ check_used_cb (gpointer key,
  * might indicate dead code.
  *
  * You probably want to call this function on the store returned by
- * amtk_application_get_app_action_info_store(). But it can also be useful for a
+ * tepl_application_get_app_action_info_store(). But it can also be useful for a
  * store provided by a library, to easily see which actions you don't use.
  *
  * Since: 2.0

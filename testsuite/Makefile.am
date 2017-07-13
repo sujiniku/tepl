@@ -18,11 +18,15 @@ AM_CPPFLAGS = 			\
 AM_LDFLAGS = $(WARN_LDFLAGS)
 
 LDADD = $(top_builddir)/tepl/libtepl-core.la	\
+	$(top_builddir)/amtk/libamtk.la		\
 	$(DEP_LIBS)
 
 noinst_PROGRAMS = $(UNIT_TEST_PROGS)
 TESTS = $(UNIT_TEST_PROGS)
 UNIT_TEST_PROGS =
+
+UNIT_TEST_PROGS += amtk-test-utils
+amtk_test_utils_SOURCES = amtk/test-utils.c
 
 UNIT_TEST_PROGS += test-action-info-store
 test_action_info_store_SOURCES = test-action-info-store.c

@@ -15,6 +15,7 @@ amtk_public_headers =				\
 	amtk-action-info-central-store.h	\
 	amtk-action-info-store.h		\
 	amtk-action-map.h			\
+	amtk-application-window.h		\
 	amtk-menu-item.h			\
 	amtk-menu-shell.h			\
 	amtk-types.h
@@ -24,6 +25,7 @@ amtk_public_c_files =				\
 	amtk-action-info-central-store.c	\
 	amtk-action-info-store.c		\
 	amtk-action-map.c			\
+	amtk-application-window.c		\
 	amtk-menu-item.c			\
 	amtk-menu-shell.c
 

@@ -20,14 +20,24 @@
 #ifndef AMTK_UTILS_H
 #define AMTK_UTILS_H
 
-#include <glib.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
+
+/* File utilities */
+
+G_GNUC_INTERNAL
+gchar *		_amtk_utils_replace_home_dir_with_tilde		(const gchar *filename);
 
 /* String utilities */
 
 G_GNUC_INTERNAL
 gchar **	_amtk_utils_strv_copy				(const gchar * const *strv);
+
+/* Widget utilities */
+
+gchar *		amtk_utils_recent_chooser_menu_get_item_uri	(GtkRecentChooserMenu *menu,
+								 GtkMenuItem          *item);
 
 G_END_DECLS
 

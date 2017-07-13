@@ -32,6 +32,7 @@ typedef struct _AmtkActionInfo			AmtkActionInfo;
 typedef struct _AmtkActionInfoEntry		AmtkActionInfoEntry;
 typedef struct _AmtkActionInfoStore		AmtkActionInfoStore;
 typedef struct _AmtkActionInfoCentralStore	AmtkActionInfoCentralStore;
+typedef struct _AmtkApplicationWindow		AmtkApplicationWindow;
 typedef struct _AmtkMenuShell			AmtkMenuShell;
 
 G_END_DECLS

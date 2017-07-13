@@ -17,7 +17,7 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "amtk/amtk-utils.h"
+#include <amtk/amtk.h>
 
 static void
 check_strv_equal (const gchar * const *strv1,

@@ -18,7 +18,8 @@ amtk_public_headers =				\
 	amtk-application-window.h		\
 	amtk-menu-item.h			\
 	amtk-menu-shell.h			\
-	amtk-types.h
+	amtk-types.h				\
+	amtk-utils.h
 
 amtk_public_c_files =				\
 	amtk-action-info.c			\
@@ -27,19 +28,12 @@ amtk_public_c_files =				\
 	amtk-action-map.c			\
 	amtk-application-window.c		\
 	amtk-menu-item.c			\
-	amtk-menu-shell.c
-
-amtk_private_headers =	\
-	amtk-utils.h
-
-amtk_private_c_files =	\
+	amtk-menu-shell.c			\
 	amtk-utils.c
 
 noinst_LTLIBRARIES = libamtk.la
 
 libamtk_la_SOURCES =		\
-	$(amtk_private_c_files)	\
-	$(amtk_private_headers)	\
 	$(amtk_public_c_files)	\
 	$(amtk_public_headers)
 

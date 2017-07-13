@@ -31,6 +31,7 @@
 #include <amtk/amtk-application-window.h>
 #include <amtk/amtk-menu-item.h>
 #include <amtk/amtk-menu-shell.h>
+#include <amtk/amtk-utils.h>
 
 #undef AMTK_H_INSIDE
 

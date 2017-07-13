@@ -25,7 +25,6 @@ CFILE_GLOB = $(top_srcdir)/tepl/*.c $(top_srcdir)/amtk/*.c
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h private_code
 IGNORE_HFILES =					\
 	amtk.h					\
-	amtk-utils.h				\
 	tepl.h					\
 	tepl-application-window-actions.h	\
 	tepl-buffer-input-stream.h		\

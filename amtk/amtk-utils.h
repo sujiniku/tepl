@@ -20,6 +20,10 @@
 #ifndef AMTK_UTILS_H
 #define AMTK_UTILS_H
 
+#if !defined (AMTK_H_INSIDE) && !defined (AMTK_COMPILATION)
+#error "Only <amtk/amtk.h> can be included directly."
+#endif
+
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS

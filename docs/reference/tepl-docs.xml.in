@@ -19,12 +19,14 @@
 
     <chapter id="amtk">
       <title>Actions, Menus and Toolbars Kit</title>
+      <xi:include href="xml/amtk-application-window.xml"/>
       <xi:include href="xml/amtk-action-info.xml"/>
       <xi:include href="xml/amtk-action-info-store.xml"/>
       <xi:include href="xml/amtk-action-info-central-store.xml"/>
       <xi:include href="xml/amtk-action-map.xml"/>
       <xi:include href="xml/amtk-menu-item.xml"/>
       <xi:include href="xml/amtk-menu-shell.xml"/>
+      <xi:include href="xml/amtk-utils.xml"/>
     </chapter>
   </part>
 

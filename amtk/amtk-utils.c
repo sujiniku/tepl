@@ -20,6 +20,14 @@
 #include "amtk-utils.h"
 #include <string.h>
 
+/**
+ * SECTION:amtk-utils
+ * @title: AmtkUtils
+ * @short_description: Utility functions
+ *
+ * Utility functions.
+ */
+
 /*
  * _amtk_utils_replace_home_dir_with_tilde:
  * @filename: the filename.

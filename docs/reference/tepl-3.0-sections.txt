@@ -1,6 +1,28 @@
 <INCLUDE>tepl/tepl.h</INCLUDE>
 
 <SECTION>
+<FILE>amtk-application-window</FILE>
+AmtkApplicationWindow
+amtk_application_window_get_from_gtk_application_window
+amtk_application_window_get_application_window
+amtk_application_window_get_statusbar
+amtk_application_window_set_statusbar
+amtk_application_window_connect_menu_to_statusbar
+amtk_application_window_connect_recent_chooser_menu_to_statusbar
+amtk_application_window_create_open_recent_menu_item
+<SUBSECTION Standard>
+AMTK_APPLICATION_WINDOW
+AMTK_APPLICATION_WINDOW_CLASS
+AMTK_APPLICATION_WINDOW_GET_CLASS
+AMTK_IS_APPLICATION_WINDOW
+AMTK_IS_APPLICATION_WINDOW_CLASS
+AMTK_TYPE_APPLICATION_WINDOW
+AmtkApplicationWindowClass
+AmtkApplicationWindowPrivate
+amtk_application_window_get_type
+</SECTION>
+
+<SECTION>
 <FILE>amtk-action-info</FILE>
 AmtkActionInfo
 AmtkActionInfoEntry
@@ -90,6 +112,11 @@ AMTK_TYPE_MENU_SHELL
 AmtkMenuShellClass
 AmtkMenuShellPrivate
 amtk_menu_shell_get_type
+</SECTION>
+
+<SECTION>
+<FILE>amtk-utils</FILE>
+amtk_utils_recent_chooser_menu_get_item_uri
 </SECTION>
 
 <SECTION>

@@ -71,12 +71,19 @@ init_tepl_action_info_store (TeplApplication *tepl_app)
 {
 	const TeplActionInfoEntry entries[] =
 	{
-		/* When adding an item to this array, do not forget to update
-		 * the documentation of
-		 * tepl_application_get_tepl_action_info_store().
-		 */
-
 		/* action, icon, label, accel, tooltip */
+
+		{ "win.tepl-cut", "edit-cut", N_("Cu_t"), "<Control>x",
+		  N_("Cut the selection") },
+
+		{ "win.tepl-copy", "edit-copy", N_("_Copy"), "<Control>c",
+		  N_("Copy the selection") },
+
+		{ "win.tepl-paste", "edit-paste", N_("_Paste"), "<Control>v",
+		  N_("Paste the clipboard") },
+
+		{ "win.tepl-delete", "edit-delete", N_("_Delete"), NULL,
+		  N_("Delete the selected text") },
 
 		{ "win.tepl-select-all", "edit-select-all", N_("Select _All"), "<Control>a",
 		  N_("Select all the text") },
@@ -279,11 +286,8 @@ tepl_application_get_app_action_info_store (TeplApplication *tepl_app)
  * tepl_application_get_tepl_action_info_store:
  * @tepl_app: a #TeplApplication.
  *
- * The returned #TeplActionInfoStore contains #TeplActionInfo's for the
- * following actions:
- * - `"win.tepl-select-all"`
- *
- * To know what the #GAction's do, see the [class description of
+ * The returned #TeplActionInfoStore contains #TeplActionInfo's for all the
+ * #GAction's listed  in the [class description of
  * TeplApplicationWindow][tepl-application-window-gactions].
  *
  * Returns: (transfer none): the #TeplActionInfoStore of the Tepl library.

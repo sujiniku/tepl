@@ -47,6 +47,10 @@
  * # GActions # {#tepl-application-window-gactions}
  *
  * This class adds the following #GAction's to the #GtkApplicationWindow:
+ * - `"win.tepl-cut"`: calls tepl_view_cut_clipboard() on the active view.
+ * - `"win.tepl-copy"`: calls tepl_view_copy_clipboard() on the active view.
+ * - `"win.tepl-paste"`: calls tepl_view_paste_clipboard() on the active view.
+ * - `"win.tepl-delete"`: calls tepl_view_delete_selection() on the active view.
  * - `"win.tepl-select-all"`: calls tepl_view_select_all() on the active view.
  *
  * Corresponding #TeplActionInfo's are available with

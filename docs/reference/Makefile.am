@@ -15,15 +15,17 @@ DOC_MAIN_SGML_FILE = tepl-docs.xml
 SCAN_OPTIONS = --rebuild-types
 
 # The directory containing the source code. Relative to $(srcdir)
-DOC_SOURCE_DIR = $(top_srcdir)/tepl
+DOC_SOURCE_DIR = $(top_srcdir)/tepl $(top_srcdir)/amtk
 
 # Used for dependencies
-HFILE_GLOB = $(top_srcdir)/tepl/*.h
-CFILE_GLOB = $(top_srcdir)/tepl/*.c
+HFILE_GLOB = $(top_srcdir)/tepl/*.h $(top_srcdir)/amtk/*.h
+CFILE_GLOB = $(top_srcdir)/tepl/*.c $(top_srcdir)/amtk/*.c
 
 # Header files or dirs to ignore when scanning. Use base file/dir names
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h private_code
 IGNORE_HFILES =					\
+	amtk.h					\
+	amtk-utils.h				\
 	tepl.h					\
 	tepl-application-window-actions.h	\
 	tepl-buffer-input-stream.h		\

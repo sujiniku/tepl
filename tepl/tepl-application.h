@@ -25,6 +25,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <amtk/amtk.h>
 #include <tepl/tepl-types.h>
 
 G_BEGIN_DECLS
@@ -61,7 +62,7 @@ TeplApplication *	tepl_application_get_default			(void);
 
 GtkApplication *	tepl_application_get_application		(TeplApplication *tepl_app);
 
-TeplActionInfoStore *	tepl_application_get_app_action_info_store	(TeplApplication *tepl_app);
+AmtkActionInfoStore *	tepl_application_get_app_action_info_store	(TeplApplication *tepl_app);
 
 TeplActionInfoStore *	tepl_application_get_tepl_action_info_store	(TeplApplication *tepl_app);
 

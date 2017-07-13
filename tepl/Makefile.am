@@ -158,11 +158,17 @@ INTROSPECTION_GIRS = Tepl-@TEPL_API_VERSION@.gir
 INTROSPECTION_SCANNER_ENV = CC="$(CC)"
 
 Tepl-@TEPL_API_VERSION@.gir: libtepl-@TEPL_API_VERSION@.la
+
 INTROSPECTION_SCANNER_ARGS =		\
 	-I$(top_srcdir)			\
 	-I$(top_builddir)		\
 	--c-include=tepl/tepl.h		\
-	--warn-all
+	--warn-all			\
+	--include-uninstalled=$(top_builddir)/amtk/Amtk-@TEPL_API_VERSION@.gir
+
+INTROSPECTION_COMPILER_ARGS =			\
+	--includedir=$(top_builddir)/amtk/
+
 Tepl_@TEPL_API_VERSION@_gir_NAMESPACE = Tepl
 Tepl_@TEPL_API_VERSION@_gir_VERSION = @TEPL_API_VERSION@
 Tepl_@TEPL_API_VERSION@_gir_CFLAGS = $(DEP_CFLAGS)

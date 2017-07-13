@@ -40,7 +40,7 @@
 struct _TeplApplicationPrivate
 {
 	GtkApplication *gtk_app;
-	TeplActionInfoStore *app_action_info_store;
+	AmtkActionInfoStore *app_action_info_store;
 	TeplActionInfoStore *tepl_action_info_store;
 };
 
@@ -63,7 +63,7 @@ init_app_action_info_store (TeplApplication *tepl_app)
 	g_return_if_fail (tepl_app->priv->app_action_info_store == NULL);
 	g_assert (tepl_app->priv->gtk_app != NULL);
 
-	tepl_app->priv->app_action_info_store = tepl_action_info_store_new (tepl_app->priv->gtk_app);
+	tepl_app->priv->app_action_info_store = amtk_action_info_store_new (tepl_app->priv->gtk_app);
 }
 
 static void
@@ -265,16 +265,16 @@ tepl_application_get_application (TeplApplication *tepl_app)
  * tepl_application_get_app_action_info_store:
  * @tepl_app: a #TeplApplication.
  *
- * Returns an initially empty #TeplActionInfoStore reserved for the
- * application-specific actions. Libraries should not add #TeplActionInfo's to
+ * Returns an initially empty #AmtkActionInfoStore reserved for the
+ * application-specific actions. Libraries should not add #AmtkActionInfo's to
  * this store. Libraries should provide their own store if they want to share
- * #TeplActionInfo's.
+ * #AmtkActionInfo's.
  *
- * Returns: (transfer none): the #TeplActionInfoStore reserved for the
+ * Returns: (transfer none): the #AmtkActionInfoStore reserved for the
  * application.
  * Since: 2.0
  */
-TeplActionInfoStore *
+AmtkActionInfoStore *
 tepl_application_get_app_action_info_store (TeplApplication *tepl_app)
 {
 	g_return_val_if_fail (TEPL_IS_APPLICATION (tepl_app), NULL);

@@ -29,7 +29,7 @@
  *
  * Returns: the new filename. Free with g_free().
  */
-/* This function comes from gedit. */
+/* This function is a copy from tepl-utils, which originally comes from gedit. */
 gchar *
 _amtk_utils_replace_home_dir_with_tilde (const gchar *filename)
 {

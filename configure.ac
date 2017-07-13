@@ -122,10 +122,6 @@ AM_CONDITIONAL(INSTALLED_TESTS, test "x$enable_installed_tests" = "xyes")
 AX_REQUIRE_DEFINED([GOBJECT_INTROSPECTION_CHECK])
 GOBJECT_INTROSPECTION_CHECK([1.42.0])
 
-# Vala
-AX_REQUIRE_DEFINED([VAPIGEN_CHECK])
-VAPIGEN_CHECK
-
 # Code coverage for unit tests
 AX_REQUIRE_DEFINED([AX_CODE_COVERAGE])
 AX_CODE_COVERAGE
@@ -165,7 +161,6 @@ Configuration:
 	GVfs metadata:		${enable_gvfs_metadata}
 	Documentation:		${enable_gtk_doc}
 	GObject introspection:	${found_introspection}
-	Vala:			${enable_vala}
 	Code coverage:		${enable_code_coverage}
 	Valgrind check:		${enable_valgrind}
 	Installed tests:	${enable_installed_tests}

@@ -196,30 +196,4 @@ CLEANFILES +=		\
 
 endif # HAVE_INTROSPECTION
 
-if ENABLE_VAPIGEN
--include $(VAPIGEN_MAKEFILE)
-
-tepl-@TEPL_API_VERSION@.vapi: Tepl-@TEPL_API_VERSION@.gir
-
-VAPIGEN_VAPIS = tepl-@TEPL_API_VERSION@.vapi
-
-tepl_@TEPL_API_VERSION@_vapi_DEPS = gtk+-3.0 gtksourceview-3.0
-
-tepl-@TEPL_API_VERSION@.deps:
-	$(AM_V_GEN) for pkg in $(tepl_@TEPL_API_VERSION@_vapi_DEPS); do \
-		echo $$pkg >> $@; \
-	done
-
-tepl_@TEPL_API_VERSION@_vapi_METADATADIRS = $(srcdir)
-tepl_@TEPL_API_VERSION@_vapi_FILES = Tepl-@TEPL_API_VERSION@.gir
-
-vapidir = $(datadir)/vala/vapi
-vapi_DATA =				\
-	tepl-@TEPL_API_VERSION@.vapi	\
-	tepl-@TEPL_API_VERSION@.deps
-
-CLEANFILES += $(vapi_DATA)
-
-endif # ENABLE_VAPIGEN
-
 -include $(top_srcdir)/git.mk

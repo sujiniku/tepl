@@ -23,8 +23,8 @@
 #include "amtk-menu-item.h"
 
 /**
- * SECTION:action-info-store
- * @Short_description: A store of AmtkActionInfo's
+ * SECTION:amtk-action-info-store
+ * @Short_description: A store of #AmtkActionInfo's
  * @Title: AmtkActionInfoStore
  * @See_also: #AmtkActionInfo, #AmtkActionInfoCentralStore
  *

@@ -21,8 +21,8 @@
 #include "amtk-action-info.h"
 
 /**
- * SECTION:action-info-central-store
- * @Short_description: Aggregation of all AmtkActionInfoStore's
+ * SECTION:amtk-action-info-central-store
+ * @Short_description: Aggregation of all #AmtkActionInfoStore's
  * @Title: AmtkActionInfoCentralStore
  * @See_also: #AmtkActionInfoStore
  *

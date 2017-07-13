@@ -23,8 +23,8 @@
 #include "amtk-utils.h"
 
 /**
- * SECTION:action-info
- * @Short_description: GAction information
+ * SECTION:amtk-action-info
+ * @Short_description: #GAction information
  * @Title: AmtkActionInfo
  * @See_also: #AmtkActionInfoStore
  *

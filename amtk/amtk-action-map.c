@@ -20,8 +20,8 @@
 #include "amtk-action-map.h"
 
 /**
- * SECTION:action-map
- * @Short_description: GActionMap wrapper functions
+ * SECTION:amtk-action-map
+ * @Short_description: #GActionMap wrapper functions
  * @Title: AmtkActionMap
  *
  * #GActionMap wrapper functions.

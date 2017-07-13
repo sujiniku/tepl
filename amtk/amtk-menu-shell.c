@@ -20,8 +20,8 @@
 #include "amtk-menu-shell.h"
 
 /**
- * SECTION:menu-shell
- * @Short_description: An extension of GtkMenuShell
+ * SECTION:amtk-menu-shell
+ * @Short_description: An extension of #GtkMenuShell
  * @Title: AmtkMenuShell
  *
  * #AmtkMenuShell extends the #GtkMenuShell abstract class with the

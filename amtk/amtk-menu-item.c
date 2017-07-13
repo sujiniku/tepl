@@ -20,8 +20,8 @@
 #include "amtk-menu-item.h"
 
 /**
- * SECTION:menu-item
- * @Short_description: GtkMenuItem functions
+ * SECTION:amtk-menu-item
+ * @Short_description: #GtkMenuItem functions
  * @Title: AmtkMenuItem
  *
  * #GtkMenuItem functions.

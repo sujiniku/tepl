@@ -521,21 +521,18 @@ open_recent_file_cb (GtkRecentChooser *recent_chooser,
 		     gpointer          user_data)
 {
 	AmtkApplicationWindow *amtk_window = AMTK_APPLICATION_WINDOW (user_data);
-	GtkApplication *gtk_app;
-	AmtkApplication *amtk_app;
 	gchar *uri;
-	GFile *file;
-
-	gtk_app = gtk_window_get_application (GTK_WINDOW (amtk_window->priv->gtk_window));
-	amtk_app = amtk_application_get_from_gtk_application (gtk_app);
+	GFile *files[1];
+	GtkApplication *app;
 
 	uri = gtk_recent_chooser_get_current_uri (recent_chooser);
-	file = g_file_new_for_uri (uri);
+	files[0] = g_file_new_for_uri (uri);
 
-	amtk_application_open_simple (amtk_app, file);
+	app = gtk_window_get_application (GTK_WINDOW (amtk_window->priv->gtk_window));
+	g_application_open (G_APPLICATION (app), files, 1, "");
 
 	g_free (uri);
-	g_object_unref (file);
+	g_object_unref (files[0]);
 }
 
 /**

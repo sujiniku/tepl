@@ -1,14 +1,14 @@
 /*
- * This file is part of Tepl, a text editor library.
+ * This file is part of Amtk, a text editor library.
  *
  * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Tepl is free software; you can redistribute it and/or modify it under
+ * Amtk is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Amtk is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,49 +17,49 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tepl-action-info-store.h"
-#include "tepl-action-info.h"
-#include "tepl-action-info-central-store.h"
-#include "tepl-menu-item.h"
+#include "amtk-action-info-store.h"
+#include "amtk-action-info.h"
+#include "amtk-action-info-central-store.h"
+#include "amtk-menu-item.h"
 
 /**
  * SECTION:action-info-store
- * @Short_description: A store of TeplActionInfo's
- * @Title: TeplActionInfoStore
- * @See_also: #TeplActionInfo, #TeplActionInfoCentralStore
+ * @Short_description: A store of AmtkActionInfo's
+ * @Title: AmtkActionInfoStore
+ * @See_also: #AmtkActionInfo, #AmtkActionInfoCentralStore
  *
- * #TeplActionInfoStore contains a set of #TeplActionInfo's.
+ * #AmtkActionInfoStore contains a set of #AmtkActionInfo's.
  *
- * #TeplActionInfoStore is add-only, a #TeplActionInfo cannot be removed. If
+ * #AmtkActionInfoStore is add-only, a #AmtkActionInfo cannot be removed. If
  * needed, the remove operation will be added in the future.
  *
  * A #GtkApplication can be associated so that when a widget is created,
  * gtk_application_set_accels_for_action() is called. See
- * tepl_action_info_store_create_menu_item() for more details. Note that this
- * happens on widget creation, not when adding a #TeplActionInfo to the store,
+ * amtk_action_info_store_create_menu_item() for more details. Note that this
+ * happens on widget creation, not when adding a #AmtkActionInfo to the store,
  * so that the accelerator is bound to the application only if the
- * #TeplActionInfo is actually used.
+ * #AmtkActionInfo is actually used.
  *
- * #TeplActionInfoStore is designed so that libraries can provide their own
+ * #AmtkActionInfoStore is designed so that libraries can provide their own
  * store, to share action information (with translations) and possibly the
- * #GAction implementations as well. Application-specific #TeplActionInfo's can
+ * #GAction implementations as well. Application-specific #AmtkActionInfo's can
  * be added to the store returned by
- * tepl_application_get_app_action_info_store().
+ * amtk_application_get_app_action_info_store().
  *
- * A library #TeplActionInfoStore must namespace the action names to not have
- * conflicts when a #TeplActionInfo is added to the #TeplActionInfoCentralStore.
- * Examples of namespaced action names: `"win.tepl-save"` or `"app.tepl-quit"`.
+ * A library #AmtkActionInfoStore must namespace the action names to not have
+ * conflicts when a #AmtkActionInfo is added to the #AmtkActionInfoCentralStore.
+ * Examples of namespaced action names: `"win.amtk-save"` or `"app.amtk-quit"`.
  */
 
-struct _TeplActionInfoStorePrivate
+struct _AmtkActionInfoStorePrivate
 {
 	/* Weak ref, because usually GtkApplication owns (indirectly) a
-	 * TeplActionInfoStore.
+	 * AmtkActionInfoStore.
 	 */
 	GtkApplication *app;
 
 	/* Key: owned gchar*: action name.
-	 * Value: owned TeplActionInfo.
+	 * Value: owned AmtkActionInfo.
 	 */
 	GHashTable *hash_table;
 };
@@ -73,10 +73,10 @@ enum
 
 static GParamSpec *properties[N_PROPERTIES];
 
-G_DEFINE_TYPE_WITH_PRIVATE (TeplActionInfoStore, tepl_action_info_store, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (AmtkActionInfoStore, amtk_action_info_store, G_TYPE_OBJECT)
 
 static void
-set_application (TeplActionInfoStore *store,
+set_application (AmtkActionInfoStore *store,
 		 GtkApplication      *app)
 {
 	g_return_if_fail (app == NULL || GTK_IS_APPLICATION (app));
@@ -96,17 +96,17 @@ set_application (TeplActionInfoStore *store,
 }
 
 static void
-tepl_action_info_store_get_property (GObject    *object,
+amtk_action_info_store_get_property (GObject    *object,
 				     guint       prop_id,
 				     GValue     *value,
 				     GParamSpec *pspec)
 {
-	TeplActionInfoStore *store = TEPL_ACTION_INFO_STORE (object);
+	AmtkActionInfoStore *store = AMTK_ACTION_INFO_STORE (object);
 
 	switch (prop_id)
 	{
 		case PROP_APPLICATION:
-			g_value_set_object (value, tepl_action_info_store_get_application (store));
+			g_value_set_object (value, amtk_action_info_store_get_application (store));
 			break;
 
 		default:
@@ -116,12 +116,12 @@ tepl_action_info_store_get_property (GObject    *object,
 }
 
 static void
-tepl_action_info_store_set_property (GObject      *object,
+amtk_action_info_store_set_property (GObject      *object,
 				     guint         prop_id,
 				     const GValue *value,
 				     GParamSpec   *pspec)
 {
-	TeplActionInfoStore *store = TEPL_ACTION_INFO_STORE (object);
+	AmtkActionInfoStore *store = AMTK_ACTION_INFO_STORE (object);
 
 	switch (prop_id)
 	{
@@ -136,9 +136,9 @@ tepl_action_info_store_set_property (GObject      *object,
 }
 
 static void
-tepl_action_info_store_dispose (GObject *object)
+amtk_action_info_store_dispose (GObject *object)
 {
-	TeplActionInfoStore *store = TEPL_ACTION_INFO_STORE (object);
+	AmtkActionInfoStore *store = AMTK_ACTION_INFO_STORE (object);
 
 	if (store->priv->app != NULL)
 	{
@@ -147,33 +147,33 @@ tepl_action_info_store_dispose (GObject *object)
 		store->priv->app = NULL;
 	}
 
-	G_OBJECT_CLASS (tepl_action_info_store_parent_class)->dispose (object);
+	G_OBJECT_CLASS (amtk_action_info_store_parent_class)->dispose (object);
 }
 
 static void
-tepl_action_info_store_finalize (GObject *object)
+amtk_action_info_store_finalize (GObject *object)
 {
-	TeplActionInfoStore *store = TEPL_ACTION_INFO_STORE (object);
+	AmtkActionInfoStore *store = AMTK_ACTION_INFO_STORE (object);
 
 	g_hash_table_unref (store->priv->hash_table);
 
-	G_OBJECT_CLASS (tepl_action_info_store_parent_class)->finalize (object);
+	G_OBJECT_CLASS (amtk_action_info_store_parent_class)->finalize (object);
 }
 
 static void
-tepl_action_info_store_class_init (TeplActionInfoStoreClass *klass)
+amtk_action_info_store_class_init (AmtkActionInfoStoreClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->get_property = tepl_action_info_store_get_property;
-	object_class->set_property = tepl_action_info_store_set_property;
-	object_class->dispose = tepl_action_info_store_dispose;
-	object_class->finalize = tepl_action_info_store_finalize;
+	object_class->get_property = amtk_action_info_store_get_property;
+	object_class->set_property = amtk_action_info_store_set_property;
+	object_class->dispose = amtk_action_info_store_dispose;
+	object_class->finalize = amtk_action_info_store_finalize;
 
 	/**
-	 * TeplActionInfoStore:application:
+	 * AmtkActionInfoStore:application:
 	 *
-	 * The associated #GtkApplication. #TeplActionInfoStore has a weak
+	 * The associated #GtkApplication. #AmtkActionInfoStore has a weak
 	 * reference to the #GtkApplication.
 	 *
 	 * Since: 2.0
@@ -191,79 +191,79 @@ tepl_action_info_store_class_init (TeplActionInfoStoreClass *klass)
 }
 
 static void
-tepl_action_info_store_init (TeplActionInfoStore *store)
+amtk_action_info_store_init (AmtkActionInfoStore *store)
 {
-	store->priv = tepl_action_info_store_get_instance_private (store);
+	store->priv = amtk_action_info_store_get_instance_private (store);
 
 	store->priv->hash_table = g_hash_table_new_full (g_str_hash,
 							 g_str_equal,
 							 g_free,
-							 (GDestroyNotify) tepl_action_info_unref);
+							 (GDestroyNotify) amtk_action_info_unref);
 }
 
 /**
- * tepl_action_info_store_new:
+ * amtk_action_info_store_new:
  * @application: (nullable): a #GtkApplication, or %NULL.
  *
- * Creates a new #TeplActionInfoStore object. Associating a #GtkApplication is
+ * Creates a new #AmtkActionInfoStore object. Associating a #GtkApplication is
  * optional.
  *
- * Returns: a new #TeplActionInfoStore.
+ * Returns: a new #AmtkActionInfoStore.
  * Since: 2.0
  */
-TeplActionInfoStore *
-tepl_action_info_store_new (GtkApplication *application)
+AmtkActionInfoStore *
+amtk_action_info_store_new (GtkApplication *application)
 {
 	g_return_val_if_fail (application == NULL || GTK_IS_APPLICATION (application), NULL);
 
-	return g_object_new (TEPL_TYPE_ACTION_INFO_STORE,
+	return g_object_new (AMTK_TYPE_ACTION_INFO_STORE,
 			     "application", application,
 			     NULL);
 }
 
 /**
- * tepl_action_info_store_get_application:
- * @store: a #TeplActionInfoStore.
+ * amtk_action_info_store_get_application:
+ * @store: a #AmtkActionInfoStore.
  *
  * Returns: (transfer none) (nullable): the associated #GtkApplication, or
  * %NULL.
  */
 GtkApplication *
-tepl_action_info_store_get_application (TeplActionInfoStore *store)
+amtk_action_info_store_get_application (AmtkActionInfoStore *store)
 {
-	g_return_val_if_fail (TEPL_IS_ACTION_INFO_STORE (store), NULL);
+	g_return_val_if_fail (AMTK_IS_ACTION_INFO_STORE (store), NULL);
 
 	return store->priv->app;
 }
 
 /**
- * tepl_action_info_store_add:
- * @store: a #TeplActionInfoStore.
- * @info: a #TeplActionInfo.
+ * amtk_action_info_store_add:
+ * @store: a #AmtkActionInfoStore.
+ * @info: a #AmtkActionInfo.
  *
- * Inserts @info into @store and into the #TeplActionInfoCentralStore. Both the
+ * Inserts @info into @store and into the #AmtkActionInfoCentralStore. Both the
  * @store and central store must <emphasis>not</emphasis> already contain a
- * #TeplActionInfo with the same action name. The stores take their own
+ * #AmtkActionInfo with the same action name. The stores take their own
  * reference on @info.
  *
  * Since: 2.0
  */
 void
-tepl_action_info_store_add (TeplActionInfoStore *store,
-			    TeplActionInfo      *info)
+amtk_action_info_store_add (AmtkActionInfoStore *store,
+			    AmtkActionInfo      *info)
 {
 	const gchar *action_name;
-	TeplActionInfoCentralStore *central_store;
+	AmtkActionInfoCentralStore *central_store;
 
-	g_return_if_fail (TEPL_IS_ACTION_INFO_STORE (store));
+	g_return_if_fail (AMTK_IS_ACTION_INFO_STORE (store));
 	g_return_if_fail (info != NULL);
 
-	action_name = tepl_action_info_get_action_name (info);
+	action_name = amtk_action_info_get_action_name (info);
 	g_return_if_fail (action_name != NULL);
 
 	if (g_hash_table_lookup (store->priv->hash_table, action_name) != NULL)
 	{
-		g_warning ("%s(): the TeplActionInfoStore already contains a TeplActionInfo "
+		g_warning ("%s(): the AmtkActionInfoStore already contains a AmtkActionInfo "
 			   "with the action name “%s”.",
 			   G_STRFUNC,
 			   action_name);
@@ -272,102 +272,102 @@ tepl_action_info_store_add (TeplActionInfoStore *store,
 
 	g_hash_table_insert (store->priv->hash_table,
 			     g_strdup (action_name),
-			     tepl_action_info_ref (info));
+			     amtk_action_info_ref (info));
 
-	central_store = tepl_action_info_central_store_get_instance ();
-	_tepl_action_info_central_store_add (central_store, info);
+	central_store = amtk_action_info_central_store_get_instance ();
+	_amtk_action_info_central_store_add (central_store, info);
 }
 
 /**
- * tepl_action_info_store_add_entries:
- * @store: a #TeplActionInfoStore.
- * @entries: (array length=n_entries) (element-type TeplActionInfoEntry): a
- * pointer to the first item in an array of #TeplActionInfoEntry structs.
+ * amtk_action_info_store_add_entries:
+ * @store: a #AmtkActionInfoStore.
+ * @entries: (array length=n_entries) (element-type AmtkActionInfoEntry): a
+ * pointer to the first item in an array of #AmtkActionInfoEntry structs.
  * @n_entries: the length of @entries, or -1 if @entries is %NULL-terminated.
  * @translation_domain: (nullable): a gettext domain, or %NULL.
  *
- * Calls tepl_action_info_store_add() for each entry.
+ * Calls amtk_action_info_store_add() for each entry.
  *
  * If @translation_domain is not %NULL, g_dgettext() is used to translate the
- * @label and @tooltip of each entry before setting them to the #TeplActionInfo.
+ * @label and @tooltip of each entry before setting them to the #AmtkActionInfo.
  *
  * An API similar to g_action_map_add_action_entries().
  *
  * Since: 2.0
  */
 void
-tepl_action_info_store_add_entries (TeplActionInfoStore       *store,
-				    const TeplActionInfoEntry *entries,
+amtk_action_info_store_add_entries (AmtkActionInfoStore       *store,
+				    const AmtkActionInfoEntry *entries,
 				    gint                       n_entries,
 				    const gchar               *translation_domain)
 {
 	gint i;
 
-	g_return_if_fail (TEPL_IS_ACTION_INFO_STORE (store));
+	g_return_if_fail (AMTK_IS_ACTION_INFO_STORE (store));
 	g_return_if_fail (n_entries >= -1);
 	g_return_if_fail (entries != NULL || n_entries == 0);
 
 	for (i = 0; n_entries == -1 ? entries[i].action_name != NULL : i < n_entries; i++)
 	{
-		TeplActionInfo *info;
+		AmtkActionInfo *info;
 
-		info = tepl_action_info_new_from_entry (&entries[i], translation_domain);
-		tepl_action_info_store_add (store, info);
-		tepl_action_info_unref (info);
+		info = amtk_action_info_new_from_entry (&entries[i], translation_domain);
+		amtk_action_info_store_add (store, info);
+		amtk_action_info_unref (info);
 	}
 }
 
 /**
- * tepl_action_info_store_lookup:
- * @store: a #TeplActionInfoStore.
+ * amtk_action_info_store_lookup:
+ * @store: a #AmtkActionInfoStore.
  * @action_name: an action name.
  *
- * Returns: (transfer none): the found #TeplActionInfo, or %NULL.
+ * Returns: (transfer none): the found #AmtkActionInfo, or %NULL.
  * Since: 2.0
  */
-const TeplActionInfo *
-tepl_action_info_store_lookup (TeplActionInfoStore *store,
+const AmtkActionInfo *
+amtk_action_info_store_lookup (AmtkActionInfoStore *store,
 			       const gchar         *action_name)
 {
-	g_return_val_if_fail (TEPL_IS_ACTION_INFO_STORE (store), NULL);
+	g_return_val_if_fail (AMTK_IS_ACTION_INFO_STORE (store), NULL);
 	g_return_val_if_fail (action_name != NULL, NULL);
 
 	return g_hash_table_lookup (store->priv->hash_table, action_name);
 }
 
 /**
- * tepl_action_info_store_create_menu_item:
- * @store: a #TeplActionInfoStore.
+ * amtk_action_info_store_create_menu_item:
+ * @store: a #AmtkActionInfoStore.
  * @action_name: an action name.
  *
  * Creates a new #GtkMenuItem for @action_name. The @store must contain a
- * #TeplActionInfo for @action_name.
+ * #AmtkActionInfo for @action_name.
  *
  * gtk_actionable_set_action_name() is called on the menu item with
  * @action_name. The label is set with the #GtkMenuItem:use-underline property
  * enabled. The first accelerator is set to the #GtkAccelLabel of the menu item.
  * The icon is set. And the tooltip is set with
- * tepl_menu_item_set_long_description().
+ * amtk_menu_item_set_long_description().
  *
- * If #TeplActionInfoStore:application is non-%NULL, this function also calls
+ * If #AmtkActionInfoStore:application is non-%NULL, this function also calls
  * gtk_application_set_accels_for_action() with the accelerators returned by
- * tepl_action_info_get_accels() (this will erase previously set accelerators
+ * amtk_action_info_get_accels() (this will erase previously set accelerators
  * for that action, if any).
  *
  * Returns: (transfer floating): a new #GtkMenuItem for @action_name.
  * Since: 2.0
  */
 GtkWidget *
-tepl_action_info_store_create_menu_item (TeplActionInfoStore *store,
+amtk_action_info_store_create_menu_item (AmtkActionInfoStore *store,
 					 const gchar         *action_name)
 {
 	GtkMenuItem *menu_item;
-	TeplActionInfo *action_info;
+	AmtkActionInfo *action_info;
 	const gchar * const *accels;
 	const gchar *icon_name;
 	const gchar *tooltip;
 
-	g_return_val_if_fail (TEPL_IS_ACTION_INFO_STORE (store), NULL);
+	g_return_val_if_fail (AMTK_IS_ACTION_INFO_STORE (store), NULL);
 	g_return_val_if_fail (action_name != NULL, NULL);
 
 	action_info = g_hash_table_lookup (store->priv->hash_table, action_name);
@@ -386,12 +386,12 @@ tepl_action_info_store_create_menu_item (TeplActionInfoStore *store,
 	gtk_actionable_set_action_name (GTK_ACTIONABLE (menu_item), action_name);
 
 	gtk_menu_item_set_use_underline (menu_item, TRUE);
-	gtk_menu_item_set_label (menu_item, tepl_action_info_get_label (action_info));
+	gtk_menu_item_set_label (menu_item, amtk_action_info_get_label (action_info));
 
 	/* Set accel before setting icon, because
-	 * tepl_menu_item_set_icon_name() adds a GtkBox.
+	 * amtk_menu_item_set_icon_name() adds a GtkBox.
 	 */
-	accels = tepl_action_info_get_accels (action_info);
+	accels = amtk_action_info_get_accels (action_info);
 	if (accels != NULL && accels[0] != NULL)
 	{
 		guint accel_key;
@@ -411,16 +411,16 @@ tepl_action_info_store_create_menu_item (TeplActionInfoStore *store,
 		}
 	}
 
-	icon_name = tepl_action_info_get_icon_name (action_info);
+	icon_name = amtk_action_info_get_icon_name (action_info);
 	if (icon_name != NULL)
 	{
-		tepl_menu_item_set_icon_name (menu_item, icon_name);
+		amtk_menu_item_set_icon_name (menu_item, icon_name);
 	}
 
-	tooltip = tepl_action_info_get_tooltip (action_info);
+	tooltip = amtk_action_info_get_tooltip (action_info);
 	if (tooltip != NULL)
 	{
-		tepl_menu_item_set_long_description (menu_item, tooltip);
+		amtk_menu_item_set_long_description (menu_item, tooltip);
 	}
 
 	if (store->priv->app != NULL)
@@ -430,7 +430,7 @@ tepl_action_info_store_create_menu_item (TeplActionInfoStore *store,
 						       accels);
 	}
 
-	_tepl_action_info_set_used (action_info);
+	_amtk_action_info_set_used (action_info);
 
 	return GTK_WIDGET (menu_item);
 }
@@ -441,33 +441,33 @@ check_used_cb (gpointer key,
 	       gpointer user_data)
 {
 	const gchar *action_name = key;
-	const TeplActionInfo *action_info = value;
+	const AmtkActionInfo *action_info = value;
 
-	if (!_tepl_action_info_get_used (action_info))
+	if (!_amtk_action_info_get_used (action_info))
 	{
-		g_warning ("TeplActionInfo with action_name='%s' has not been used.",
+		g_warning ("AmtkActionInfo with action_name='%s' has not been used.",
 			   action_name);
 	}
 }
 
 /**
- * tepl_action_info_store_check_all_used:
- * @store: a #TeplActionInfoStore.
+ * amtk_action_info_store_check_all_used:
+ * @store: a #AmtkActionInfoStore.
  *
- * Checks that all #TeplActionInfo's of @store have been used by
- * tepl_action_info_store_create_menu_item(). If not, a warning is printed and
+ * Checks that all #AmtkActionInfo's of @store have been used by
+ * amtk_action_info_store_create_menu_item(). If not, a warning is printed and
  * might indicate dead code.
  *
  * You probably want to call this function on the store returned by
- * tepl_application_get_app_action_info_store(). But it can also be useful for a
+ * amtk_application_get_app_action_info_store(). But it can also be useful for a
  * store provided by a library, to easily see which actions you don't use.
  *
  * Since: 2.0
  */
 void
-tepl_action_info_store_check_all_used (TeplActionInfoStore *store)
+amtk_action_info_store_check_all_used (AmtkActionInfoStore *store)
 {
-	g_return_if_fail (TEPL_IS_ACTION_INFO_STORE (store));
+	g_return_if_fail (AMTK_IS_ACTION_INFO_STORE (store));
 
 	g_hash_table_foreach (store->priv->hash_table,
 			      check_used_cb,

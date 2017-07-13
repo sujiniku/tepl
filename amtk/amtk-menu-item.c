@@ -1,14 +1,14 @@
 /*
- * This file is part of Tepl, a text editor library.
+ * This file is part of Amtk, a text editor library.
  *
  * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Tepl is free software; you can redistribute it and/or modify it under
+ * Amtk is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Amtk is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,28 +17,28 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tepl-menu-item.h"
+#include "amtk-menu-item.h"
 
 /**
  * SECTION:menu-item
  * @Short_description: GtkMenuItem functions
- * @Title: TeplMenuItem
+ * @Title: AmtkMenuItem
  *
  * #GtkMenuItem functions.
  */
 
-#define LONG_DESCRIPTION_KEY "tepl-menu-item-long-description-key"
+#define LONG_DESCRIPTION_KEY "amtk-menu-item-long-description-key"
 
 /**
- * tepl_menu_item_get_long_description:
+ * amtk_menu_item_get_long_description:
  * @menu_item: a #GtkMenuItem.
  *
  * Returns: (nullable): the long description of @menu_item, previously set with
- *   tepl_menu_item_set_long_description().
+ *   amtk_menu_item_set_long_description().
  * Since: 2.0
  */
 const gchar *
-tepl_menu_item_get_long_description (GtkMenuItem *menu_item)
+amtk_menu_item_get_long_description (GtkMenuItem *menu_item)
 {
 	g_return_val_if_fail (GTK_IS_MENU_ITEM (menu_item), NULL);
 
@@ -46,7 +46,7 @@ tepl_menu_item_get_long_description (GtkMenuItem *menu_item)
 }
 
 /**
- * tepl_menu_item_set_long_description:
+ * amtk_menu_item_set_long_description:
  * @menu_item: a #GtkMenuItem.
  * @long_description: (nullable): the long description, or %NULL to unset it.
  *
@@ -56,7 +56,7 @@ tepl_menu_item_get_long_description (GtkMenuItem *menu_item)
  * Since: 2.0
  */
 void
-tepl_menu_item_set_long_description (GtkMenuItem *menu_item,
+amtk_menu_item_set_long_description (GtkMenuItem *menu_item,
 				     const gchar *long_description)
 {
 	g_return_if_fail (GTK_IS_MENU_ITEM (menu_item));
@@ -68,7 +68,7 @@ tepl_menu_item_set_long_description (GtkMenuItem *menu_item,
 }
 
 /**
- * tepl_menu_item_set_icon_name:
+ * amtk_menu_item_set_icon_name:
  * @item: a #GtkMenuItem.
  * @icon_name: an icon name.
  *
@@ -92,7 +92,7 @@ tepl_menu_item_set_long_description (GtkMenuItem *menu_item,
  * Copyright 2011, 2013 Canonical Limited
  */
 void
-tepl_menu_item_set_icon_name (GtkMenuItem *item,
+amtk_menu_item_set_icon_name (GtkMenuItem *item,
 			      const gchar *icon_name)
 {
 	GtkWidget *child;

@@ -1,14 +1,14 @@
 /*
- * This file is part of Tepl, a text editor library.
+ * This file is part of Amtk, a text editor library.
  *
  * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
- * Tepl is free software; you can redistribute it and/or modify it under
+ * Amtk is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
  * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
  *
- * Tepl is distributed in the hope that it will be useful, but WITHOUT ANY
+ * Amtk is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
  * License for more details.
@@ -17,12 +17,12 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tepl-action-map.h"
+#include "amtk-action-map.h"
 
 /**
  * SECTION:action-map
  * @Short_description: GActionMap wrapper functions
- * @Title: TeplActionMap
+ * @Title: AmtkActionMap
  *
  * #GActionMap wrapper functions.
  */
@@ -40,7 +40,7 @@ check_dups_in_array (const GActionEntry *entries,
 
 		if (g_strcmp0 (action_name, entry->name) == 0)
 		{
-			g_warning ("tepl_action_map_add_action_entries_check_dups(): "
+			g_warning ("amtk_action_map_add_action_entries_check_dups(): "
 				   "the GActionEntry array contains duplicated entries for the action name '%s'. "
 				   "The first one will be dropped from the GActionMap.",
 				   action_name);
@@ -50,7 +50,7 @@ check_dups_in_array (const GActionEntry *entries,
 }
 
 /**
- * tepl_action_map_add_action_entries_check_dups:
+ * amtk_action_map_add_action_entries_check_dups:
  * @action_map: a #GActionMap.
  * @entries: (array length=n_entries) (element-type GActionEntry): a pointer to
  *           the first item in an array of #GActionEntry structs.
@@ -72,7 +72,7 @@ check_dups_in_array (const GActionEntry *entries,
  * Since: 2.0
  */
 void
-tepl_action_map_add_action_entries_check_dups (GActionMap         *action_map,
+amtk_action_map_add_action_entries_check_dups (GActionMap         *action_map,
 					       const GActionEntry *entries,
 					       gint                n_entries,
 					       gpointer            user_data)

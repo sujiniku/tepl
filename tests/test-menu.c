@@ -22,9 +22,9 @@
 static void
 add_action_info_entries (TeplApplication *tepl_app)
 {
-	TeplActionInfoStore *store;
+	AmtkActionInfoStore *store;
 
-	const TeplActionInfoEntry entries[] =
+	const AmtkActionInfoEntry entries[] =
 	{
 		/* action, icon, label, accel, tooltip */
 
@@ -37,7 +37,7 @@ add_action_info_entries (TeplApplication *tepl_app)
 
 	store = tepl_application_get_app_action_info_store (tepl_app);
 
-	tepl_action_info_store_add_entries (store,
+	amtk_action_info_store_add_entries (store,
 					    entries,
 					    G_N_ELEMENTS (entries),
 					    NULL);
@@ -68,7 +68,7 @@ add_action_entries (GApplication *app)
 		{ "about", about_activate_cb },
 	};
 
-	tepl_action_map_add_action_entries_check_dups (G_ACTION_MAP (app),
+	amtk_action_map_add_action_entries_check_dups (G_ACTION_MAP (app),
 						       entries,
 						       G_N_ELEMENTS (entries),
 						       app);
@@ -86,7 +86,7 @@ startup_cb (GApplication *g_app,
 	add_action_entries (g_app);
 }
 
-static TeplActionInfoStore *
+static AmtkActionInfoStore *
 get_action_info_store (void)
 {
 	TeplApplication *app;
@@ -99,13 +99,13 @@ get_action_info_store (void)
 static GtkWidget *
 create_file_submenu (void)
 {
-	TeplActionInfoStore *store;
+	AmtkActionInfoStore *store;
 	GtkMenuShell *file_submenu;
 
 	store = get_action_info_store ();
 	file_submenu = GTK_MENU_SHELL (gtk_menu_new ());
 
-	gtk_menu_shell_append (file_submenu, tepl_action_info_store_create_menu_item (store, "app.quit"));
+	gtk_menu_shell_append (file_submenu, amtk_action_info_store_create_menu_item (store, "app.quit"));
 
 	return GTK_WIDGET (file_submenu);
 }
@@ -113,13 +113,13 @@ create_file_submenu (void)
 static GtkWidget *
 create_help_submenu (void)
 {
-	TeplActionInfoStore *store;
+	AmtkActionInfoStore *store;
 	GtkMenuShell *help_submenu;
 
 	store = get_action_info_store ();
 	help_submenu = GTK_MENU_SHELL (gtk_menu_new ());
 
-	gtk_menu_shell_append (help_submenu, tepl_action_info_store_create_menu_item (store, "app.about"));
+	gtk_menu_shell_append (help_submenu, amtk_action_info_store_create_menu_item (store, "app.about"));
 
 	return GTK_WIDGET (help_submenu);
 }
@@ -130,7 +130,7 @@ create_menu_bar (void)
 	GtkWidget *file_menu_item;
 	GtkWidget *help_menu_item;
 	GtkMenuBar *menu_bar;
-	TeplActionInfoStore *store;
+	AmtkActionInfoStore *store;
 
 	file_menu_item = gtk_menu_item_new_with_mnemonic ("_File");
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (file_menu_item),
@@ -145,7 +145,7 @@ create_menu_bar (void)
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), help_menu_item);
 
 	store = get_action_info_store ();
-	tepl_action_info_store_check_all_used (store);
+	amtk_action_info_store_check_all_used (store);
 
 	return menu_bar;
 }
@@ -176,12 +176,12 @@ activate_cb (GApplication *g_app,
 	gtk_widget_show (window);
 }
 
-gint
-main (gint    argc,
-      gchar **argv)
+int
+main (int    argc,
+      char **argv)
 {
 	GtkApplication *app;
-	gint status;
+	int status;
 
 	app = gtk_application_new ("org.gnome.tepl.test-menu", G_APPLICATION_FLAGS_NONE);
 

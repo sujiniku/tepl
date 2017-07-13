@@ -6,6 +6,7 @@ AM_CPPFLAGS = 			\
 AM_LDFLAGS = $(WARN_LDFLAGS)
 
 LDADD = $(top_builddir)/tepl/libtepl-core.la	\
+	$(top_builddir)/amtk/libamtk.la		\
 	$(DEP_LIBS)
 
 noinst_PROGRAMS = $(TEST_PROGS)

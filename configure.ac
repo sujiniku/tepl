@@ -141,6 +141,7 @@ PKG_CHECK_VAR([GLIB_PREFIX], [glib-2.0], [prefix])
 AC_CONFIG_FILES([
 	tepl-${TEPL_API_VERSION}.pc:tepl.pc.in
 	Makefile
+	amtk/Makefile
 	docs/Makefile
 	docs/reference/tepl-docs.xml
 	docs/reference/intro.xml

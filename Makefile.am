@@ -1,4 +1,4 @@
-SUBDIRS = po tepl tests testsuite docs
+SUBDIRS = po amtk tepl tests testsuite docs
 
 @CODE_COVERAGE_RULES@
 

@@ -1,5 +1,5 @@
 /*
- * This file is part of Amtk, a text editor library.
+ * This file is part of Amtk - Actions, Menus and Toolbars Kit
  *
  * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *

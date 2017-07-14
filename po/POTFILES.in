@@ -1,8 +1,4 @@
 # List of source files containing translatable strings.
-tepl/tepl-action-info.c
-tepl/tepl-action-info-central-store.c
-tepl/tepl-action-info-store.c
-tepl/tepl-action-map.c
 tepl/tepl-application.c
 tepl/tepl-application-window.c
 tepl/tepl-application-window-actions.c
@@ -18,8 +14,6 @@ tepl/tepl-file-saver.c
 tepl/tepl-info-bar.c
 tepl/tepl-init.c
 tepl/tepl-iter.c
-tepl/tepl-menu-item.c
-tepl/tepl-menu-shell.c
 tepl/tepl-metadata-manager.c
 tepl/tepl-notebook.c
 tepl/tepl-tab.c

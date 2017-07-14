@@ -27,10 +27,6 @@
 #include <tepl/tepl-types.h>
 #include <tepl/tepl-enum-types.h>
 
-#include <tepl/tepl-action-info.h>
-#include <tepl/tepl-action-info-store.h>
-#include <tepl/tepl-action-info-central-store.h>
-#include <tepl/tepl-action-map.h>
 #include <tepl/tepl-application.h>
 #include <tepl/tepl-application-window.h>
 #include <tepl/tepl-buffer.h>
@@ -43,8 +39,6 @@
 #include <tepl/tepl-gutter-renderer-folds.h>
 #include <tepl/tepl-info-bar.h>
 #include <tepl/tepl-iter.h>
-#include <tepl/tepl-menu-item.h>
-#include <tepl/tepl-menu-shell.h>
 #include <tepl/tepl-metadata-manager.h>
 #include <tepl/tepl-notebook.h>
 #include <tepl/tepl-tab.h>

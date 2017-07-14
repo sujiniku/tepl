@@ -12,10 +12,6 @@ AM_CPPFLAGS =				\
 
 tepl_public_headers =				\
 	tepl.h					\
-	tepl-action-info.h			\
-	tepl-action-info-central-store.h	\
-	tepl-action-info-store.h		\
-	tepl-action-map.h			\
 	tepl-application.h			\
 	tepl-application-window.h		\
 	tepl-buffer.h				\
@@ -28,8 +24,6 @@ tepl_public_headers =				\
 	tepl-gutter-renderer-folds.h		\
 	tepl-info-bar.h				\
 	tepl-iter.h				\
-	tepl-menu-item.h			\
-	tepl-menu-shell.h			\
 	tepl-metadata-manager.h			\
 	tepl-notebook.h				\
 	tepl-types.h				\
@@ -39,10 +33,6 @@ tepl_public_headers =				\
 	tepl-view.h
 
 tepl_public_c_files =				\
-	tepl-action-info.c			\
-	tepl-action-info-central-store.c	\
-	tepl-action-info-store.c		\
-	tepl-action-map.c			\
 	tepl-application.c			\
 	tepl-application-window.c		\
 	tepl-buffer.c				\
@@ -55,8 +45,6 @@ tepl_public_c_files =				\
 	tepl-gutter-renderer-folds.c		\
 	tepl-info-bar.c				\
 	tepl-iter.c				\
-	tepl-menu-item.c			\
-	tepl-menu-shell.c			\
 	tepl-metadata-manager.c			\
 	tepl-notebook.c				\
 	tepl-tab.c				\

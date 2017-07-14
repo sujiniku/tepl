@@ -28,10 +28,6 @@
 
 G_BEGIN_DECLS
 
-typedef struct _TeplActionInfo			TeplActionInfo;
-typedef struct _TeplActionInfoEntry		TeplActionInfoEntry;
-typedef struct _TeplActionInfoStore		TeplActionInfoStore;
-typedef struct _TeplActionInfoCentralStore	TeplActionInfoCentralStore;
 typedef struct _TeplApplication			TeplApplication;
 typedef struct _TeplApplicationWindow		TeplApplicationWindow;
 typedef struct _TeplBuffer			TeplBuffer;
@@ -43,7 +39,6 @@ typedef struct _TeplFileSaver			TeplFileSaver;
 typedef struct _TeplFoldRegion			TeplFoldRegion;
 typedef struct _TeplGutterRendererFolds		TeplGutterRendererFolds;
 typedef struct _TeplInfoBar			TeplInfoBar;
-typedef struct _TeplMenuShell			TeplMenuShell;
 typedef struct _TeplNotebook			TeplNotebook;
 typedef struct _TeplTab				TeplTab;
 typedef struct _TeplTabGroup			TeplTabGroup;

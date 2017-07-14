@@ -62,20 +62,6 @@ GtkApplicationWindow *	tepl_application_window_get_application_window		(TeplAppl
 void			tepl_application_window_set_tab_group			(TeplApplicationWindow *tepl_window,
 										 TeplTabGroup          *tab_group);
 
-GtkStatusbar *		tepl_application_window_get_statusbar			(TeplApplicationWindow *tepl_window);
-
-void			tepl_application_window_set_statusbar			(TeplApplicationWindow *tepl_window,
-										 GtkStatusbar          *statusbar);
-
-void			tepl_application_window_connect_menu_to_statusbar	(TeplApplicationWindow *tepl_window,
-										 TeplMenuShell         *tepl_menu_shell);
-
-void			tepl_application_window_connect_recent_chooser_menu_to_statusbar
-										(TeplApplicationWindow *tepl_window,
-										 GtkRecentChooserMenu  *menu);
-
-GtkWidget *		tepl_application_window_create_open_recent_menu_item	(TeplApplicationWindow *tepl_window);
-
 G_END_DECLS
 
 #endif /* TEPL_APPLICATION_WINDOW_H */

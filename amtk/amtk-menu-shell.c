@@ -30,7 +30,7 @@
  *
  * One possible use-case is to push/pop longer descriptions of menu items to a
  * #GtkStatusbar, exactly like
- * tepl_application_window_connect_menu_to_statusbar() does.
+ * amtk_application_window_connect_menu_to_statusbar() does.
  */
 
 struct _AmtkMenuShellPrivate

@@ -53,6 +53,14 @@
           instead.
         </para>
       </listitem>
+      <listitem>
+        <para>
+          The classes and functions related to actions and menus have been moved
+          to a new shared library called Amtk (Actions, Menus and Toolbars Kit),
+          since it was not really related to text editors, it is more general.
+          But Amtk is still developed inside the Tepl repository.
+        </para>
+      </listitem>
     </itemizedlist>
   </chapter>
 </part>

@@ -18,8 +18,8 @@
  */
 
 #include "tepl-application-window-actions.h"
+#include <amtk/amtk.h>
 #include "tepl-application-window.h"
-#include "tepl-action-map.h"
 #include "tepl-tab-group.h"
 #include "tepl-view.h"
 
@@ -116,7 +116,7 @@ _tepl_application_window_add_actions (TeplApplicationWindow *tepl_window)
 	 * application or other libraries.
 	 *
 	 * Do not forget to document each action in the TeplApplicationWindow
-	 * class description, and to add the corresponding TeplActionInfoEntry
+	 * class description, and to add the corresponding AmtkActionInfoEntry
 	 * in tepl-application.c.
 	 */
 	const GActionEntry entries[] = {
@@ -129,7 +129,7 @@ _tepl_application_window_add_actions (TeplApplicationWindow *tepl_window)
 
 	gtk_window = tepl_application_window_get_application_window (tepl_window);
 
-	tepl_action_map_add_action_entries_check_dups (G_ACTION_MAP (gtk_window),
+	amtk_action_map_add_action_entries_check_dups (G_ACTION_MAP (gtk_window),
 						       entries,
 						       G_N_ELEMENTS (entries),
 						       tepl_window);

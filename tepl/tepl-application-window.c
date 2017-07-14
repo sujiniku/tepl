@@ -45,7 +45,7 @@
  * - `"win.tepl-delete"`: calls tepl_view_delete_selection() on the active view.
  * - `"win.tepl-select-all"`: calls tepl_view_select_all() on the active view.
  *
- * Corresponding #TeplActionInfo's are available with
+ * Corresponding #AmtkActionInfo's are available with
  * tepl_application_get_tepl_action_info_store().
  */
 

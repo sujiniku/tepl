@@ -20,14 +20,11 @@
 #include "config.h"
 #include "tepl-application.h"
 #include <glib/gi18n-lib.h>
-#include "tepl-action-info.h"
-#include "tepl-action-info-store.h"
 
 /**
  * SECTION:application
  * @Short_description: An extension of GtkApplication
  * @Title: TeplApplication
- * @See_also: #TeplActionInfoStore
  *
  * #TeplApplication extends the #GtkApplication class.
  *
@@ -41,7 +38,7 @@ struct _TeplApplicationPrivate
 {
 	GtkApplication *gtk_app;
 	AmtkActionInfoStore *app_action_info_store;
-	TeplActionInfoStore *tepl_action_info_store;
+	AmtkActionInfoStore *tepl_action_info_store;
 };
 
 enum
@@ -69,7 +66,7 @@ init_app_action_info_store (TeplApplication *tepl_app)
 static void
 init_tepl_action_info_store (TeplApplication *tepl_app)
 {
-	const TeplActionInfoEntry entries[] =
+	const AmtkActionInfoEntry entries[] =
 	{
 		/* action, icon, label, accel, tooltip */
 
@@ -92,9 +89,9 @@ init_tepl_action_info_store (TeplApplication *tepl_app)
 	g_return_if_fail (tepl_app->priv->tepl_action_info_store == NULL);
 	g_assert (tepl_app->priv->gtk_app != NULL);
 
-	tepl_app->priv->tepl_action_info_store = tepl_action_info_store_new (tepl_app->priv->gtk_app);
+	tepl_app->priv->tepl_action_info_store = amtk_action_info_store_new (tepl_app->priv->gtk_app);
 
-	tepl_action_info_store_add_entries (tepl_app->priv->tepl_action_info_store,
+	amtk_action_info_store_add_entries (tepl_app->priv->tepl_action_info_store,
 					    entries,
 					    G_N_ELEMENTS (entries),
 					    GETTEXT_PACKAGE);
@@ -286,14 +283,14 @@ tepl_application_get_app_action_info_store (TeplApplication *tepl_app)
  * tepl_application_get_tepl_action_info_store:
  * @tepl_app: a #TeplApplication.
  *
- * The returned #TeplActionInfoStore contains #TeplActionInfo's for all the
+ * The returned #AmtkActionInfoStore contains #AmtkActionInfo's for all the
  * #GAction's listed  in the [class description of
  * TeplApplicationWindow][tepl-application-window-gactions].
  *
- * Returns: (transfer none): the #TeplActionInfoStore of the Tepl library.
+ * Returns: (transfer none): the #AmtkActionInfoStore of the Tepl library.
  * Since: 3.0
  */
-TeplActionInfoStore *
+AmtkActionInfoStore *
 tepl_application_get_tepl_action_info_store (TeplApplication *tepl_app)
 {
 	g_return_val_if_fail (TEPL_IS_APPLICATION (tepl_app), NULL);

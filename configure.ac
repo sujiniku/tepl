@@ -135,6 +135,7 @@ PKG_CHECK_VAR([GLIB_PREFIX], [glib-2.0], [prefix])
 
 # Output files
 AC_CONFIG_FILES([
+	amtk-${TEPL_API_VERSION}.pc:amtk.pc.in
 	tepl-${TEPL_API_VERSION}.pc:tepl.pc.in
 	Makefile
 	amtk/Makefile

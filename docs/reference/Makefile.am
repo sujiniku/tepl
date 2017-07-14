@@ -53,6 +53,7 @@ FIXXREF_OPTIONS =
 # signals and properties.
 GTKDOC_CFLAGS = -I$(top_srcdir) $(DEP_CFLAGS)
 GTKDOC_LIBS =							\
+	$(top_builddir)/amtk/libamtk-@TEPL_API_VERSION@.la	\
 	$(top_builddir)/tepl/libtepl-@TEPL_API_VERSION@.la	\
 	$(DEP_LIBS)
 

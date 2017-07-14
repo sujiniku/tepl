@@ -122,15 +122,15 @@ lib_LTLIBRARIES = libtepl-@TEPL_API_VERSION@.la
 
 libtepl_@TEPL_API_VERSION@_la_SOURCES =
 
-libtepl_@TEPL_API_VERSION@_la_LIBADD =	\
-	$(top_builddir)/amtk/libamtk.la	\
-	libtepl-core.la			\
+libtepl_@TEPL_API_VERSION@_la_LIBADD =				\
+	libtepl-core.la						\
+	$(top_builddir)/amtk/libamtk-@TEPL_API_VERSION@.la	\
 	$(DEP_LIBS)
 
 libtepl_@TEPL_API_VERSION@_la_LDFLAGS =		\
 	-version-info $(TEPL_LT_VERSION)	\
 	-no-undefined				\
-	-export-symbols-regex "^(tepl|amtk)_.*"	\
+	-export-symbols-regex "^tepl_.*"	\
 	$(WARN_LDFLAGS)
 
 libtepl_includedir = $(includedir)/tepl-@TEPL_API_VERSION@/tepl
@@ -180,6 +180,9 @@ Tepl_@TEPL_API_VERSION@_gir_FILES =	\
 	$(tepl_built_public_headers)	\
 	$(tepl_built_public_c_files)
 
+# FIXME: list Amtk too?
+#Tepl_@TEPL_API_VERSION@_gir_INCLUDES = Gtk-3.0 GtkSource-3.0 Amtk-@TEPL_API_VERSION@
+#Tepl_@TEPL_API_VERSION@_gir_PACKAGES = gtk+-3.0 gtksourceview-3.0 amtk-@TEPL_API_VERSION@
 Tepl_@TEPL_API_VERSION@_gir_INCLUDES = Gtk-3.0 GtkSource-3.0
 Tepl_@TEPL_API_VERSION@_gir_PACKAGES = gtk+-3.0 gtksourceview-3.0
 Tepl_@TEPL_API_VERSION@_gir_EXPORT_PACKAGES = tepl-@TEPL_API_VERSION@

@@ -31,23 +31,40 @@ amtk_public_c_files =				\
 	amtk-menu-shell.c			\
 	amtk-utils.c
 
-noinst_LTLIBRARIES = libamtk.la
+# Helper Libtool library, so that the private functions can be used in unit
+# tests.
+noinst_LTLIBRARIES = libamtk-core.la
 
-libamtk_la_SOURCES =		\
+libamtk_core_la_SOURCES =	\
 	$(amtk_public_c_files)	\
 	$(amtk_public_headers)
 
-libamtk_la_CFLAGS =		\
+libamtk_core_la_CFLAGS =	\
 	$(CODE_COVERAGE_CFLAGS)
 
-libamtk_la_LDFLAGS =		\
+libamtk_core_la_LDFLAGS =	\
 	-no-undefined		\
 	$(WARN_LDFLAGS)
 
-libamtk_la_LIBADD =		\
+libamtk_core_la_LIBADD =	\
 	$(CODE_COVERAGE_LIBS)
 
-libamtk_includedir = $(includedir)/tepl-@TEPL_API_VERSION@/amtk
+# The real library.
+lib_LTLIBRARIES = libamtk-@TEPL_API_VERSION@.la
+
+libamtk_@TEPL_API_VERSION@_la_SOURCES =
+
+libamtk_@TEPL_API_VERSION@_la_LIBADD =	\
+	libamtk-core.la			\
+	$(DEP_LIBS)
+
+libamtk_@TEPL_API_VERSION@_la_LDFLAGS =		\
+	-version-info $(TEPL_LT_VERSION)	\
+	-no-undefined				\
+	-export-symbols-regex "^amtk_.*"	\
+	$(WARN_LDFLAGS)
+
+libamtk_includedir = $(includedir)/amtk-@TEPL_API_VERSION@/amtk
 libamtk_include_HEADERS = $(amtk_public_headers)
 
 CLEANFILES =
@@ -58,23 +75,26 @@ INTROSPECTION_GIRS = Amtk-@TEPL_API_VERSION@.gir
 
 INTROSPECTION_SCANNER_ENV = CC="$(CC)"
 
-Amtk-@TEPL_API_VERSION@.gir: libamtk.la
+Amtk-@TEPL_API_VERSION@.gir: libamtk-@TEPL_API_VERSION@.la
+
 INTROSPECTION_SCANNER_ARGS =		\
 	-I$(top_srcdir)			\
 	-I$(top_builddir)		\
 	--c-include=amtk/amtk.h		\
 	--warn-all
+
 Amtk_@TEPL_API_VERSION@_gir_NAMESPACE = Amtk
 Amtk_@TEPL_API_VERSION@_gir_VERSION = @TEPL_API_VERSION@
 Amtk_@TEPL_API_VERSION@_gir_CFLAGS = $(DEP_CFLAGS)
 Amtk_@TEPL_API_VERSION@_gir_SCANNERFLAGS = $(WARN_SCANNERFLAGS)
-Amtk_@TEPL_API_VERSION@_gir_LIBS = libamtk.la
+Amtk_@TEPL_API_VERSION@_gir_LIBS = libamtk-@TEPL_API_VERSION@.la
 Amtk_@TEPL_API_VERSION@_gir_FILES =	\
 	$(amtk_public_headers)		\
 	$(amtk_public_c_files)
 
 Amtk_@TEPL_API_VERSION@_gir_INCLUDES = Gtk-3.0
 Amtk_@TEPL_API_VERSION@_gir_PACKAGES = gtk+-3.0
+Amtk_@TEPL_API_VERSION@_gir_EXPORT_PACKAGES = amtk-@TEPL_API_VERSION@
 
 girdir = $(datadir)/gir-1.0
 gir_DATA = Amtk-@TEPL_API_VERSION@.gir

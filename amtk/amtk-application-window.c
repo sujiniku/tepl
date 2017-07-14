@@ -552,8 +552,8 @@ open_recent_file_cb (GtkRecentChooser *recent_chooser,
  * amtk_application_window_connect_recent_chooser_menu_to_statusbar().
  *
  * When the #GtkRecentChooser::item-activated signal is emitted,
- * amtk_application_open_simple() is called, so the #GApplication must have the
- * %G_APPLICATION_HANDLES_OPEN flag set.
+ * g_application_open() is called (with an empty hint), so the #GApplication
+ * must have the %G_APPLICATION_HANDLES_OPEN flag set.
  *
  * Returns: (transfer floating): a new #GtkMenuItem.
  * Since: 2.0

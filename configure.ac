@@ -34,11 +34,17 @@ AX_IS_RELEASE([git-directory])
 # When incrementing the API version (usually for a new major package version),
 # set CURRENT, REVISION and AGE to 0 since it's like a new library.
 
+AMTK_LT_CURRENT=0
+AMTK_LT_REVISION=0
+AMTK_LT_AGE=0
+AMTK_LT_VERSION="$AMTK_LT_CURRENT:$AMTK_LT_REVISION:$AMTK_LT_AGE"
+AC_SUBST([AMTK_LT_VERSION])
+
 TEPL_LT_CURRENT=0
 TEPL_LT_REVISION=0
 TEPL_LT_AGE=0
 TEPL_LT_VERSION="$TEPL_LT_CURRENT:$TEPL_LT_REVISION:$TEPL_LT_AGE"
-AC_SUBST(TEPL_LT_VERSION)
+AC_SUBST([TEPL_LT_VERSION])
 
 # API version, used for parallel installability.
 # Not used in:

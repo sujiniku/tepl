@@ -59,7 +59,7 @@ libamtk_@TEPL_API_VERSION@_la_LIBADD =	\
 	$(AMTK_DEP_LIBS)
 
 libamtk_@TEPL_API_VERSION@_la_LDFLAGS =		\
-	-version-info $(TEPL_LT_VERSION)	\
+	-version-info $(AMTK_LT_VERSION)	\
 	-no-undefined				\
 	-export-symbols-regex "^amtk_.*"	\
 	$(WARN_LDFLAGS)

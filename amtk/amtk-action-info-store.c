@@ -36,19 +36,18 @@
  * A #GtkApplication can be associated so that when a widget is created,
  * gtk_application_set_accels_for_action() is called. See
  * amtk_action_info_store_create_menu_item() for more details. Note that this
- * happens on widget creation, not when adding a #AmtkActionInfo to the store,
+ * happens on widget creation, not when adding an #AmtkActionInfo to the store,
  * so that the accelerator is bound to the application only if the
  * #AmtkActionInfo is actually used.
  *
  * #AmtkActionInfoStore is designed so that libraries can provide their own
  * store, to share action information (with translations) and possibly the
- * #GAction implementations as well. Application-specific #AmtkActionInfo's can
- * be added to the store returned by
- * tepl_application_get_app_action_info_store().
+ * #GAction implementations as well.
  *
  * A library #AmtkActionInfoStore must namespace the action names to not have
- * conflicts when a #AmtkActionInfo is added to the #AmtkActionInfoCentralStore.
- * Examples of namespaced action names: `"win.amtk-save"` or `"app.amtk-quit"`.
+ * conflicts when an #AmtkActionInfo is added to the
+ * #AmtkActionInfoCentralStore. Examples of namespaced action names:
+ * `"win.amtk-save"` or `"app.amtk-quit"`.
  */
 
 struct _AmtkActionInfoStorePrivate
@@ -223,7 +222,7 @@ amtk_action_info_store_new (GtkApplication *application)
 
 /**
  * amtk_action_info_store_get_application:
- * @store: a #AmtkActionInfoStore.
+ * @store: an #AmtkActionInfoStore.
  *
  * Returns: (transfer none) (nullable): the associated #GtkApplication, or
  * %NULL.
@@ -238,11 +237,11 @@ amtk_action_info_store_get_application (AmtkActionInfoStore *store)
 
 /**
  * amtk_action_info_store_add:
- * @store: a #AmtkActionInfoStore.
- * @info: a #AmtkActionInfo.
+ * @store: an #AmtkActionInfoStore.
+ * @info: an #AmtkActionInfo.
  *
  * Inserts @info into @store and into the #AmtkActionInfoCentralStore. Both the
- * @store and central store must <emphasis>not</emphasis> already contain a
+ * @store and central store must <emphasis>not</emphasis> already contain an
  * #AmtkActionInfo with the same action name. The stores take their own
  * reference on @info.
  *
@@ -263,7 +262,7 @@ amtk_action_info_store_add (AmtkActionInfoStore *store,
 
 	if (g_hash_table_lookup (store->priv->hash_table, action_name) != NULL)
 	{
-		g_warning ("%s(): the AmtkActionInfoStore already contains a AmtkActionInfo "
+		g_warning ("%s(): the AmtkActionInfoStore already contains an AmtkActionInfo "
 			   "with the action name “%s”.",
 			   G_STRFUNC,
 			   action_name);
@@ -280,7 +279,7 @@ amtk_action_info_store_add (AmtkActionInfoStore *store,
 
 /**
  * amtk_action_info_store_add_entries:
- * @store: a #AmtkActionInfoStore.
+ * @store: an #AmtkActionInfoStore.
  * @entries: (array length=n_entries) (element-type AmtkActionInfoEntry): a
  * pointer to the first item in an array of #AmtkActionInfoEntry structs.
  * @n_entries: the length of @entries, or -1 if @entries is %NULL-terminated.
@@ -319,7 +318,7 @@ amtk_action_info_store_add_entries (AmtkActionInfoStore       *store,
 
 /**
  * amtk_action_info_store_lookup:
- * @store: a #AmtkActionInfoStore.
+ * @store: an #AmtkActionInfoStore.
  * @action_name: an action name.
  *
  * Returns: (transfer none): the found #AmtkActionInfo, or %NULL.
@@ -337,10 +336,10 @@ amtk_action_info_store_lookup (AmtkActionInfoStore *store,
 
 /**
  * amtk_action_info_store_create_menu_item:
- * @store: a #AmtkActionInfoStore.
+ * @store: an #AmtkActionInfoStore.
  * @action_name: an action name.
  *
- * Creates a new #GtkMenuItem for @action_name. The @store must contain a
+ * Creates a new #GtkMenuItem for @action_name. The @store must contain an
  * #AmtkActionInfo for @action_name.
  *
  * gtk_actionable_set_action_name() is called on the menu item with
@@ -452,15 +451,15 @@ check_used_cb (gpointer key,
 
 /**
  * amtk_action_info_store_check_all_used:
- * @store: a #AmtkActionInfoStore.
+ * @store: an #AmtkActionInfoStore.
  *
  * Checks that all #AmtkActionInfo's of @store have been used by
  * amtk_action_info_store_create_menu_item(). If not, a warning is printed and
  * might indicate dead code.
  *
- * You probably want to call this function on the store returned by
- * tepl_application_get_app_action_info_store(). But it can also be useful for a
- * store provided by a library, to easily see which actions you don't use.
+ * You probably want to call this function on the application store. But it can
+ * also be useful for a store provided by a library, to easily see which actions
+ * you don't use.
  *
  * Since: 2.0
  */

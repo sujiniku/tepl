@@ -27,7 +27,7 @@
  * @See_also: #AmtkActionInfoStore
  *
  * #AmtkActionInfoCentralStore is a singleton class containing the aggregation
- * of all #AmtkActionInfoStore's. Each time a #AmtkActionInfo is added to a
+ * of all #AmtkActionInfoStore's. Each time an #AmtkActionInfo is added to a
  * #AmtkActionInfoStore, it is also added to the #AmtkActionInfoCentralStore.
  */
 
@@ -126,7 +126,7 @@ _amtk_action_info_central_store_add (AmtkActionInfoCentralStore *central_store,
 
 	if (g_hash_table_lookup (central_store->priv->hash_table, action_name) != NULL)
 	{
-		g_warning ("The AmtkActionInfoCentralStore already contains a AmtkActionInfo "
+		g_warning ("The AmtkActionInfoCentralStore already contains an AmtkActionInfo "
 			   "with the action name “%s”. Libraries must namespace their action names.",
 			   action_name);
 		return;
@@ -139,7 +139,7 @@ _amtk_action_info_central_store_add (AmtkActionInfoCentralStore *central_store,
 
 /**
  * amtk_action_info_central_store_lookup:
- * @central_store: a #AmtkActionInfoCentralStore.
+ * @central_store: the #AmtkActionInfoCentralStore.
  * @action_name: an action name.
  *
  * Returns: (transfer none): the found #AmtkActionInfo, or %NULL.

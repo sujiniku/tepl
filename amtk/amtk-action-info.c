@@ -28,16 +28,18 @@
  * @Title: AmtkActionInfo
  * @See_also: #AmtkActionInfoStore
  *
- * A #AmtkActionInfo instance contains a set of information about a #GAction.
+ * An #AmtkActionInfo instance contains a set of information about a #GAction.
  * Those pieces of information are useful to create UI elements that trigger the
  * #GAction, for example a menu item or a toolbar item.
  *
  * When writing an XML file to create a #GMenu, with the format understood by
  * #GtkBuilder (see the class description of #GtkApplicationWindow), the
- * information in the XML file can be used only to create a #GMenu. The initial
- * goal with #AmtkActionInfo and its related classes is to encode the
- * information just once, and be able to create both a menu and a toolbar easily
- * (to have a traditional user interface).
+ * information in the XML file can be used only to create a #GMenu, not a
+ * toolbar. The initial goal with #AmtkActionInfo and its related classes is to
+ * encode the information just once, and be able to create both a menu and a
+ * toolbar easily (to have a traditional user interface, not based on
+ * #GtkHeaderBar). Note that with the Amtk API, it would also be possible to
+ * create a #GMenu.
  */
 
 struct _AmtkActionInfo
@@ -99,10 +101,10 @@ amtk_action_info_new (void)
 
 /**
  * amtk_action_info_new_from_entry:
- * @info_entry: a #AmtkActionInfoEntry.
+ * @info_entry: an #AmtkActionInfoEntry.
  * @translation_domain: (nullable): a gettext domain, or %NULL.
  *
- * Creates a new #AmtkActionInfo from a #AmtkActionInfoEntry.
+ * Creates a new #AmtkActionInfo from an #AmtkActionInfoEntry.
  *
  * If @translation_domain is not %NULL, g_dgettext() is used to translate the
  * @label and @tooltip before setting them to the #AmtkActionInfo.
@@ -145,7 +147,7 @@ amtk_action_info_new_from_entry (const AmtkActionInfoEntry *info_entry,
 
 /**
  * amtk_action_info_ref:
- * @info: a #AmtkActionInfo.
+ * @info: an #AmtkActionInfo.
  *
  * Increments the reference count of @info by one.
  *
@@ -164,7 +166,7 @@ amtk_action_info_ref (AmtkActionInfo *info)
 
 /**
  * amtk_action_info_unref:
- * @info: a #AmtkActionInfo.
+ * @info: an #AmtkActionInfo.
  *
  * Decrements the reference count of @info by one. If the reference count drops
  * to 0, @info is freed.
@@ -186,7 +188,7 @@ amtk_action_info_unref (AmtkActionInfo *info)
 
 /**
  * amtk_action_info_copy:
- * @info: a #AmtkActionInfo.
+ * @info: an #AmtkActionInfo.
  *
  * Returns: (transfer full): a copy of @info. The copy will have a reference
  * count of one.
@@ -213,7 +215,7 @@ amtk_action_info_copy (const AmtkActionInfo *info)
 
 /**
  * amtk_action_info_get_action_name:
- * @info: a #AmtkActionInfo.
+ * @info: an #AmtkActionInfo.
  *
  * Returns: (nullable): the action name, or %NULL. Example: `"win.save"`.
  * Since: 2.0
@@ -228,7 +230,7 @@ amtk_action_info_get_action_name (const AmtkActionInfo *info)
 
 /**
  * amtk_action_info_set_action_name:
- * @info: a #AmtkActionInfo.
+ * @info: an #AmtkActionInfo.
  * @action_name: the action name.
  *
  * Sets the action name, for example `"win.save"`.
@@ -248,7 +250,7 @@ amtk_action_info_set_action_name (AmtkActionInfo *info,
 
 /**
  * amtk_action_info_get_icon_name:
- * @info: a #AmtkActionInfo.
+ * @info: an #AmtkActionInfo.
  *
  * Returns: (nullable): the icon name, or %NULL.
  * Since: 2.0
@@ -263,7 +265,7 @@ amtk_action_info_get_icon_name (const AmtkActionInfo *info)
 
 /**
  * amtk_action_info_set_icon_name:
- * @info: a #AmtkActionInfo.
+ * @info: an #AmtkActionInfo.
  * @icon_name: (nullable): the icon name, or %NULL.
  *
  * Since: 2.0
@@ -280,7 +282,7 @@ amtk_action_info_set_icon_name (AmtkActionInfo *info,
 
 /**
  * amtk_action_info_get_label:
- * @info: a #AmtkActionInfo.
+ * @info: an #AmtkActionInfo.
  *
  * Returns: (nullable): the label (i.e. a short description), or %NULL.
  * Since: 2.0
@@ -295,7 +297,7 @@ amtk_action_info_get_label (const AmtkActionInfo *info)
 
 /**
  * amtk_action_info_set_label:
- * @info: a #AmtkActionInfo.
+ * @info: an #AmtkActionInfo.
  * @label: (nullable): the label (i.e. a short description), or %NULL.
  *
  * Since: 2.0
@@ -312,7 +314,7 @@ amtk_action_info_set_label (AmtkActionInfo *info,
 
 /**
  * amtk_action_info_get_tooltip:
- * @info: a #AmtkActionInfo.
+ * @info: an #AmtkActionInfo.
  *
  * Returns: (nullable): the tooltip (i.e. a long description), or %NULL.
  * Since: 2.0
@@ -327,7 +329,7 @@ amtk_action_info_get_tooltip (const AmtkActionInfo *info)
 
 /**
  * amtk_action_info_set_tooltip:
- * @info: a #AmtkActionInfo.
+ * @info: an #AmtkActionInfo.
  * @tooltip: (nullable): the tooltip (i.e. a long description), or %NULL.
  *
  * Since: 2.0
@@ -344,7 +346,7 @@ amtk_action_info_set_tooltip (AmtkActionInfo *info,
 
 /**
  * amtk_action_info_get_accels:
- * @info: a #AmtkActionInfo.
+ * @info: an #AmtkActionInfo.
  *
  * Returns the accelerators. This function never returns %NULL, it always
  * returns a %NULL-terminated array, to be suitable for
@@ -366,7 +368,7 @@ amtk_action_info_get_accels (const AmtkActionInfo *info)
 
 /**
  * amtk_action_info_set_accels:
- * @info: a #AmtkActionInfo.
+ * @info: an #AmtkActionInfo.
  * @accels: (array zero-terminated=1): a %NULL-terminated array of accelerators
  * in the format understood by gtk_accelerator_parse().
  *

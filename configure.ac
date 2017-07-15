@@ -86,9 +86,19 @@ AX_COMPILER_FLAGS([WARN_CFLAGS], [WARN_LDFLAGS], [yes])
 
 # Dynamic linking dependencies
 AX_REQUIRE_DEFINED([AX_PKG_CHECK_MODULES])
-AX_PKG_CHECK_MODULES([DEP],
+AX_PKG_CHECK_MODULES([AMTK_DEP],
+		     [glib-2.0 >= $glib_req  gtk+-3.0 >= $gtk_req],
+		     [],
+		     [], [],
+		     [AMTK_PACKAGE_REQUIRES],
+		     [AMTK_PACKAGE_REQUIRES_PRIVATE])
+
+AX_PKG_CHECK_MODULES([TEPL_DEP],
 		     [glib-2.0 >= $glib_req  gtk+-3.0 >= $gtk_req  gtksourceview-3.0 >= $gtksourceview_req],
-		     [libxml-2.0 >= $libxml_req  uchardet])
+		     [libxml-2.0 >= $libxml_req  uchardet],
+		     [], [],
+		     [TEPL_PACKAGE_REQUIRES],
+		     [TEPL_PACKAGE_REQUIRES_PRIVATE])
 
 # Use GVfs metadata or the old XML file store.
 AC_ARG_ENABLE([gvfs-metadata],

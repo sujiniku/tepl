@@ -7,7 +7,7 @@ AM_CPPFLAGS =				\
 	-I$(top_srcdir)			\
 	$(WARN_CFLAGS)			\
 	$(CODE_COVERAGE_CPPFLAGS)	\
-	$(DEP_CFLAGS)
+	$(AMTK_DEP_CFLAGS)
 
 amtk_public_headers =				\
 	amtk.h					\
@@ -56,7 +56,7 @@ libamtk_@TEPL_API_VERSION@_la_SOURCES =
 
 libamtk_@TEPL_API_VERSION@_la_LIBADD =	\
 	libamtk-core.la			\
-	$(DEP_LIBS)
+	$(AMTK_DEP_LIBS)
 
 libamtk_@TEPL_API_VERSION@_la_LDFLAGS =		\
 	-version-info $(TEPL_LT_VERSION)	\
@@ -85,7 +85,7 @@ INTROSPECTION_SCANNER_ARGS =		\
 
 Amtk_@TEPL_API_VERSION@_gir_NAMESPACE = Amtk
 Amtk_@TEPL_API_VERSION@_gir_VERSION = @TEPL_API_VERSION@
-Amtk_@TEPL_API_VERSION@_gir_CFLAGS = $(DEP_CFLAGS)
+Amtk_@TEPL_API_VERSION@_gir_CFLAGS = $(AMTK_DEP_CFLAGS)
 Amtk_@TEPL_API_VERSION@_gir_SCANNERFLAGS = $(WARN_SCANNERFLAGS)
 Amtk_@TEPL_API_VERSION@_gir_LIBS = libamtk-@TEPL_API_VERSION@.la
 Amtk_@TEPL_API_VERSION@_gir_FILES =	\

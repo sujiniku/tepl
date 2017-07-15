@@ -1,13 +1,15 @@
 AM_CPPFLAGS = 			\
 	-I$(top_srcdir) 	\
 	$(WARN_CFLAGS) 		\
-	$(DEP_CFLAGS)
+	$(AMTK_DEP_CFLAGS)	\
+	$(TEPL_DEP_CFLAGS)
 
 AM_LDFLAGS = $(WARN_LDFLAGS)
 
-LDADD = $(top_builddir)/tepl/libtepl-core.la	\
-	$(top_builddir)/amtk/libamtk-core.la	\
-	$(DEP_LIBS)
+LDADD = $(top_builddir)/amtk/libamtk-core.la	\
+	$(top_builddir)/tepl/libtepl-core.la	\
+	$(AMTK_DEP_LIBS)			\
+	$(TEPL_DEP_LIBS)
 
 noinst_PROGRAMS = $(TEST_PROGS)
 TEST_PROGS =

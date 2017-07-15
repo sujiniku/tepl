@@ -51,11 +51,12 @@ FIXXREF_OPTIONS =
 # CFLAGS and LDFLAGS for compiling gtkdoc-scangobj with your library.
 # Only needed if you are using gtkdoc-scangobj to dynamically query widget
 # signals and properties.
-GTKDOC_CFLAGS = -I$(top_srcdir) $(DEP_CFLAGS)
+GTKDOC_CFLAGS = -I$(top_srcdir) $(AMTK_DEP_CFLAGS) $(TEPL_DEP_CFLAGS)
 GTKDOC_LIBS =							\
 	$(top_builddir)/amtk/libamtk-@TEPL_API_VERSION@.la	\
 	$(top_builddir)/tepl/libtepl-@TEPL_API_VERSION@.la	\
-	$(DEP_LIBS)
+	$(AMTK_DEP_LIBS)					\
+	$(TEPL_DEP_LIBS)
 
 MAINTAINERCLEANFILES =			\
 	$(DOC_MODULE)-overrides.txt	\

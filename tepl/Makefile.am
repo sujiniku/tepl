@@ -8,7 +8,7 @@ AM_CPPFLAGS =				\
 	-I$(top_srcdir)			\
 	$(WARN_CFLAGS)			\
 	$(CODE_COVERAGE_CPPFLAGS)	\
-	$(DEP_CFLAGS)
+	$(TEPL_DEP_CFLAGS)
 
 tepl_public_headers =				\
 	tepl.h					\
@@ -113,7 +113,7 @@ libtepl_@TEPL_API_VERSION@_la_SOURCES =
 libtepl_@TEPL_API_VERSION@_la_LIBADD =				\
 	libtepl-core.la						\
 	$(top_builddir)/amtk/libamtk-@TEPL_API_VERSION@.la	\
-	$(DEP_LIBS)
+	$(TEPL_DEP_LIBS)
 
 libtepl_@TEPL_API_VERSION@_la_LDFLAGS =		\
 	-version-info $(TEPL_LT_VERSION)	\
@@ -159,7 +159,7 @@ INTROSPECTION_COMPILER_ARGS =			\
 
 Tepl_@TEPL_API_VERSION@_gir_NAMESPACE = Tepl
 Tepl_@TEPL_API_VERSION@_gir_VERSION = @TEPL_API_VERSION@
-Tepl_@TEPL_API_VERSION@_gir_CFLAGS = $(DEP_CFLAGS)
+Tepl_@TEPL_API_VERSION@_gir_CFLAGS = $(TEPL_DEP_CFLAGS)
 Tepl_@TEPL_API_VERSION@_gir_SCANNERFLAGS = $(WARN_SCANNERFLAGS)
 Tepl_@TEPL_API_VERSION@_gir_LIBS = libtepl-@TEPL_API_VERSION@.la
 Tepl_@TEPL_API_VERSION@_gir_FILES =	\

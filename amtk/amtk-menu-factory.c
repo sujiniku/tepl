@@ -284,10 +284,9 @@ amtk_menu_factory_create_menu_item (AmtkMenuFactory *factory,
 	}
 
 	/* FIXME: we are cheating a little here. Maybe the lookup functions
-	 * should not return const values. And _amtk_action_info_set_used()
-	 * should be public so factory functions can be written in apps.
+	 * should not return const values.
 	 */
-	_amtk_action_info_set_used ((AmtkActionInfo *) action_info);
+	amtk_action_info_mark_as_used ((AmtkActionInfo *) action_info);
 
 	return GTK_WIDGET (menu_item);
 }

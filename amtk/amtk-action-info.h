@@ -99,11 +99,9 @@ const gchar * const *	amtk_action_info_get_accels		(const AmtkActionInfo *info);
 void			amtk_action_info_set_accels		(AmtkActionInfo      *info,
 								 const gchar * const *accels);
 
-G_GNUC_INTERNAL
-gboolean		_amtk_action_info_get_used		(const AmtkActionInfo *info);
+void			amtk_action_info_mark_as_used		(AmtkActionInfo *info);
 
-G_GNUC_INTERNAL
-void			_amtk_action_info_set_used		(AmtkActionInfo *info);
+gboolean		amtk_action_info_has_been_used		(const AmtkActionInfo *info);
 
 G_END_DECLS
 

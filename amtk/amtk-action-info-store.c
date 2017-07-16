@@ -198,7 +198,7 @@ check_used_cb (gpointer key,
 	const gchar *action_name = key;
 	const AmtkActionInfo *action_info = value;
 
-	if (!_amtk_action_info_get_used (action_info))
+	if (!amtk_action_info_has_been_used (action_info))
 	{
 		g_warning ("AmtkActionInfo with action_name='%s' has not been used.",
 			   action_name);

@@ -41,6 +41,8 @@ amtk_action_info_get_tooltip
 amtk_action_info_set_tooltip
 amtk_action_info_get_accels
 amtk_action_info_set_accels
+amtk_action_info_mark_as_used
+amtk_action_info_has_been_used
 <SUBSECTION Standard>
 amtk_action_info_get_type
 AMTK_TYPE_ACTION_INFO

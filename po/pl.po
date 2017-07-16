@@ -7,9 +7,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-10 16:14+0000\n"
-"PO-Revision-Date: 2017-03-10 17:38+0100\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
+"product=tepl&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2017-07-13 08:34+0000\n"
+"PO-Revision-Date: 2017-07-16 18:48+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -19,18 +20,59 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
+#. action, icon, label, accel, tooltip
+#: tepl/tepl-application.c:76
+msgid "Cu_t"
+msgstr "_Wytnij"
+
+#: tepl/tepl-application.c:77
+msgid "Cut the selection"
+msgstr "Wycina zaznaczenie"
+
+#: tepl/tepl-application.c:79
+msgid "_Copy"
+msgstr "S_kopiuj"
+
+#: tepl/tepl-application.c:80
+msgid "Copy the selection"
+msgstr "Kopiuje zaznaczenie"
+
+#: tepl/tepl-application.c:82
+msgid "_Paste"
+msgstr "Wk_lej"
+
+#: tepl/tepl-application.c:83
+msgid "Paste the clipboard"
+msgstr "Wkleja zawartość schowka"
+
+#: tepl/tepl-application.c:85
+msgid "_Delete"
+msgstr "_Usuń"
+
+#: tepl/tepl-application.c:86
+msgid "Delete the selected text"
+msgstr "Usuwa zaznaczony tekst"
+
+#: tepl/tepl-application.c:88
+msgid "Select _All"
+msgstr "Z_aznacz wszystko"
+
+#: tepl/tepl-application.c:89
+msgid "Select all the text"
+msgstr "Zaznacza cały tekst"
+
 #. Translators: %s is a filename.
-#: tepl/tepl-application-window.c:356
+#: tepl/tepl-application-window.c:465
 #, c-format
 msgid "Open “%s”"
 msgstr "Otwórz „%s”"
 
-#: tepl/tepl-application-window.c:575
+#: tepl/tepl-application-window.c:684
 msgid "Open _Recent"
 msgstr "Ostatnio używane doku_menty"
 
 #. Translators: %s is the application name.
-#: tepl/tepl-application-window.c:578
+#: tepl/tepl-application-window.c:687
 #, c-format
 msgid "Open a file recently used with %s"
 msgstr "Otwarcie pliku ostatnio używanego w programie %s"
@@ -190,7 +232,7 @@ msgstr "Treść wejściowa kończą się niepełnymi danymi."
 #: tepl/tepl-file.c:413
 #, c-format
 msgid "Untitled File %d"
-msgstr "Plik bez tytułu %d"
+msgstr "%d. plik bez tytułu"
 
 #: tepl/tepl-file-content-loader.c:334
 #, c-format
@@ -201,145 +243,106 @@ msgstr "Plik jest za duży. Maksymalnie można wczytać %s."
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Nie można automatycznie wykryć kodowania znaków."
 
-#: tepl/tepl-file-saver.c:776
+#: tepl/tepl-file-saver.c:784
 msgid "The file is externally modified."
 msgstr "Plik został zmodyfikowany poza programem."
 
-#: tepl/tepl-file-saver.c:1310
+#: tepl/tepl-file-saver.c:1318
 msgid "The buffer contains invalid characters."
 msgstr "Bufor zawiera nieprawidłowe znaki."
 
-#: tepl/tepl-io-error-info-bar.c:74
-#, c-format
-msgid "Could not find the file “%s”."
-msgstr "Nie można odnaleźć pliku „%s”."
+#~ msgid "Could not find the file “%s”."
+#~ msgstr "Nie można odnaleźć pliku „%s”."
 
-#: tepl/tepl-io-error-info-bar.c:77 tepl/tepl-io-error-info-bar.c:104
-#: tepl/tepl-io-error-info-bar.c:111
-msgid "Please check that you typed the location correctly and try again."
-msgstr ""
-"Proszę sprawdzić, czy wprowadzone zostało poprawne położenie i spróbować "
-"ponownie."
+#~ msgid "Please check that you typed the location correctly and try again."
+#~ msgstr ""
+#~ "Proszę sprawdzić, czy wprowadzone zostało poprawne położenie i spróbować "
+#~ "ponownie."
 
-#. Translators: %s is a URI scheme (like for example
-#. * http:, ftp:, etc.).
-#.
-#: tepl/tepl-io-error-info-bar.c:90
-#, c-format
-msgid "Unable to handle “%s:” locations."
-msgstr "Nie można obsłużyć położeń „%s:”."
+#~ msgid "Unable to handle “%s:” locations."
+#~ msgstr "Nie można obsłużyć położeń „%s:”."
 
-#: tepl/tepl-io-error-info-bar.c:98
-msgid "The location of the file cannot be accessed."
-msgstr "Nie można uzyskać dostępu do położenia pliku."
+#~ msgid "The location of the file cannot be accessed."
+#~ msgstr "Nie można uzyskać dostępu do położenia pliku."
 
-#: tepl/tepl-io-error-info-bar.c:102
-#, c-format
-msgid "“%s” is a directory."
-msgstr "„%s” jest katalogiem."
+#~ msgid "“%s” is a directory."
+#~ msgstr "„%s” jest katalogiem."
 
-#: tepl/tepl-io-error-info-bar.c:109
-#, c-format
-msgid "“%s” is not a valid location."
-msgstr "„%s” nie jest prawidłowym położeniem."
+#~ msgid "“%s” is not a valid location."
+#~ msgstr "„%s” nie jest prawidłowym położeniem."
 
-#. Translators: %s is a hostname.
-#: tepl/tepl-io-error-info-bar.c:141
-#, c-format
-msgid ""
-"Host “%s” could not be found. Please check that your proxy settings are "
-"correct and try again."
-msgstr ""
-"Nie można odnaleźć komputera „%s”. Proszę sprawdzić poprawność ustawień "
-"pośrednika i spróbować ponownie."
+#~ msgid ""
+#~ "Host “%s” could not be found. Please check that your proxy settings are "
+#~ "correct and try again."
+#~ msgstr ""
+#~ "Nie można odnaleźć komputera „%s”. Proszę sprawdzić poprawność ustawień "
+#~ "pośrednika i spróbować ponownie."
 
-#. Use the same string as INVALID_HOST.
-#: tepl/tepl-io-error-info-bar.c:150
-msgid ""
-"Hostname was invalid. Please check that you typed the location correctly and "
-"try again."
-msgstr ""
-"Nazwa komputera jest nieprawidłowa. Proszę sprawdzić, czy wprowadzone "
-"położenie jest poprawne i spróbować ponownie."
+#~ msgid ""
+#~ "Hostname was invalid. Please check that you typed the location correctly "
+#~ "and try again."
+#~ msgstr ""
+#~ "Nazwa komputera jest nieprawidłowa. Proszę sprawdzić, czy wprowadzone "
+#~ "położenie jest poprawne i spróbować ponownie."
 
-#: tepl/tepl-io-error-info-bar.c:159
-#, c-format
-msgid "“%s” is not a regular file."
-msgstr "„%s” nie jest zwykłym plikiem."
+#~ msgid "“%s” is not a regular file."
+#~ msgstr "„%s” nie jest zwykłym plikiem."
 
-#: tepl/tepl-io-error-info-bar.c:164
-msgid "Connection timed out. Please try again."
-msgstr "Przekroczono czas połączenia. Proszę spróbować ponownie."
+#~ msgid "Connection timed out. Please try again."
+#~ msgstr "Przekroczono czas połączenia. Proszę spróbować ponownie."
 
-#: tepl/tepl-io-error-info-bar.c:168
-#, c-format
-msgid "Unexpected error: %s"
-msgstr "Nieoczekiwany błąd: %s"
+#~ msgid "Unexpected error: %s"
+#~ msgstr "Nieoczekiwany błąd: %s"
 
-#: tepl/tepl-io-error-info-bar.c:179 tepl/tepl-io-error-info-bar.c:212
-#: tepl/tepl-progress-info-bar.c:53
-msgid "_Cancel"
-msgstr "_Anuluj"
+#~ msgid "_Cancel"
+#~ msgstr "_Anuluj"
 
-#: tepl/tepl-io-error-info-bar.c:185 tepl/tepl-io-error-info-bar.c:195
-msgid "_Retry"
-msgstr "P_onów"
+#~ msgid "_Retry"
+#~ msgstr "P_onów"
 
-#: tepl/tepl-io-error-info-bar.c:201
-msgid "Edit Any_way"
-msgstr "_Modyfikuj mimo to"
+#~ msgid "Edit Any_way"
+#~ msgstr "_Modyfikuj mimo to"
 
-#: tepl/tepl-io-error-info-bar.c:270
-msgid ""
-"The number of followed links is limited and the actual file could not be "
-"found within this limit."
-msgstr ""
-"Liczba dowiązań do podążenia jest ograniczona. Plik nie został odnaleziony "
-"w zakresie tego ograniczenia."
+#~ msgid ""
+#~ "The number of followed links is limited and the actual file could not be "
+#~ "found within this limit."
+#~ msgstr ""
+#~ "Liczba dowiązań do podążenia jest ograniczona. Plik nie został "
+#~ "odnaleziony w zakresie tego ograniczenia."
 
-#: tepl/tepl-io-error-info-bar.c:275
-msgid "You do not have the permissions necessary to open the file."
-msgstr "Brak odpowiednich uprawnień do otwarcia tego pliku."
+#~ msgid "You do not have the permissions necessary to open the file."
+#~ msgstr "Brak odpowiednich uprawnień do otwarcia tego pliku."
 
-#: tepl/tepl-io-error-info-bar.c:285
-msgid ""
-"Unable to detect the character encoding.\n"
-"Please check that you are not trying to open a binary file.\n"
-"Select a character encoding from the menu and try again."
-msgstr ""
-"Nie można wykryć kodowania znaków.\n"
-"Proszę sprawdzić, czy otwierany plik nie jest binarny.\n"
-"Można także wybrać kodowanie znaków w menu i spróbować ponownie."
+#~ msgid ""
+#~ "Unable to detect the character encoding.\n"
+#~ "Please check that you are not trying to open a binary file.\n"
+#~ "Select a character encoding from the menu and try again."
+#~ msgstr ""
+#~ "Nie można wykryć kodowania znaków.\n"
+#~ "Proszę sprawdzić, czy otwierany plik nie jest binarny.\n"
+#~ "Można także wybrać kodowanie znaków w menu i spróbować ponownie."
 
-#: tepl/tepl-io-error-info-bar.c:294
-#, c-format
-msgid "There was a problem opening the file “%s”."
-msgstr "Wystąpił problem podczas otwierania pliku „%s”."
+#~ msgid "There was a problem opening the file “%s”."
+#~ msgstr "Wystąpił problem podczas otwierania pliku „%s”."
 
-#: tepl/tepl-io-error-info-bar.c:296
-msgid ""
-"The file you opened has some invalid characters. If you continue editing "
-"this file you could corrupt it.\n"
-"You can also choose another character encoding and try again."
-msgstr ""
-"Otwarty plik zawiera nieprawidłowe znaki. Jeśli modyfikowanie tego pliku "
-"zostanie kontynuowane, może on zostać uszkodzony.\n"
-"Można także wybrać inne kodowanie znaków i spróbować ponownie."
+#~ msgid ""
+#~ "The file you opened has some invalid characters. If you continue editing "
+#~ "this file you could corrupt it.\n"
+#~ "You can also choose another character encoding and try again."
+#~ msgstr ""
+#~ "Otwarty plik zawiera nieprawidłowe znaki. Jeśli modyfikowanie tego pliku "
+#~ "zostanie kontynuowane, może on zostać uszkodzony.\n"
+#~ "Można także wybrać inne kodowanie znaków i spróbować ponownie."
 
-#: tepl/tepl-io-error-info-bar.c:312
-#, c-format
-msgid "Could not open the file “%s” using the “%s” character encoding."
-msgstr "Nie można otworzyć pliku „%s” za pomocą kodowania znaków „%s”."
+#~ msgid "Could not open the file “%s” using the “%s” character encoding."
+#~ msgstr "Nie można otworzyć pliku „%s” za pomocą kodowania znaków „%s”."
 
-#: tepl/tepl-io-error-info-bar.c:316
-msgid ""
-"Please check that you are not trying to open a binary file.\n"
-"Select a different character encoding from the menu and try again."
-msgstr ""
-"Proszę sprawdzić, czy otwierany plik nie jest binarny.\n"
-"Można także wybrać inne kodowanie znaków w menu i spróbować ponownie."
+#~ msgid ""
+#~ "Please check that you are not trying to open a binary file.\n"
+#~ "Select a different character encoding from the menu and try again."
+#~ msgstr ""
+#~ "Proszę sprawdzić, czy otwierany plik nie jest binarny.\n"
+#~ "Można także wybrać inne kodowanie znaków w menu i spróbować ponownie."
 
-#: tepl/tepl-io-error-info-bar.c:329
-#, c-format
-msgid "Could not open the file “%s”."
-msgstr "Nie można otworzyć pliku „%s”."
+#~ msgid "Could not open the file “%s”."
+#~ msgstr "Nie można otworzyć pliku „%s”."

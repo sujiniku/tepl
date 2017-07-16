@@ -91,6 +91,25 @@ amtk_action_map_add_action_entries_check_dups
 </SECTION>
 
 <SECTION>
+<FILE>amtk-menu-factory</FILE>
+AmtkMenuFactory
+amtk_menu_factory_new
+amtk_menu_factory_new_with_default_application
+amtk_menu_factory_get_application
+amtk_menu_factory_create_menu_item
+<SUBSECTION Standard>
+AMTK_IS_MENU_FACTORY
+AMTK_IS_MENU_FACTORY_CLASS
+AMTK_MENU_FACTORY
+AMTK_MENU_FACTORY_CLASS
+AMTK_MENU_FACTORY_GET_CLASS
+AMTK_TYPE_MENU_FACTORY
+AmtkMenuFactoryClass
+AmtkMenuFactoryPrivate
+amtk_menu_factory_get_type
+</SECTION>
+
+<SECTION>
 <FILE>amtk-menu-item</FILE>
 amtk_menu_item_get_long_description
 amtk_menu_item_set_long_description

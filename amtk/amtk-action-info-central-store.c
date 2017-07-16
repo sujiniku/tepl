@@ -35,23 +35,18 @@
  *
  * Why both AmtkActionInfoStore and AmtkActionInfoCentralStore are needed?
  *
- * Advantages of AmtkActionInfoStore:
- * - amtk_action_info_store_new() takes an optional GtkApplication parameter. It
- *   doesn't rely on g_application_get_default() (calling
- *   g_application_get_default() in a library is not really a good practice I
- *   think. In theory an app can have several GApplication instances).
+ * Advantage of AmtkActionInfoStore:
  * - amtk_action_info_store_check_all_used()
  *
  * Advantages of AmtkActionInfoCentralStore:
  * - The central store checks if there are no duplicated action names
  *   (globally).
- * - [For the menu bar, easy to retrieve the tooltip to show it in the
- *   statusbar.] No longer relevant with amtk_menu_item_get_long_description().
+ * - Permits to write widget factory functions that don't require an
+ *   AmtkActionInfoStore parameter.
  *
- * If there was only one of the two classes, hacks would be needed to achieve
- * the above items. So by having the two classes, we have the best of both
- * worlds. We should not be afraid to create a lot of classes, and see things in
- * big.
+ * By having the two classes, we have the best of both worlds. We should not be
+ * afraid to create a lot of classes, and see things in big, even if it's a bit
+ * Java-ish.
  */
 
 struct _AmtkActionInfoCentralStorePrivate

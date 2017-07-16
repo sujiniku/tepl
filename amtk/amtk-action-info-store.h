@@ -24,7 +24,7 @@
 #error "Only <amtk/amtk.h> can be included directly."
 #endif
 
-#include <gtk/gtk.h>
+#include <glib-object.h>
 #include <amtk/amtk-types.h>
 
 G_BEGIN_DECLS
@@ -53,11 +53,9 @@ struct _AmtkActionInfoStoreClass
 	gpointer padding[12];
 };
 
-GType			amtk_action_info_store_get_type			(void) G_GNUC_CONST;
+GType			amtk_action_info_store_get_type			(void);
 
-AmtkActionInfoStore *	amtk_action_info_store_new			(GtkApplication *application);
-
-GtkApplication *	amtk_action_info_store_get_application		(AmtkActionInfoStore *store);
+AmtkActionInfoStore *	amtk_action_info_store_new			(void);
 
 void			amtk_action_info_store_add			(AmtkActionInfoStore *store,
 									 AmtkActionInfo      *info);
@@ -68,9 +66,6 @@ void			amtk_action_info_store_add_entries		(AmtkActionInfoStore       *store,
 									 const gchar               *translation_domain);
 
 const AmtkActionInfo *	amtk_action_info_store_lookup			(AmtkActionInfoStore *store,
-									 const gchar         *action_name);
-
-GtkWidget *		amtk_action_info_store_create_menu_item		(AmtkActionInfoStore *store,
 									 const gchar         *action_name);
 
 void			amtk_action_info_store_check_all_used		(AmtkActionInfoStore *store);

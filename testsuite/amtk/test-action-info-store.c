@@ -38,7 +38,7 @@ test_add_entries (void)
 		{ "win.open", "document-open", "_Open", "<Control>o" },
 	};
 
-	store = amtk_action_info_store_new (NULL);
+	store = amtk_action_info_store_new ();
 
 	amtk_action_info_store_add_entries (store,
 					    entries,

@@ -50,11 +50,9 @@ AMTK_TYPE_ACTION_INFO
 <FILE>amtk-action-info-store</FILE>
 AmtkActionInfoStore
 amtk_action_info_store_new
-amtk_action_info_store_get_application
 amtk_action_info_store_add
 amtk_action_info_store_add_entries
 amtk_action_info_store_lookup
-amtk_action_info_store_create_menu_item
 amtk_action_info_store_check_all_used
 <SUBSECTION Standard>
 AMTK_ACTION_INFO_STORE

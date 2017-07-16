@@ -86,26 +86,17 @@ startup_cb (GApplication *g_app,
 	add_action_entries (g_app);
 }
 
-static AmtkActionInfoStore *
-get_action_info_store (void)
-{
-	TeplApplication *app;
-
-	app = tepl_application_get_default ();
-
-	return tepl_application_get_app_action_info_store (app);
-}
-
 static GtkWidget *
 create_file_submenu (void)
 {
-	AmtkActionInfoStore *store;
 	GtkMenuShell *file_submenu;
+	AmtkMenuFactory *factory;
 
-	store = get_action_info_store ();
 	file_submenu = GTK_MENU_SHELL (gtk_menu_new ());
 
-	gtk_menu_shell_append (file_submenu, amtk_action_info_store_create_menu_item (store, "app.quit"));
+	factory = amtk_menu_factory_new_with_default_application ();
+	gtk_menu_shell_append (file_submenu, amtk_menu_factory_create_menu_item (factory, "app.quit"));
+	g_object_unref (factory);
 
 	return GTK_WIDGET (file_submenu);
 }
@@ -113,13 +104,14 @@ create_file_submenu (void)
 static GtkWidget *
 create_help_submenu (void)
 {
-	AmtkActionInfoStore *store;
 	GtkMenuShell *help_submenu;
+	AmtkMenuFactory *factory;
 
-	store = get_action_info_store ();
 	help_submenu = GTK_MENU_SHELL (gtk_menu_new ());
 
-	gtk_menu_shell_append (help_submenu, amtk_action_info_store_create_menu_item (store, "app.about"));
+	factory = amtk_menu_factory_new_with_default_application ();
+	gtk_menu_shell_append (help_submenu, amtk_menu_factory_create_menu_item (factory, "app.about"));
+	g_object_unref (factory);
 
 	return GTK_WIDGET (help_submenu);
 }
@@ -130,6 +122,7 @@ create_menu_bar (void)
 	GtkWidget *file_menu_item;
 	GtkWidget *help_menu_item;
 	GtkMenuBar *menu_bar;
+	TeplApplication *app;
 	AmtkActionInfoStore *store;
 
 	file_menu_item = gtk_menu_item_new_with_mnemonic ("_File");
@@ -144,7 +137,8 @@ create_menu_bar (void)
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), file_menu_item);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), help_menu_item);
 
-	store = get_action_info_store ();
+	app = tepl_application_get_default ();
+	store = tepl_application_get_app_action_info_store (app);
 	amtk_action_info_store_check_all_used (store);
 
 	return menu_bar;

@@ -55,15 +55,6 @@ static GParamSpec *properties[N_PROPERTIES];
 G_DEFINE_TYPE_WITH_PRIVATE (TeplApplication, tepl_application, G_TYPE_OBJECT)
 
 static void
-init_app_action_info_store (TeplApplication *tepl_app)
-{
-	g_return_if_fail (tepl_app->priv->app_action_info_store == NULL);
-	g_assert (tepl_app->priv->gtk_app != NULL);
-
-	tepl_app->priv->app_action_info_store = amtk_action_info_store_new (tepl_app->priv->gtk_app);
-}
-
-static void
 init_tepl_action_info_store (TeplApplication *tepl_app)
 {
 	const AmtkActionInfoEntry entries[] =
@@ -86,10 +77,8 @@ init_tepl_action_info_store (TeplApplication *tepl_app)
 		  N_("Select all the text") },
 	};
 
-	g_return_if_fail (tepl_app->priv->tepl_action_info_store == NULL);
-	g_assert (tepl_app->priv->gtk_app != NULL);
-
-	tepl_app->priv->tepl_action_info_store = amtk_action_info_store_new (tepl_app->priv->gtk_app);
+	g_assert (tepl_app->priv->tepl_action_info_store == NULL);
+	tepl_app->priv->tepl_action_info_store = amtk_action_info_store_new ();
 
 	amtk_action_info_store_add_entries (tepl_app->priv->tepl_action_info_store,
 					    entries,
@@ -130,9 +119,6 @@ tepl_application_set_property (GObject      *object,
 		case PROP_APPLICATION:
 			g_assert (tepl_app->priv->gtk_app == NULL);
 			tepl_app->priv->gtk_app = g_value_get_object (value);
-
-			init_app_action_info_store (tepl_app);
-			init_tepl_action_info_store (tepl_app);
 			break;
 
 		default:
@@ -185,6 +171,9 @@ static void
 tepl_application_init (TeplApplication *tepl_app)
 {
 	tepl_app->priv = tepl_application_get_instance_private (tepl_app);
+
+	tepl_app->priv->app_action_info_store = amtk_action_info_store_new ();
+	init_tepl_action_info_store (tepl_app);
 }
 
 /**

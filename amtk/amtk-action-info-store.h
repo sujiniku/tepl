@@ -65,7 +65,7 @@ void			amtk_action_info_store_add_entries		(AmtkActionInfoStore       *store,
 									 gint                       n_entries,
 									 const gchar               *translation_domain);
 
-const AmtkActionInfo *	amtk_action_info_store_lookup			(AmtkActionInfoStore *store,
+AmtkActionInfo *	amtk_action_info_store_lookup			(AmtkActionInfoStore *store,
 									 const gchar         *action_name);
 
 void			amtk_action_info_store_check_all_used		(AmtkActionInfoStore *store);

@@ -213,7 +213,7 @@ amtk_menu_factory_create_menu_item (AmtkMenuFactory *factory,
 				    const gchar     *action_name)
 {
 	AmtkActionInfoCentralStore *central_store;
-	const AmtkActionInfo *action_info;
+	AmtkActionInfo *action_info;
 	GtkMenuItem *menu_item;
 	const gchar * const *accels;
 	const gchar *icon_name;
@@ -283,10 +283,7 @@ amtk_menu_factory_create_menu_item (AmtkMenuFactory *factory,
 						       accels);
 	}
 
-	/* FIXME: we are cheating a little here. Maybe the lookup functions
-	 * should not return const values.
-	 */
-	amtk_action_info_mark_as_used ((AmtkActionInfo *) action_info);
+	amtk_action_info_mark_as_used (action_info);
 
 	return GTK_WIDGET (menu_item);
 }

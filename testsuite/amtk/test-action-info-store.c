@@ -24,8 +24,8 @@ test_add_entries (void)
 {
 	AmtkActionInfoStore *store;
 	AmtkActionInfoCentralStore *central_store;
-	const AmtkActionInfo *info1;
-	const AmtkActionInfo *info2;
+	AmtkActionInfo *info1;
+	AmtkActionInfo *info2;
 
 	const AmtkActionInfoEntry entries[] =
 	{

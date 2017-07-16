@@ -180,7 +180,7 @@ amtk_action_info_store_add_entries (AmtkActionInfoStore       *store,
  * Returns: (transfer none): the found #AmtkActionInfo, or %NULL.
  * Since: 2.0
  */
-const AmtkActionInfo *
+AmtkActionInfo *
 amtk_action_info_store_lookup (AmtkActionInfoStore *store,
 			       const gchar         *action_name)
 {

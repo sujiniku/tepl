@@ -140,7 +140,7 @@ _amtk_action_info_central_store_add (AmtkActionInfoCentralStore *central_store,
  * Returns: (transfer none): the found #AmtkActionInfo, or %NULL.
  * Since: 2.0
  */
-const AmtkActionInfo *
+AmtkActionInfo *
 amtk_action_info_central_store_lookup (AmtkActionInfoCentralStore *central_store,
 				       const gchar                *action_name)
 {

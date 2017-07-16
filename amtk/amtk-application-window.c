@@ -207,7 +207,7 @@ amtk_application_window_get_from_gtk_application_window (GtkApplicationWindow *g
 
 /**
  * amtk_application_window_get_application_window:
- * @amtk_window: a #AmtkApplicationWindow.
+ * @amtk_window: an #AmtkApplicationWindow.
  *
  * Returns: (transfer none): the #GtkApplicationWindow of @amtk_window.
  * Since: 2.0
@@ -222,7 +222,7 @@ amtk_application_window_get_application_window (AmtkApplicationWindow *amtk_wind
 
 /**
  * amtk_application_window_get_statusbar:
- * @amtk_window: a #AmtkApplicationWindow.
+ * @amtk_window: an #AmtkApplicationWindow.
  *
  * Returns: (transfer none) (nullable): the #AmtkApplicationWindow:statusbar.
  * Since: 2.0
@@ -237,7 +237,7 @@ amtk_application_window_get_statusbar (AmtkApplicationWindow *amtk_window)
 
 /**
  * amtk_application_window_set_statusbar:
- * @amtk_window: a #AmtkApplicationWindow.
+ * @amtk_window: an #AmtkApplicationWindow.
  * @statusbar: (nullable): a #GtkStatusbar, or %NULL.
  *
  * Sets the #AmtkApplicationWindow:statusbar property.
@@ -443,8 +443,8 @@ statusbar_notify_cb (AmtkApplicationWindow *amtk_window,
 
 /**
  * amtk_application_window_connect_menu_to_statusbar:
- * @amtk_window: a #AmtkApplicationWindow.
- * @amtk_menu_shell: a #AmtkMenuShell.
+ * @amtk_window: an #AmtkApplicationWindow.
+ * @amtk_menu_shell: an #AmtkMenuShell.
  *
  * Connect to the #AmtkMenuShell::menu-item-selected and
  * #AmtkMenuShell::menu-item-deselected signals of @amtk_menu_shell to push/pop
@@ -486,7 +486,7 @@ amtk_application_window_connect_menu_to_statusbar (AmtkApplicationWindow *amtk_w
 
 /**
  * amtk_application_window_connect_recent_chooser_menu_to_statusbar:
- * @amtk_window: a #AmtkApplicationWindow.
+ * @amtk_window: an #AmtkApplicationWindow.
  * @menu: a #GtkRecentChooserMenu.
  *
  * An alternative to gtk_recent_chooser_set_show_tips(). Shows the full path in
@@ -537,7 +537,7 @@ open_recent_file_cb (GtkRecentChooser *recent_chooser,
 
 /**
  * amtk_application_window_create_open_recent_menu_item:
- * @amtk_window: a #AmtkApplicationWindow.
+ * @amtk_window: an #AmtkApplicationWindow.
  *
  * Creates a #GtkMenuItem with a simple and generic #GtkRecentChooserMenu as
  * submenu.

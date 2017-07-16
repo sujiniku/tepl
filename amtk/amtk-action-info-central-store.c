@@ -27,7 +27,7 @@
  * @See_also: #AmtkActionInfoStore
  *
  * #AmtkActionInfoCentralStore is a singleton class containing the aggregation
- * of all #AmtkActionInfoStore's. Each time an #AmtkActionInfo is added to a
+ * of all #AmtkActionInfoStore's. Each time an #AmtkActionInfo is added to an
  * #AmtkActionInfoStore, it is also added to the #AmtkActionInfoCentralStore.
  */
 

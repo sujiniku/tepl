@@ -397,7 +397,7 @@ amtk_menu_shell_get_from_gtk_menu_shell (GtkMenuShell *gtk_menu_shell)
 
 /**
  * amtk_menu_shell_get_menu_shell:
- * @amtk_menu_shell: a #AmtkMenuShell.
+ * @amtk_menu_shell: an #AmtkMenuShell.
  *
  * Returns: (transfer none): the #GtkMenuShell of @amtk_menu_shell.
  * Since: 2.0

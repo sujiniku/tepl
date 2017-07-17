@@ -93,6 +93,7 @@ amtk_action_map_add_action_entries_check_dups
 <SECTION>
 <FILE>amtk-factory</FILE>
 AmtkFactory
+AmtkFactoryFlags
 amtk_factory_get_application
 <SUBSECTION Standard>
 AMTK_FACTORY

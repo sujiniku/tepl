@@ -51,6 +51,34 @@ struct _AmtkFactoryClass
 	GObjectClass parent_class;
 };
 
+/**
+ * AmtkFactoryFlags:
+ * @AMTK_FACTORY_FLAGS_NONE: No flags.
+ * @AMTK_FACTORY_IGNORE_GACTION: Do not call gtk_actionable_set_action_name().
+ * @AMTK_FACTORY_IGNORE_ICON: Do not set an icon.
+ * @AMTK_FACTORY_IGNORE_LABEL: Do not set a label/short description.
+ * @AMTK_FACTORY_IGNORE_TOOLTIP: Do not set a tooltip/long description.
+ * @AMTK_FACTORY_IGNORE_ACCELS: Ignore completely the accelerators.
+ * @AMTK_FACTORY_IGNORE_ACCELS_FOR_DOC: Ignore the accelerators for
+ *   documentation purposes only. For example do not add/configure a
+ *   #GtkAccelLabel.
+ * @AMTK_FACTORY_IGNORE_ACCELS_FOR_APP: Do not call
+ *   gtk_application_set_accels_for_action().
+ *
+ * Since: 3.0
+ */
+typedef enum
+{
+	AMTK_FACTORY_FLAGS_NONE			= 0,
+	AMTK_FACTORY_IGNORE_GACTION		= 1 << 0,
+	AMTK_FACTORY_IGNORE_ICON		= 1 << 1,
+	AMTK_FACTORY_IGNORE_LABEL		= 1 << 2,
+	AMTK_FACTORY_IGNORE_TOOLTIP		= 1 << 3,
+	AMTK_FACTORY_IGNORE_ACCELS		= 1 << 4,
+	AMTK_FACTORY_IGNORE_ACCELS_FOR_DOC	= 1 << 5,
+	AMTK_FACTORY_IGNORE_ACCELS_FOR_APP	= 1 << 6,
+} AmtkFactoryFlags;
+
 GType			amtk_factory_get_type			(void);
 
 GtkApplication *	amtk_factory_get_application		(AmtkFactory *factory);

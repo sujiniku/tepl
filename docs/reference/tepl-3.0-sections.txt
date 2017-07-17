@@ -95,6 +95,8 @@ amtk_action_map_add_action_entries_check_dups
 AmtkFactory
 AmtkFactoryFlags
 amtk_factory_get_application
+amtk_factory_get_default_flags
+amtk_factory_set_default_flags
 <SUBSECTION Standard>
 AMTK_FACTORY
 AMTK_FACTORY_CLASS

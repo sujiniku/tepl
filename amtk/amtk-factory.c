@@ -18,6 +18,7 @@
  */
 
 #include "amtk-factory.h"
+#include "amtk-enum-types.h"
 
 /**
  * SECTION:amtk-factory
@@ -36,12 +37,14 @@
 struct _AmtkFactoryPrivate
 {
 	GtkApplication *app;
+	AmtkFactoryFlags default_flags;
 };
 
 enum
 {
 	PROP_0,
 	PROP_APPLICATION,
+	PROP_DEFAULT_FLAGS,
 	N_PROPERTIES
 };
 
@@ -63,6 +66,10 @@ amtk_factory_get_property (GObject    *object,
 			g_value_set_object (value, amtk_factory_get_application (factory));
 			break;
 
+		case PROP_DEFAULT_FLAGS:
+			g_value_set_flags (value, amtk_factory_get_default_flags (factory));
+			break;
+
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 			break;
@@ -82,6 +89,10 @@ amtk_factory_set_property (GObject      *object,
 		case PROP_APPLICATION:
 			g_assert (factory->priv->app == NULL);
 			factory->priv->app = g_value_dup_object (value);
+			break;
+
+		case PROP_DEFAULT_FLAGS:
+			amtk_factory_set_default_flags (factory, g_value_get_flags (value));
 			break;
 
 		default:
@@ -127,6 +138,22 @@ amtk_factory_class_init (AmtkFactoryClass *klass)
 				     G_PARAM_CONSTRUCT_ONLY |
 				     G_PARAM_STATIC_STRINGS);
 
+	/**
+	 * AmtkFactory:default-flags:
+	 *
+	 * The default #AmtkFactoryFlags.
+	 *
+	 * Since: 3.0
+	 */
+	properties[PROP_DEFAULT_FLAGS] =
+		g_param_spec_flags ("default-flags",
+				    "Default flags",
+				    "",
+				    AMTK_TYPE_FACTORY_FLAGS,
+				    AMTK_FACTORY_FLAGS_NONE,
+				    G_PARAM_READWRITE |
+				    G_PARAM_STATIC_STRINGS);
+
 	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
 }
 
@@ -149,4 +176,41 @@ amtk_factory_get_application (AmtkFactory *factory)
 	g_return_val_if_fail (AMTK_IS_FACTORY (factory), NULL);
 
 	return factory->priv->app;
+}
+
+/**
+ * amtk_factory_get_default_flags:
+ * @factory: an #AmtkFactory.
+ *
+ * Returns: the #AmtkFactory:default-flags.
+ * Since: 3.0
+ */
+AmtkFactoryFlags
+amtk_factory_get_default_flags (AmtkFactory *factory)
+{
+	g_return_val_if_fail (AMTK_IS_FACTORY (factory), AMTK_FACTORY_FLAGS_NONE);
+
+	return factory->priv->default_flags;
+}
+
+/**
+ * amtk_factory_set_default_flags:
+ * @factory: an #AmtkFactory.
+ * @default_flags: the new value.
+ *
+ * Sets the #AmtkFactory:default-flags property.
+ *
+ * Since: 3.0
+ */
+void
+amtk_factory_set_default_flags (AmtkFactory      *factory,
+				AmtkFactoryFlags  default_flags)
+{
+	g_return_if_fail (AMTK_IS_FACTORY (factory));
+
+	if (factory->priv->default_flags != default_flags)
+	{
+		factory->priv->default_flags = default_flags;
+		g_object_notify_by_pspec (G_OBJECT (factory), properties[PROP_DEFAULT_FLAGS]);
+	}
 }

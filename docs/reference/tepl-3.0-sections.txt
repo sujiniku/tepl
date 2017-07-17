@@ -111,7 +111,6 @@ amtk_factory_get_type
 AmtkFactoryMenu
 amtk_factory_menu_new
 amtk_factory_menu_new_with_default_application
-amtk_factory_menu_get_application
 amtk_factory_menu_create_menu_item
 <SUBSECTION Standard>
 AMTK_FACTORY_MENU

@@ -25,6 +25,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <amtk/amtk-factory.h>
 #include <amtk/amtk-types.h>
 
 G_BEGIN_DECLS
@@ -41,14 +42,14 @@ typedef struct _AmtkFactoryMenuPrivate  AmtkFactoryMenuPrivate;
 
 struct _AmtkFactoryMenu
 {
-	GObject parent;
+	AmtkFactory parent;
 
 	AmtkFactoryMenuPrivate *priv;
 };
 
 struct _AmtkFactoryMenuClass
 {
-	GObjectClass parent_class;
+	AmtkFactoryClass parent_class;
 };
 
 GType			amtk_factory_menu_get_type			(void);
@@ -56,8 +57,6 @@ GType			amtk_factory_menu_get_type			(void);
 AmtkFactoryMenu *	amtk_factory_menu_new				(GtkApplication *application);
 
 AmtkFactoryMenu *	amtk_factory_menu_new_with_default_application	(void);
-
-GtkApplication *	amtk_factory_menu_get_application		(AmtkFactoryMenu *factory);
 
 GtkWidget *		amtk_factory_menu_create_menu_item		(AmtkFactoryMenu *factory,
 									 const gchar     *action_name);

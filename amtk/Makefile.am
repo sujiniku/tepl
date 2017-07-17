@@ -17,7 +17,7 @@ amtk_public_headers =				\
 	amtk-action-map.h			\
 	amtk-application-window.h		\
 	amtk-factory.h				\
-	amtk-menu-factory.h			\
+	amtk-factory-menu.h			\
 	amtk-menu-item.h			\
 	amtk-menu-shell.h			\
 	amtk-types.h				\
@@ -30,7 +30,7 @@ amtk_public_c_files =				\
 	amtk-action-map.c			\
 	amtk-application-window.c		\
 	amtk-factory.c				\
-	amtk-menu-factory.c			\
+	amtk-factory-menu.c			\
 	amtk-menu-item.c			\
 	amtk-menu-shell.c			\
 	amtk-utils.c

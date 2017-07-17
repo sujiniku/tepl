@@ -90,12 +90,12 @@ static GtkWidget *
 create_file_submenu (void)
 {
 	GtkMenuShell *file_submenu;
-	AmtkMenuFactory *factory;
+	AmtkFactoryMenu *factory;
 
 	file_submenu = GTK_MENU_SHELL (gtk_menu_new ());
 
-	factory = amtk_menu_factory_new_with_default_application ();
-	gtk_menu_shell_append (file_submenu, amtk_menu_factory_create_menu_item (factory, "app.quit"));
+	factory = amtk_factory_menu_new_with_default_application ();
+	gtk_menu_shell_append (file_submenu, amtk_factory_menu_create_menu_item (factory, "app.quit"));
 	g_object_unref (factory);
 
 	return GTK_WIDGET (file_submenu);
@@ -105,12 +105,12 @@ static GtkWidget *
 create_help_submenu (void)
 {
 	GtkMenuShell *help_submenu;
-	AmtkMenuFactory *factory;
+	AmtkFactoryMenu *factory;
 
 	help_submenu = GTK_MENU_SHELL (gtk_menu_new ());
 
-	factory = amtk_menu_factory_new_with_default_application ();
-	gtk_menu_shell_append (help_submenu, amtk_menu_factory_create_menu_item (factory, "app.about"));
+	factory = amtk_factory_menu_new_with_default_application ();
+	gtk_menu_shell_append (help_submenu, amtk_factory_menu_create_menu_item (factory, "app.about"));
 	g_object_unref (factory);
 
 	return GTK_WIDGET (help_submenu);

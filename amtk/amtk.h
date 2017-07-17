@@ -30,7 +30,7 @@
 #include <amtk/amtk-action-map.h>
 #include <amtk/amtk-application-window.h>
 #include <amtk/amtk-factory.h>
-#include <amtk/amtk-menu-factory.h>
+#include <amtk/amtk-factory-menu.h>
 #include <amtk/amtk-menu-item.h>
 #include <amtk/amtk-menu-shell.h>
 #include <amtk/amtk-utils.h>

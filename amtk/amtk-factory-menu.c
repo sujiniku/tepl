@@ -17,24 +17,24 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "amtk-menu-factory.h"
+#include "amtk-factory-menu.h"
 #include "amtk-action-info.h"
 #include "amtk-action-info-central-store.h"
 #include "amtk-menu-item.h"
 
 /**
- * SECTION:amtk-menu-factory
+ * SECTION:amtk-factory-menu
  * @Short_description: A factory that creates #GtkMenuItem's
- * @Title: AmtkMenuFactory
+ * @Title: AmtkFactoryMenu
  *
- * #AmtkMenuFactory permits to create #GtkMenuItem's from #AmtkActionInfo's.
+ * #AmtkFactoryMenu permits to create #GtkMenuItem's from #AmtkActionInfo's.
  *
  * A #GtkApplication can be associated so that when a menu item is created,
  * gtk_application_set_accels_for_action() is called. See
- * amtk_menu_factory_create_menu_item() for more details.
+ * amtk_factory_menu_create_menu_item() for more details.
  */
 
-struct _AmtkMenuFactoryPrivate
+struct _AmtkFactoryMenuPrivate
 {
 	GtkApplication *app;
 };
@@ -48,20 +48,20 @@ enum
 
 static GParamSpec *properties[N_PROPERTIES];
 
-G_DEFINE_TYPE_WITH_PRIVATE (AmtkMenuFactory, amtk_menu_factory, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (AmtkFactoryMenu, amtk_factory_menu, G_TYPE_OBJECT)
 
 static void
-amtk_menu_factory_get_property (GObject    *object,
+amtk_factory_menu_get_property (GObject    *object,
                                 guint       prop_id,
                                 GValue     *value,
                                 GParamSpec *pspec)
 {
-	AmtkMenuFactory *factory = AMTK_MENU_FACTORY (object);
+	AmtkFactoryMenu *factory = AMTK_FACTORY_MENU (object);
 
 	switch (prop_id)
 	{
 		case PROP_APPLICATION:
-			g_value_set_object (value, amtk_menu_factory_get_application (factory));
+			g_value_set_object (value, amtk_factory_menu_get_application (factory));
 			break;
 
 		default:
@@ -71,12 +71,12 @@ amtk_menu_factory_get_property (GObject    *object,
 }
 
 static void
-amtk_menu_factory_set_property (GObject      *object,
+amtk_factory_menu_set_property (GObject      *object,
                                 guint         prop_id,
                                 const GValue *value,
                                 GParamSpec   *pspec)
 {
-	AmtkMenuFactory *factory = AMTK_MENU_FACTORY (object);
+	AmtkFactoryMenu *factory = AMTK_FACTORY_MENU (object);
 
 	switch (prop_id)
 	{
@@ -92,30 +92,30 @@ amtk_menu_factory_set_property (GObject      *object,
 }
 
 static void
-amtk_menu_factory_dispose (GObject *object)
+amtk_factory_menu_dispose (GObject *object)
 {
-	AmtkMenuFactory *factory = AMTK_MENU_FACTORY (object);
+	AmtkFactoryMenu *factory = AMTK_FACTORY_MENU (object);
 
 	g_clear_object (&factory->priv->app);
 
-	G_OBJECT_CLASS (amtk_menu_factory_parent_class)->dispose (object);
+	G_OBJECT_CLASS (amtk_factory_menu_parent_class)->dispose (object);
 }
 
 static void
-amtk_menu_factory_class_init (AmtkMenuFactoryClass *klass)
+amtk_factory_menu_class_init (AmtkFactoryMenuClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->get_property = amtk_menu_factory_get_property;
-	object_class->set_property = amtk_menu_factory_set_property;
-	object_class->dispose = amtk_menu_factory_dispose;
+	object_class->get_property = amtk_factory_menu_get_property;
+	object_class->set_property = amtk_factory_menu_set_property;
+	object_class->dispose = amtk_factory_menu_dispose;
 
 	/**
-	 * AmtkMenuFactory:application:
+	 * AmtkFactoryMenu:application:
 	 *
-	 * The associated #GtkApplication. #AmtkMenuFactory has a strong
+	 * The associated #GtkApplication. #AmtkFactoryMenu has a strong
 	 * reference to the #GtkApplication (which means that once the menu is
-	 * created you should free the #AmtkMenuFactory).
+	 * created you should free the #AmtkFactoryMenu).
 	 *
 	 * Since: 3.0
 	 */
@@ -132,63 +132,63 @@ amtk_menu_factory_class_init (AmtkMenuFactoryClass *klass)
 }
 
 static void
-amtk_menu_factory_init (AmtkMenuFactory *factory)
+amtk_factory_menu_init (AmtkFactoryMenu *factory)
 {
-	factory->priv = amtk_menu_factory_get_instance_private (factory);
+	factory->priv = amtk_factory_menu_get_instance_private (factory);
 }
 
 /**
- * amtk_menu_factory_new:
+ * amtk_factory_menu_new:
  * @application: (nullable): a #GtkApplication, or %NULL.
  *
- * Creates a new #AmtkMenuFactory object. Associating a #GtkApplication is
+ * Creates a new #AmtkFactoryMenu object. Associating a #GtkApplication is
  * optional.
  *
- * Returns: a new #AmtkMenuFactory.
+ * Returns: a new #AmtkFactoryMenu.
  * Since: 3.0
  */
-AmtkMenuFactory *
-amtk_menu_factory_new (GtkApplication *application)
+AmtkFactoryMenu *
+amtk_factory_menu_new (GtkApplication *application)
 {
 	g_return_val_if_fail (application == NULL || GTK_IS_APPLICATION (application), NULL);
 
-	return g_object_new (AMTK_TYPE_MENU_FACTORY,
+	return g_object_new (AMTK_TYPE_FACTORY_MENU,
 			     "application", application,
 			     NULL);
 }
 
 /**
- * amtk_menu_factory_new_with_default_application:
+ * amtk_factory_menu_new_with_default_application:
  *
- * Calls amtk_menu_factory_new() with g_application_get_default().
+ * Calls amtk_factory_menu_new() with g_application_get_default().
  *
- * Returns: a new #AmtkMenuFactory with the default #GtkApplication.
+ * Returns: a new #AmtkFactoryMenu with the default #GtkApplication.
  * Since: 3.0
  */
-AmtkMenuFactory *
-amtk_menu_factory_new_with_default_application (void)
+AmtkFactoryMenu *
+amtk_factory_menu_new_with_default_application (void)
 {
-	return amtk_menu_factory_new (GTK_APPLICATION (g_application_get_default ()));
+	return amtk_factory_menu_new (GTK_APPLICATION (g_application_get_default ()));
 }
 
 /**
- * amtk_menu_factory_get_application:
- * @factory: an #AmtkMenuFactory.
+ * amtk_factory_menu_get_application:
+ * @factory: an #AmtkFactoryMenu.
  *
- * Returns: (transfer none): the #AmtkMenuFactory:application.
+ * Returns: (transfer none): the #AmtkFactoryMenu:application.
  * Since: 3.0
  */
 GtkApplication *
-amtk_menu_factory_get_application (AmtkMenuFactory *factory)
+amtk_factory_menu_get_application (AmtkFactoryMenu *factory)
 {
-	g_return_val_if_fail (AMTK_IS_MENU_FACTORY (factory), NULL);
+	g_return_val_if_fail (AMTK_IS_FACTORY_MENU (factory), NULL);
 
 	return factory->priv->app;
 }
 
 /**
- * amtk_menu_factory_create_menu_item:
- * @factory: an #AmtkMenuFactory.
+ * amtk_factory_menu_create_menu_item:
+ * @factory: an #AmtkFactoryMenu.
  * @action_name: an action name.
  *
  * Creates a new #GtkMenuItem for @action_name. The #AmtkActionInfoCentralStore
@@ -200,7 +200,7 @@ amtk_menu_factory_get_application (AmtkMenuFactory *factory)
  * The icon is set. And the tooltip is set with
  * amtk_menu_item_set_long_description().
  *
- * If the #AmtkMenuFactory:application is non-%NULL, this function also calls
+ * If the #AmtkFactoryMenu:application is non-%NULL, this function also calls
  * gtk_application_set_accels_for_action() with the accelerators returned by
  * amtk_action_info_get_accels() (this will erase previously set accelerators
  * for that action, if any).
@@ -209,7 +209,7 @@ amtk_menu_factory_get_application (AmtkMenuFactory *factory)
  * Since: 3.0
  */
 GtkWidget *
-amtk_menu_factory_create_menu_item (AmtkMenuFactory *factory,
+amtk_factory_menu_create_menu_item (AmtkFactoryMenu *factory,
 				    const gchar     *action_name)
 {
 	AmtkActionInfoCentralStore *central_store;
@@ -219,7 +219,7 @@ amtk_menu_factory_create_menu_item (AmtkMenuFactory *factory,
 	const gchar *icon_name;
 	const gchar *tooltip;
 
-	g_return_val_if_fail (AMTK_IS_MENU_FACTORY (factory), NULL);
+	g_return_val_if_fail (AMTK_IS_FACTORY_MENU (factory), NULL);
 	g_return_val_if_fail (action_name != NULL, NULL);
 
 	central_store = amtk_action_info_central_store_get_instance ();

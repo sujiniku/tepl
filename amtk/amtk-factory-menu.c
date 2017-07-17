@@ -88,8 +88,11 @@ amtk_factory_menu_new_with_default_application (void)
  * @factory: an #AmtkFactoryMenu.
  * @action_name: an action name.
  *
- * Creates a new #GtkMenuItem for @action_name. The #AmtkActionInfoCentralStore
- * must contain an #AmtkActionInfo for @action_name.
+ * Creates a new #GtkMenuItem for @action_name with the
+ * #AmtkFactory:default-flags.
+ *
+ * The #AmtkActionInfoCentralStore must contain an #AmtkActionInfo for
+ * @action_name.
  *
  * gtk_actionable_set_action_name() is called on the menu item with
  * @action_name. The label is set with the #GtkMenuItem:use-underline property
@@ -109,9 +112,14 @@ GtkWidget *
 amtk_factory_menu_create_menu_item (AmtkFactoryMenu *factory,
 				    const gchar     *action_name)
 {
-	return amtk_factory_menu_create_menu_item_full (factory,
-							action_name,
-							AMTK_FACTORY_FLAGS_NONE);
+	AmtkFactoryFlags default_flags;
+
+	g_return_val_if_fail (AMTK_IS_FACTORY_MENU (factory), NULL);
+	g_return_val_if_fail (action_name != NULL, NULL);
+
+	default_flags = amtk_factory_get_default_flags (AMTK_FACTORY (factory));
+
+	return amtk_factory_menu_create_menu_item_full (factory, action_name, default_flags);
 }
 
 /**
@@ -119,6 +127,9 @@ amtk_factory_menu_create_menu_item (AmtkFactoryMenu *factory,
  * @factory: an #AmtkFactoryMenu.
  * @action_name: an action name.
  * @flags: #AmtkFactoryFlags.
+ *
+ * This function ignores the #AmtkFactory:default-flags property and takes the
+ * @flags argument instead.
  *
  * Returns: (transfer floating): a new #GtkMenuItem for @action_name.
  * Since: 3.0

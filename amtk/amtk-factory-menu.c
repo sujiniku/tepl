@@ -109,6 +109,25 @@ GtkWidget *
 amtk_factory_menu_create_menu_item (AmtkFactoryMenu *factory,
 				    const gchar     *action_name)
 {
+	return amtk_factory_menu_create_menu_item_full (factory,
+							action_name,
+							AMTK_FACTORY_FLAGS_NONE);
+}
+
+/**
+ * amtk_factory_menu_create_menu_item_full:
+ * @factory: an #AmtkFactoryMenu.
+ * @action_name: an action name.
+ * @flags: #AmtkFactoryFlags.
+ *
+ * Returns: (transfer floating): a new #GtkMenuItem for @action_name.
+ * Since: 3.0
+ */
+GtkWidget *
+amtk_factory_menu_create_menu_item_full (AmtkFactoryMenu  *factory,
+					 const gchar      *action_name,
+					 AmtkFactoryFlags  flags)
+{
 	AmtkActionInfoCentralStore *central_store;
 	AmtkActionInfo *action_info;
 	GtkMenuItem *menu_item;
@@ -134,16 +153,24 @@ amtk_factory_menu_create_menu_item (AmtkFactoryMenu *factory,
 
 	menu_item = GTK_MENU_ITEM (gtk_menu_item_new ());
 
-	gtk_actionable_set_action_name (GTK_ACTIONABLE (menu_item), action_name);
+	if ((flags & AMTK_FACTORY_IGNORE_GACTION) == 0)
+	{
+		gtk_actionable_set_action_name (GTK_ACTIONABLE (menu_item), action_name);
+	}
 
-	gtk_menu_item_set_use_underline (menu_item, TRUE);
-	gtk_menu_item_set_label (menu_item, amtk_action_info_get_label (action_info));
+	if ((flags & AMTK_FACTORY_IGNORE_LABEL) == 0)
+	{
+		gtk_menu_item_set_use_underline (menu_item, TRUE);
+		gtk_menu_item_set_label (menu_item, amtk_action_info_get_label (action_info));
+	}
 
 	/* Set accel before setting icon, because
 	 * amtk_menu_item_set_icon_name() adds a GtkBox.
 	 */
 	accels = amtk_action_info_get_accels (action_info);
-	if (accels != NULL && accels[0] != NULL)
+	if ((flags & AMTK_FACTORY_IGNORE_ACCELS) == 0 &&
+	    (flags & AMTK_FACTORY_IGNORE_ACCELS_FOR_DOC) == 0 &&
+	    accels != NULL && accels[0] != NULL)
 	{
 		guint accel_key;
 		GdkModifierType accel_mods;
@@ -163,19 +190,23 @@ amtk_factory_menu_create_menu_item (AmtkFactoryMenu *factory,
 	}
 
 	icon_name = amtk_action_info_get_icon_name (action_info);
-	if (icon_name != NULL)
+	if ((flags & AMTK_FACTORY_IGNORE_ICON) == 0 &&
+	    icon_name != NULL)
 	{
 		amtk_menu_item_set_icon_name (menu_item, icon_name);
 	}
 
 	tooltip = amtk_action_info_get_tooltip (action_info);
-	if (tooltip != NULL)
+	if ((flags & AMTK_FACTORY_IGNORE_TOOLTIP) == 0 &&
+	    tooltip != NULL)
 	{
 		amtk_menu_item_set_long_description (menu_item, tooltip);
 	}
 
 	app = amtk_factory_get_application (AMTK_FACTORY (factory));
-	if (app != NULL)
+	if ((flags & AMTK_FACTORY_IGNORE_ACCELS) == 0 &&
+	    (flags & AMTK_FACTORY_IGNORE_ACCELS_FOR_APP) == 0 &&
+	    app != NULL)
 	{
 		gtk_application_set_accels_for_action (app, action_name, accels);
 	}

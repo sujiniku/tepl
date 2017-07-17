@@ -61,6 +61,10 @@ AmtkFactoryMenu *	amtk_factory_menu_new_with_default_application	(void);
 GtkWidget *		amtk_factory_menu_create_menu_item		(AmtkFactoryMenu *factory,
 									 const gchar     *action_name);
 
+GtkWidget *		amtk_factory_menu_create_menu_item_full		(AmtkFactoryMenu  *factory,
+									 const gchar      *action_name,
+									 AmtkFactoryFlags  flags);
+
 G_END_DECLS
 
 #endif /* AMTK_FACTORY_MENU_H */

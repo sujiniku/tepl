@@ -284,6 +284,8 @@ amtk_action_info_set_icon_name (AmtkActionInfo *info,
  * amtk_action_info_get_label:
  * @info: an #AmtkActionInfo.
  *
+ * Gets the label. The label has normally a mnemonic.
+ *
  * Returns: (nullable): the label (i.e. a short description), or %NULL.
  * Since: 2.0
  */
@@ -299,6 +301,8 @@ amtk_action_info_get_label (const AmtkActionInfo *info)
  * amtk_action_info_set_label:
  * @info: an #AmtkActionInfo.
  * @label: (nullable): the label (i.e. a short description), or %NULL.
+ *
+ * Sets the label with a mnemonic.
  *
  * Since: 2.0
  */

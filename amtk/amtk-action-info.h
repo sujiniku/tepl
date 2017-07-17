@@ -35,7 +35,7 @@ G_BEGIN_DECLS
  * AmtkActionInfoEntry:
  * @action_name: the action name.
  * @icon_name: the icon name, or %NULL.
- * @label: the label (i.e. a short description), or %NULL.
+ * @label: the label (i.e. a short description) with a mnemonic, or %NULL.
  * @accel: the accelerator, in the format understood by gtk_accelerator_parse().
  * Or %NULL.
  * @tooltip: the tooltip (i.e. a long description), or %NULL.

@@ -25,13 +25,30 @@
  * @Short_description: Factory base class
  * @Title: AmtkFactory
  *
- * #AmtkFactory is a base class to create #GtkWidget's from #AmtkActionInfo's.
+ * #AmtkFactory is a base class to create menu or toolbar items (or anything
+ * else) from #AmtkActionInfo's. A factory function accesses an #AmtkActionInfo
+ * from the #AmtkActionInfoCentralStore.
  *
- * A #GtkApplication can be associated so that when a widget is created,
- * gtk_application_set_accels_for_action() is called.
+ * A #GtkApplication can be associated so that factory functions can call
+ * gtk_application_set_accels_for_action() with the accelerators returned by
+ * amtk_action_info_get_accels() (this erases previously set accelerators for
+ * that action, if any). Note that gtk_application_set_accels_for_action() is
+ * called by factory functions and not by amtk_action_info_store_add(), so that
+ * libraries can provide their own store and the accelerators are set to the
+ * #GtkApplication only if an #AmtkActionInfo is actually used.
  *
- * Once the widgets are created, an #AmtkFactory should be freed because it has
- * a strong reference to the #GtkApplication.
+ * #AmtkFactoryFlags permits to control how a factory function creates the
+ * object, to ignore some steps. Factory functions should be declined in two
+ * variants: a simple form which takes the value of the
+ * #AmtkFactory:default-flags property, and the same function with the `_full`
+ * suffix which takes an #AmtkFactoryFlags argument and ignores the
+ * #AmtkFactory:default-flags. See for example
+ * amtk_factory_menu_create_menu_item() and
+ * amtk_factory_menu_create_menu_item_full().
+ *
+ * Once the objects are created, an #AmtkFactory should be freed because it has
+ * a strong reference to the #GtkApplication. TODO: change it to a weak ref
+ * instead so that this paragraph can be removed.
  */
 
 struct _AmtkFactoryPrivate

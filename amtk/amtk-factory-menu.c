@@ -28,6 +28,14 @@
  * @Title: AmtkFactoryMenu
  *
  * #AmtkFactoryMenu permits to create #GtkMenuItem's from #AmtkActionInfo's.
+ *
+ * If not ignored by an #AmtkFactoryFlags, the first accelerator returned by
+ * amtk_action_info_get_accels() is set to the #GtkAccelLabel of the
+ * #GtkMenuItem.
+ *
+ * If not ignored by an #AmtkFactoryFlags, the tooltip is set with
+ * amtk_menu_item_set_long_description(), which permits to display it in a
+ * #GtkStatusbar with amtk_application_window_connect_menu_to_statusbar().
  */
 
 struct _AmtkFactoryMenuPrivate
@@ -90,20 +98,6 @@ amtk_factory_menu_new_with_default_application (void)
  *
  * Creates a new #GtkMenuItem for @action_name with the
  * #AmtkFactory:default-flags.
- *
- * The #AmtkActionInfoCentralStore must contain an #AmtkActionInfo for
- * @action_name.
- *
- * gtk_actionable_set_action_name() is called on the menu item with
- * @action_name. The label is set with the #GtkMenuItem:use-underline property
- * enabled. The first accelerator is set to the #GtkAccelLabel of the menu item.
- * The icon is set. And the tooltip is set with
- * amtk_menu_item_set_long_description().
- *
- * If the #AmtkFactory:application is non-%NULL, this function also calls
- * gtk_application_set_accels_for_action() with the accelerators returned by
- * amtk_action_info_get_accels() (this will erase previously set accelerators
- * for that action, if any).
  *
  * Returns: (transfer floating): a new #GtkMenuItem for @action_name.
  * Since: 3.0

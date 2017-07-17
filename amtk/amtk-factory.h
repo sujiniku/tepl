@@ -65,6 +65,9 @@ struct _AmtkFactoryClass
  * @AMTK_FACTORY_IGNORE_ACCELS_FOR_APP: Do not call
  *   gtk_application_set_accels_for_action().
  *
+ * #AmtkFactoryFlags permits to control how a factory function creates the
+ * object, to ignore some steps.
+ *
  * Since: 3.0
  */
 typedef enum

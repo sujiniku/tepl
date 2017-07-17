@@ -4,6 +4,7 @@ amtk/amtk-action-info-central-store.c
 amtk/amtk-action-info-store.c
 amtk/amtk-action-map.c
 amtk/amtk-application-window.c
+amtk/amtk-factory.c
 amtk/amtk-menu-factory.c
 amtk/amtk-menu-item.c
 amtk/amtk-menu-shell.c

@@ -91,6 +91,22 @@ amtk_action_map_add_action_entries_check_dups
 </SECTION>
 
 <SECTION>
+<FILE>amtk-factory</FILE>
+AmtkFactory
+amtk_factory_get_application
+<SUBSECTION Standard>
+AMTK_FACTORY
+AMTK_FACTORY_CLASS
+AMTK_FACTORY_GET_CLASS
+AMTK_IS_FACTORY
+AMTK_IS_FACTORY_CLASS
+AMTK_TYPE_FACTORY
+AmtkFactoryClass
+AmtkFactoryPrivate
+amtk_factory_get_type
+</SECTION>
+
+<SECTION>
 <FILE>amtk-menu-factory</FILE>
 AmtkMenuFactory
 amtk_menu_factory_new

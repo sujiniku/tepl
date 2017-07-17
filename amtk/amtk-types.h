@@ -33,6 +33,7 @@ typedef struct _AmtkActionInfoEntry		AmtkActionInfoEntry;
 typedef struct _AmtkActionInfoStore		AmtkActionInfoStore;
 typedef struct _AmtkActionInfoCentralStore	AmtkActionInfoCentralStore;
 typedef struct _AmtkApplicationWindow		AmtkApplicationWindow;
+typedef struct _AmtkFactory			AmtkFactory;
 typedef struct _AmtkMenuFactory			AmtkMenuFactory;
 typedef struct _AmtkMenuShell			AmtkMenuShell;
 

@@ -23,6 +23,7 @@
 #define AMTK_H_INSIDE
 
 #include <amtk/amtk-types.h>
+#include <amtk/amtk-enum-types.h>
 
 #include <amtk/amtk-action-info.h>
 #include <amtk/amtk-action-info-store.h>

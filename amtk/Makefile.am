@@ -35,6 +35,12 @@ amtk_public_c_files =				\
 	amtk-menu-shell.c			\
 	amtk-utils.c
 
+amtk_built_public_headers =	\
+	amtk-enum-types.h
+
+amtk_built_public_c_files =	\
+	amtk-enum-types.c
+
 # Helper Libtool library, so that the private functions can be used in unit
 # tests.
 noinst_LTLIBRARIES = libamtk-core.la
@@ -42,6 +48,14 @@ noinst_LTLIBRARIES = libamtk-core.la
 libamtk_core_la_SOURCES =	\
 	$(amtk_public_c_files)	\
 	$(amtk_public_headers)
+
+nodist_libamtk_core_la_SOURCES =	\
+	$(amtk_built_public_c_files)	\
+	$(amtk_built_public_headers)
+
+BUILT_SOURCES =				\
+	$(amtk_built_public_c_files)	\
+	$(amtk_built_public_headers)
 
 libamtk_core_la_CFLAGS =	\
 	$(CODE_COVERAGE_CFLAGS)
@@ -70,8 +84,21 @@ libamtk_@TEPL_API_VERSION@_la_LDFLAGS =		\
 
 libamtk_includedir = $(includedir)/amtk-@TEPL_API_VERSION@/amtk
 libamtk_include_HEADERS = $(amtk_public_headers)
+nodist_libamtk_include_HEADERS = $(amtk_built_public_headers)
 
-CLEANFILES =
+ENUM_TYPES = $(amtk_public_headers)
+
+amtk-enum-types.h: amtk-enum-types.h.template $(ENUM_TYPES) $(GLIB_MKENUMS)
+	$(AM_V_GEN) (cd $(srcdir) && $(GLIB_MKENUMS) --template amtk-enum-types.h.template $(ENUM_TYPES)) > $@
+
+amtk-enum-types.c: amtk-enum-types.c.template $(ENUM_TYPES) $(GLIB_MKENUMS)
+	$(AM_V_GEN) (cd $(srcdir) && $(GLIB_MKENUMS) --template amtk-enum-types.c.template $(ENUM_TYPES)) > $@
+
+EXTRA_DIST =				\
+	amtk-enum-types.c.template	\
+	amtk-enum-types.h.template
+
+CLEANFILES = $(BUILT_SOURCES)
 
 if HAVE_INTROSPECTION
 -include $(INTROSPECTION_MAKEFILE)
@@ -94,7 +121,9 @@ Amtk_@TEPL_API_VERSION@_gir_SCANNERFLAGS = $(WARN_SCANNERFLAGS)
 Amtk_@TEPL_API_VERSION@_gir_LIBS = libamtk-@TEPL_API_VERSION@.la
 Amtk_@TEPL_API_VERSION@_gir_FILES =	\
 	$(amtk_public_headers)		\
-	$(amtk_public_c_files)
+	$(amtk_public_c_files)		\
+	$(amtk_built_public_headers)	\
+	$(amtk_built_public_c_files)
 
 Amtk_@TEPL_API_VERSION@_gir_INCLUDES = Gtk-3.0
 Amtk_@TEPL_API_VERSION@_gir_PACKAGES = gtk+-3.0

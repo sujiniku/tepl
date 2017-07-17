@@ -105,6 +105,8 @@ AMTK_TYPE_FACTORY
 AmtkFactoryClass
 AmtkFactoryPrivate
 amtk_factory_get_type
+AMTK_TYPE_FACTORY_FLAGS
+amtk_factory_flags_get_type
 </SECTION>
 
 <SECTION>

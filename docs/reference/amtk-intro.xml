@@ -82,5 +82,14 @@
       <link linkend="amtk-application-window-connect-recent-chooser-menu-to-statusbar">amtk_application_window_connect_recent_chooser_menu_to_statusbar()</link>.
     </para>
   </listitem>
+  <listitem>
+    <para>
+      Additionally, the Amtk infrastructure permits to share
+      <link linkend="AmtkActionInfo">AmtkActionInfo</link>'s in a library (with
+      translations); this is a bit similar to
+      <link linkend="GtkStockItem">GtkStockItem</link>, to reduce the amount of
+      work that an application (and translators) need to do.
+    </para>
+  </listitem>
 </itemizedlist>
 </refentry>

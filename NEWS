@@ -1,4 +1,4 @@
-News in 2.99.2, 2017-xx-yy
+News in 2.99.2, 2017-07-18
 --------------------------
 
 Amtk:
@@ -9,6 +9,8 @@ Amtk:
   repository. Amtk is a basic GtkUIManager replacement based on GAction (still
   under development, it is not yet finished, for example it doesn't handle
   toolbars).
+* Add AmtkFactory and AmtkFactoryMenu, which replace
+  amtk_action_info_store_create_menu_item().
 
 Framework:
 * Revamp TeplTab.

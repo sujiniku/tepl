@@ -29,7 +29,7 @@
     </itemizedlist>
   </chapter>
 
-  <chapter id="api-breaks-2-to-3">
+  <chapter id="api-breaks-2-to-3-tepl">
     <title>Gtef 2 -> Tepl 3</title>
 
     <itemizedlist>
@@ -53,12 +53,27 @@
           instead.
         </para>
       </listitem>
+    </itemizedlist>
+  </chapter>
+
+  <chapter id="api-breaks-2-to-3-amtk">
+    <title>Gtef 2 -> Amtk 3</title>
+
+    <itemizedlist>
       <listitem>
         <para>
           The classes and functions related to actions and menus have been moved
           to a new shared library called Amtk (Actions, Menus and Toolbars Kit),
           since it was not really related to text editors, it is more general.
           But Amtk is still developed inside the Tepl repository.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Add <link linkend="AmtkFactory">AmtkFactory</link> and
+          <link linkend="AmtkFactoryMenu">AmtkFactoryMenu</link>, which replace
+          <code>gtef_action_info_store_create_menu_item()</code> and removes the
+          <code>GtefActionInfoStore:application</code> property.
         </para>
       </listitem>
     </itemizedlist>

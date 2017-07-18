@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+ <!ENTITY % local.common.attrib "xmlns:xi CDATA #FIXED 'http://www.w3.org/2003/XInclude'">
+ <!ENTITY % gtkdocentities SYSTEM "xml/gtkdocentities.ent">
+ %gtkdocentities;
+]>
+
+<refentry id="amtk-intro">
+<refmeta>
+  <refentrytitle>Amtk introduction</refentrytitle>
+</refmeta>
+
+<refnamediv>
+  <refname>Amtk introduction</refname>
+  <refpurpose>
+    Introduction to the Actions, Menus and Toolbars Kit for GTK+
+  </refpurpose>
+</refnamediv>
+
+<para>
+  Amtk is the acronym for “Actions, Menus and Toolbars Kit”. It is a basic
+  <link linkend="GtkUIManager">GtkUIManager</link> replacement based on
+  <link linkend="GAction">GAction</link>.
+  <link linkend="GtkUIManager">GtkUIManager</link> has been deprecated in
+  GTK+&nbsp;3, without a good enough replacement for applications that want to
+  keep a traditional UI (with a <link linkend="GtkMenuBar">GtkMenuBar</link>,
+  a <link linkend="GtkToolbar">GtkToolbar</link> and a
+  <link linkend="GtkStatusbar">GtkStatusbar</link>; in contrast to the new UI
+  with a <link linkend="GtkHeaderBar">GtkHeaderBar</link> and a “hamburger
+  menu”).
+</para>
+
+<para>
+  With Amtk, menus and toolbars are created programmatically, but with
+  convenient APIs (the support for an XML format will maybe be added in the
+  future, contributions welcome). <link linkend="GMenu">GMenu</link> is not
+  used, a menubar is created with <link linkend="GtkMenuItem">GtkMenuItem</link>'s,
+  although the support for <link linkend="GMenu">GMenu</link> could easily be
+  added.
+</para>
+
+<para>
+  There are currently several things that are not possible to do with the
+  support of <link linkend="GMenu">GMenu</link> in GTK+, that Amtk solves:
+</para>
+<itemizedlist>
+  <listitem>
+    <para>
+      Primarily, encoding the information about an action only once, to create
+      both a menu item and a toolbar item for that action. The information
+      needed: a label (i.e. a short description), an icon, a tooltip (i.e. a
+      longer description) and keyboard shortcuts. This is implemented by
+      <link linkend="AmtkActionInfo">AmtkActionInfo</link>, with
+      <link linkend="AmtkFactory">AmtkFactory</link> classes to create menu and
+      toolbar items.
+    </para>
+    <para>
+      When writing an XML file to create a <link linkend="GMenu">GMenu</link>
+      with the format understood by <link linkend="GtkBuilder">GtkBuilder</link>
+      (see the class description of <link linkend="GtkApplicationWindow">GtkApplicationWindow</link>),
+      the information in the XML file can be used only to create a <link linkend="GMenu">GMenu</link>,
+      not a toolbar. It would not be convenient to duplicate the information.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      When a <link linkend="GtkMenuItem">GtkMenuItem</link> is selected (e.g.
+      when the mouse hovers it), showing a longer description in the
+      <link linkend="GtkStatusbar">GtkStatusbar</link>. This is implemented by
+      <link linkend="AmtkApplicationWindow">AmtkApplicationWindow</link>. It
+      makes the UI better self-discoverable, to improve the usability.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Related to the previous point: having a
+      <link linkend="GtkRecentChooser">GtkRecentChooser</link> menu that shows
+      in a <link linkend="GtkStatusbar">GtkStatusbar</link> the full file path
+      when a menu item is selected. This is implemented by
+      <link linkend="amtk-application-window-connect-recent-chooser-menu-to-statusbar">amtk_application_window_connect_recent_chooser_menu_to_statusbar()</link>.
+    </para>
+  </listitem>
+</itemizedlist>
+</refentry>

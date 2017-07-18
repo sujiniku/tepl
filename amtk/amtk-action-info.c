@@ -32,14 +32,8 @@
  * Those pieces of information are useful to create UI elements that trigger the
  * #GAction, for example a menu item or a toolbar item.
  *
- * When writing an XML file to create a #GMenu, with the format understood by
- * #GtkBuilder (see the class description of #GtkApplicationWindow), the
- * information in the XML file can be used only to create a #GMenu, not a
- * toolbar. The initial goal with #AmtkActionInfo and its related classes is to
- * encode the information just once, and be able to create both a menu and a
- * toolbar easily (to have a traditional user interface, not based on
- * #GtkHeaderBar). Note that with the Amtk API, it would also be possible to
- * create a #GMenu.
+ * The recommended way to create a set of #AmtkActionInfo's is to use the
+ * amtk_action_info_store_add_entries() function.
  */
 
 struct _AmtkActionInfo

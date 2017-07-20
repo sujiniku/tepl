@@ -47,6 +47,11 @@
       <xi:include href="xml/buffer.xml"/>
     </chapter>
 
+    <chapter id="menus-and-toolbars">
+      <title>Menus</title>
+      <xi:include href="xml/menu-shell.xml"/>
+    </chapter>
+
     <chapter id="file-loading-and-saving">
       <title>File Loading and Saving</title>
       <xi:include href="xml/encoding.xml"/>

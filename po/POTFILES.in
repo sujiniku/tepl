@@ -24,6 +24,7 @@ tepl/tepl-file-saver.c
 tepl/tepl-info-bar.c
 tepl/tepl-init.c
 tepl/tepl-iter.c
+tepl/tepl-menu-shell.c
 tepl/tepl-metadata-manager.c
 tepl/tepl-notebook.c
 tepl/tepl-tab.c

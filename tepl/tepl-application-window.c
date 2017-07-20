@@ -52,6 +52,8 @@
  * - `"win.tepl-paste"`: calls tepl_view_paste_clipboard() on the active view.
  * - `"win.tepl-delete"`: calls tepl_view_delete_selection() on the active view.
  * - `"win.tepl-select-all"`: calls tepl_view_select_all() on the active view.
+ *
+ * See the tepl_menu_shell_append_edit_actions() convenience function.
  */
 
 struct _TeplApplicationWindowPrivate

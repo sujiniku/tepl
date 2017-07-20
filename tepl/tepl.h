@@ -39,6 +39,7 @@
 #include <tepl/tepl-gutter-renderer-folds.h>
 #include <tepl/tepl-info-bar.h>
 #include <tepl/tepl-iter.h>
+#include <tepl/tepl-menu-shell.h>
 #include <tepl/tepl-metadata-manager.h>
 #include <tepl/tepl-notebook.h>
 #include <tepl/tepl-tab.h>

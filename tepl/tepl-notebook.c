@@ -36,6 +36,12 @@ struct _TeplNotebookPrivate
 	gint something;
 };
 
+enum
+{
+	PROP_0,
+	PROP_ACTIVE_TAB,
+};
+
 static void tepl_tab_group_interface_init (gpointer g_iface,
 					   gpointer iface_data);
 
@@ -47,18 +53,70 @@ G_DEFINE_TYPE_WITH_CODE (TeplNotebook,
 						tepl_tab_group_interface_init))
 
 static void
-tepl_notebook_finalize (GObject *object)
+tepl_notebook_get_property (GObject    *object,
+			    guint       prop_id,
+			    GValue     *value,
+			    GParamSpec *pspec)
 {
+	TeplTabGroup *tab_group = TEPL_TAB_GROUP (object);
 
-	G_OBJECT_CLASS (tepl_notebook_parent_class)->finalize (object);
+	switch (prop_id)
+	{
+		case PROP_ACTIVE_TAB:
+			g_value_set_object (value, tepl_tab_group_get_active_tab (tab_group));
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+			break;
+	}
+}
+
+static void
+tepl_notebook_set_property (GObject      *object,
+			    guint         prop_id,
+			    const GValue *value,
+			    GParamSpec   *pspec)
+{
+	switch (prop_id)
+	{
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+			break;
+	}
+}
+
+static void
+tepl_notebook_switch_page (GtkNotebook *notebook,
+			   GtkWidget   *page,
+			   guint        page_num)
+{
+	if (GTK_NOTEBOOK_CLASS (tepl_notebook_parent_class)->switch_page != NULL)
+	{
+		GTK_NOTEBOOK_CLASS (tepl_notebook_parent_class)->switch_page (notebook,
+									      page,
+									      page_num);
+	}
+
+	/* FIXME: we connect only to the switch-page signal to notify the
+	 * active-tab property. Is it enough? Do we also need to connect to
+	 * other GtkNotebook signals?
+	 */
+	g_object_notify (G_OBJECT (notebook), "active-tab");
 }
 
 static void
 tepl_notebook_class_init (TeplNotebookClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GtkNotebookClass *notebook_class = GTK_NOTEBOOK_CLASS (klass);
 
-	object_class->finalize = tepl_notebook_finalize;
+	object_class->get_property = tepl_notebook_get_property;
+	object_class->set_property = tepl_notebook_set_property;
+
+	notebook_class->switch_page = tepl_notebook_switch_page;
+
+	g_object_class_override_property (object_class, PROP_ACTIVE_TAB, "active-tab");
 }
 
 static GList *

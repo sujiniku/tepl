@@ -52,6 +52,21 @@ tepl_tab_group_default_init (TeplTabGroupInterface *interface)
 {
 	interface->get_tabs = tepl_tab_group_get_tabs_default;
 	interface->get_active_tab = tepl_tab_group_get_active_tab_default;
+
+	/**
+	 * TeplTabGroup:active-tab:
+	 *
+	 * The #TeplTab currently shown.
+	 *
+	 * Since: 3.0
+	 */
+	g_object_interface_install_property (interface,
+					     g_param_spec_object ("active-tab",
+								  "Active Tab",
+								  "",
+								  TEPL_TYPE_TAB,
+								  G_PARAM_READABLE |
+								  G_PARAM_STATIC_STRINGS));
 }
 
 /**

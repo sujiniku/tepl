@@ -66,6 +66,7 @@ enum
 {
 	PROP_0,
 	PROP_APPLICATION_WINDOW,
+	PROP_ACTIVE_TAB,
 };
 
 #define TEPL_APPLICATION_WINDOW_KEY "tepl-application-window-key"
@@ -92,6 +93,10 @@ tepl_application_window_get_property (GObject    *object,
 	{
 		case PROP_APPLICATION_WINDOW:
 			g_value_set_object (value, tepl_application_window_get_application_window (tepl_window));
+			break;
+
+		case PROP_ACTIVE_TAB:
+			g_value_set_object (value, tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window)));
 			break;
 
 		default:
@@ -171,6 +176,8 @@ tepl_application_window_class_init (TeplApplicationWindowClass *klass)
 							      G_PARAM_READWRITE |
 							      G_PARAM_CONSTRUCT_ONLY |
 							      G_PARAM_STATIC_STRINGS));
+
+	g_object_class_override_property (object_class, PROP_ACTIVE_TAB, "active-tab");
 }
 
 static GList *
@@ -265,6 +272,14 @@ tepl_application_window_get_application_window (TeplApplicationWindow *tepl_wind
 	return tepl_window->priv->gtk_window;
 }
 
+static void
+active_tab_notify_cb (TeplTabGroup          *tab_group,
+		      GParamSpec            *pspec,
+		      TeplApplicationWindow *tepl_window)
+{
+	g_object_notify (G_OBJECT (tepl_window), "active-tab");
+}
+
 /**
  * tepl_application_window_set_tab_group:
  * @tepl_window: a #TeplApplicationWindow.
@@ -294,6 +309,12 @@ tepl_application_window_set_tab_group (TeplApplicationWindow *tepl_window,
 	}
 
 	tepl_window->priv->tab_group = g_object_ref_sink (tab_group);
+
+	g_signal_connect_object (tab_group,
+				 "notify::active-tab",
+				 G_CALLBACK (active_tab_notify_cb),
+				 tepl_window,
+				 0);
 }
 
 /* ex:set ts=8 noet: */

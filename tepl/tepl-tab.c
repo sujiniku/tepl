@@ -55,10 +55,7 @@ enum
 {
 	PROP_0,
 	PROP_VIEW,
-	N_PROPERTIES
 };
-
-static GParamSpec *properties[N_PROPERTIES];
 
 static void tepl_tab_group_interface_init (gpointer g_iface,
 					   gpointer iface_data);
@@ -164,7 +161,7 @@ set_view (TeplTab  *tab,
 
 	TEPL_TAB_GET_CLASS (tab)->pack_view (tab, view);
 
-	g_object_notify_by_pspec (G_OBJECT (tab), properties[PROP_VIEW]);
+	g_object_notify (G_OBJECT (tab), "view");
 }
 
 static void
@@ -237,16 +234,15 @@ tepl_tab_class_init (TeplTabClass *klass)
 	 *
 	 * Since: 3.0
 	 */
-	properties[PROP_VIEW] =
-		g_param_spec_object ("view",
-				     "View",
-				     "",
-				     TEPL_TYPE_VIEW,
-				     G_PARAM_READWRITE |
-				     G_PARAM_CONSTRUCT_ONLY |
-				     G_PARAM_STATIC_STRINGS);
-
-	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
+	g_object_class_install_property (object_class,
+					 PROP_VIEW,
+					 g_param_spec_object ("view",
+							      "View",
+							      "",
+							      TEPL_TYPE_VIEW,
+							      G_PARAM_READWRITE |
+							      G_PARAM_CONSTRUCT_ONLY |
+							      G_PARAM_STATIC_STRINGS));
 }
 
 static GList *

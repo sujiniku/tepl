@@ -66,12 +66,9 @@ enum
 {
 	PROP_0,
 	PROP_APPLICATION_WINDOW,
-	N_PROPERTIES
 };
 
 #define TEPL_APPLICATION_WINDOW_KEY "tepl-application-window-key"
-
-static GParamSpec *properties[N_PROPERTIES];
 
 static void tepl_tab_group_interface_init (gpointer g_iface,
 					   gpointer iface_data);
@@ -165,16 +162,15 @@ tepl_application_window_class_init (TeplApplicationWindowClass *klass)
 	 *
 	 * Since: 2.0
 	 */
-	properties[PROP_APPLICATION_WINDOW] =
-		g_param_spec_object ("application-window",
-				     "GtkApplicationWindow",
-				     "",
-				     GTK_TYPE_APPLICATION_WINDOW,
-				     G_PARAM_READWRITE |
-				     G_PARAM_CONSTRUCT_ONLY |
-				     G_PARAM_STATIC_STRINGS);
-
-	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
+	g_object_class_install_property (object_class,
+					 PROP_APPLICATION_WINDOW,
+					 g_param_spec_object ("application-window",
+							      "GtkApplicationWindow",
+							      "",
+							      GTK_TYPE_APPLICATION_WINDOW,
+							      G_PARAM_READWRITE |
+							      G_PARAM_CONSTRUCT_ONLY |
+							      G_PARAM_STATIC_STRINGS));
 }
 
 static GList *

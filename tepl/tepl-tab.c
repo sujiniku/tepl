@@ -57,6 +57,7 @@ enum
 	PROP_VIEW,
 	PROP_ACTIVE_TAB,
 	PROP_ACTIVE_VIEW,
+	PROP_ACTIVE_BUFFER,
 };
 
 static void tepl_tab_group_interface_init (gpointer g_iface,
@@ -146,6 +147,14 @@ tepl_tab_pack_info_bar_default (TeplTab    *tab,
 }
 
 static void
+buffer_notify_cb (GtkTextView *view,
+		  GParamSpec  *pspec,
+		  TeplTab     *tab)
+{
+	g_object_notify (G_OBJECT (tab), "active-buffer");
+}
+
+static void
 set_view (TeplTab  *tab,
 	  TeplView *view)
 {
@@ -162,6 +171,12 @@ set_view (TeplTab  *tab,
 	tab->priv->view = g_object_ref_sink (view);
 
 	TEPL_TAB_GET_CLASS (tab)->pack_view (tab, view);
+
+	g_signal_connect_object (view,
+				 "notify::buffer",
+				 G_CALLBACK (buffer_notify_cb),
+				 tab,
+				 0);
 
 	g_object_notify (G_OBJECT (tab), "view");
 }
@@ -186,6 +201,10 @@ tepl_tab_get_property (GObject    *object,
 
 		case PROP_ACTIVE_VIEW:
 			g_value_set_object (value, tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tab)));
+			break;
+
+		case PROP_ACTIVE_BUFFER:
+			g_value_set_object (value, tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tab)));
 			break;
 
 		default:
@@ -256,6 +275,7 @@ tepl_tab_class_init (TeplTabClass *klass)
 
 	g_object_class_override_property (object_class, PROP_ACTIVE_TAB, "active-tab");
 	g_object_class_override_property (object_class, PROP_ACTIVE_VIEW, "active-view");
+	g_object_class_override_property (object_class, PROP_ACTIVE_BUFFER, "active-buffer");
 }
 
 static GList *

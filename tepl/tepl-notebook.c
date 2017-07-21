@@ -20,6 +20,7 @@
 #include "tepl-notebook.h"
 #include "tepl-tab-group.h"
 #include "tepl-tab.h"
+#include "tepl-signal-group.h"
 
 /**
  * SECTION:notebook
@@ -33,7 +34,7 @@
 
 struct _TeplNotebookPrivate
 {
-	gint something;
+	TeplSignalGroup *view_signal_group;
 };
 
 enum
@@ -41,6 +42,7 @@ enum
 	PROP_0,
 	PROP_ACTIVE_TAB,
 	PROP_ACTIVE_VIEW,
+	PROP_ACTIVE_BUFFER,
 };
 
 static void tepl_tab_group_interface_init (gpointer g_iface,
@@ -71,6 +73,10 @@ tepl_notebook_get_property (GObject    *object,
 			g_value_set_object (value, tepl_tab_group_get_active_view (tab_group));
 			break;
 
+		case PROP_ACTIVE_BUFFER:
+			g_value_set_object (value, tepl_tab_group_get_active_buffer (tab_group));
+			break;
+
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 			break;
@@ -92,6 +98,47 @@ tepl_notebook_set_property (GObject      *object,
 }
 
 static void
+tepl_notebook_dispose (GObject *object)
+{
+	TeplNotebook *notebook = TEPL_NOTEBOOK (object);
+
+	g_clear_pointer (&notebook->priv->view_signal_group,
+			 (GDestroyNotify) _tepl_signal_group_free);
+
+	G_OBJECT_CLASS (tepl_notebook_parent_class)->dispose (object);
+}
+
+static void
+buffer_notify_cb (GtkTextView  *view,
+		  GParamSpec   *pspec,
+		  TeplNotebook *notebook)
+{
+	g_object_notify (G_OBJECT (notebook), "active-buffer");
+}
+
+static void
+active_tab_changed (TeplNotebook *notebook)
+{
+	TeplView *view;
+
+	g_clear_pointer (&notebook->priv->view_signal_group,
+			 (GDestroyNotify) _tepl_signal_group_free);
+
+	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (notebook));
+	notebook->priv->view_signal_group = _tepl_signal_group_new (G_OBJECT (view));
+
+	_tepl_signal_group_add_handler_id (notebook->priv->view_signal_group,
+					   g_signal_connect (view,
+							     "notify::buffer",
+							     G_CALLBACK (buffer_notify_cb),
+							     notebook));
+
+	g_object_notify (G_OBJECT (notebook), "active-tab");
+	g_object_notify (G_OBJECT (notebook), "active-view");
+	g_object_notify (G_OBJECT (notebook), "active-buffer");
+}
+
+static void
 tepl_notebook_switch_page (GtkNotebook *notebook,
 			   GtkWidget   *page,
 			   guint        page_num)
@@ -107,8 +154,7 @@ tepl_notebook_switch_page (GtkNotebook *notebook,
 	 * active-tab property. Is it enough? Do we also need to connect to
 	 * other GtkNotebook signals?
 	 */
-	g_object_notify (G_OBJECT (notebook), "active-tab");
-	g_object_notify (G_OBJECT (notebook), "active-view");
+	active_tab_changed (TEPL_NOTEBOOK (notebook));
 }
 
 static void
@@ -119,11 +165,13 @@ tepl_notebook_class_init (TeplNotebookClass *klass)
 
 	object_class->get_property = tepl_notebook_get_property;
 	object_class->set_property = tepl_notebook_set_property;
+	object_class->dispose = tepl_notebook_dispose;
 
 	notebook_class->switch_page = tepl_notebook_switch_page;
 
 	g_object_class_override_property (object_class, PROP_ACTIVE_TAB, "active-tab");
 	g_object_class_override_property (object_class, PROP_ACTIVE_VIEW, "active-view");
+	g_object_class_override_property (object_class, PROP_ACTIVE_BUFFER, "active-buffer");
 }
 
 static GList *

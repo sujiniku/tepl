@@ -20,6 +20,7 @@
 #include "tepl-tab-group.h"
 #include "tepl-tab.h"
 #include "tepl-view.h"
+#include "tepl-buffer.h"
 
 /**
  * SECTION:tab-group
@@ -81,6 +82,21 @@ tepl_tab_group_default_init (TeplTabGroupInterface *interface)
 								  "Active View",
 								  "",
 								  TEPL_TYPE_VIEW,
+								  G_PARAM_READABLE |
+								  G_PARAM_STATIC_STRINGS));
+
+	/**
+	 * TeplTabGroup:active-buffer:
+	 *
+	 * The #TeplBuffer of the active tab.
+	 *
+	 * Since: 3.0
+	 */
+	g_object_interface_install_property (interface,
+					     g_param_spec_object ("active-buffer",
+								  "Active Buffer",
+								  "",
+								  TEPL_TYPE_BUFFER,
 								  G_PARAM_READABLE |
 								  G_PARAM_STATIC_STRINGS));
 }

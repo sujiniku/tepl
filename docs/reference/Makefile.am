@@ -32,7 +32,8 @@ IGNORE_HFILES =					\
 	tepl-encoding-private.h			\
 	tepl-file-content-loader.h		\
 	tepl-io-error-info-bar.h		\
-	tepl-progress-info-bar.h
+	tepl-progress-info-bar.h		\
+	tepl-signal-group.h
 
 # Extra options to supply to gtkdoc-mkdb
 MKDB_OPTIONS = --xml-mode --output-format=xml

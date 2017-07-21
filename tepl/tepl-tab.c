@@ -56,6 +56,7 @@ enum
 	PROP_0,
 	PROP_VIEW,
 	PROP_ACTIVE_TAB,
+	PROP_ACTIVE_VIEW,
 };
 
 static void tepl_tab_group_interface_init (gpointer g_iface,
@@ -183,6 +184,10 @@ tepl_tab_get_property (GObject    *object,
 			g_value_set_object (value, tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tab)));
 			break;
 
+		case PROP_ACTIVE_VIEW:
+			g_value_set_object (value, tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tab)));
+			break;
+
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 			break;
@@ -250,6 +255,7 @@ tepl_tab_class_init (TeplTabClass *klass)
 							      G_PARAM_STATIC_STRINGS));
 
 	g_object_class_override_property (object_class, PROP_ACTIVE_TAB, "active-tab");
+	g_object_class_override_property (object_class, PROP_ACTIVE_VIEW, "active-view");
 }
 
 static GList *

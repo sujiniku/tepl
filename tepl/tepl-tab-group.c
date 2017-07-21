@@ -19,6 +19,7 @@
 
 #include "tepl-tab-group.h"
 #include "tepl-tab.h"
+#include "tepl-view.h"
 
 /**
  * SECTION:tab-group
@@ -65,6 +66,21 @@ tepl_tab_group_default_init (TeplTabGroupInterface *interface)
 								  "Active Tab",
 								  "",
 								  TEPL_TYPE_TAB,
+								  G_PARAM_READABLE |
+								  G_PARAM_STATIC_STRINGS));
+
+	/**
+	 * TeplTabGroup:active-view:
+	 *
+	 * The #TeplView of the active tab.
+	 *
+	 * Since: 3.0
+	 */
+	g_object_interface_install_property (interface,
+					     g_param_spec_object ("active-view",
+								  "Active View",
+								  "",
+								  TEPL_TYPE_VIEW,
 								  G_PARAM_READABLE |
 								  G_PARAM_STATIC_STRINGS));
 }

@@ -67,6 +67,7 @@ enum
 	PROP_0,
 	PROP_APPLICATION_WINDOW,
 	PROP_ACTIVE_TAB,
+	PROP_ACTIVE_VIEW,
 };
 
 #define TEPL_APPLICATION_WINDOW_KEY "tepl-application-window-key"
@@ -97,6 +98,10 @@ tepl_application_window_get_property (GObject    *object,
 
 		case PROP_ACTIVE_TAB:
 			g_value_set_object (value, tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window)));
+			break;
+
+		case PROP_ACTIVE_VIEW:
+			g_value_set_object (value, tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window)));
 			break;
 
 		default:
@@ -178,6 +183,7 @@ tepl_application_window_class_init (TeplApplicationWindowClass *klass)
 							      G_PARAM_STATIC_STRINGS));
 
 	g_object_class_override_property (object_class, PROP_ACTIVE_TAB, "active-tab");
+	g_object_class_override_property (object_class, PROP_ACTIVE_VIEW, "active-view");
 }
 
 static GList *
@@ -280,6 +286,14 @@ active_tab_notify_cb (TeplTabGroup          *tab_group,
 	g_object_notify (G_OBJECT (tepl_window), "active-tab");
 }
 
+static void
+active_view_notify_cb (TeplTabGroup          *tab_group,
+		       GParamSpec            *pspec,
+		       TeplApplicationWindow *tepl_window)
+{
+	g_object_notify (G_OBJECT (tepl_window), "active-view");
+}
+
 /**
  * tepl_application_window_set_tab_group:
  * @tepl_window: a #TeplApplicationWindow.
@@ -313,6 +327,12 @@ tepl_application_window_set_tab_group (TeplApplicationWindow *tepl_window,
 	g_signal_connect_object (tab_group,
 				 "notify::active-tab",
 				 G_CALLBACK (active_tab_notify_cb),
+				 tepl_window,
+				 0);
+
+	g_signal_connect_object (tab_group,
+				 "notify::active-view",
+				 G_CALLBACK (active_view_notify_cb),
 				 tepl_window,
 				 0);
 }

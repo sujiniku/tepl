@@ -40,6 +40,7 @@ enum
 {
 	PROP_0,
 	PROP_ACTIVE_TAB,
+	PROP_ACTIVE_VIEW,
 };
 
 static void tepl_tab_group_interface_init (gpointer g_iface,
@@ -64,6 +65,10 @@ tepl_notebook_get_property (GObject    *object,
 	{
 		case PROP_ACTIVE_TAB:
 			g_value_set_object (value, tepl_tab_group_get_active_tab (tab_group));
+			break;
+
+		case PROP_ACTIVE_VIEW:
+			g_value_set_object (value, tepl_tab_group_get_active_view (tab_group));
 			break;
 
 		default:
@@ -103,6 +108,7 @@ tepl_notebook_switch_page (GtkNotebook *notebook,
 	 * other GtkNotebook signals?
 	 */
 	g_object_notify (G_OBJECT (notebook), "active-tab");
+	g_object_notify (G_OBJECT (notebook), "active-view");
 }
 
 static void
@@ -117,6 +123,7 @@ tepl_notebook_class_init (TeplNotebookClass *klass)
 	notebook_class->switch_page = tepl_notebook_switch_page;
 
 	g_object_class_override_property (object_class, PROP_ACTIVE_TAB, "active-tab");
+	g_object_class_override_property (object_class, PROP_ACTIVE_VIEW, "active-view");
 }
 
 static GList *

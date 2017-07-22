@@ -131,13 +131,17 @@ active_tab_changed (TeplNotebook *notebook)
 			 (GDestroyNotify) _tepl_signal_group_free);
 
 	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (notebook));
-	notebook->priv->view_signal_group = _tepl_signal_group_new (G_OBJECT (view));
 
-	_tepl_signal_group_add_handler_id (notebook->priv->view_signal_group,
-					   g_signal_connect (view,
-							     "notify::buffer",
-							     G_CALLBACK (buffer_notify_cb),
-							     notebook));
+	if (view != NULL)
+	{
+		notebook->priv->view_signal_group = _tepl_signal_group_new (G_OBJECT (view));
+
+		_tepl_signal_group_add_handler_id (notebook->priv->view_signal_group,
+						   g_signal_connect (view,
+								     "notify::buffer",
+								     G_CALLBACK (buffer_notify_cb),
+								     notebook));
+	}
 
 	g_object_notify (G_OBJECT (notebook), "active-tab");
 	g_object_notify (G_OBJECT (notebook), "active-view");

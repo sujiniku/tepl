@@ -188,6 +188,7 @@ tepl_tab_get_property (GObject    *object,
                        GParamSpec *pspec)
 {
 	TeplTab *tab = TEPL_TAB (object);
+	TeplTabGroup *tab_group = TEPL_TAB_GROUP (object);
 
 	switch (prop_id)
 	{
@@ -196,15 +197,15 @@ tepl_tab_get_property (GObject    *object,
 			break;
 
 		case PROP_ACTIVE_TAB:
-			g_value_set_object (value, tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tab)));
+			g_value_set_object (value, tepl_tab_group_get_active_tab (tab_group));
 			break;
 
 		case PROP_ACTIVE_VIEW:
-			g_value_set_object (value, tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tab)));
+			g_value_set_object (value, tepl_tab_group_get_active_view (tab_group));
 			break;
 
 		case PROP_ACTIVE_BUFFER:
-			g_value_set_object (value, tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tab)));
+			g_value_set_object (value, tepl_tab_group_get_active_buffer (tab_group));
 			break;
 
 		default:

@@ -237,6 +237,18 @@ tepl_application_window_set_active_tab (TeplTabGroup *tab_group,
 }
 
 static void
+tepl_application_window_append_tab (TeplTabGroup *tab_group,
+				    TeplTab      *tab)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (tab_group);
+
+	if (tepl_window->priv->tab_group != NULL)
+	{
+		tepl_tab_group_append_tab (tepl_window->priv->tab_group, tab, FALSE);
+	}
+}
+
+static void
 tepl_tab_group_interface_init (gpointer g_iface,
 			       gpointer iface_data)
 {
@@ -245,6 +257,7 @@ tepl_tab_group_interface_init (gpointer g_iface,
 	interface->get_tabs = tepl_application_window_get_tabs;
 	interface->get_active_tab = tepl_application_window_get_active_tab;
 	interface->set_active_tab = tepl_application_window_set_active_tab;
+	interface->append_tab = tepl_application_window_append_tab;
 }
 
 static void

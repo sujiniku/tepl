@@ -228,14 +228,23 @@ static void
 tepl_notebook_set_active_tab (TeplTabGroup *tab_group,
 			      TeplTab      *tab)
 {
-	gint page_num;
-
 	GtkNotebook *notebook = GTK_NOTEBOOK (tab_group);
+	gint page_num;
 
 	page_num = gtk_notebook_page_num (notebook, GTK_WIDGET (tab));
 	g_return_if_fail (page_num != -1);
 
 	gtk_notebook_set_current_page (notebook, page_num);
+}
+
+static void
+tepl_notebook_append_tab (TeplTabGroup *tab_group,
+			  TeplTab      *tab)
+{
+	GtkNotebook *notebook = GTK_NOTEBOOK (tab_group);
+
+	/* TODO implement a TeplTabLabel widget. */
+	gtk_notebook_append_page (notebook, GTK_WIDGET (tab), NULL);
 }
 
 static void
@@ -247,6 +256,7 @@ tepl_tab_group_interface_init (gpointer g_iface,
 	interface->get_tabs = tepl_notebook_get_tabs;
 	interface->get_active_tab = tepl_notebook_get_active_tab;
 	interface->set_active_tab = tepl_notebook_set_active_tab;
+	interface->append_tab = tepl_notebook_append_tab;
 }
 
 static void

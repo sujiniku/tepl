@@ -56,11 +56,18 @@ tepl_tab_group_set_active_tab_default (TeplTabGroup *tab_group,
 }
 
 static void
+tepl_tab_group_append_tab_default (TeplTabGroup *tab_group,
+				   TeplTab      *tab)
+{
+}
+
+static void
 tepl_tab_group_default_init (TeplTabGroupInterface *interface)
 {
 	interface->get_tabs = tepl_tab_group_get_tabs_default;
 	interface->get_active_tab = tepl_tab_group_get_active_tab_default;
 	interface->set_active_tab = tepl_tab_group_set_active_tab_default;
+	interface->append_tab = tepl_tab_group_append_tab_default;
 
 	/**
 	 * TeplTabGroup:active-tab:
@@ -280,4 +287,30 @@ tepl_tab_group_get_active_buffer (TeplTabGroup *tab_group)
 	active_tab = tepl_tab_group_get_active_tab (tab_group);
 
 	return active_tab != NULL ? tepl_tab_get_buffer (active_tab) : NULL;
+}
+
+/**
+ * tepl_tab_group_append_tab:
+ * @tab_group: a #TeplTabGroup.
+ * @tab: a #TeplTab.
+ * @jump_to: whether to set @tab as the active tab after appending it.
+ *
+ * Appends @tab to @tab_group.
+ *
+ * Since: 3.0
+ */
+void
+tepl_tab_group_append_tab (TeplTabGroup *tab_group,
+			   TeplTab      *tab,
+			   gboolean      jump_to)
+{
+	g_return_if_fail (TEPL_IS_TAB_GROUP (tab_group));
+	g_return_if_fail (TEPL_IS_TAB (tab));
+
+	TEPL_TAB_GROUP_GET_INTERFACE (tab_group)->append_tab (tab_group, tab);
+
+	if (jump_to)
+	{
+		tepl_tab_group_set_active_tab (tab_group, tab);
+	}
 }

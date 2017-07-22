@@ -48,6 +48,9 @@ typedef struct _TeplTabGroupInterface TeplTabGroupInterface;
  *   By default, %NULL is returned.
  * @set_active_tab: Virtual function pointer for
  *   tepl_tab_group_set_active_tab(). Does nothing by default.
+ * @append_tab: Virtual function pointer for tepl_tab_group_append_tab(). Does
+ *   nothing by default. The @jump_to parameter is already implemented with
+ *   tepl_tab_group_set_active_tab().
  *
  * The virtual function table for #TeplTabGroup. When implementing one of the
  * vfunc, you can assume that the pre-conditions are already checked (the
@@ -65,24 +68,31 @@ struct _TeplTabGroupInterface
 
 	void		(*set_active_tab)	(TeplTabGroup *tab_group,
 						 TeplTab      *tab);
+
+	void		(*append_tab)		(TeplTabGroup *tab_group,
+						 TeplTab      *tab);
 };
 
-GType		tepl_tab_group_get_type		(void);
+GType		tepl_tab_group_get_type			(void);
 
-GList *		tepl_tab_group_get_tabs		(TeplTabGroup *tab_group);
+GList *		tepl_tab_group_get_tabs			(TeplTabGroup *tab_group);
 
 GList *		tepl_tab_group_get_views		(TeplTabGroup *tab_group);
 
-GList *		tepl_tab_group_get_buffers	(TeplTabGroup *tab_group);
+GList *		tepl_tab_group_get_buffers		(TeplTabGroup *tab_group);
 
-TeplTab *	tepl_tab_group_get_active_tab	(TeplTabGroup *tab_group);
+TeplTab *	tepl_tab_group_get_active_tab		(TeplTabGroup *tab_group);
 
-void		tepl_tab_group_set_active_tab	(TeplTabGroup *tab_group,
-						 TeplTab      *tab);
+void		tepl_tab_group_set_active_tab		(TeplTabGroup *tab_group,
+							 TeplTab      *tab);
 
-TeplView *	tepl_tab_group_get_active_view	(TeplTabGroup *tab_group);
+TeplView *	tepl_tab_group_get_active_view		(TeplTabGroup *tab_group);
 
 TeplBuffer *	tepl_tab_group_get_active_buffer	(TeplTabGroup *tab_group);
+
+void		tepl_tab_group_append_tab		(TeplTabGroup *tab_group,
+							 TeplTab      *tab,
+							 gboolean      jump_to);
 
 G_END_DECLS
 

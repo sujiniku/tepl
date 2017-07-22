@@ -441,6 +441,7 @@ tepl_tab_group_get_active_tab
 tepl_tab_group_set_active_tab
 tepl_tab_group_get_active_view
 tepl_tab_group_get_active_buffer
+tepl_tab_group_append_tab
 <SUBSECTION Standard>
 TEPL_IS_TAB_GROUP
 TEPL_TAB_GROUP

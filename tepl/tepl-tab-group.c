@@ -50,10 +50,17 @@ tepl_tab_group_get_active_tab_default (TeplTabGroup *tab_group)
 }
 
 static void
+tepl_tab_group_set_active_tab_default (TeplTabGroup *tab_group,
+				       TeplTab      *tab)
+{
+}
+
+static void
 tepl_tab_group_default_init (TeplTabGroupInterface *interface)
 {
 	interface->get_tabs = tepl_tab_group_get_tabs_default;
 	interface->get_active_tab = tepl_tab_group_get_active_tab_default;
+	interface->set_active_tab = tepl_tab_group_set_active_tab_default;
 
 	/**
 	 * TeplTabGroup:active-tab:
@@ -67,7 +74,7 @@ tepl_tab_group_default_init (TeplTabGroupInterface *interface)
 								  "Active Tab",
 								  "",
 								  TEPL_TYPE_TAB,
-								  G_PARAM_READABLE |
+								  G_PARAM_READWRITE |
 								  G_PARAM_STATIC_STRINGS));
 
 	/**
@@ -204,6 +211,33 @@ tepl_tab_group_get_active_tab (TeplTabGroup *tab_group)
 	g_return_val_if_fail (TEPL_IS_TAB_GROUP (tab_group), NULL);
 
 	return TEPL_TAB_GROUP_GET_INTERFACE (tab_group)->get_active_tab (tab_group);
+}
+
+/**
+ * tepl_tab_group_set_active_tab:
+ * @tab_group: a #TeplTabGroup.
+ * @tab: a #TeplTab part of @tab_group.
+ *
+ * Sets the #TeplTabGroup:active-tab. @tab must be part of @tab_group.
+ *
+ * Since: 3.0
+ */
+void
+tepl_tab_group_set_active_tab (TeplTabGroup *tab_group,
+			       TeplTab      *tab)
+{
+	GList *all_tabs;
+	gboolean tab_in_tab_group;
+
+	g_return_if_fail (TEPL_IS_TAB_GROUP (tab_group));
+	g_return_if_fail (TEPL_IS_TAB (tab));
+
+	all_tabs = tepl_tab_group_get_tabs (tab_group);
+	tab_in_tab_group = g_list_find (all_tabs, tab) != NULL;
+	g_list_free (all_tabs);
+	g_return_if_fail (tab_in_tab_group);
+
+	TEPL_TAB_GROUP_GET_INTERFACE (tab_group)->set_active_tab (tab_group, tab);
 }
 
 /**

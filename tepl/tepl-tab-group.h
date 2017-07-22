@@ -46,8 +46,12 @@ typedef struct _TeplTabGroupInterface TeplTabGroupInterface;
  *   tepl_tab_group_get_tabs().
  * @get_active_tab: Virtual function pointer for tepl_tab_group_get_active_tab().
  *   By default, %NULL is returned.
+ * @set_active_tab: Virtual function pointer for
+ *   tepl_tab_group_set_active_tab(). Does nothing by default.
  *
- * The virtual function table for #TeplTabGroup.
+ * The virtual function table for #TeplTabGroup. When implementing one of the
+ * vfunc, you can assume that the pre-conditions are already checked (the
+ * parameters are valid).
  *
  * Since: 3.0
  */
@@ -58,6 +62,9 @@ struct _TeplTabGroupInterface
 	GList *		(*get_tabs)		(TeplTabGroup *tab_group);
 
 	TeplTab *	(*get_active_tab)	(TeplTabGroup *tab_group);
+
+	void		(*set_active_tab)	(TeplTabGroup *tab_group,
+						 TeplTab      *tab);
 };
 
 GType		tepl_tab_group_get_type		(void);
@@ -69,6 +76,9 @@ GList *		tepl_tab_group_get_views		(TeplTabGroup *tab_group);
 GList *		tepl_tab_group_get_buffers	(TeplTabGroup *tab_group);
 
 TeplTab *	tepl_tab_group_get_active_tab	(TeplTabGroup *tab_group);
+
+void		tepl_tab_group_set_active_tab	(TeplTabGroup *tab_group,
+						 TeplTab      *tab);
 
 TeplView *	tepl_tab_group_get_active_view	(TeplTabGroup *tab_group);
 

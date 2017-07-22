@@ -122,12 +122,17 @@ tepl_application_window_set_property (GObject      *object,
 				      GParamSpec   *pspec)
 {
 	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (object);
+	TeplTabGroup *tab_group = TEPL_TAB_GROUP (object);
 
 	switch (prop_id)
 	{
 		case PROP_APPLICATION_WINDOW:
 			g_assert (tepl_window->priv->gtk_window == NULL);
 			tepl_window->priv->gtk_window = g_value_get_object (value);
+			break;
+
+		case PROP_ACTIVE_TAB:
+			tepl_tab_group_set_active_tab (tab_group, g_value_get_object (value));
 			break;
 
 		default:
@@ -219,6 +224,18 @@ tepl_application_window_get_active_tab (TeplTabGroup *tab_group)
 }
 
 static void
+tepl_application_window_set_active_tab (TeplTabGroup *tab_group,
+					TeplTab      *tab)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (tab_group);
+
+	if (tepl_window->priv->tab_group != NULL)
+	{
+		tepl_tab_group_set_active_tab (tepl_window->priv->tab_group, tab);
+	}
+}
+
+static void
 tepl_tab_group_interface_init (gpointer g_iface,
 			       gpointer iface_data)
 {
@@ -226,6 +243,7 @@ tepl_tab_group_interface_init (gpointer g_iface,
 
 	interface->get_tabs = tepl_application_window_get_tabs;
 	interface->get_active_tab = tepl_application_window_get_active_tab;
+	interface->set_active_tab = tepl_application_window_set_active_tab;
 }
 
 static void

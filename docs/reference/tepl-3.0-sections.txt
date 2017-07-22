@@ -438,6 +438,7 @@ tepl_tab_group_get_tabs
 tepl_tab_group_get_views
 tepl_tab_group_get_buffers
 tepl_tab_group_get_active_tab
+tepl_tab_group_set_active_tab
 tepl_tab_group_get_active_view
 tepl_tab_group_get_active_buffer
 <SUBSECTION Standard>

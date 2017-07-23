@@ -75,10 +75,8 @@ test_tab_group (void)
 	/* Append one TeplTab */
 	tab1 = tepl_tab_new ();
 	gtk_widget_show (GTK_WIDGET (tab1));
-	gtk_notebook_append_page (notebook, GTK_WIDGET (tab1), NULL);
+	tepl_tab_group_append_tab (tab_group, tab1, TRUE);
 	expected_list = g_list_append (NULL, tab1);
-
-	gtk_notebook_set_current_page (notebook, 1);
 
 	g_assert_cmpint (gtk_notebook_get_n_pages (notebook), ==, 2);
 	g_assert (tepl_tab_group_get_active_tab (tab_group) == tab1);
@@ -99,14 +97,16 @@ test_tab_group (void)
 	/* Append a second TeplTab */
 	tab2 = tepl_tab_new ();
 	gtk_widget_show (GTK_WIDGET (tab2));
-	gtk_notebook_append_page (notebook, GTK_WIDGET (tab2), NULL);
+	tepl_tab_group_append_tab (tab_group, tab2, FALSE);
 	expected_list = g_list_append (expected_list, tab2);
 
 	gtk_notebook_set_current_page (notebook, gtk_notebook_page_num (notebook, other_widget));
 	g_assert (tepl_tab_group_get_active_tab (tab_group) == NULL);
-	gtk_notebook_set_current_page (notebook, gtk_notebook_page_num (notebook, GTK_WIDGET (tab1)));
+
+	tepl_tab_group_set_active_tab (tab_group, tab1);
 	g_assert (tepl_tab_group_get_active_tab (tab_group) == tab1);
-	gtk_notebook_set_current_page (notebook, gtk_notebook_page_num (notebook, GTK_WIDGET (tab2)));
+
+	tepl_tab_group_set_active_tab (tab_group, tab2);
 	g_assert (tepl_tab_group_get_active_tab (tab_group) == tab2);
 
 	received_list = tepl_tab_group_get_tabs (tab_group);

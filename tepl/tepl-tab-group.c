@@ -59,6 +59,8 @@ static void
 tepl_tab_group_append_tab_default (TeplTabGroup *tab_group,
 				   TeplTab      *tab)
 {
+	g_warning ("Appending a TeplTab to this TeplTabGroup is not supported. "
+		   "Use for example TeplNotebook.");
 }
 
 static void

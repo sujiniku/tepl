@@ -48,8 +48,9 @@ typedef struct _TeplTabGroupInterface TeplTabGroupInterface;
  *   By default, %NULL is returned.
  * @set_active_tab: Virtual function pointer for
  *   tepl_tab_group_set_active_tab(). Does nothing by default.
- * @append_tab: Virtual function pointer for tepl_tab_group_append_tab(). Does
- *   nothing by default. The @jump_to parameter is already implemented with
+ * @append_tab: Virtual function pointer for tepl_tab_group_append_tab(). The
+ *   default implementation prints a warning about the operation not being
+ *   supported. The @jump_to parameter is already implemented with
  *   tepl_tab_group_set_active_tab().
  *
  * The virtual function table for #TeplTabGroup. When implementing one of the

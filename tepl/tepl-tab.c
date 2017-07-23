@@ -42,8 +42,15 @@
  * the ::pack_view virtual function. Similarly, the way that #GtkInfoBar's are
  * added can be customized with ::pack_info_bar.
  *
+ * # TeplTabGroup implementation
+ *
  * #TeplTab implements the #TeplTabGroup interface, for a group of only one tab.
- * It is useful for text editors that open each file in a separate window.
+ * It is useful for text editors that open each file in a separate window, or
+ * for applications that don't require to open more than one file. But the
+ * tepl_tab_group_append_tab() operation is not supported, so some higher-level
+ * features of Tepl don't work with #TeplTab as the #TeplTabGroup of the window.
+ * This will maybe be improved in the future by creating automatically a new
+ * window.
  */
 
 struct _TeplTabPrivate

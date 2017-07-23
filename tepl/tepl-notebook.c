@@ -203,9 +203,6 @@ tepl_notebook_class_init (TeplNotebookClass *klass)
 	object_class->set_property = tepl_notebook_set_property;
 	object_class->dispose = tepl_notebook_dispose;
 
-	/* FIXME: Do we connect to all necessary signals to notify the
-	 * properties?
-	 */
 	notebook_class->switch_page = tepl_notebook_switch_page;
 	notebook_class->page_removed = tepl_notebook_page_removed;
 

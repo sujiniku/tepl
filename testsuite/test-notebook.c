@@ -160,13 +160,25 @@ notify_cb (TeplTabGroup *tab_group,
 }
 
 static void
+change_buffer (TeplTab *tab)
+{
+	TeplView *view;
+	TeplBuffer *new_buffer;
+
+	view = tepl_tab_get_view (tab);
+	new_buffer = tepl_buffer_new ();
+	gtk_text_view_set_buffer (GTK_TEXT_VIEW (view), GTK_TEXT_BUFFER (new_buffer));
+	g_object_unref (new_buffer);
+}
+
+static void
 test_tab_group_notify_signals (void)
 {
 	GtkNotebook *notebook;
 	TeplTabGroup *tab_group;
 	TeplTab *tab1;
-	TeplView *view;
-	TeplBuffer *new_buffer;
+	TeplTab *tab2;
+	TeplTab *tab3;
 	NotifyDeltaCounters delta_counters = { 0, 0, 0 };
 
 	notebook = GTK_NOTEBOOK (tepl_notebook_new ());
@@ -201,9 +213,7 @@ test_tab_group_notify_signals (void)
 	check_notify_delta_counters (&delta_counters, 0, 0);
 
 	/* Change buffer */
-	view = tepl_tab_get_view (tab1);
-	new_buffer = tepl_buffer_new ();
-	gtk_text_view_set_buffer (GTK_TEXT_VIEW (view), GTK_TEXT_BUFFER (new_buffer));
+	change_buffer (tab1);
 	check_notify_delta_counters (&delta_counters, 0, 1);
 
 	/* Remove tab -> active-tab is NULL. */
@@ -211,6 +221,65 @@ test_tab_group_notify_signals (void)
 	check_notify_delta_counters (&delta_counters, 1, 1);
 	g_assert (tepl_tab_group_get_tabs (tab_group) == NULL);
 	g_assert (tepl_tab_group_get_active_tab (tab_group) == NULL);
+
+	/* Re-create first tab. */
+	tab1 = tepl_tab_new ();
+	gtk_widget_show (GTK_WIDGET (tab1));
+	// With jump_to = TRUE this time.
+	tepl_tab_group_append_tab (tab_group, tab1, TRUE);
+	check_notify_delta_counters (&delta_counters, 1, 1);
+
+	/* Append a second tab. */
+	tab2 = tepl_tab_new ();
+	gtk_widget_show (GTK_WIDGET (tab2));
+	tepl_tab_group_append_tab (tab_group, tab2, FALSE);
+	check_notify_delta_counters (&delta_counters, 0, 0);
+
+	tepl_tab_group_set_active_tab (tab_group, tab2);
+	check_notify_delta_counters (&delta_counters, 1, 1);
+
+	/* Change buffer of tab1. */
+	change_buffer (tab1);
+	check_notify_delta_counters (&delta_counters, 0, 0);
+
+	/* Change buffer of tab2. */
+	change_buffer (tab2);
+	check_notify_delta_counters (&delta_counters, 0, 1);
+
+	/* Switch tabs */
+	tepl_tab_group_set_active_tab (tab_group, tab1);
+	check_notify_delta_counters (&delta_counters, 1, 1);
+
+	tepl_tab_group_set_active_tab (tab_group, tab2);
+	check_notify_delta_counters (&delta_counters, 1, 1);
+
+	/* Reorder non-active tab */
+	gtk_notebook_reorder_child (notebook, GTK_WIDGET (tab1), 1);
+	check_notify_delta_counters (&delta_counters, 0, 0);
+	g_assert (tepl_tab_group_get_active_tab (tab_group) == tab2);
+
+	/* Reorder active tab.
+	 * The order is reset to tab1 -> tab2.
+	 */
+	gtk_notebook_reorder_child (notebook, GTK_WIDGET (tab2), 1);
+	check_notify_delta_counters (&delta_counters, 0, 0);
+	g_assert (tepl_tab_group_get_active_tab (tab_group) == tab2);
+
+	/* Append a third tab. */
+	tab3 = tepl_tab_new ();
+	gtk_widget_show (GTK_WIDGET (tab3));
+	tepl_tab_group_append_tab (tab_group, tab3, FALSE);
+	check_notify_delta_counters (&delta_counters, 0, 0);
+	g_assert (tepl_tab_group_get_active_tab (tab_group) == tab2);
+
+	/* Remove a non-active tab. */
+	gtk_widget_destroy (GTK_WIDGET (tab1));
+	check_notify_delta_counters (&delta_counters, 0, 0);
+
+	/* Remove active tab. */
+	gtk_widget_destroy (GTK_WIDGET (tab2));
+	check_notify_delta_counters (&delta_counters, 1, 1);
+	g_assert (tepl_tab_group_get_active_tab (tab_group) == tab3);
 
 	g_object_unref (notebook);
 }

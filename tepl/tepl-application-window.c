@@ -22,6 +22,7 @@
 #include "tepl-tab-group.h"
 #include "tepl-tab.h"
 #include "tepl-view.h"
+#include "tepl-signal-group.h"
 
 /**
  * SECTION:application-window
@@ -67,6 +68,8 @@ struct _TeplApplicationWindowPrivate
 {
 	GtkApplicationWindow *gtk_window;
 	TeplTabGroup *tab_group;
+	TeplSignalGroup *view_signal_group;
+	TeplSignalGroup *buffer_signal_group;
 };
 
 enum
@@ -185,6 +188,59 @@ select_all_cb (GSimpleAction *action,
 }
 
 static void
+update_edit_actions_sensitivity (TeplApplicationWindow *tepl_window)
+{
+	TeplView *view;
+	TeplBuffer *buffer;
+	gboolean view_is_editable = FALSE;
+	gboolean buffer_has_selection = FALSE;
+	GActionMap *action_map;
+	GAction *action;
+
+	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+	buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
+
+	if (view != NULL)
+	{
+		view_is_editable = gtk_text_view_get_editable (GTK_TEXT_VIEW (view));
+	}
+
+	if (buffer != NULL)
+	{
+		buffer_has_selection = gtk_text_buffer_get_has_selection (GTK_TEXT_BUFFER (buffer));
+	}
+
+	action_map = G_ACTION_MAP (tepl_window->priv->gtk_window);
+
+	action = g_action_map_lookup_action (action_map, "tepl-cut");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+				     view_is_editable && buffer_has_selection);
+
+	action = g_action_map_lookup_action (action_map, "tepl-copy");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+				     buffer_has_selection);
+
+	/* TODO see if the clipboard isn't empty. */
+	action = g_action_map_lookup_action (action_map, "tepl-paste");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+				     buffer != NULL);
+
+	action = g_action_map_lookup_action (action_map, "tepl-delete");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+				     view_is_editable && buffer_has_selection);
+
+	action = g_action_map_lookup_action (action_map, "tepl-select-all");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+				     buffer != NULL);
+}
+
+static void
+update_actions_sensitivity (TeplApplicationWindow *tepl_window)
+{
+	update_edit_actions_sensitivity (tepl_window);
+}
+
+static void
 add_actions (TeplApplicationWindow *tepl_window)
 {
 	/* The actions need to be namespaced, to not conflict with the
@@ -210,7 +266,10 @@ add_actions (TeplApplicationWindow *tepl_window)
 						       entries,
 						       G_N_ELEMENTS (entries),
 						       tepl_window);
+
+	update_actions_sensitivity (tepl_window);
 }
+
 static void
 tepl_application_window_get_property (GObject    *object,
 				      guint       prop_id,
@@ -290,6 +349,12 @@ tepl_application_window_dispose (GObject *object)
 
 	tepl_window->priv->gtk_window = NULL;
 	g_clear_object (&tepl_window->priv->tab_group);
+
+	g_clear_pointer (&tepl_window->priv->view_signal_group,
+			 (GDestroyNotify) _tepl_signal_group_free);
+
+	g_clear_pointer (&tepl_window->priv->buffer_signal_group,
+			 (GDestroyNotify) _tepl_signal_group_free);
 
 	G_OBJECT_CLASS (tepl_application_window_parent_class)->dispose (object);
 }
@@ -449,7 +514,17 @@ active_tab_notify_cb (TeplTabGroup          *tab_group,
 		      GParamSpec            *pspec,
 		      TeplApplicationWindow *tepl_window)
 {
+	update_edit_actions_sensitivity (tepl_window);
+
 	g_object_notify (G_OBJECT (tepl_window), "active-tab");
+}
+
+static void
+active_view_editable_notify_cb (GtkTextView           *active_view,
+				GParamSpec            *pspec,
+				TeplApplicationWindow *tepl_window)
+{
+	update_edit_actions_sensitivity (tepl_window);
 }
 
 static void
@@ -457,7 +532,36 @@ active_view_notify_cb (TeplTabGroup          *tab_group,
 		       GParamSpec            *pspec,
 		       TeplApplicationWindow *tepl_window)
 {
+	TeplView *active_view;
+
+	g_clear_pointer (&tepl_window->priv->view_signal_group,
+			 (GDestroyNotify) _tepl_signal_group_free);
+
+	active_view = tepl_tab_group_get_active_view (tab_group);
+
+	if (active_view == NULL)
+	{
+		goto exit;
+	}
+
+	tepl_window->priv->view_signal_group = _tepl_signal_group_new (G_OBJECT (active_view));
+
+	_tepl_signal_group_add_handler_id (tepl_window->priv->view_signal_group,
+					   g_signal_connect (active_view,
+							     "notify::editable",
+							     G_CALLBACK (active_view_editable_notify_cb),
+							     tepl_window));
+
+exit:
 	g_object_notify (G_OBJECT (tepl_window), "active-view");
+}
+
+static void
+active_buffer_has_selection_notify_cb (GtkTextBuffer         *buffer,
+				       GParamSpec            *pspec,
+				       TeplApplicationWindow *tepl_window)
+{
+	update_edit_actions_sensitivity (tepl_window);
 }
 
 static void
@@ -465,6 +569,29 @@ active_buffer_notify_cb (TeplTabGroup          *tab_group,
 			 GParamSpec            *pspec,
 			 TeplApplicationWindow *tepl_window)
 {
+	TeplBuffer *active_buffer;
+
+	g_clear_pointer (&tepl_window->priv->buffer_signal_group,
+			 (GDestroyNotify) _tepl_signal_group_free);
+
+	active_buffer = tepl_tab_group_get_active_buffer (tab_group);
+
+	if (active_buffer == NULL)
+	{
+		goto exit;
+	}
+
+	tepl_window->priv->buffer_signal_group = _tepl_signal_group_new (G_OBJECT (active_buffer));
+
+	_tepl_signal_group_add_handler_id (tepl_window->priv->buffer_signal_group,
+					   g_signal_connect (active_buffer,
+							     "notify::has-selection",
+							     G_CALLBACK (active_buffer_has_selection_notify_cb),
+							     tepl_window));
+
+exit:
+	update_edit_actions_sensitivity (tepl_window);
+
 	g_object_notify (G_OBJECT (tepl_window), "active-buffer");
 }
 

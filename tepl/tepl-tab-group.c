@@ -56,8 +56,8 @@ tepl_tab_group_set_active_tab_default (TeplTabGroup *tab_group,
 }
 
 static void
-tepl_tab_group_append_tab_default (TeplTabGroup *tab_group,
-				   TeplTab      *tab)
+tepl_tab_group_append_tab_vfunc_default (TeplTabGroup *tab_group,
+					 TeplTab      *tab)
 {
 	g_warning ("Appending a TeplTab to this TeplTabGroup is not supported. "
 		   "Use for example TeplNotebook.");
@@ -69,7 +69,7 @@ tepl_tab_group_default_init (TeplTabGroupInterface *interface)
 	interface->get_tabs = tepl_tab_group_get_tabs_default;
 	interface->get_active_tab = tepl_tab_group_get_active_tab_default;
 	interface->set_active_tab = tepl_tab_group_set_active_tab_default;
-	interface->append_tab = tepl_tab_group_append_tab_default;
+	interface->append_tab_vfunc = tepl_tab_group_append_tab_vfunc_default;
 
 	/**
 	 * TeplTabGroup:active-tab:
@@ -309,7 +309,7 @@ tepl_tab_group_append_tab (TeplTabGroup *tab_group,
 	g_return_if_fail (TEPL_IS_TAB_GROUP (tab_group));
 	g_return_if_fail (TEPL_IS_TAB (tab));
 
-	TEPL_TAB_GROUP_GET_INTERFACE (tab_group)->append_tab (tab_group, tab);
+	TEPL_TAB_GROUP_GET_INTERFACE (tab_group)->append_tab_vfunc (tab_group, tab);
 
 	if (jump_to)
 	{

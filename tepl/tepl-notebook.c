@@ -272,8 +272,8 @@ tepl_notebook_set_active_tab (TeplTabGroup *tab_group,
 }
 
 static void
-tepl_notebook_append_tab (TeplTabGroup *tab_group,
-			  TeplTab      *tab)
+tepl_notebook_append_tab_vfunc (TeplTabGroup *tab_group,
+				TeplTab      *tab)
 {
 	GtkNotebook *notebook = GTK_NOTEBOOK (tab_group);
 
@@ -290,7 +290,7 @@ tepl_tab_group_interface_init (gpointer g_iface,
 	interface->get_tabs = tepl_notebook_get_tabs;
 	interface->get_active_tab = tepl_notebook_get_active_tab;
 	interface->set_active_tab = tepl_notebook_set_active_tab;
-	interface->append_tab = tepl_notebook_append_tab;
+	interface->append_tab_vfunc = tepl_notebook_append_tab_vfunc;
 }
 
 static void

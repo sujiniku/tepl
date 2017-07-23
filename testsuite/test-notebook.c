@@ -43,7 +43,7 @@ check_list_equal (GList *expected_list,
 }
 
 static void
-test_tab_group (void)
+test_tab_group_basic (void)
 {
 	GtkNotebook *notebook;
 	TeplTabGroup *tab_group;
@@ -127,13 +127,103 @@ test_tab_group (void)
 	g_object_unref (notebook);
 }
 
+typedef struct
+{
+	gint active_tab_notify_delta_count;
+
+	/* Must be always equal to active_tab_notify_delta_count. */
+	gint active_view_notify_delta_count;
+
+	gint active_buffer_notify_delta_count;
+} NotifyDeltaCounters;
+
+static void
+check_notify_delta_counters (NotifyDeltaCounters *delta_counters,
+			     gint                 expected_tab_delta,
+			     gint                 expected_buffer_delta)
+{
+	g_assert_cmpint (delta_counters->active_tab_notify_delta_count, ==, expected_tab_delta);
+	g_assert_cmpint (delta_counters->active_view_notify_delta_count, ==, expected_tab_delta);
+	g_assert_cmpint (delta_counters->active_buffer_notify_delta_count, ==, expected_buffer_delta);
+
+	delta_counters->active_tab_notify_delta_count = 0;
+	delta_counters->active_view_notify_delta_count = 0;
+	delta_counters->active_buffer_notify_delta_count = 0;
+}
+
+static void
+notify_cb (TeplTabGroup *tab_group,
+	   GParamSpec   *pspec,
+	   gint         *counter)
+{
+	(*counter)++;
+}
+
+static void
+test_tab_group_notify_signals (void)
+{
+	GtkNotebook *notebook;
+	TeplTabGroup *tab_group;
+	TeplTab *tab1;
+	TeplView *view;
+	TeplBuffer *new_buffer;
+	NotifyDeltaCounters delta_counters = { 0, 0, 0 };
+
+	notebook = GTK_NOTEBOOK (tepl_notebook_new ());
+	tab_group = TEPL_TAB_GROUP (notebook);
+	g_object_ref_sink (notebook);
+
+	gtk_widget_show (GTK_WIDGET (notebook));
+
+	g_signal_connect (tab_group,
+			  "notify::active-tab",
+			  G_CALLBACK (notify_cb),
+			  &(delta_counters.active_tab_notify_delta_count));
+
+	g_signal_connect (tab_group,
+			  "notify::active-view",
+			  G_CALLBACK (notify_cb),
+			  &(delta_counters.active_view_notify_delta_count));
+
+	g_signal_connect (tab_group,
+			  "notify::active-buffer",
+			  G_CALLBACK (notify_cb),
+			  &(delta_counters.active_buffer_notify_delta_count));
+
+	/* Create first tab. */
+	tab1 = tepl_tab_new ();
+	gtk_widget_show (GTK_WIDGET (tab1));
+	tepl_tab_group_append_tab (tab_group, tab1, FALSE);
+	check_notify_delta_counters (&delta_counters, 1, 1);
+
+	/* For the first tab, GtkNotebook has already set it as the active tab. */
+	tepl_tab_group_set_active_tab (tab_group, tab1);
+	check_notify_delta_counters (&delta_counters, 0, 0);
+
+	/* Change buffer */
+	view = tepl_tab_get_view (tab1);
+	new_buffer = tepl_buffer_new ();
+	gtk_text_view_set_buffer (GTK_TEXT_VIEW (view), GTK_TEXT_BUFFER (new_buffer));
+	check_notify_delta_counters (&delta_counters, 0, 1);
+
+	/* Remove tab -> active-tab is NULL. */
+	gtk_widget_destroy (GTK_WIDGET (tab1));
+	/* FIXME broken, signals not received. */
+	//check_notify_delta_counters (&delta_counters, 1, 1);
+	g_assert (tepl_tab_group_get_tabs (tab_group) == NULL);
+	g_assert (tepl_tab_group_get_active_tab (tab_group) == NULL);
+
+	g_object_unref (notebook);
+}
+
 int
 main (int    argc,
       char **argv)
 {
 	gtk_test_init (&argc, &argv, NULL);
 
-	g_test_add_func ("/notebook/tab-group", test_tab_group);
+	g_test_add_func ("/notebook/tab-group-basic", test_tab_group_basic);
+	g_test_add_func ("/notebook/tab-group-notify-signals", test_tab_group_notify_signals);
 
 	return g_test_run ();
 }

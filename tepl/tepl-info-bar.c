@@ -86,11 +86,17 @@ tepl_info_bar_init (TeplInfoBar *info_bar)
 	_tepl_info_bar_set_size_request (GTK_INFO_BAR (info_bar));
 
 	/* Change the buttons orientation to be vertical.
+	 *
 	 * With a small window, if 3 or more buttons are shown horizontally,
 	 * there is a ridiculous amount of space for the text. And it can get
 	 * worse since the button labels are translatable, in other languages it
 	 * can take even more place. If the buttons are packed vertically, there
 	 * is no problem.
+	 *
+	 * The GtkInfoBar implementation comes originally from gedit, and the
+	 * action area was vertical. Then IIRC a GNOME designer decided that the
+	 * action area must be horizontal, making the gedit info bars look
+	 * weird... So, come back to the original design.
 	 */
 	action_area = gtk_info_bar_get_action_area (GTK_INFO_BAR (info_bar));
 	if (GTK_IS_ORIENTABLE (action_area))

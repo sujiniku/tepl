@@ -61,6 +61,18 @@ init_tepl_action_info_store (TeplApplication *tepl_app)
 	{
 		/* action, icon, label, accel, tooltip */
 
+		/* File menu */
+
+		// Why "file" and not "document"? "Document" is not the best
+		// word because the action is not always to create a new
+		// document. For example a LaTeX document can be composed of
+		// several _files_. Or for source code we do not really create a
+		// new "document".
+		{ "win.tepl-new-file", "document-new", N_("_New"), "<Control>n",
+		  N_("New file") },
+
+		/* Edit menu */
+
 		{ "win.tepl-cut", "edit-cut", N_("Cu_t"), "<Control>x",
 		  N_("Cut the selection") },
 

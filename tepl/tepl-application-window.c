@@ -20,6 +20,7 @@
 #include "tepl-application-window.h"
 #include <amtk/amtk.h>
 #include "tepl-tab-group.h"
+#include "tepl-tab.h"
 #include "tepl-view.h"
 
 /**
@@ -42,6 +43,11 @@
  * This class adds the following #GAction's to the #GtkApplicationWindow.
  * Corresponding #AmtkActionInfo's are available with
  * tepl_application_get_tepl_action_info_store().
+ *
+ * ## For the File menu
+ *
+ * - `"win.tepl-new-file"`: creates a new #TeplTab, appends it with
+ *   tepl_tab_group_append_tab() and set it as the active tab.
  *
  * ## For the Edit menu
  *
@@ -83,6 +89,20 @@ G_DEFINE_TYPE_WITH_CODE (TeplApplicationWindow,
 			 G_ADD_PRIVATE (TeplApplicationWindow)
 			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_TAB_GROUP,
 						tepl_tab_group_interface_init))
+
+static void
+new_file_cb (GSimpleAction *action,
+	     GVariant      *parameter,
+	     gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplTab *new_tab;
+
+	/* TODO: implement an Abstract Factory to create the TeplTab. */
+	new_tab = tepl_tab_new ();
+	gtk_widget_show (GTK_WIDGET (new_tab));
+	tepl_tab_group_append_tab (TEPL_TAB_GROUP (tepl_window), new_tab, TRUE);
+}
 
 static void
 cut_cb (GSimpleAction *action,
@@ -175,6 +195,10 @@ add_actions (TeplApplicationWindow *tepl_window)
 	 * in tepl-application.c.
 	 */
 	const GActionEntry entries[] = {
+		/* File menu */
+		{ "tepl-new-file", new_file_cb },
+
+		/* Edit menu */
 		{ "tepl-cut", cut_cb },
 		{ "tepl-copy", copy_cb },
 		{ "tepl-paste", paste_cb },

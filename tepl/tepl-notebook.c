@@ -297,6 +297,14 @@ static void
 tepl_notebook_init (TeplNotebook *notebook)
 {
 	notebook->priv = tepl_notebook_get_instance_private (notebook);
+
+	/* The statusbar must always be at the bottom of the window (if there is
+	 * a statusbar). More generally, the notebook is the main part of the
+	 * window, so it needs to be expanded, to push other widgets on the
+	 * sides, even if the notebook is empty.
+	 */
+	gtk_widget_set_hexpand (GTK_WIDGET (notebook), TRUE);
+	gtk_widget_set_vexpand (GTK_WIDGET (notebook), TRUE);
 }
 
 /**

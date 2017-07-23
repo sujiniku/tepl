@@ -234,6 +234,13 @@ tepl_notebook_set_active_tab (TeplTabGroup *tab_group,
 	page_num = gtk_notebook_page_num (notebook, GTK_WIDGET (tab));
 	g_return_if_fail (page_num != -1);
 
+	if (!gtk_widget_get_visible (GTK_WIDGET (tab)))
+	{
+		g_warning ("Calling gtk_notebook_set_current_page() on an "
+			   "invisible TeplTab. This won't work, make the "
+			   "TeplTab visible first.");
+	}
+
 	gtk_notebook_set_current_page (notebook, page_num);
 }
 

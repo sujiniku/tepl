@@ -35,6 +35,12 @@
 struct _TeplNotebookPrivate
 {
 	TeplSignalGroup *view_signal_group;
+
+	/* Not used for tepl_tab_group_get_active_tab(), used to avoid sending
+	 * unnecessary notify signals.
+	 * Unowned.
+	 */
+	TeplTab *active_tab;
 };
 
 enum
@@ -123,21 +129,30 @@ buffer_notify_cb (GtkTextView  *view,
 }
 
 static void
-active_tab_changed (TeplNotebook *notebook)
+check_active_tab_changed (TeplNotebook *notebook)
 {
-	TeplView *view;
+	TeplTab *active_tab;
+	TeplView *active_view;
+
+	active_tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (notebook));
+	if (notebook->priv->active_tab == active_tab)
+	{
+		return;
+	}
+
+	notebook->priv->active_tab = active_tab;
 
 	g_clear_pointer (&notebook->priv->view_signal_group,
 			 (GDestroyNotify) _tepl_signal_group_free);
 
-	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (notebook));
+	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (notebook));
 
-	if (view != NULL)
+	if (active_view != NULL)
 	{
-		notebook->priv->view_signal_group = _tepl_signal_group_new (G_OBJECT (view));
+		notebook->priv->view_signal_group = _tepl_signal_group_new (G_OBJECT (active_view));
 
 		_tepl_signal_group_add_handler_id (notebook->priv->view_signal_group,
-						   g_signal_connect (view,
+						   g_signal_connect (active_view,
 								     "notify::buffer",
 								     G_CALLBACK (buffer_notify_cb),
 								     notebook));
@@ -160,11 +175,22 @@ tepl_notebook_switch_page (GtkNotebook *notebook,
 									      page_num);
 	}
 
-	/* FIXME: we connect only to the switch-page signal to notify the
-	 * active-tab property. Is it enough? Do we also need to connect to
-	 * other GtkNotebook signals?
-	 */
-	active_tab_changed (TEPL_NOTEBOOK (notebook));
+	check_active_tab_changed (TEPL_NOTEBOOK (notebook));
+}
+
+static void
+tepl_notebook_page_removed (GtkNotebook *notebook,
+			    GtkWidget   *child,
+			    guint        page_num)
+{
+	if (GTK_NOTEBOOK_CLASS (tepl_notebook_parent_class)->page_removed != NULL)
+	{
+		GTK_NOTEBOOK_CLASS (tepl_notebook_parent_class)->page_removed (notebook,
+									       child,
+									       page_num);
+	}
+
+	check_active_tab_changed (TEPL_NOTEBOOK (notebook));
 }
 
 static void
@@ -177,7 +203,11 @@ tepl_notebook_class_init (TeplNotebookClass *klass)
 	object_class->set_property = tepl_notebook_set_property;
 	object_class->dispose = tepl_notebook_dispose;
 
+	/* FIXME: Do we connect to all necessary signals to notify the
+	 * properties?
+	 */
 	notebook_class->switch_page = tepl_notebook_switch_page;
+	notebook_class->page_removed = tepl_notebook_page_removed;
 
 	g_object_class_override_property (object_class, PROP_ACTIVE_TAB, "active-tab");
 	g_object_class_override_property (object_class, PROP_ACTIVE_VIEW, "active-view");

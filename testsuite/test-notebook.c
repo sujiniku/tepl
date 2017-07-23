@@ -208,8 +208,7 @@ test_tab_group_notify_signals (void)
 
 	/* Remove tab -> active-tab is NULL. */
 	gtk_widget_destroy (GTK_WIDGET (tab1));
-	/* FIXME broken, signals not received. */
-	//check_notify_delta_counters (&delta_counters, 1, 1);
+	check_notify_delta_counters (&delta_counters, 1, 1);
 	g_assert (tepl_tab_group_get_tabs (tab_group) == NULL);
 	g_assert (tepl_tab_group_get_active_tab (tab_group) == NULL);
 

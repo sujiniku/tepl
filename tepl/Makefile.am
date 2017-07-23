@@ -56,7 +56,6 @@ tepl_public_c_files =				\
 
 tepl_private_headers =				\
 	gconstructor.h				\
-	tepl-application-window-actions.h	\
 	tepl-buffer-input-stream.h		\
 	tepl-encoding-converter.h		\
 	tepl-encoding-private.h			\
@@ -66,7 +65,6 @@ tepl_private_headers =				\
 	tepl-signal-group.h
 
 tepl_private_c_files =				\
-	tepl-application-window-actions.c	\
 	tepl-buffer-input-stream.c		\
 	tepl-encoding-converter.c		\
 	tepl-file-content-loader.c		\

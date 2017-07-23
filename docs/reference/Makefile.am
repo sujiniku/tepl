@@ -26,7 +26,6 @@ CFILE_GLOB = $(top_srcdir)/tepl/*.c $(top_srcdir)/amtk/*.c
 IGNORE_HFILES =					\
 	amtk.h					\
 	tepl.h					\
-	tepl-application-window-actions.h	\
 	tepl-buffer-input-stream.h		\
 	tepl-encoding-converter.h		\
 	tepl-encoding-private.h			\

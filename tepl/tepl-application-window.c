@@ -18,8 +18,9 @@
  */
 
 #include "tepl-application-window.h"
-#include "tepl-application-window-actions.h"
+#include <amtk/amtk.h>
 #include "tepl-tab-group.h"
+#include "tepl-view.h"
 
 /**
  * SECTION:application-window
@@ -83,6 +84,109 @@ G_DEFINE_TYPE_WITH_CODE (TeplApplicationWindow,
 			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_TAB_GROUP,
 						tepl_tab_group_interface_init))
 
+static void
+cut_cb (GSimpleAction *action,
+	GVariant      *parameter,
+	gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplView *active_view;
+
+	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (active_view != NULL)
+	{
+		tepl_view_cut_clipboard (active_view);
+	}
+}
+
+static void
+copy_cb (GSimpleAction *action,
+	 GVariant      *parameter,
+	 gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplView *active_view;
+
+	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (active_view != NULL)
+	{
+		tepl_view_copy_clipboard (active_view);
+	}
+}
+
+static void
+paste_cb (GSimpleAction *action,
+	  GVariant      *parameter,
+	  gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplView *active_view;
+
+	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (active_view != NULL)
+	{
+		tepl_view_paste_clipboard (active_view);
+	}
+}
+
+static void
+delete_cb (GSimpleAction *action,
+	   GVariant      *parameter,
+	   gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplView *active_view;
+
+	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (active_view != NULL)
+	{
+		tepl_view_delete_selection (active_view);
+	}
+}
+
+static void
+select_all_cb (GSimpleAction *action,
+	       GVariant      *parameter,
+	       gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplView *active_view;
+
+	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (active_view != NULL)
+	{
+		tepl_view_select_all (active_view);
+	}
+}
+
+static void
+add_actions (TeplApplicationWindow *tepl_window)
+{
+	/* The actions need to be namespaced, to not conflict with the
+	 * application or other libraries.
+	 *
+	 * Do not forget to document each action in the TeplApplicationWindow
+	 * class description, and to add the corresponding AmtkActionInfoEntry
+	 * in tepl-application.c.
+	 */
+	const GActionEntry entries[] = {
+		{ "tepl-cut", cut_cb },
+		{ "tepl-copy", copy_cb },
+		{ "tepl-paste", paste_cb },
+		{ "tepl-delete", delete_cb },
+		{ "tepl-select-all", select_all_cb },
+	};
+
+	amtk_action_map_add_action_entries_check_dups (G_ACTION_MAP (tepl_window->priv->gtk_window),
+						       entries,
+						       G_N_ELEMENTS (entries),
+						       tepl_window);
+}
 static void
 tepl_application_window_get_property (GObject    *object,
 				      guint       prop_id,
@@ -152,7 +256,7 @@ tepl_application_window_constructed (GObject *object)
 		G_OBJECT_CLASS (tepl_application_window_parent_class)->constructed (object);
 	}
 
-	_tepl_application_window_add_actions (tepl_window);
+	add_actions (tepl_window);
 }
 
 static void

@@ -154,12 +154,9 @@ tepl_view_paste_clipboard (TeplView *view)
 					 NULL,
 					 gtk_text_view_get_editable (GTK_TEXT_VIEW (view)));
 
-	gtk_text_view_scroll_to_mark (GTK_TEXT_VIEW (view),
-				      gtk_text_buffer_get_insert (buffer),
-				      SCROLL_MARGIN,
-				      FALSE,
-				      0.0,
-				      0.0);
+	/* GtkTextView already connects to the GtkTextBuffer::paste-done signal
+	 * to scroll to the cursor position.
+	 */
 }
 
 /**

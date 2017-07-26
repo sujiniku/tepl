@@ -187,6 +187,109 @@ select_all_cb (GSimpleAction *action,
 	}
 }
 
+/* @can_paste_according_to_clipboard: TRUE if calling
+ * tepl_view_paste_clipboard() will paste something.
+ */
+static void
+set_paste_action_sensitivity_according_to_clipboard (TeplApplicationWindow *tepl_window,
+						     gboolean               can_paste_according_to_clipboard)
+{
+	TeplView *view;
+	gboolean view_is_editable = FALSE;
+	GActionMap *action_map;
+	GAction *action;
+
+	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (view != NULL)
+	{
+		view_is_editable = gtk_text_view_get_editable (GTK_TEXT_VIEW (view));
+	}
+
+	action_map = G_ACTION_MAP (tepl_window->priv->gtk_window);
+	action = g_action_map_lookup_action (action_map, "tepl-paste");
+
+	/* Since this is called async, the disposal of the actions may have
+	 * already happened. Ensure that we have an action before setting the
+	 * state.
+	 */
+	if (action != NULL)
+	{
+		g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+					     view_is_editable &&
+					     can_paste_according_to_clipboard);
+	}
+}
+
+static void
+clipboard_targets_received_cb (GtkClipboard *clipboard,
+			       GdkAtom      *atoms,
+			       gint          n_atoms,
+			       gpointer      user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplBuffer *active_buffer;
+	GtkTargetList *target_list;
+	gboolean can_paste = FALSE;
+	gint i;
+
+	active_buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
+	if (active_buffer == NULL)
+	{
+		goto end;
+	}
+
+	target_list = gtk_text_buffer_get_paste_target_list (GTK_TEXT_BUFFER (active_buffer));
+
+	for (i = 0; i < n_atoms; i++)
+	{
+		if (gtk_target_list_find (target_list, atoms[i], NULL))
+		{
+			can_paste = TRUE;
+			break;
+		}
+	}
+
+end:
+	set_paste_action_sensitivity_according_to_clipboard (tepl_window, can_paste);
+
+	/* Async operation finished. */
+	g_object_unref (tepl_window->priv->gtk_window);
+}
+
+/* How to test this easily: with a clipboard manager like xsel:
+ * $ xsel --clipboard --clear
+ * $ echo -n "bloum!" | xsel --clipboard # -> GdkAtom "TEXT"
+ * Copy text in a GtkTextBuffer -> GdkAtom "GTK_TEXT_BUFFER_CONTENTS"
+ */
+static void
+update_paste_action_sensitivity (TeplApplicationWindow *tepl_window)
+{
+	GtkClipboard *clipboard;
+	GdkDisplay *display;
+
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (tepl_window->priv->gtk_window),
+					      GDK_SELECTION_CLIPBOARD);
+	g_return_if_fail (clipboard != NULL);
+
+	display = gtk_clipboard_get_display (clipboard);
+	if (!gdk_display_supports_selection_notification (display))
+	{
+		/* Do as if it can always paste, because if we set the paste
+		 * action as insensitive, we won't get the notification when the
+		 * clipboard contains something that we can paste (i.e.
+		 * clipboard_owner_change_cb() will not be called).
+		 */
+		set_paste_action_sensitivity_according_to_clipboard (tepl_window, TRUE);
+		return;
+	}
+
+	g_object_ref (tepl_window->priv->gtk_window);
+	gtk_clipboard_request_targets (clipboard,
+				       clipboard_targets_received_cb,
+				       tepl_window);
+}
+
 static void
 update_edit_actions_sensitivity (TeplApplicationWindow *tepl_window)
 {
@@ -220,10 +323,8 @@ update_edit_actions_sensitivity (TeplApplicationWindow *tepl_window)
 	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
 				     buffer_has_selection);
 
-	/* TODO see if the clipboard isn't empty. */
-	action = g_action_map_lookup_action (action_map, "tepl-paste");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
-				     buffer != NULL);
+	/* For tepl-paste: */
+	update_paste_action_sensitivity (tepl_window);
 
 	action = g_action_map_lookup_action (action_map, "tepl-delete");
 	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
@@ -330,9 +431,18 @@ tepl_application_window_set_property (GObject      *object,
 }
 
 static void
+clipboard_owner_change_cb (GtkClipboard          *clipboard,
+			   GdkEvent              *event,
+			   TeplApplicationWindow *tepl_window)
+{
+	update_paste_action_sensitivity (tepl_window);
+}
+
+static void
 tepl_application_window_constructed (GObject *object)
 {
 	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (object);
+	GtkClipboard *clipboard;
 
 	if (G_OBJECT_CLASS (tepl_application_window_parent_class)->constructed != NULL)
 	{
@@ -340,6 +450,15 @@ tepl_application_window_constructed (GObject *object)
 	}
 
 	add_actions (tepl_window);
+
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (tepl_window->priv->gtk_window),
+					      GDK_SELECTION_CLIPBOARD);
+
+	g_signal_connect_object (clipboard,
+				 "owner-change",
+				 G_CALLBACK (clipboard_owner_change_cb),
+				 tepl_window,
+				 0);
 }
 
 static void

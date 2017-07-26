@@ -102,6 +102,7 @@ _tepl_signal_group_add (TeplSignalGroup *group,
 			gulong           signal_handler_id)
 {
 	g_return_if_fail (group != NULL);
+	g_return_if_fail (signal_handler_id != 0);
 
 	g_array_append_val (group->handler_ids, signal_handler_id);
 }

@@ -546,11 +546,11 @@ active_view_notify_cb (TeplTabGroup          *tab_group,
 
 	tepl_window->priv->view_signal_group = _tepl_signal_group_new (G_OBJECT (active_view));
 
-	_tepl_signal_group_add_handler_id (tepl_window->priv->view_signal_group,
-					   g_signal_connect (active_view,
-							     "notify::editable",
-							     G_CALLBACK (active_view_editable_notify_cb),
-							     tepl_window));
+	_tepl_signal_group_add (tepl_window->priv->view_signal_group,
+				g_signal_connect (active_view,
+						  "notify::editable",
+						  G_CALLBACK (active_view_editable_notify_cb),
+						  tepl_window));
 
 exit:
 	g_object_notify (G_OBJECT (tepl_window), "active-view");
@@ -583,11 +583,11 @@ active_buffer_notify_cb (TeplTabGroup          *tab_group,
 
 	tepl_window->priv->buffer_signal_group = _tepl_signal_group_new (G_OBJECT (active_buffer));
 
-	_tepl_signal_group_add_handler_id (tepl_window->priv->buffer_signal_group,
-					   g_signal_connect (active_buffer,
-							     "notify::has-selection",
-							     G_CALLBACK (active_buffer_has_selection_notify_cb),
-							     tepl_window));
+	_tepl_signal_group_add (tepl_window->priv->buffer_signal_group,
+				g_signal_connect (active_buffer,
+						  "notify::has-selection",
+						  G_CALLBACK (active_buffer_has_selection_notify_cb),
+						  tepl_window));
 
 exit:
 	update_edit_actions_sensitivity (tepl_window);

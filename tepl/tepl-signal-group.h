@@ -27,14 +27,14 @@ G_BEGIN_DECLS
 typedef struct _TeplSignalGroup TeplSignalGroup;
 
 G_GNUC_INTERNAL
-TeplSignalGroup *	_tepl_signal_group_new			(GObject *object);
+TeplSignalGroup *	_tepl_signal_group_new		(GObject *object);
 
 G_GNUC_INTERNAL
-void			_tepl_signal_group_free			(TeplSignalGroup *group);
+void			_tepl_signal_group_free		(TeplSignalGroup *group);
 
 G_GNUC_INTERNAL
-void			_tepl_signal_group_add_handler_id	(TeplSignalGroup *group,
-								 gulong           signal_handler_id);
+void			_tepl_signal_group_add		(TeplSignalGroup *group,
+							 gulong           signal_handler_id);
 
 G_END_DECLS
 

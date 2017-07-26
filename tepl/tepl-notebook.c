@@ -151,11 +151,11 @@ check_active_tab_changed (TeplNotebook *notebook)
 	{
 		notebook->priv->view_signal_group = _tepl_signal_group_new (G_OBJECT (active_view));
 
-		_tepl_signal_group_add_handler_id (notebook->priv->view_signal_group,
-						   g_signal_connect (active_view,
-								     "notify::buffer",
-								     G_CALLBACK (buffer_notify_cb),
-								     notebook));
+		_tepl_signal_group_add (notebook->priv->view_signal_group,
+					g_signal_connect (active_view,
+							  "notify::buffer",
+							  G_CALLBACK (buffer_notify_cb),
+							  notebook));
 	}
 
 	g_object_notify (G_OBJECT (notebook), "active-tab");

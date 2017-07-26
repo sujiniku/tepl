@@ -89,8 +89,8 @@ _tepl_signal_group_free (TeplSignalGroup *group)
 }
 
 void
-_tepl_signal_group_add_handler_id (TeplSignalGroup *group,
-				   gulong           signal_handler_id)
+_tepl_signal_group_add (TeplSignalGroup *group,
+			gulong           signal_handler_id)
 {
 	g_return_if_fail (group != NULL);
 

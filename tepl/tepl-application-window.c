@@ -349,12 +349,8 @@ tepl_application_window_dispose (GObject *object)
 
 	tepl_window->priv->gtk_window = NULL;
 	g_clear_object (&tepl_window->priv->tab_group);
-
-	g_clear_pointer (&tepl_window->priv->view_signal_group,
-			 (GDestroyNotify) _tepl_signal_group_free);
-
-	g_clear_pointer (&tepl_window->priv->buffer_signal_group,
-			 (GDestroyNotify) _tepl_signal_group_free);
+	_tepl_signal_group_clear (&tepl_window->priv->view_signal_group);
+	_tepl_signal_group_clear (&tepl_window->priv->buffer_signal_group);
 
 	G_OBJECT_CLASS (tepl_application_window_parent_class)->dispose (object);
 }
@@ -534,8 +530,7 @@ active_view_notify_cb (TeplTabGroup          *tab_group,
 {
 	TeplView *active_view;
 
-	g_clear_pointer (&tepl_window->priv->view_signal_group,
-			 (GDestroyNotify) _tepl_signal_group_free);
+	_tepl_signal_group_clear (&tepl_window->priv->view_signal_group);
 
 	active_view = tepl_tab_group_get_active_view (tab_group);
 
@@ -571,8 +566,7 @@ active_buffer_notify_cb (TeplTabGroup          *tab_group,
 {
 	TeplBuffer *active_buffer;
 
-	g_clear_pointer (&tepl_window->priv->buffer_signal_group,
-			 (GDestroyNotify) _tepl_signal_group_free);
+	_tepl_signal_group_clear (&tepl_window->priv->buffer_signal_group);
 
 	active_buffer = tepl_tab_group_get_active_buffer (tab_group);
 

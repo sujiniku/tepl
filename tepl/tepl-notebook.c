@@ -114,8 +114,7 @@ tepl_notebook_dispose (GObject *object)
 {
 	TeplNotebook *notebook = TEPL_NOTEBOOK (object);
 
-	g_clear_pointer (&notebook->priv->view_signal_group,
-			 (GDestroyNotify) _tepl_signal_group_free);
+	_tepl_signal_group_clear (&notebook->priv->view_signal_group);
 
 	G_OBJECT_CLASS (tepl_notebook_parent_class)->dispose (object);
 }
@@ -142,8 +141,7 @@ check_active_tab_changed (TeplNotebook *notebook)
 
 	notebook->priv->active_tab = active_tab;
 
-	g_clear_pointer (&notebook->priv->view_signal_group,
-			 (GDestroyNotify) _tepl_signal_group_free);
+	_tepl_signal_group_clear (&notebook->priv->view_signal_group);
 
 	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (notebook));
 

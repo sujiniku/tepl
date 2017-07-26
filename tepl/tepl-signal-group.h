@@ -30,7 +30,7 @@ G_GNUC_INTERNAL
 TeplSignalGroup *	_tepl_signal_group_new		(GObject *object);
 
 G_GNUC_INTERNAL
-void			_tepl_signal_group_free		(TeplSignalGroup *group);
+void			_tepl_signal_group_clear	(TeplSignalGroup **group_pointer);
 
 G_GNUC_INTERNAL
 void			_tepl_signal_group_add		(TeplSignalGroup *group,

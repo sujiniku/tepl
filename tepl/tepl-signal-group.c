@@ -58,7 +58,7 @@ _tepl_signal_group_new (GObject *object)
 	return group;
 }
 
-void
+static void
 _tepl_signal_group_free (TeplSignalGroup *group)
 {
 	if (group == NULL)
@@ -86,6 +86,15 @@ _tepl_signal_group_free (TeplSignalGroup *group)
 
 	g_array_free (group->handler_ids, TRUE);
 	g_free (group);
+}
+
+void
+_tepl_signal_group_clear (TeplSignalGroup **group_pointer)
+{
+	g_return_if_fail (group_pointer != NULL);
+
+	_tepl_signal_group_free (*group_pointer);
+	*group_pointer = NULL;
 }
 
 void

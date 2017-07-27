@@ -78,20 +78,23 @@
       object in GtkSourceView is the <link linkend="GtkSourceView">GtkSourceView</link>
       widget (representing only one view, or one file), while the GtkSourceView
       widget is at the bottom of the containment hierarchy in the Tepl
-      framework. The top-level object in Tepl is
-      <link linkend="TeplApplication">TeplApplication</link>, representing the
-      whole application which can contain several windows, with each window
-      containing one or several GtkSourceView widgets (typically with a Tabbed
-      Document Interface).
+      framework (it is a “somewhat” clear boundary because there is also
+      <link linkend="TeplBuffer">TeplBuffer</link>, a subclass of
+      <link linkend="GtkSourceBuffer">GtkSourceBuffer</link>).
     </para>
 
-    <!-- TODO Once the framework is complete, update paragraph. -->
     <para>
-      So the GtkSourceView library is not aware that there can be several
-      documents opened in the application, while the Tepl framework –&nbsp;once
-      finished&nbsp;– will have a complete view of the application with regards
-      to the opened documents. It permits to implement higher-level APIs in
-      Tepl.
+      The top-level object in Tepl is <link linkend="TeplApplication">TeplApplication</link>,
+      representing the whole application which can contain several windows, with
+      each window containing one or several GtkSourceView widgets (typically
+      with a Tabbed Document Interface).
+    </para>
+
+    <para>
+      So the GtkSourceView library is not aware that there can be several files
+      opened in the application, while the Tepl framework has a complete view of
+      the application with regards to the opened files/tabs. It permits to
+      implement higher-level APIs.
     </para>
   </refsect1>
 
@@ -116,6 +119,17 @@
       for years with a non-optimal API, the Tepl developers want to be able to
       break the API at any time, to iteratively improve it. Sometimes we see
       possible improvements several years later.
+    </para>
+
+    <para>
+      So applications depending on an old (stable) vesion of Tepl will still
+      compile and run fine, and the Tepl developers can develop the library with
+      more freedom.
+    </para>
+
+    <para>
+      The API breaks are well documented in
+      <link linkend="api-breaks">this section</link>.
     </para>
   </refsect1>
 

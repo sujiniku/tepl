@@ -23,7 +23,7 @@
   <para>
     Tepl was previously named Gtef (GTK+ text editor framework). The project has
     been renamed in June 2017 to have a more beautiful name. The end of Tepl is
-    pronounced like “apple”.
+    pronounced like in “apple”.
   </para>
 
   <!-- TODO Do not forget to update the paragraph in the future. -->
@@ -40,8 +40,8 @@
     editors. For example specialized for one programming language, or one
     development platform, or a small group of related languages. By being
     specialized, an application is potentially better at what it does. It
-    follows more closely the UNIX philosophy to do only one thing but doing it
-    well. And it better follows the GNOME philosophy: writing applications that
+    follows more closely the UNIX philosophy to “do only one thing but do it
+    well”. And it better follows the GNOME philosophy: writing applications that
     Just Works; when a user opens the text editor for the first time, it should
     work out-of-the-box, without the need to find, install and configure
     plugins. Of course it still makes sense to develop one general-purpose text

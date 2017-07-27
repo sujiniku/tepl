@@ -24,9 +24,9 @@
   <link linkend="GtkUIManager">GtkUIManager</link> replacement based on
   <link linkend="GAction">GAction</link>.
   <link linkend="GtkUIManager">GtkUIManager</link> has been deprecated in
-  GTK+&nbsp;3, without a good enough replacement for applications that want to
-  keep a traditional UI (with a <link linkend="GtkMenuBar">GtkMenuBar</link>,
-  a <link linkend="GtkToolbar">GtkToolbar</link> and a
+  GTK+&nbsp;3, without a good replacement for applications that want to keep a
+  traditional UI (with a <link linkend="GtkMenuBar">GtkMenuBar</link>, a
+  <link linkend="GtkToolbar">GtkToolbar</link> and a
   <link linkend="GtkStatusbar">GtkStatusbar</link>; in contrast to the new UI
   with a <link linkend="GtkHeaderBar">GtkHeaderBar</link> and a “hamburger
   menu”).

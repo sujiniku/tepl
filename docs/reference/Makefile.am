@@ -67,11 +67,13 @@ MAINTAINERCLEANFILES =			\
 include $(top_srcdir)/gtk-doc.make
 
 EXTRA_DIST +=			\
-	tepl-docs.xml.in	\
-	intro.xml.in
+	amtk-intro.xml.in	\
+	intro.xml.in		\
+	tepl-docs.xml.in
 
 DISTCLEANFILES =		\
-	tepl-docs.xml		\
-	intro.xml
+	amtk-intro.xml		\
+	intro.xml		\
+	tepl-docs.xml
 
 -include $(top_srcdir)/git.mk

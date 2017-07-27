@@ -156,9 +156,10 @@ AC_CONFIG_FILES([
 	Makefile
 	amtk/Makefile
 	docs/Makefile
-	docs/reference/tepl-docs.xml
+	docs/reference/amtk-intro.xml
 	docs/reference/intro.xml
 	docs/reference/Makefile
+	docs/reference/tepl-docs.xml
 	tepl/Makefile
 	po/Makefile.in
 	tests/Makefile

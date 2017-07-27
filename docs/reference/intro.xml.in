@@ -134,21 +134,44 @@
   </refsect1>
 
   <refsect1>
+    <title>Amtk - Actions, Menus and Toolbars Kit for GTK+</title>
+
+    <para>
+      As yak shaving, another shared library called Amtk has been developed.
+      Because with GTK+ alone, it is no longer possible to create a traditional
+      UI in a convenient way without using deprecated APIs (that have been
+      removed in GTK+&nbsp;4).
+    </para>
+
+    <para>
+      Amtk has been developed with libraries like Tepl in mind. This has the
+      nice benefit that action information is shared (see
+      <link linkend="tepl-application-get-tepl-action-info-store">tepl_application_get_tepl_action_info_store()</link>).
+    </para>
+
+    <para>
+      Read the <link linkend="amtk-intro">Amtk introduction</link> for more
+      information.
+    </para>
+  </refsect1>
+
+  <refsect1>
     <title>GTK+ and GtkSourceView dependencies</title>
     <para>
-      Tepl @TEPL_API_VERSION@ depends on GTK+ 3 and GtkSourceView 3.
+      Tepl&nbsp;@TEPL_API_VERSION@ depends on GTK+&nbsp;3 and
+      GtkSourceView&nbsp;3.
     </para>
   </refsect1>
 
   <refsect1>
     <title>pkg-config name</title>
     <para>
-      For Tepl @TEPL_API_VERSION@, the pkg-config name is:
+      For Tepl&nbsp;@TEPL_API_VERSION@, the pkg-config name is:
       <code>tepl-@TEPL_API_VERSION@</code>
     </para>
     <para>
-      To compile a program that uses Tepl @TEPL_API_VERSION@, you
-      can for example use the following command:
+      To compile a program that uses Tepl&nbsp;@TEPL_API_VERSION@, you can for
+      example use the following command:
     </para>
     <para>
       <code>$ gcc hello.c `pkg-config --cflags --libs tepl-@TEPL_API_VERSION@` -o hello</code>

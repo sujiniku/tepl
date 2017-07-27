@@ -33,6 +33,11 @@
 </para>
 
 <para>
+  Amtk is developed inside the Tepl repository, but is a separate shared library
+  so that applications can use it without depending on Tepl, GtkSourceView, etc.
+</para>
+
+<para>
   With Amtk, menus and toolbars are created programmatically, but with
   convenient APIs (the support for an XML format will maybe be added in the
   future, contributions welcome). <link linkend="GMenu">GMenu</link> is not
@@ -92,4 +97,26 @@
     </para>
   </listitem>
 </itemizedlist>
+
+<refsect1>
+  <title>GTK+ dependency</title>
+  <para>
+    Amtk&nbsp;@TEPL_API_VERSION@ depends on GTK+&nbsp;3.
+  </para>
+</refsect1>
+
+<refsect1>
+  <title>pkg-config name</title>
+  <para>
+    For Amtk&nbsp;@TEPL_API_VERSION@, the pkg-config name is:
+    <code>amtk-@TEPL_API_VERSION@</code>
+  </para>
+  <para>
+    To compile a program that uses Amtk&nbsp;@TEPL_API_VERSION@, you can for
+    example use the following command:
+  </para>
+  <para>
+    <code>$ gcc hello.c `pkg-config --cflags --libs amtk-@TEPL_API_VERSION@` -o hello</code>
+  </para>
+</refsect1>
 </refentry>

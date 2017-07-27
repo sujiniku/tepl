@@ -323,8 +323,10 @@ update_edit_actions_sensitivity (TeplApplicationWindow *tepl_window)
 	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
 				     buffer_has_selection);
 
-	/* For tepl-paste: */
-	update_paste_action_sensitivity (tepl_window);
+	/* tepl-paste is treated separately with
+	 * update_paste_action_sensitivity(), to request the clipboard only when
+	 * necessary.
+	 */
 
 	action = g_action_map_lookup_action (action_map, "tepl-delete");
 	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
@@ -339,6 +341,7 @@ static void
 update_actions_sensitivity (TeplApplicationWindow *tepl_window)
 {
 	update_edit_actions_sensitivity (tepl_window);
+	update_paste_action_sensitivity (tepl_window);
 }
 
 static void
@@ -628,6 +631,7 @@ static void
 active_tab_changed (TeplApplicationWindow *tepl_window)
 {
 	update_edit_actions_sensitivity (tepl_window);
+	update_paste_action_sensitivity (tepl_window);
 }
 
 static void
@@ -636,6 +640,7 @@ active_view_editable_notify_cb (GtkTextView           *active_view,
 				TeplApplicationWindow *tepl_window)
 {
 	update_edit_actions_sensitivity (tepl_window);
+	update_paste_action_sensitivity (tepl_window);
 }
 
 static void

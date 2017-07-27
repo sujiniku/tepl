@@ -625,13 +625,9 @@ tepl_application_window_get_application_window (TeplApplicationWindow *tepl_wind
 }
 
 static void
-active_tab_notify_cb (TeplTabGroup          *tab_group,
-		      GParamSpec            *pspec,
-		      TeplApplicationWindow *tepl_window)
+active_tab_changed (TeplApplicationWindow *tepl_window)
 {
 	update_edit_actions_sensitivity (tepl_window);
-
-	g_object_notify (G_OBJECT (tepl_window), "active-tab");
 }
 
 static void
@@ -643,19 +639,16 @@ active_view_editable_notify_cb (GtkTextView           *active_view,
 }
 
 static void
-active_view_notify_cb (TeplTabGroup          *tab_group,
-		       GParamSpec            *pspec,
-		       TeplApplicationWindow *tepl_window)
+active_view_changed (TeplApplicationWindow *tepl_window)
 {
 	TeplView *active_view;
 
 	_tepl_signal_group_clear (&tepl_window->priv->view_signal_group);
 
-	active_view = tepl_tab_group_get_active_view (tab_group);
-
+	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
 	if (active_view == NULL)
 	{
-		goto exit;
+		return;
 	}
 
 	tepl_window->priv->view_signal_group = _tepl_signal_group_new (G_OBJECT (active_view));
@@ -665,9 +658,6 @@ active_view_notify_cb (TeplTabGroup          *tab_group,
 						  "notify::editable",
 						  G_CALLBACK (active_view_editable_notify_cb),
 						  tepl_window));
-
-exit:
-	g_object_notify (G_OBJECT (tepl_window), "active-view");
 }
 
 static void
@@ -679,19 +669,16 @@ active_buffer_has_selection_notify_cb (GtkTextBuffer         *buffer,
 }
 
 static void
-active_buffer_notify_cb (TeplTabGroup          *tab_group,
-			 GParamSpec            *pspec,
-			 TeplApplicationWindow *tepl_window)
+active_buffer_changed (TeplApplicationWindow *tepl_window)
 {
 	TeplBuffer *active_buffer;
 
 	_tepl_signal_group_clear (&tepl_window->priv->buffer_signal_group);
 
-	active_buffer = tepl_tab_group_get_active_buffer (tab_group);
-
+	active_buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
 	if (active_buffer == NULL)
 	{
-		goto exit;
+		goto end;
 	}
 
 	tepl_window->priv->buffer_signal_group = _tepl_signal_group_new (G_OBJECT (active_buffer));
@@ -702,9 +689,34 @@ active_buffer_notify_cb (TeplTabGroup          *tab_group,
 						  G_CALLBACK (active_buffer_has_selection_notify_cb),
 						  tepl_window));
 
-exit:
+end:
 	update_edit_actions_sensitivity (tepl_window);
+}
 
+static void
+active_tab_notify_cb (TeplTabGroup          *tab_group,
+		      GParamSpec            *pspec,
+		      TeplApplicationWindow *tepl_window)
+{
+	active_tab_changed (tepl_window);
+	g_object_notify (G_OBJECT (tepl_window), "active-tab");
+}
+
+static void
+active_view_notify_cb (TeplTabGroup          *tab_group,
+		       GParamSpec            *pspec,
+		       TeplApplicationWindow *tepl_window)
+{
+	active_view_changed (tepl_window);
+	g_object_notify (G_OBJECT (tepl_window), "active-view");
+}
+
+static void
+active_buffer_notify_cb (TeplTabGroup          *tab_group,
+			 GParamSpec            *pspec,
+			 TeplApplicationWindow *tepl_window)
+{
+	active_buffer_changed (tepl_window);
 	g_object_notify (G_OBJECT (tepl_window), "active-buffer");
 }
 
@@ -726,6 +738,8 @@ void
 tepl_application_window_set_tab_group (TeplApplicationWindow *tepl_window,
 				       TeplTabGroup          *tab_group)
 {
+	TeplTab *active_tab;
+
 	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));
 	g_return_if_fail (TEPL_IS_TAB_GROUP (tab_group));
 
@@ -755,6 +769,19 @@ tepl_application_window_set_tab_group (TeplApplicationWindow *tepl_window,
 				 G_CALLBACK (active_buffer_notify_cb),
 				 tepl_window,
 				 0);
+
+	active_tab = tepl_tab_group_get_active_tab (tab_group);
+	if (active_tab != NULL)
+	{
+		active_tab_changed (tepl_window);
+		g_object_notify (G_OBJECT (tepl_window), "active-tab");
+
+		active_view_changed (tepl_window);
+		g_object_notify (G_OBJECT (tepl_window), "active-view");
+
+		active_buffer_changed (tepl_window);
+		g_object_notify (G_OBJECT (tepl_window), "active-buffer");
+	}
 }
 
 /* ex:set ts=8 noet: */

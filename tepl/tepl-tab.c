@@ -27,10 +27,15 @@
  * SECTION:tab
  * @Short_description: Contains a TeplView and GtkInfoBars
  * @Title: TeplTab
+ * @See_also: #TeplInfoBar
  *
  * #TeplTab is meant to be the content of one tab in the text editor (if the
  * text editor has a Tabbed Document Interface). It is a #GtkGrid container that
- * contains the #TeplView and can contain one or several #GtkInfoBar's.
+ * contains the #TeplView and can contain one or several #GtkInfoBar's. Since it
+ * is a #GtkGrid, an application can of course add any other widget to it.
+ *
+ * To create a new #GtkInfoBar, it is recommended to use #TeplInfoBar (but
+ * #TeplTab doesn't enforce it).
  *
  * By default:
  * - #TeplTab has a vertical #GtkOrientation.

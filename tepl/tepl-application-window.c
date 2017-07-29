@@ -19,8 +19,8 @@
 
 #include "tepl-application-window.h"
 #include <amtk/amtk.h>
+#include "tepl-abstract-factory.h"
 #include "tepl-tab-group.h"
-#include "tepl-tab.h"
 #include "tepl-view.h"
 #include "tepl-signal-group.h"
 
@@ -99,11 +99,13 @@ new_file_cb (GSimpleAction *action,
 	     gpointer       user_data)
 {
 	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplAbstractFactory *factory;
 	TeplTab *new_tab;
 
-	/* TODO: implement an Abstract Factory to create the TeplTab. */
-	new_tab = tepl_tab_new ();
+	factory = tepl_abstract_factory_get_singleton ();
+	new_tab = tepl_abstract_factory_create_tab (factory);
 	gtk_widget_show (GTK_WIDGET (new_tab));
+
 	tepl_tab_group_append_tab (TEPL_TAB_GROUP (tepl_window), new_tab, TRUE);
 }
 

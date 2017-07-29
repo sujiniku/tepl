@@ -181,6 +181,7 @@ TeplAbstractFactory
 TeplAbstractFactoryClass
 tepl_abstract_factory_set_singleton
 tepl_abstract_factory_get_singleton
+tepl_abstract_factory_create_tab
 <SUBSECTION Standard>
 TEPL_ABSTRACT_FACTORY
 TEPL_ABSTRACT_FACTORY_CLASS

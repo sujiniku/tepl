@@ -43,9 +43,17 @@ struct _TeplAbstractFactory
 	GObject parent;
 };
 
+/**
+ * TeplAbstractFactoryClass:
+ * @parent_class: The parent class.
+ * @create_tab: Virtual function pointer for tepl_abstract_factory_create_tab().
+ *   By default the #TeplTab is created with tepl_tab_new().
+ */
 struct _TeplAbstractFactoryClass
 {
 	GObjectClass parent_class;
+
+	TeplTab *	(* create_tab)		(TeplAbstractFactory *factory);
 
 	/*< private >*/
 	gpointer padding[12];
@@ -56,6 +64,8 @@ GType			tepl_abstract_factory_get_type			(void);
 void			tepl_abstract_factory_set_singleton		(TeplAbstractFactory *factory);
 
 TeplAbstractFactory *	tepl_abstract_factory_get_singleton		(void);
+
+TeplTab *		tepl_abstract_factory_create_tab		(TeplAbstractFactory *factory);
 
 G_GNUC_INTERNAL
 void			_tepl_abstract_factory_unref_singleton		(void);

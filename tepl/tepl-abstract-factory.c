@@ -18,6 +18,7 @@
  */
 
 #include "tepl-abstract-factory.h"
+#include "tepl-tab.h"
 
 /**
  * SECTION:abstract-factory
@@ -54,12 +55,20 @@ tepl_abstract_factory_finalize (GObject *object)
 	G_OBJECT_CLASS (tepl_abstract_factory_parent_class)->finalize (object);
 }
 
+static TeplTab *
+tepl_abstract_factory_create_tab_default (TeplAbstractFactory *factory)
+{
+	return tepl_tab_new ();
+}
+
 static void
 tepl_abstract_factory_class_init (TeplAbstractFactoryClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	object_class->finalize = tepl_abstract_factory_finalize;
+
+	klass->create_tab = tepl_abstract_factory_create_tab_default;
 }
 
 static void
@@ -130,4 +139,19 @@ _tepl_abstract_factory_unref_singleton (void)
 	 * tepl_abstract_factory_finalize() (i.e. when we are sure that the ref
 	 * count reaches 0).
 	 */
+}
+
+/**
+ * tepl_abstract_factory_create_tab:
+ * @factory: the #TeplAbstractFactory.
+ *
+ * Returns: (transfer floating): a new #TeplTab.
+ * Since: 3.0
+ */
+TeplTab *
+tepl_abstract_factory_create_tab (TeplAbstractFactory *factory)
+{
+	g_return_val_if_fail (TEPL_IS_ABSTRACT_FACTORY (factory), NULL);
+
+	return TEPL_ABSTRACT_FACTORY_GET_CLASS (factory)->create_tab (factory);
 }

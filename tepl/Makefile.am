@@ -23,6 +23,7 @@ tepl_public_headers =				\
 	tepl-fold-region.h			\
 	tepl-gutter-renderer-folds.h		\
 	tepl-info-bar.h				\
+	tepl-init.h				\
 	tepl-iter.h				\
 	tepl-menu-shell.h			\
 	tepl-metadata-manager.h			\
@@ -45,6 +46,7 @@ tepl_public_c_files =				\
 	tepl-fold-region.c			\
 	tepl-gutter-renderer-folds.c		\
 	tepl-info-bar.c				\
+	tepl-init.c				\
 	tepl-iter.c				\
 	tepl-menu-shell.c			\
 	tepl-metadata-manager.c			\
@@ -67,7 +69,6 @@ tepl_private_c_files =				\
 	tepl-buffer-input-stream.c		\
 	tepl-encoding-converter.c		\
 	tepl-file-content-loader.c		\
-	tepl-init.c				\
 	tepl-io-error-info-bar.c		\
 	tepl-progress-info-bar.c		\
 	tepl-signal-group.c

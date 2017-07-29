@@ -1,6 +1,7 @@
 @CODE_COVERAGE_RULES@
 
 AM_CPPFLAGS =				\
+	-DDATADIR=\""$(datadir)"\"	\
 	-DG_LOG_DOMAIN=\"Amtk\"		\
 	-DAMTK_COMPILATION		\
 	-I$(top_builddir)		\
@@ -18,6 +19,7 @@ amtk_public_headers =				\
 	amtk-application-window.h		\
 	amtk-factory.h				\
 	amtk-factory-menu.h			\
+	amtk-init.h				\
 	amtk-menu-item.h			\
 	amtk-menu-shell.h			\
 	amtk-types.h				\
@@ -31,6 +33,7 @@ amtk_public_c_files =				\
 	amtk-application-window.c		\
 	amtk-factory.c				\
 	amtk-factory-menu.c			\
+	amtk-init.c				\
 	amtk-menu-item.c			\
 	amtk-menu-shell.c			\
 	amtk-utils.c

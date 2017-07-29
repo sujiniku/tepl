@@ -20,6 +20,7 @@
     <chapter id="amtk">
       <title>Actions, Menus and Toolbars Kit for GTK+</title>
       <xi:include href="amtk-intro.xml"/>
+      <xi:include href="xml/amtk-init.xml"/>
       <xi:include href="xml/amtk-application-window.xml"/>
       <xi:include href="xml/amtk-action-info.xml"/>
       <xi:include href="xml/amtk-action-info-store.xml"/>

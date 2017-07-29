@@ -1,6 +1,13 @@
 <INCLUDE>tepl/tepl.h</INCLUDE>
 
 <SECTION>
+<FILE>amtk-init</FILE>
+<TITLE>Amtk Initialization and Finalization</TITLE>
+amtk_init
+amtk_finalize
+</SECTION>
+
+<SECTION>
 <FILE>amtk-application-window</FILE>
 AmtkApplicationWindow
 amtk_application_window_get_from_gtk_application_window

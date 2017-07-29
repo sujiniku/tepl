@@ -104,8 +104,8 @@
     <para>
       Tepl uses the same
       <ulink url="https://developer.gnome.org/programming-guidelines/stable/versioning.html.en">versioning scheme</ulink>
-      as GNOME. API/ABI stability is guaranteed. For example Tepl 3.2 is
-      backward-compatible with Tepl 3.0 (those versions don't necessarily exist,
+      as GNOME. API/ABI stability is guaranteed. For example Tepl 17.2 is
+      backward-compatible with Tepl 17.0 (those versions don't necessarily exist,
       it's just an example). But the peculiarity of Tepl is that new major
       versions are released more often, at most every 6 months if needed.
       Different major versions can be installed in parallel, like GTK+&nbsp;2

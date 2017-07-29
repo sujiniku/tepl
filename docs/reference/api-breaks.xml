@@ -70,15 +70,17 @@
       </listitem>
       <listitem>
         <para>
-          Add <link linkend="AmtkFactory">AmtkFactory</link> and
-          <link linkend="AmtkFactoryMenu">AmtkFactoryMenu</link>, which replace
+          The <link linkend="AmtkFactory">AmtkFactory</link> and
+          <link linkend="AmtkFactoryMenu">AmtkFactoryMenu</link> classes have
+          been added, which replace
           <code>gtef_action_info_store_create_menu_item()</code> and removes the
           <code>GtefActionInfoStore:application</code> property.
         </para>
       </listitem>
       <listitem>
         <para>
-          Rename <code>gtef_action_info_central_store_get_instance()</code> to
+          <code>gtef_action_info_central_store_get_instance()</code> has been
+          renamed to
           <link linkend="amtk-action-info-central-store-get-singleton">amtk_action_info_central_store_get_singleton()</link>.
         </para>
       </listitem>

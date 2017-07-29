@@ -19,6 +19,7 @@
 
 #include "tepl-init.h"
 #include <amtk/amtk.h>
+#include "tepl-abstract-factory.h"
 #include "tepl-metadata-manager.h"
 
 /**
@@ -75,8 +76,15 @@ tepl_finalize (void)
 
 	if (!done)
 	{
-		amtk_finalize ();
 		tepl_metadata_manager_shutdown ();
+		_tepl_abstract_factory_unref_singleton ();
+
+		/* Since Tepl depends on Amtk, it's better to first finalize
+		 * Tepl stuff and then finalize Amtk, in case the Tepl
+		 * singletons depends on Amtk.
+		 */
+		amtk_finalize ();
+
 		done = TRUE;
 	}
 }

@@ -10,6 +10,7 @@ amtk/amtk-init.c
 amtk/amtk-menu-item.c
 amtk/amtk-menu-shell.c
 amtk/amtk-utils.c
+tepl/tepl-abstract-factory.c
 tepl/tepl-application.c
 tepl/tepl-application-window.c
 tepl/tepl-buffer.c

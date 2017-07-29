@@ -12,6 +12,7 @@ AM_CPPFLAGS =				\
 
 tepl_public_headers =				\
 	tepl.h					\
+	tepl-abstract-factory.h			\
 	tepl-application.h			\
 	tepl-application-window.h		\
 	tepl-buffer.h				\
@@ -35,6 +36,7 @@ tepl_public_headers =				\
 	tepl-view.h
 
 tepl_public_c_files =				\
+	tepl-abstract-factory.c			\
 	tepl-application.c			\
 	tepl-application-window.c		\
 	tepl-buffer.c				\

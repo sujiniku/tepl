@@ -176,6 +176,22 @@ tepl_finalize
 </SECTION>
 
 <SECTION>
+<FILE>abstract-factory</FILE>
+TeplAbstractFactory
+TeplAbstractFactoryClass
+tepl_abstract_factory_set_singleton
+tepl_abstract_factory_get_singleton
+<SUBSECTION Standard>
+TEPL_ABSTRACT_FACTORY
+TEPL_ABSTRACT_FACTORY_CLASS
+TEPL_ABSTRACT_FACTORY_GET_CLASS
+TEPL_IS_ABSTRACT_FACTORY
+TEPL_IS_ABSTRACT_FACTORY_CLASS
+TEPL_TYPE_ABSTRACT_FACTORY
+tepl_abstract_factory_get_type
+</SECTION>
+
+<SECTION>
 <FILE>application</FILE>
 TeplApplication
 tepl_application_get_from_gtk_application

@@ -28,6 +28,7 @@
 
 G_BEGIN_DECLS
 
+typedef struct _TeplAbstractFactory		TeplAbstractFactory;
 typedef struct _TeplApplication			TeplApplication;
 typedef struct _TeplApplicationWindow		TeplApplicationWindow;
 typedef struct _TeplBuffer			TeplBuffer;

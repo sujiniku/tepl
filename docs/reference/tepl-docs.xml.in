@@ -44,6 +44,7 @@
 
     <chapter id="framework">
       <title>Framework</title>
+      <xi:include href="xml/abstract-factory.xml"/>
       <xi:include href="xml/application.xml"/>
       <xi:include href="xml/application-window.xml"/>
       <xi:include href="xml/tab-group.xml"/>

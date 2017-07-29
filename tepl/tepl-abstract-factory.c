@@ -30,6 +30,11 @@
  * override the desired virtual functions) and setting the instance with
  * tepl_abstract_factory_set_singleton(), an application can tell Tepl to create
  * custom objects and widgets.
+ *
+ * Note that #GtkTextViewClass has the ::create_buffer factory method, that
+ * #TeplView overrides to create a #TeplBuffer. How the #TeplView and
+ * #TeplBuffer are created can be customized with the ::create_tab vfunc of
+ * #TeplAbstractFactory.
  */
 
 /* API design:

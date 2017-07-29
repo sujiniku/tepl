@@ -38,6 +38,7 @@
 #include <tepl/tepl-fold-region.h>
 #include <tepl/tepl-gutter-renderer-folds.h>
 #include <tepl/tepl-info-bar.h>
+#include <tepl/tepl-init.h>
 #include <tepl/tepl-iter.h>
 #include <tepl/tepl-menu-shell.h>
 #include <tepl/tepl-metadata-manager.h>

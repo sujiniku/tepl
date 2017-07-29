@@ -153,6 +153,8 @@ tepl_metadata_manager_init (const gchar *metadata_path)
  * This function saves synchronously metadata if they need to be saved, and
  * frees the internal data of the metadata manager.
  *
+ * See also tepl_finalize(), which calls this function.
+ *
  * Since: 1.0
  */
 void

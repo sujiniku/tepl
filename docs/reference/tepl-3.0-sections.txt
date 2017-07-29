@@ -169,6 +169,13 @@ amtk_utils_recent_chooser_menu_get_item_uri
 <INCLUDE>tepl/tepl.h</INCLUDE>
 
 <SECTION>
+<FILE>init</FILE>
+<TITLE>Tepl Initialization and Finalization</TITLE>
+tepl_init
+tepl_finalize
+</SECTION>
+
+<SECTION>
 <FILE>application</FILE>
 TeplApplication
 tepl_application_get_from_gtk_application

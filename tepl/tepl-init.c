@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -17,152 +17,66 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-/* Init i18n */
+#include "tepl-init.h"
+#include <amtk/amtk.h>
+#include "tepl-metadata-manager.h"
 
-/* Part of the code taken from the GtkSourceView library (gtksourceview-i18n.c).
- * Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation
+/**
+ * tepl_init:
+ *
+ * Initializes the Tepl library (e.g. for the internationalization).
+ *
+ * This function can be called several times, but is meant to be called at the
+ * beginning of main(), before any other Tepl function call.
+ *
+ * This function also calls amtk_init().
+ *
+ * Since: 3.0
  */
-
-#include "config.h"
-#include <glib/gi18n-lib.h>
-#include "gconstructor.h"
-
-#ifdef G_OS_WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
-static HMODULE tepl_dll;
-#endif
-
-#ifdef OS_OSX
-#include <Cocoa/Cocoa.h>
-
-static gchar *
-dirs_os_x_get_bundle_resource_dir (void)
-{
-	NSAutoreleasePool *pool;
-	gchar *str = NULL;
-	NSString *path;
-
-	pool = [[NSAutoreleasePool alloc] init];
-
-	if ([[NSBundle mainBundle] bundleIdentifier] == nil)
-	{
-		[pool release];
-		return NULL;
-	}
-
-	path = [[NSBundle mainBundle] resourcePath];
-
-	if (!path)
-	{
-		[pool release];
-		return NULL;
-	}
-
-	str = g_strdup ([path UTF8String]);
-	[pool release];
-	return str;
-}
-
-static gchar *
-dirs_os_x_get_locale_dir (void)
-{
-	gchar *res_dir;
-	gchar *ret;
-
-	res_dir = dirs_os_x_get_bundle_resource_dir ();
-
-	if (res_dir == NULL)
-	{
-		ret = g_build_filename (DATADIR, "locale", NULL);
-	}
-	else
-	{
-		ret = g_build_filename (res_dir, "share", "locale", NULL);
-		g_free (res_dir);
-	}
-
-	return ret;
-}
-#endif /* OS_OSX */
-
-static gchar *
-get_locale_dir (void)
-{
-	gchar *locale_dir;
-
-#if defined (G_OS_WIN32)
-	gchar *win32_dir;
-
-	win32_dir = g_win32_get_package_installation_directory_of_module (tepl_dll);
-
-	locale_dir = g_build_filename (win32_dir, "share", "locale", NULL);
-
-	g_free (win32_dir);
-#elif defined (OS_OSX)
-	locale_dir = dirs_os_x_get_locale_dir ();
-#else
-	locale_dir = g_build_filename (DATADIR, "locale", NULL);
-#endif
-
-	return locale_dir;
-}
-
-static void
+void
 tepl_init (void)
 {
-	gchar *locale_dir;
-
-	locale_dir = get_locale_dir ();
-	bindtextdomain (GETTEXT_PACKAGE, locale_dir);
-	g_free (locale_dir);
-
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	amtk_init ();
 }
 
-#if defined (G_OS_WIN32)
+/**
+ * tepl_finalize:
+ *
+ * Free the resources allocated by Tepl. For example it unrefs the singleton
+ * objects. It also properly shutdowns the metadata manager by calling
+ * tepl_metadata_manager_shutdown().
+ *
+ * This function also calls amtk_finalize().
+ *
+ * It is not mandatory to call this function, it's just to be friendlier to
+ * memory debugging tools (but if you don't call this function and you use the
+ * metadata manager, you should call tepl_metadata_manager_shutdown()). This
+ * function is meant to be called at the end of main(). It can be called several
+ * times.
+ *
+ * Since: 3.0
+ */
 
-BOOL WINAPI DllMain (HINSTANCE hinstDLL,
-		     DWORD     fdwReason,
-		     LPVOID    lpvReserved);
-
-BOOL WINAPI
-DllMain (HINSTANCE hinstDLL,
-	 DWORD     fdwReason,
-	 LPVOID    lpvReserved)
+/* Another way is to use a DSO destructor, see gconstructor.h in GLib.
+ *
+ * The advantage of calling tepl_finalize() at the end of main() is that
+ * gobject-list [1] correctly reports that all Tepl* objects have been finalized
+ * when quitting the application. On the other hand a DSO destructor runs after
+ * the gobject-list's last output, so it's much less convenient, see:
+ * https://git.gnome.org/browse/gtksourceview/commit/?id=e761de9c2bee90c232875bbc41e6e73e1f63e145
+ *
+ * [1] A tool for debugging the lifetime of GObjects:
+ * https://github.com/danni/gobject-list
+ */
+void
+tepl_finalize (void)
 {
-	switch (fdwReason)
+	static gboolean done = FALSE;
+
+	if (!done)
 	{
-		case DLL_PROCESS_ATTACH:
-			tepl_dll = hinstDLL;
-			tepl_init ();
-			break;
-
-		case DLL_THREAD_DETACH:
-		default:
-			/* do nothing */
-			break;
+		amtk_finalize ();
+		tepl_metadata_manager_shutdown ();
+		done = TRUE;
 	}
-
-	return TRUE;
 }
-
-#elif defined (G_HAS_CONSTRUCTORS)
-
-#  ifdef G_DEFINE_CONSTRUCTOR_NEEDS_PRAGMA
-#    pragma G_DEFINE_CONSTRUCTOR_PRAGMA_ARGS(tepl_constructor)
-#  endif
-G_DEFINE_CONSTRUCTOR (tepl_constructor)
-
-static void
-tepl_constructor (void)
-{
-	tepl_init ();
-}
-
-#else
-#  error Your platform/compiler is missing constructor support
-#endif
-
-/* ex:set ts=8 noet: */

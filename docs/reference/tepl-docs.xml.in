@@ -37,6 +37,11 @@
   <part id="tepl-api-reference">
     <title>Tepl API Reference</title>
 
+    <chapter id="general">
+      <title>General</title>
+      <xi:include href="xml/init.xml"/>
+    </chapter>
+
     <chapter id="framework">
       <title>Framework</title>
       <xi:include href="xml/application.xml"/>

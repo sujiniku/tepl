@@ -61,6 +61,14 @@ tepl_abstract_factory_create_tab_default (TeplAbstractFactory *factory)
 	return tepl_tab_new ();
 }
 
+static GtkWidget *
+tepl_abstract_factory_create_tab_label_default (TeplAbstractFactory *factory,
+						TeplTab             *tab)
+{
+	/* TODO implement a default TeplTabLabel widget. */
+	return NULL;
+}
+
 static void
 tepl_abstract_factory_class_init (TeplAbstractFactoryClass *klass)
 {
@@ -69,6 +77,7 @@ tepl_abstract_factory_class_init (TeplAbstractFactoryClass *klass)
 	object_class->finalize = tepl_abstract_factory_finalize;
 
 	klass->create_tab = tepl_abstract_factory_create_tab_default;
+	klass->create_tab_label = tepl_abstract_factory_create_tab_label_default;
 }
 
 static void
@@ -154,4 +163,25 @@ tepl_abstract_factory_create_tab (TeplAbstractFactory *factory)
 	g_return_val_if_fail (TEPL_IS_ABSTRACT_FACTORY (factory), NULL);
 
 	return TEPL_ABSTRACT_FACTORY_GET_CLASS (factory)->create_tab (factory);
+}
+
+/**
+ * tepl_abstract_factory_create_tab_label:
+ * @factory: the #TeplAbstractFactory.
+ * @tab: a #TeplTab.
+ *
+ * Creates a new tab label for @tab, suitable for gtk_notebook_set_tab_label().
+ *
+ * Returns: (transfer floating) (nullable): a new #GtkWidget, or %NULL for the
+ * default tab label (“page N” with #GtkNotebook).
+ * Since: 3.0
+ */
+GtkWidget *
+tepl_abstract_factory_create_tab_label (TeplAbstractFactory *factory,
+					TeplTab             *tab)
+{
+	g_return_val_if_fail (TEPL_IS_ABSTRACT_FACTORY (factory), NULL);
+	g_return_val_if_fail (TEPL_IS_TAB (tab), NULL);
+
+	return TEPL_ABSTRACT_FACTORY_GET_CLASS (factory)->create_tab_label (factory, tab);
 }

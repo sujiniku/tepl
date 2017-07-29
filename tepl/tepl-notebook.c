@@ -18,6 +18,7 @@
  */
 
 #include "tepl-notebook.h"
+#include "tepl-abstract-factory.h"
 #include "tepl-tab-group.h"
 #include "tepl-tab.h"
 #include "tepl-signal-group.h"
@@ -274,9 +275,13 @@ tepl_notebook_append_tab_vfunc (TeplTabGroup *tab_group,
 				TeplTab      *tab)
 {
 	GtkNotebook *notebook = GTK_NOTEBOOK (tab_group);
+	TeplAbstractFactory *factory;
+	GtkWidget *tab_label;
 
-	/* TODO implement a TeplTabLabel widget. */
-	gtk_notebook_append_page (notebook, GTK_WIDGET (tab), NULL);
+	factory = tepl_abstract_factory_get_singleton ();
+	tab_label = tepl_abstract_factory_create_tab_label (factory, tab);
+
+	gtk_notebook_append_page (notebook, GTK_WIDGET (tab), tab_label);
 }
 
 static void

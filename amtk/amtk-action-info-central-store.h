@@ -65,6 +65,9 @@ G_GNUC_INTERNAL
 void		_amtk_action_info_central_store_add		(AmtkActionInfoCentralStore *central_store,
 								 AmtkActionInfo             *info);
 
+G_GNUC_INTERNAL
+void		_amtk_action_info_central_store_unref_singleton	(void);
+
 G_END_DECLS
 
 #endif /* AMTK_ACTION_INFO_CENTRAL_STORE_H */

@@ -57,6 +57,8 @@ struct _AmtkActionInfoCentralStorePrivate
 	GHashTable *hash_table;
 };
 
+static AmtkActionInfoCentralStore *singleton = NULL;
+
 G_DEFINE_TYPE_WITH_PRIVATE (AmtkActionInfoCentralStore, amtk_action_info_central_store, G_TYPE_OBJECT)
 
 static void
@@ -65,6 +67,11 @@ amtk_action_info_central_store_finalize (GObject *object)
 	AmtkActionInfoCentralStore *central_store = AMTK_ACTION_INFO_CENTRAL_STORE (object);
 
 	g_hash_table_unref (central_store->priv->hash_table);
+
+	if (singleton == central_store)
+	{
+		singleton = NULL;
+	}
 
 	G_OBJECT_CLASS (amtk_action_info_central_store_parent_class)->finalize (object);
 }
@@ -97,14 +104,26 @@ amtk_action_info_central_store_init (AmtkActionInfoCentralStore *central_store)
 AmtkActionInfoCentralStore *
 amtk_action_info_central_store_get_instance (void)
 {
-	static AmtkActionInfoCentralStore *instance = NULL;
-
-	if (G_UNLIKELY (instance == NULL))
+	if (G_UNLIKELY (singleton == NULL))
 	{
-		instance = g_object_new (AMTK_TYPE_ACTION_INFO_CENTRAL_STORE, NULL);
+		singleton = g_object_new (AMTK_TYPE_ACTION_INFO_CENTRAL_STORE, NULL);
 	}
 
-	return instance;
+	return singleton;
+}
+
+void
+_amtk_action_info_central_store_unref_singleton (void)
+{
+	if (singleton != NULL)
+	{
+		g_object_unref (singleton);
+	}
+
+	/* singleton is not set to NULL here, it is set to NULL in
+	 * amtk_action_info_central_store_finalize() (i.e. when we are sure that
+	 * the ref count reaches 0).
+	 */
 }
 
 void

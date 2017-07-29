@@ -129,7 +129,7 @@ amtk_action_info_store_add (AmtkActionInfoStore *store,
 			     g_strdup (action_name),
 			     amtk_action_info_ref (info));
 
-	central_store = amtk_action_info_central_store_get_instance ();
+	central_store = amtk_action_info_central_store_get_singleton ();
 	_amtk_action_info_central_store_add (central_store, info);
 }
 

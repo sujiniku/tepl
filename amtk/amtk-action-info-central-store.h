@@ -56,7 +56,7 @@ struct _AmtkActionInfoCentralStoreClass
 GType		amtk_action_info_central_store_get_type		(void) G_GNUC_CONST;
 
 AmtkActionInfoCentralStore *
-		amtk_action_info_central_store_get_instance	(void);
+		amtk_action_info_central_store_get_singleton	(void);
 
 AmtkActionInfo *amtk_action_info_central_store_lookup		(AmtkActionInfoCentralStore *central_store,
 								 const gchar                *action_name);

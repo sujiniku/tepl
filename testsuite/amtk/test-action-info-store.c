@@ -50,7 +50,7 @@ test_add_entries (void)
 	g_assert_cmpstr (amtk_action_info_get_icon_name (info1), ==, "document-open");
 	g_assert (amtk_action_info_get_tooltip (info1) == NULL);
 
-	central_store = amtk_action_info_central_store_get_instance ();
+	central_store = amtk_action_info_central_store_get_singleton ();
 	info2 = amtk_action_info_central_store_lookup (central_store, "win.open");
 	g_assert (info1 == info2);
 

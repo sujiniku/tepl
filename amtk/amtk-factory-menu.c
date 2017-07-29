@@ -144,7 +144,7 @@ amtk_factory_menu_create_menu_item_full (AmtkFactoryMenu  *factory,
 	g_return_val_if_fail (AMTK_IS_FACTORY_MENU (factory), NULL);
 	g_return_val_if_fail (action_name != NULL, NULL);
 
-	central_store = amtk_action_info_central_store_get_instance ();
+	central_store = amtk_action_info_central_store_get_singleton ();
 	action_info = amtk_action_info_central_store_lookup (central_store, action_name);
 
 	if (action_info == NULL)

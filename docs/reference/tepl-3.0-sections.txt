@@ -78,7 +78,7 @@ amtk_action_info_store_get_type
 <SECTION>
 <FILE>amtk-action-info-central-store</FILE>
 AmtkActionInfoCentralStore
-amtk_action_info_central_store_get_instance
+amtk_action_info_central_store_get_singleton
 amtk_action_info_central_store_lookup
 <SUBSECTION Standard>
 AMTK_ACTION_INFO_CENTRAL_STORE

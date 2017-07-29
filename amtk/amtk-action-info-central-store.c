@@ -96,13 +96,13 @@ amtk_action_info_central_store_init (AmtkActionInfoCentralStore *central_store)
 }
 
 /**
- * amtk_action_info_central_store_get_instance:
+ * amtk_action_info_central_store_get_singleton:
  *
  * Returns: (transfer none): the #AmtkActionInfoCentralStore singleton instance.
- * Since: 2.0
+ * Since: 3.0
  */
 AmtkActionInfoCentralStore *
-amtk_action_info_central_store_get_instance (void)
+amtk_action_info_central_store_get_singleton (void)
 {
 	if (G_UNLIKELY (singleton == NULL))
 	{

@@ -9,11 +9,11 @@
 
 <refentry id="amtk-intro">
 <refmeta>
-  <refentrytitle>Amtk introduction</refentrytitle>
+  <refentrytitle>Amtk Introduction</refentrytitle>
 </refmeta>
 
 <refnamediv>
-  <refname>Amtk introduction</refname>
+  <refname>Amtk Introduction</refname>
   <refpurpose>
     Introduction to the Actions, Menus and Toolbars Kit for GTK+
   </refpurpose>

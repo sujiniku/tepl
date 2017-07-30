@@ -99,6 +99,37 @@
 </itemizedlist>
 
 <refsect1>
+  <title>Sanity checks</title>
+  <para>
+    Amtk has several functions to do various sanity checks. They normally don't
+    impact too much the performances, so it is recommended to always run them,
+    although they could be disabled on production. The functions:
+  </para>
+  <itemizedlist>
+    <listitem>
+      <para>
+        <link linkend="amtk-action-map-add-action-entries-check-dups">amtk_action_map_add_action_entries_check_dups()</link>
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        <link linkend="amtk-action-info-store-check-all-used">amtk_action_info_store_check_all_used()</link>
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        Another sanity check, but which cannot be disabled: the
+        <link linkend="AmtkActionInfoCentralStore">AmtkActionInfoCentralStore</link>
+        checks that each <link linkend="AmtkActionInfo">AmtkActionInfo</link>
+        has a unique action name. Which means that
+        <link linkend="AmtkActionInfo">AmtkActionInfo</link>'s provided by a
+        library must be namespaced.
+      </para>
+    </listitem>
+  </itemizedlist>
+</refsect1>
+
+<refsect1>
   <title>GTK+ dependency</title>
   <para>
     Amtk&nbsp;@TEPL_API_VERSION@ depends on GTK+&nbsp;3.

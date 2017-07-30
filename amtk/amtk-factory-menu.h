@@ -50,6 +50,8 @@ struct _AmtkFactoryMenu
 struct _AmtkFactoryMenuClass
 {
 	AmtkFactoryClass parent_class;
+
+	gpointer padding[12];
 };
 
 GType			amtk_factory_menu_get_type			(void);

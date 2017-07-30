@@ -49,6 +49,8 @@ struct _TeplNotebook
 struct _TeplNotebookClass
 {
 	GtkNotebookClass parent_class;
+
+	gpointer padding[12];
 };
 
 GType		tepl_notebook_get_type	(void);

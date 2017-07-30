@@ -49,6 +49,8 @@ struct _AmtkFactory
 struct _AmtkFactoryClass
 {
 	GObjectClass parent_class;
+
+	gpointer padding[12];
 };
 
 /**

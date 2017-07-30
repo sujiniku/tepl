@@ -409,7 +409,10 @@ amtk_action_info_mark_as_used (AmtkActionInfo *info)
  * amtk_action_info_has_been_used:
  * @info: an #AmtkActionInfo.
  *
- * Returns: whether @info has been used by an #AmtkFactory function.
+ * Returns whether @info has been used (for example by an #AmtkFactory
+ * function). See also amtk_action_info_store_check_all_used().
+ *
+ * Returns: whether @info has been used.
  * Since: 3.0
  */
 gboolean

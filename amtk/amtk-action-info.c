@@ -392,9 +392,8 @@ amtk_action_info_set_accels (AmtkActionInfo      *info,
  * amtk_action_info_mark_as_used:
  * @info: an #AmtkActionInfo.
  *
- * Mark @info as used. A #GtkWidget factory function that uses an
- * #AmtkActionInfo should call this function. See
- * amtk_action_info_store_check_all_used().
+ * Mark @info as used. An #AmtkFactory function that uses an #AmtkActionInfo
+ * should call this function. See amtk_action_info_store_check_all_used().
  *
  * Since: 3.0
  */
@@ -410,7 +409,7 @@ amtk_action_info_mark_as_used (AmtkActionInfo *info)
  * amtk_action_info_has_been_used:
  * @info: an #AmtkActionInfo.
  *
- * Returns: whether @info has been used by a #GtkWidget factory function.
+ * Returns: whether @info has been used by an #AmtkFactory function.
  * Since: 3.0
  */
 gboolean

@@ -41,7 +41,7 @@
  * Advantages of AmtkActionInfoCentralStore:
  * - The central store checks if there are no duplicated action names
  *   (globally).
- * - Permits to write widget factory functions that don't require an
+ * - Permits to write AmtkFactory functions that don't require an
  *   AmtkActionInfoStore parameter.
  *
  * By having the two classes, we have the best of both worlds. We should not be

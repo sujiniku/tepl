@@ -1,3 +1,28 @@
+News in 2.99.3, 2017-xx-yy
+--------------------------
+
+Amtk:
+* Add amtk_init() and amtk_finalize().
+* Improvements to the documentation.
+* Other small code improvements.
+
+Framework:
+* TeplTabGroup interface:
+	* Add :active-tab, :active-view and :active-buffer properties.
+	* Add tepl_tab_group_set_active_tab().
+	* Add tepl_tab_group_append_tab().
+* Finish to implement the GActions for the Edit menu: cut, copy, paste, delete
+  and select all. (Update the GAction:enabled properties).
+* Add "win.tepl-new-file" GAction.
+* Add the TeplAbstractFactory class to create TeplTab's and tab labels.
+
+Misc:
+* Add tepl_init() and tepl_finalize(), do not use DSO constructors/destructors.
+* Implement small internal utility: TeplSignalGroup, inspired by DzlSignalGroup
+  from libdazzle, but with a much simpler implementation.
+* Improvements to the documentation.
+* Translation updates.
+
 News in 2.99.2, 2017-07-18
 --------------------------
 

@@ -213,9 +213,9 @@ check_used_cb (gpointer key,
  * amtk_action_info_has_been_used()). If an #AmtkActionInfo has not been used, a
  * warning is printed and might indicate dead code.
  *
- * You probably want to call this function on the application store. But it can
- * also be useful for a store provided by a library, to easily see which actions
- * are not used by the application.
+ * You probably want to call this function on the application store after
+ * creating the menu and toolbar. But it can also be useful for a store provided
+ * by a library, to easily see which actions are not used by the application.
  *
  * Since: 2.0
  */

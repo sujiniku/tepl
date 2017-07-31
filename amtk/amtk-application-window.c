@@ -31,7 +31,9 @@
  * @Short_description: An extension of GtkApplicationWindow
  * @Title: AmtkApplicationWindow
  *
- * #AmtkApplicationWindow extends the #GtkApplicationWindow class.
+ * #AmtkApplicationWindow extends the #GtkApplicationWindow class with a
+ * #AmtkApplicationWindow:statusbar property and functions to show longer
+ * descriptions of #GtkMenuItem's to the #GtkStatusbar.
  *
  * Note that #AmtkApplicationWindow extends the #GtkApplicationWindow class but
  * without subclassing it, because several libraries might want to extend
@@ -453,8 +455,7 @@ statusbar_notify_cb (AmtkApplicationWindow *amtk_window,
  *
  * The long description is retrieved with amtk_menu_item_get_long_description().
  * So amtk_menu_item_set_long_description() must have been called, which is the
- * case if the #GtkMenuItem has been created with the functions available in
- * #AmtkActionInfoStore.
+ * case if the #GtkMenuItem has been created by an #AmtkFactoryMenu.
  *
  * Since: 2.0
  */

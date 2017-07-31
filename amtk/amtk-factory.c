@@ -45,15 +45,13 @@
  * #AmtkFactory:default-flags. See for example
  * amtk_factory_menu_create_menu_item() and
  * amtk_factory_menu_create_menu_item_full().
- *
- * Once the objects are created, an #AmtkFactory should be freed because it has
- * a strong reference to the #GtkApplication. TODO: change it to a weak ref
- * instead so that this paragraph can be removed.
  */
 
 struct _AmtkFactoryPrivate
 {
+	/* Weak ref */
 	GtkApplication *app;
+
 	AmtkFactoryFlags default_flags;
 };
 
@@ -105,7 +103,12 @@ amtk_factory_set_property (GObject      *object,
 	{
 		case PROP_APPLICATION:
 			g_assert (factory->priv->app == NULL);
-			factory->priv->app = g_value_dup_object (value);
+			factory->priv->app = g_value_get_object (value);
+			if (factory->priv->app != NULL)
+			{
+				g_object_add_weak_pointer (G_OBJECT (factory->priv->app),
+							   (gpointer *) &factory->priv->app);
+			}
 			break;
 
 		case PROP_DEFAULT_FLAGS:
@@ -123,7 +126,12 @@ amtk_factory_dispose (GObject *object)
 {
 	AmtkFactory *factory = AMTK_FACTORY (object);
 
-	g_clear_object (&factory->priv->app);
+	if (factory->priv->app != NULL)
+	{
+		g_object_remove_weak_pointer (G_OBJECT (factory->priv->app),
+					      (gpointer *) &factory->priv->app);
+		factory->priv->app = NULL;
+	}
 
 	G_OBJECT_CLASS (amtk_factory_parent_class)->dispose (object);
 }
@@ -140,9 +148,8 @@ amtk_factory_class_init (AmtkFactoryClass *klass)
 	/**
 	 * AmtkFactory:application:
 	 *
-	 * The associated #GtkApplication. #AmtkFactory has a strong reference
-	 * to the #GtkApplication (which means that once the widgets are created
-	 * you should free the #AmtkFactory).
+	 * The associated #GtkApplication (it is optional, it can be %NULL).
+	 * #AmtkFactory has a weak reference to the #GtkApplication.
 	 *
 	 * Since: 3.0
 	 */

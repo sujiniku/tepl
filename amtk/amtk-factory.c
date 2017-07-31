@@ -184,7 +184,7 @@ amtk_factory_init (AmtkFactory *factory)
  * amtk_factory_get_application:
  * @factory: an #AmtkFactory.
  *
- * Returns: (transfer none): the #AmtkFactory:application.
+ * Returns: (transfer none) (nullable): the #AmtkFactory:application.
  * Since: 3.0
  */
 GtkApplication *

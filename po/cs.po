@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-06-25 09:09+0000\n"
-"PO-Revision-Date: 2017-07-01 10:15+0200\n"
+"POT-Creation-Date: 2017-07-23 13:28+0000\n"
+"PO-Revision-Date: 2017-08-01 12:57+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
-"Language-Team: čeština <gnome-cs-list@gnome.org>\n"
+"Language-Team: čeština <gnome-cs-list@gnome.org>>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,20 +20,76 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.7\n"
 
 #. Translators: %s is a filename.
-#: tepl/tepl-application-window.c:438
+#: amtk/amtk-application-window.c:356
 #, c-format
 msgid "Open “%s”"
 msgstr "Otevřít „%s“"
 
-#: tepl/tepl-application-window.c:657
+#: amtk/amtk-application-window.c:572
 msgid "Open _Recent"
 msgstr "Otevřít ne_dávné"
 
 #. Translators: %s is the application name.
-#: tepl/tepl-application-window.c:660
+#: amtk/amtk-application-window.c:575
 #, c-format
 msgid "Open a file recently used with %s"
 msgstr "Otevřít soubor nedávno použitý aplikací %s"
+
+#. action, icon, label, accel, tooltip
+#. File menu
+#. Why "file" and not "document"? "Document" is not the best
+#. word because the action is not always to create a new
+#. document. For example a LaTeX document can be composed of
+#. several _files_. Or for source code we do not really create a
+#. new "document".
+#: tepl/tepl-application.c:71
+msgid "_New"
+msgstr "_Nový"
+
+#: tepl/tepl-application.c:72
+msgid "New file"
+msgstr "Nový soubor"
+
+#. Edit menu
+#: tepl/tepl-application.c:76
+msgid "Cu_t"
+msgstr "_Vyjmout"
+
+#: tepl/tepl-application.c:77
+msgid "Cut the selection"
+msgstr "Vyjmout výběr"
+
+#: tepl/tepl-application.c:79
+msgid "_Copy"
+msgstr "_Kopírovat"
+
+#: tepl/tepl-application.c:80
+msgid "Copy the selection"
+msgstr "Kopírovat výběr"
+
+#: tepl/tepl-application.c:82
+msgid "_Paste"
+msgstr "V_ložit"
+
+#: tepl/tepl-application.c:83
+msgid "Paste the clipboard"
+msgstr "Vložit obsah schránky"
+
+#: tepl/tepl-application.c:85
+msgid "_Delete"
+msgstr "_Smazat"
+
+#: tepl/tepl-application.c:86
+msgid "Delete the selected text"
+msgstr "Smazat vybraný text"
+
+#: tepl/tepl-application.c:88
+msgid "Select _All"
+msgstr "Vybr_at vše"
+
+#: tepl/tepl-application.c:89
+msgid "Select all the text"
+msgstr "Vybrat všechen text"
 
 #. UTF-8 first, so that it's the first encoding returned by
 #. * tepl_encoding_get_all().

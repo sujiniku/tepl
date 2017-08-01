@@ -36,6 +36,71 @@
  * If not ignored by an #AmtkFactoryFlags, the tooltip is set with
  * amtk_menu_item_set_long_description(), which permits to display it in a
  * #GtkStatusbar with amtk_application_window_connect_menu_to_statusbar().
+ *
+ * # Code example
+ *
+ * How to create a #GtkMenuBar with #AmtkFactoryMenu. Each submenu is created by
+ * a separate function, to make the code clearer.
+ *
+ * |[
+ * static GtkWidget *
+ * create_file_submenu (void)
+ * {
+ *   GtkMenuShell *file_submenu;
+ *   AmtkFactoryMenu *factory;
+ *
+ *   file_submenu = GTK_MENU_SHELL (gtk_menu_new ());
+ *
+ *   factory = amtk_factory_menu_new_with_default_application ();
+ *   gtk_menu_shell_append (file_submenu, amtk_factory_menu_create_menu_item (factory, "win.open"));
+ *   gtk_menu_shell_append (file_submenu, amtk_factory_menu_create_menu_item (factory, "win.save"));
+ *   gtk_menu_shell_append (file_submenu, gtk_separator_menu_item_new ());
+ *   gtk_menu_shell_append (file_submenu, amtk_factory_menu_create_menu_item (factory, "app.quit"));
+ *   g_object_unref (factory);
+ *
+ *   return GTK_WIDGET (file_submenu);
+ * }
+ *
+ * static GtkWidget *
+ * create_help_submenu (void)
+ * {
+ *   GtkMenuShell *help_submenu;
+ *   AmtkFactoryMenu *factory;
+ *
+ *   help_submenu = GTK_MENU_SHELL (gtk_menu_new ());
+ *
+ *   factory = amtk_factory_menu_new_with_default_application ();
+ *   gtk_menu_shell_append (help_submenu, amtk_factory_menu_create_menu_item (factory, "app.about"));
+ *   g_object_unref (factory);
+ *
+ *   return GTK_WIDGET (help_submenu);
+ * }
+ *
+ * static GtkWidget *
+ * create_menu_bar (void)
+ * {
+ *   GtkWidget *file_menu_item;
+ *   GtkWidget *help_menu_item;
+ *   GtkWidget *menu_bar;
+ *
+ *   file_menu_item = gtk_menu_item_new_with_mnemonic ("_File");
+ *   gtk_menu_item_set_submenu (GTK_MENU_ITEM (file_menu_item),
+ *                              create_file_submenu ());
+ *
+ *   help_menu_item = gtk_menu_item_new_with_mnemonic ("_Help");
+ *   gtk_menu_item_set_submenu (GTK_MENU_ITEM (help_menu_item),
+ *                              create_help_submenu ());
+ *
+ *   menu_bar = gtk_menu_bar_new ();
+ *   gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), file_menu_item);
+ *   gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), help_menu_item);
+ *
+ *   // Additionally, it is a good place to call
+ *   // amtk_action_info_store_check_all_used() here.
+ *
+ *   return menu_bar;
+ * }
+ * ]|
  */
 
 struct _AmtkFactoryMenuPrivate

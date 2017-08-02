@@ -41,6 +41,22 @@
  * extensions at the same time.
  */
 
+/* API design:
+ *
+ * AmtkApplicationWindow was first implemented in Tepl, and
+ * TeplApplicationWindow needs to access the GtkApplicationWindow for the
+ * GActionMap. Currently AmtkApplicationWindow could be renamed to AmtkWindow
+ * and be an extension of GtkWindow instead of GtkApplicationWindow, it would
+ * have the advantage to have shorter function names and be a little more
+ * re-usable. But I think it's not a big problem to keep AmtkApplicationWindow
+ * as is, because (1) the A in Amtk is all about GActions, so normally the app
+ * already uses GtkApplicationWindow, (2) it is easy to port an application to
+ * use GtkApplicationWindow, most of the time it's just changing the parent
+ * class when subclassing GtkWindow, (3) it is more future-proof for Amtk to
+ * have access to the GtkApplicationWindow, in case we want to add some features
+ * that require the GActionMap or whatever. -- swilmet
+ */
+
 struct _AmtkApplicationWindowPrivate
 {
 	GtkApplicationWindow *gtk_window;

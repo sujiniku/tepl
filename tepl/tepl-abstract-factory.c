@@ -41,8 +41,9 @@
  *
  * An example of another sub-classable singleton is PeasEngine, in libpeas. I
  * didn't really like the PeasEngine implementation with get_default(), so I've
- * implemented TeplAbstractFactory differently. But I'll maybe change my mind in
- * the future. -- swilmet
+ * implemented TeplAbstractFactory differently.
+ * tepl_abstract_factory_set_singleton() is more explicit. And doing things
+ * explicitly is clearer. -- swilmet
  */
 
 static TeplAbstractFactory *singleton = NULL;

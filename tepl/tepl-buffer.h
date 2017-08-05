@@ -66,6 +66,8 @@ TeplFile *		tepl_buffer_get_file			(TeplBuffer *buffer);
 
 gboolean		tepl_buffer_is_untouched		(TeplBuffer *buffer);
 
+gchar *			tepl_buffer_get_short_title		(TeplBuffer *buffer);
+
 gchar *			tepl_buffer_get_full_title		(TeplBuffer *buffer);
 
 gchar *			tepl_buffer_get_style_scheme_id		(TeplBuffer *buffer);

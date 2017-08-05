@@ -52,6 +52,7 @@ struct _TeplBufferPrivate
 enum
 {
 	PROP_0,
+	PROP_TEPL_SHORT_TITLE,
 	PROP_TEPL_FULL_TITLE,
 	PROP_TEPL_STYLE_SCHEME_ID,
 	N_PROPERTIES
@@ -102,6 +103,10 @@ tepl_buffer_get_property (GObject    *object,
 
 	switch (prop_id)
 	{
+		case PROP_TEPL_SHORT_TITLE:
+			g_value_take_string (value, tepl_buffer_get_short_title (buffer));
+			break;
+
 		case PROP_TEPL_FULL_TITLE:
 			g_value_take_string (value, tepl_buffer_get_full_title (buffer));
 			break;
@@ -259,6 +264,7 @@ tepl_buffer_modified_changed (GtkTextBuffer *buffer)
 		GTK_TEXT_BUFFER_CLASS (tepl_buffer_parent_class)->modified_changed (buffer);
 	}
 
+	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TEPL_SHORT_TITLE]);
 	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TEPL_FULL_TITLE]);
 }
 
@@ -277,6 +283,21 @@ tepl_buffer_class_init (TeplBufferClass *klass)
 	text_buffer_class->mark_set = tepl_buffer_mark_set;
 	text_buffer_class->changed = tepl_buffer_changed;
 	text_buffer_class->modified_changed = tepl_buffer_modified_changed;
+
+	/**
+	 * TeplBuffer:tepl-short-title:
+	 *
+	 * The short title. See tepl_buffer_get_short_title().
+	 *
+	 * Since: 3.0
+	 */
+	properties[PROP_TEPL_SHORT_TITLE] =
+		g_param_spec_string ("tepl-short-title",
+				     "tepl-short-title",
+				     "",
+				     NULL,
+				     G_PARAM_READABLE |
+				     G_PARAM_STATIC_STRINGS);
 
 	/**
 	 * TeplBuffer:tepl-full-title:
@@ -336,10 +357,11 @@ tepl_buffer_class_init (TeplBufferClass *klass)
 }
 
 static void
-short_name_notify_cb (TeplFile   *file,
-		      GParamSpec *pspec,
-		      TeplBuffer *buffer)
+file_short_name_notify_cb (TeplFile   *file,
+			   GParamSpec *pspec,
+			   TeplBuffer *buffer)
 {
+	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TEPL_SHORT_TITLE]);
 	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TEPL_FULL_TITLE]);
 }
 
@@ -364,7 +386,7 @@ tepl_buffer_init (TeplBuffer *buffer)
 
 	g_signal_connect_object (priv->file,
 				 "notify::short-name",
-				 G_CALLBACK (short_name_notify_cb),
+				 G_CALLBACK (file_short_name_notify_cb),
 				 buffer,
 				 0);
 
@@ -440,12 +462,48 @@ tepl_buffer_is_untouched (TeplBuffer *buffer)
 }
 
 /**
+ * tepl_buffer_get_short_title:
+ * @buffer: a #TeplBuffer.
+ *
+ * Returns a title suitable for a tab label. It contains (in that order):
+ * - '*' if the buffer is modified;
+ * - the #TeplFile:short-name;
+ *
+ * Returns: the @buffer short title. Free the return value with g_free() when no
+ * longer needed.
+ * Since: 3.0
+ */
+gchar *
+tepl_buffer_get_short_title (TeplBuffer *buffer)
+{
+	TeplBufferPrivate *priv;
+	const gchar *short_name;
+	gchar *short_title;
+
+	g_return_val_if_fail (TEPL_IS_BUFFER (buffer), NULL);
+
+	priv = tepl_buffer_get_instance_private (buffer);
+
+	short_name = tepl_file_get_short_name (priv->file);
+
+	if (gtk_text_buffer_get_modified (GTK_TEXT_BUFFER (buffer)))
+	{
+		short_title = g_strconcat ("*", short_name, NULL);
+	}
+	else
+	{
+		short_title = g_strdup (short_name);
+	}
+
+	return short_title;
+}
+
+/**
  * tepl_buffer_get_full_title:
  * @buffer: a #TeplBuffer.
  *
  * Returns a title suitable for a #GtkWindow title. It contains (in that order):
- * - '*' if the buffer is modified;
- * - the #TeplFile:short-name;
+ * - the #TeplBuffer:tepl-short-title;
  * - the directory path in parenthesis if the #TeplFile:location isn't
  *   %NULL.
  *
@@ -458,22 +516,18 @@ tepl_buffer_get_full_title (TeplBuffer *buffer)
 {
 	TeplBufferPrivate *priv;
 	GFile *location;
-	const gchar *short_name;
-	gchar *title;
+	gchar *short_title;
+	gchar *full_title;
 
 	g_return_val_if_fail (TEPL_IS_BUFFER (buffer), NULL);
 
 	priv = tepl_buffer_get_instance_private (buffer);
 
 	location = tepl_file_get_location (priv->file);
-	short_name = tepl_file_get_short_name (priv->file);
+	short_title = tepl_buffer_get_short_title (buffer);
 
-	if (location == NULL ||
-	    !g_file_has_parent (location, NULL))
-	{
-		title = g_strdup (short_name);
-	}
-	else
+	if (location != NULL &&
+	    g_file_has_parent (location, NULL))
 	{
 		GFile *parent;
 		gchar *directory;
@@ -483,24 +537,19 @@ tepl_buffer_get_full_title (TeplBuffer *buffer)
 		directory = g_file_get_parse_name (parent);
 		directory_tilde = _tepl_utils_replace_home_dir_with_tilde (directory);
 
-		title = g_strdup_printf ("%s (%s)", short_name, directory_tilde);
+		full_title = g_strdup_printf ("%s (%s)", short_title, directory_tilde);
+		g_free (short_title);
 
 		g_object_unref (parent);
 		g_free (directory);
 		g_free (directory_tilde);
 	}
-
-	if (gtk_text_buffer_get_modified (GTK_TEXT_BUFFER (buffer)))
+	else
 	{
-		gchar *full_title;
-
-		full_title = g_strconcat ("*", title, NULL);
-		g_free (title);
-
-		return full_title;
+		full_title = short_title;
 	}
 
-	return title;
+	return full_title;
 }
 
 /**

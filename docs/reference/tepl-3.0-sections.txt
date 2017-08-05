@@ -239,7 +239,7 @@ TeplSelectionType
 tepl_buffer_new
 tepl_buffer_get_file
 tepl_buffer_is_untouched
-tepl_buffer_get_title
+tepl_buffer_get_full_title
 tepl_buffer_get_style_scheme_id
 tepl_buffer_set_style_scheme_id
 tepl_buffer_get_selection_type

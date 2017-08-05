@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -66,7 +66,7 @@ TeplFile *		tepl_buffer_get_file			(TeplBuffer *buffer);
 
 gboolean		tepl_buffer_is_untouched		(TeplBuffer *buffer);
 
-gchar *			tepl_buffer_get_title			(TeplBuffer *buffer);
+gchar *			tepl_buffer_get_full_title		(TeplBuffer *buffer);
 
 gchar *			tepl_buffer_get_style_scheme_id		(TeplBuffer *buffer);
 

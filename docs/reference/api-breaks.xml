@@ -53,6 +53,14 @@
           instead.
         </para>
       </listitem>
+      <listitem>
+        <para>
+          The <code>TeplBuffer:tepl-title</code> property has been renamed to
+          <link linkend="TeplBuffer--tepl-full-title">TeplBuffer:tepl-full-title</link>,
+          and <code>tepl_buffer_get_title()</code> has been renamed to
+          <link linkend="tepl-buffer-get-full-title">tepl_buffer_get_full_title()</link>.
+        </para>
+      </listitem>
     </itemizedlist>
   </chapter>
 

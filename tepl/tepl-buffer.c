@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -52,7 +52,7 @@ struct _TeplBufferPrivate
 enum
 {
 	PROP_0,
-	PROP_TEPL_TITLE,
+	PROP_TEPL_FULL_TITLE,
 	PROP_TEPL_STYLE_SCHEME_ID,
 	N_PROPERTIES
 };
@@ -102,8 +102,8 @@ tepl_buffer_get_property (GObject    *object,
 
 	switch (prop_id)
 	{
-		case PROP_TEPL_TITLE:
-			g_value_take_string (value, tepl_buffer_get_title (buffer));
+		case PROP_TEPL_FULL_TITLE:
+			g_value_take_string (value, tepl_buffer_get_full_title (buffer));
 			break;
 
 		case PROP_TEPL_STYLE_SCHEME_ID:
@@ -259,7 +259,7 @@ tepl_buffer_modified_changed (GtkTextBuffer *buffer)
 		GTK_TEXT_BUFFER_CLASS (tepl_buffer_parent_class)->modified_changed (buffer);
 	}
 
-	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TEPL_TITLE]);
+	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TEPL_FULL_TITLE]);
 }
 
 static void
@@ -279,15 +279,15 @@ tepl_buffer_class_init (TeplBufferClass *klass)
 	text_buffer_class->modified_changed = tepl_buffer_modified_changed;
 
 	/**
-	 * TeplBuffer:tepl-title:
+	 * TeplBuffer:tepl-full-title:
 	 *
-	 * The buffer title. See tepl_buffer_get_title().
+	 * The full title. See tepl_buffer_get_full_title().
 	 *
-	 * Since: 2.0
+	 * Since: 3.0
 	 */
-	properties[PROP_TEPL_TITLE] =
-		g_param_spec_string ("tepl-title",
-				     "Tepl Title",
+	properties[PROP_TEPL_FULL_TITLE] =
+		g_param_spec_string ("tepl-full-title",
+				     "tepl-full-title",
 				     "",
 				     NULL,
 				     G_PARAM_READABLE |
@@ -340,7 +340,7 @@ short_name_notify_cb (TeplFile   *file,
 		      GParamSpec *pspec,
 		      TeplBuffer *buffer)
 {
-	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TEPL_TITLE]);
+	g_object_notify_by_pspec (G_OBJECT (buffer), properties[PROP_TEPL_FULL_TITLE]);
 }
 
 static void
@@ -440,7 +440,7 @@ tepl_buffer_is_untouched (TeplBuffer *buffer)
 }
 
 /**
- * tepl_buffer_get_title:
+ * tepl_buffer_get_full_title:
  * @buffer: a #TeplBuffer.
  *
  * Returns a title suitable for a #GtkWindow title. It contains (in that order):
@@ -449,12 +449,12 @@ tepl_buffer_is_untouched (TeplBuffer *buffer)
  * - the directory path in parenthesis if the #TeplFile:location isn't
  *   %NULL.
  *
- * Returns: the @buffer title. Free the return value with g_free() when no
+ * Returns: the @buffer full title. Free the return value with g_free() when no
  * longer needed.
- * Since: 1.0
+ * Since: 3.0
  */
 gchar *
-tepl_buffer_get_title (TeplBuffer *buffer)
+tepl_buffer_get_full_title (TeplBuffer *buffer)
 {
 	TeplBufferPrivate *priv;
 	GFile *location;

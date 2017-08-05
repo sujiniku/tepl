@@ -43,6 +43,7 @@ typedef struct _TeplInfoBar			TeplInfoBar;
 typedef struct _TeplNotebook			TeplNotebook;
 typedef struct _TeplTab				TeplTab;
 typedef struct _TeplTabGroup			TeplTabGroup;
+typedef struct _TeplTabLabel			TeplTabLabel;
 typedef struct _TeplView			TeplView;
 
 G_END_DECLS

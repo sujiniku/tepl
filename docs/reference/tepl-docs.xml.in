@@ -50,6 +50,7 @@
       <xi:include href="xml/tab-group.xml"/>
       <xi:include href="xml/notebook.xml"/>
       <xi:include href="xml/tab.xml"/>
+      <xi:include href="xml/tab-label.xml"/>
       <xi:include href="xml/view.xml"/>
       <xi:include href="xml/buffer.xml"/>
     </chapter>

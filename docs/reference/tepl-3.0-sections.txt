@@ -486,6 +486,23 @@ tepl_tab_group_get_type
 </SECTION>
 
 <SECTION>
+<FILE>tab-label</FILE>
+TeplTabLabel
+tepl_tab_label_new
+tepl_tab_label_get_tab
+<SUBSECTION Standard>
+TEPL_IS_TAB_LABEL
+TEPL_IS_TAB_LABEL_CLASS
+TEPL_TAB_LABEL
+TEPL_TAB_LABEL_CLASS
+TEPL_TAB_LABEL_GET_CLASS
+TEPL_TYPE_TAB_LABEL
+TeplTabLabelClass
+TeplTabLabelPrivate
+tepl_tab_label_get_type
+</SECTION>
+
+<SECTION>
 <FILE>notebook</FILE>
 TeplNotebook
 tepl_notebook_new

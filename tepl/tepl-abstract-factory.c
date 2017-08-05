@@ -19,6 +19,7 @@
 
 #include "tepl-abstract-factory.h"
 #include "tepl-tab.h"
+#include "tepl-tab-label.h"
 
 /**
  * SECTION:abstract-factory
@@ -71,8 +72,7 @@ static GtkWidget *
 tepl_abstract_factory_create_tab_label_default (TeplAbstractFactory *factory,
 						TeplTab             *tab)
 {
-	/* TODO implement a default TeplTabLabel widget. */
-	return NULL;
+	return tepl_tab_label_new (tab);
 }
 
 static void

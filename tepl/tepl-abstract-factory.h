@@ -49,7 +49,8 @@ struct _TeplAbstractFactory
  * @create_tab: Virtual function pointer for tepl_abstract_factory_create_tab().
  *   By default the #TeplTab is created with tepl_tab_new().
  * @create_tab_label: Virtual function pointer for
- *   tepl_abstract_factory_create_tab_label(). By default %NULL is returned.
+ *   tepl_abstract_factory_create_tab_label(). By default the tab label is
+ *   created with tepl_tab_label_new().
  */
 struct _TeplAbstractFactoryClass
 {

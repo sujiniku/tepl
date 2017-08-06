@@ -24,7 +24,7 @@
 #error "Only <tepl/tepl.h> can be included directly."
 #endif
 
-#include <gio/gio.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
@@ -48,6 +48,10 @@ gboolean	_tepl_utils_decode_uri				(const gchar  *uri,
 
 G_GNUC_INTERNAL
 gchar *		_tepl_utils_get_fallback_basename_for_display	(GFile *location);
+
+/* Widget utilities */
+
+GtkWidget *	_tepl_utils_create_close_button			(void);
 
 G_END_DECLS
 

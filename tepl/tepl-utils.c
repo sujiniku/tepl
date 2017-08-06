@@ -368,3 +368,20 @@ _tepl_utils_get_fallback_basename_for_display (GFile *location)
 
 	return basename;
 }
+
+GtkWidget *
+_tepl_utils_create_close_button (void)
+{
+	GtkWidget *close_button;
+	GtkStyleContext *style_context;
+
+	close_button = gtk_button_new_from_icon_name ("window-close-symbolic",
+						      GTK_ICON_SIZE_BUTTON);
+	gtk_button_set_relief (GTK_BUTTON (close_button), GTK_RELIEF_NONE);
+	gtk_widget_set_focus_on_click (close_button, FALSE);
+
+	style_context = gtk_widget_get_style_context (close_button);
+	gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_FLAT);
+
+	return close_button;
+}

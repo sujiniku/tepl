@@ -17,7 +17,9 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "tepl-tab-label.h"
+#include <glib/gi18n-lib.h>
 #include "tepl-tab.h"
 #include "tepl-buffer.h"
 #include "tepl-signal-group.h"
@@ -29,6 +31,11 @@
  * @Title: TeplTabLabel
  *
  * #TeplTabLabel is the label/title of a #TeplTab, suitable for #GtkNotebook.
+ *
+ * A #TeplTabLabel contains:
+ * - a #GtkLabel with the #TeplBuffer:tepl-short-title.
+ * - a close button, when clicked the #TeplTab #TeplTab::close-request signal is
+ *   emitted.
  */
 
 struct _TeplTabLabelPrivate
@@ -210,16 +217,43 @@ tepl_tab_label_class_init (TeplTabLabelClass *klass)
 }
 
 static void
+close_button_clicked_cb (GtkButton    *close_button,
+			 TeplTabLabel *tab_label)
+{
+	if (tab_label->priv->tab != NULL)
+	{
+		g_signal_emit_by_name (tab_label->priv->tab, "close-request");
+	}
+}
+
+static void
 tepl_tab_label_init (TeplTabLabel *tab_label)
 {
+	GtkWidget *close_button;
+
 	tab_label->priv = tepl_tab_label_get_instance_private (tab_label);
 
+	/* Label */
+
 	tab_label->priv->label = GTK_LABEL (gtk_label_new (NULL));
-	gtk_widget_show (GTK_WIDGET (tab_label->priv->label));
 	gtk_widget_set_vexpand (GTK_WIDGET (tab_label->priv->label), TRUE);
 
+	gtk_widget_show (GTK_WIDGET (tab_label->priv->label));
 	gtk_container_add (GTK_CONTAINER (tab_label),
 			   GTK_WIDGET (tab_label->priv->label));
+
+	/* Close button */
+
+	close_button = _tepl_utils_create_close_button ();
+	gtk_widget_set_tooltip_text (close_button, _("Close file"));
+
+	g_signal_connect (close_button,
+			  "clicked",
+			  G_CALLBACK (close_button_clicked_cb),
+			  tab_label);
+
+	gtk_widget_show (close_button);
+	gtk_container_add (GTK_CONTAINER (tab_label), close_button);
 }
 
 /**

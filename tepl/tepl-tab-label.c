@@ -21,6 +21,7 @@
 #include "tepl-tab.h"
 #include "tepl-buffer.h"
 #include "tepl-signal-group.h"
+#include "tepl-utils.h"
 
 /**
  * SECTION:tab-label
@@ -47,6 +48,8 @@ enum
 
 static GParamSpec *properties[N_PROPERTIES];
 
+#define MAX_LABEL_CHARS_LENGTH (42)
+
 G_DEFINE_TYPE_WITH_PRIVATE (TeplTabLabel, tepl_tab_label, GTK_TYPE_GRID)
 
 static void
@@ -54,12 +57,19 @@ update_label (TeplTabLabel *tab_label)
 {
 	TeplBuffer *buffer;
 	gchar *short_title;
+	gchar *truncated_short_title;
 
 	buffer = tepl_tab_get_buffer (tab_label->priv->tab);
 	short_title = tepl_buffer_get_short_title (buffer);
 
-	gtk_label_set_text (tab_label->priv->label, short_title);
+	/* A GtkNotebook tab label doesn't support well an ellipsizing GtkLabel.
+	 * So, ellipsize ourself.
+	 */
+	truncated_short_title = _tepl_utils_str_middle_truncate (short_title, MAX_LABEL_CHARS_LENGTH);
 
+	gtk_label_set_text (tab_label->priv->label, truncated_short_title);
+
+	g_free (truncated_short_title);
 	g_free (short_title);
 }
 

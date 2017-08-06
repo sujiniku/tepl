@@ -45,6 +45,17 @@
  * #AmtkFactory:default-flags. See for example
  * amtk_factory_menu_create_menu_item() and
  * amtk_factory_menu_create_menu_item_full().
+ *
+ * # Static objects # {#amtk-factory-static-objects}
+ *
+ * An important detail is that once a factory function has created an object,
+ * the object is not updated if the corresponding #AmtkActionInfo is modified
+ * afterwards. #AmtkActionInfo doesn't have a notify signal, and it is anyway
+ * discouraged to modify an #AmtkActionInfo after being added to an
+ * #AmtkActionInfoStore. An #AmtkActionInfoStore is meant to be something
+ * static, created on application startup. Updating automatically menu and
+ * toolbar items is out of scope for the Amtk library. If for example action
+ * accelerators can be modified at run-time, the menu needs to be re-generated.
  */
 
 struct _AmtkFactoryPrivate

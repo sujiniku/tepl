@@ -308,6 +308,8 @@ tepl_notebook_init (TeplNotebook *notebook)
 	 */
 	gtk_widget_set_hexpand (GTK_WIDGET (notebook), TRUE);
 	gtk_widget_set_vexpand (GTK_WIDGET (notebook), TRUE);
+
+	gtk_notebook_set_scrollable (GTK_NOTEBOOK (notebook), TRUE);
 }
 
 /**

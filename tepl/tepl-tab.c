@@ -72,6 +72,14 @@ enum
 	PROP_ACTIVE_BUFFER,
 };
 
+enum
+{
+	SIGNAL_CLOSE_REQUEST,
+	N_SIGNALS
+};
+
+static guint signals[N_SIGNALS];
+
 static void tepl_tab_group_interface_init (gpointer g_iface,
 					   gpointer iface_data);
 
@@ -294,6 +302,23 @@ tepl_tab_class_init (TeplTabClass *klass)
 	g_object_class_override_property (object_class, PROP_ACTIVE_TAB, "active-tab");
 	g_object_class_override_property (object_class, PROP_ACTIVE_VIEW, "active-view");
 	g_object_class_override_property (object_class, PROP_ACTIVE_BUFFER, "active-buffer");
+
+	/**
+	 * TeplTab::close-request:
+	 * @tab: the #TeplTab emitting the signal.
+	 *
+	 * The ::close-request signal is emitted when there is a request to
+	 * close the #TeplTab, for example if the user clicks on a close button.
+	 *
+	 * Since: 3.0
+	 */
+	signals[SIGNAL_CLOSE_REQUEST] =
+		g_signal_new ("close-request",
+			      G_TYPE_FROM_CLASS (klass),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (TeplTabClass, close_request),
+			      NULL, NULL, NULL,
+			      G_TYPE_NONE, 0);
 }
 
 static GList *

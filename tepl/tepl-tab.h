@@ -59,16 +59,23 @@ struct _TeplTab
  *   non-#GtkInfoBar child widget of #TeplTab (so by default it is inserted
  *   below other #GtkInfoBar's, but above the #GtkScrolledWindow containing the
  *   #TeplView).
+ * @close_request: For the #TeplTab::close-request signal.
  */
 struct _TeplTabClass
 {
 	GtkGridClass parent_class;
+
+	/* Vfuncs */
 
 	void	(* pack_view)		(TeplTab  *tab,
 					 TeplView *view);
 
 	void	(* pack_info_bar)	(TeplTab    *tab,
 					 GtkInfoBar *info_bar);
+
+	/* Signals */
+
+	void	(* close_request)	(TeplTab *tab);
 
 	/*< private >*/
 	gpointer padding[12];

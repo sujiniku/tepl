@@ -33,6 +33,82 @@
  * Utility functions.
  */
 
+static gchar *
+str_truncate (const gchar *string,
+	      guint        truncate_length,
+	      gboolean     middle)
+{
+	GString *truncated;
+	guint length;
+	guint n_chars;
+	guint num_left_chars;
+	guint right_offset;
+	guint delimiter_length;
+	const gchar *delimiter = "\342\200\246";
+
+	g_return_val_if_fail (string != NULL, NULL);
+
+	length = strlen (string);
+
+	g_return_val_if_fail (g_utf8_validate (string, length, NULL), NULL);
+
+	/* It doesnt make sense to truncate strings to less than
+	 * the size of the delimiter plus 2 characters (one on each
+	 * side)
+	 */
+	delimiter_length = g_utf8_strlen (delimiter, -1);
+	if (truncate_length < (delimiter_length + 2))
+	{
+		return g_strdup (string);
+	}
+
+	n_chars = g_utf8_strlen (string, length);
+
+	/* Make sure the string is not already small enough. */
+	if (n_chars <= truncate_length)
+	{
+		return g_strdup (string);
+	}
+
+	/* Find the 'middle' where the truncation will occur. */
+	if (middle)
+	{
+		num_left_chars = (truncate_length - delimiter_length) / 2;
+		right_offset = n_chars - truncate_length + num_left_chars + delimiter_length;
+
+		truncated = g_string_new_len (string,
+					      g_utf8_offset_to_pointer (string, num_left_chars) - string);
+		g_string_append (truncated, delimiter);
+		g_string_append (truncated, g_utf8_offset_to_pointer (string, right_offset));
+	}
+	else
+	{
+		num_left_chars = truncate_length - delimiter_length;
+		truncated = g_string_new_len (string,
+					      g_utf8_offset_to_pointer (string, num_left_chars) - string);
+		g_string_append (truncated, delimiter);
+	}
+
+	return g_string_free (truncated, FALSE);
+}
+
+gchar *
+_tepl_utils_str_middle_truncate (const gchar *str,
+				 guint        truncate_length)
+{
+	return str_truncate (str, truncate_length, TRUE);
+}
+
+#if 0
+/* Not yet used in Tepl. */
+gchar *
+_tepl_utils_str_end_truncate (const gchar *str,
+			     guint        truncate_length)
+{
+	return str_truncate (str, truncate_length, FALSE);
+}
+#endif
+
 /*
  * _tepl_utils_replace_home_dir_with_tilde:
  * @filename: the filename.

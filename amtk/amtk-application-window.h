@@ -71,6 +71,8 @@ void			amtk_application_window_connect_recent_chooser_menu_to_statusbar
 										(AmtkApplicationWindow *amtk_window,
 										 GtkRecentChooserMenu  *menu);
 
+GtkWidget *		amtk_application_window_create_open_recent_menu		(AmtkApplicationWindow *amtk_window);
+
 GtkWidget *		amtk_application_window_create_open_recent_menu_item	(AmtkApplicationWindow *amtk_window);
 
 G_END_DECLS

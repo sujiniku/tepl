@@ -553,11 +553,10 @@ open_recent_file_cb (GtkRecentChooser *recent_chooser,
 }
 
 /**
- * amtk_application_window_create_open_recent_menu_item:
+ * amtk_application_window_create_open_recent_menu:
  * @amtk_window: an #AmtkApplicationWindow.
  *
- * Creates a #GtkMenuItem with a simple and generic #GtkRecentChooserMenu as
- * submenu.
+ * Creates a simple and generic #GtkRecentChooserMenu.
  *
  * The #GtkRecentChooser is configured to show files only recently used with the
  * current application, as returned by g_get_application_name(). If recent files
@@ -572,30 +571,19 @@ open_recent_file_cb (GtkRecentChooser *recent_chooser,
  * g_application_open() is called (with an empty hint), so the #GApplication
  * must have the %G_APPLICATION_HANDLES_OPEN flag set.
  *
- * Returns: (transfer floating): a new #GtkMenuItem.
- * Since: 2.0
+ * Returns: (transfer floating): a new #GtkRecentChooserMenu.
+ * Since: 3.0
  */
 GtkWidget *
-amtk_application_window_create_open_recent_menu_item (AmtkApplicationWindow *amtk_window)
+amtk_application_window_create_open_recent_menu (AmtkApplicationWindow *amtk_window)
 {
-	GtkMenuItem *menu_item;
-	gchar *long_description;
 	GtkRecentChooserMenu *recent_chooser_menu;
 	GtkRecentChooser *recent_chooser;
 	GtkRecentFilter *filter;
 
 	g_return_val_if_fail (AMTK_IS_APPLICATION_WINDOW (amtk_window), NULL);
 
-	menu_item = GTK_MENU_ITEM (gtk_menu_item_new_with_mnemonic (_("Open _Recent")));
-
-	/* Translators: %s is the application name. */
-	long_description = g_strdup_printf (_("Open a file recently used with %s"),
-					    g_get_application_name ());
-	amtk_menu_item_set_long_description (menu_item, long_description);
-	g_free (long_description);
-
 	recent_chooser_menu = GTK_RECENT_CHOOSER_MENU (gtk_recent_chooser_menu_new ());
-	gtk_menu_item_set_submenu (menu_item, GTK_WIDGET (recent_chooser_menu));
 
 	recent_chooser = GTK_RECENT_CHOOSER (recent_chooser_menu);
 	gtk_recent_chooser_set_local_only (recent_chooser, FALSE);
@@ -612,6 +600,40 @@ amtk_application_window_create_open_recent_menu_item (AmtkApplicationWindow *amt
 				 G_CALLBACK (open_recent_file_cb),
 				 amtk_window,
 				 0);
+
+	return GTK_WIDGET (recent_chooser_menu);
+}
+
+/**
+ * amtk_application_window_create_open_recent_menu_item:
+ * @amtk_window: an #AmtkApplicationWindow.
+ *
+ * Creates a #GtkMenuItem with a simple and generic #GtkRecentChooserMenu as
+ * submenu. The #GtkRecentChooserMenu is created with
+ * amtk_application_window_create_open_recent_menu().
+ *
+ * Returns: (transfer floating): a new #GtkMenuItem.
+ * Since: 2.0
+ */
+GtkWidget *
+amtk_application_window_create_open_recent_menu_item (AmtkApplicationWindow *amtk_window)
+{
+	GtkMenuItem *menu_item;
+	gchar *long_description;
+	GtkWidget *recent_chooser_menu;
+
+	g_return_val_if_fail (AMTK_IS_APPLICATION_WINDOW (amtk_window), NULL);
+
+	menu_item = GTK_MENU_ITEM (gtk_menu_item_new_with_mnemonic (_("Open _Recent")));
+
+	/* Translators: %s is the application name. */
+	long_description = g_strdup_printf (_("Open a file recently used with %s"),
+					    g_get_application_name ());
+	amtk_menu_item_set_long_description (menu_item, long_description);
+	g_free (long_description);
+
+	recent_chooser_menu = amtk_application_window_create_open_recent_menu (amtk_window);
+	gtk_menu_item_set_submenu (menu_item, recent_chooser_menu);
 
 	return GTK_WIDGET (menu_item);
 }

@@ -471,7 +471,7 @@ statusbar_notify_cb (AmtkApplicationWindow *amtk_window,
  *
  * The long description is retrieved with amtk_menu_item_get_long_description().
  * So amtk_menu_item_set_long_description() must have been called, which is the
- * case if the #GtkMenuItem has been created by an #AmtkFactoryMenu.
+ * case if the #GtkMenuItem has been created with #AmtkFactory.
  *
  * Since: 2.0
  */

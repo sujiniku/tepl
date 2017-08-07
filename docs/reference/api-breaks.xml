@@ -78,11 +78,9 @@
       </listitem>
       <listitem>
         <para>
-          The <link linkend="AmtkFactory">AmtkFactory</link> and
-          <link linkend="AmtkFactoryMenu">AmtkFactoryMenu</link> classes have
-          been added, which replace
-          <code>gtef_action_info_store_create_menu_item()</code> and removes the
-          <code>GtefActionInfoStore:application</code> property.
+          The <link linkend="AmtkFactory">AmtkFactory</link> class has been
+          added, which replace <code>gtef_action_info_store_create_menu_item()</code>
+          and removes the <code>GtefActionInfoStore:application</code> property.
         </para>
       </listitem>
       <listitem>

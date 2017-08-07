@@ -40,7 +40,9 @@
 
 struct _TeplTabLabelPrivate
 {
+	/* Weak ref */
 	TeplTab *tab;
+
 	TeplSignalGroup *buffer_signal_group;
 
 	GtkLabel *label;
@@ -65,6 +67,11 @@ update_label (TeplTabLabel *tab_label)
 	TeplBuffer *buffer;
 	gchar *short_title;
 	gchar *truncated_short_title;
+
+	if (tab_label->priv->tab == NULL)
+	{
+		return;
+	}
 
 	buffer = tepl_tab_get_buffer (tab_label->priv->tab);
 	short_title = tepl_buffer_get_short_title (buffer);
@@ -95,6 +102,11 @@ buffer_changed (TeplTabLabel *tab_label)
 
 	_tepl_signal_group_clear (&tab_label->priv->buffer_signal_group);
 
+	if (tab_label->priv->tab == NULL)
+	{
+		return;
+	}
+
 	buffer = tepl_tab_get_buffer (tab_label->priv->tab);
 	tab_label->priv->buffer_signal_group = _tepl_signal_group_new (G_OBJECT (buffer));
 
@@ -121,10 +133,17 @@ set_tab (TeplTabLabel *tab_label,
 {
 	TeplView *view;
 
+	if (tab == NULL)
+	{
+		return;
+	}
+
 	g_return_if_fail (TEPL_IS_TAB (tab));
 
 	g_assert (tab_label->priv->tab == NULL);
-	tab_label->priv->tab = g_object_ref (tab);
+	tab_label->priv->tab = tab;
+	g_object_add_weak_pointer (G_OBJECT (tab_label->priv->tab),
+				   (gpointer *) &tab_label->priv->tab);
 
 	view = tepl_tab_get_view (tab);
 	g_signal_connect_object (view,
@@ -181,7 +200,13 @@ tepl_tab_label_dispose (GObject *object)
 {
 	TeplTabLabel *tab_label = TEPL_TAB_LABEL (object);
 
-	g_clear_object (&tab_label->priv->tab);
+	if (tab_label->priv->tab != NULL)
+	{
+		g_object_remove_weak_pointer (G_OBJECT (tab_label->priv->tab),
+					      (gpointer *) &tab_label->priv->tab);
+		tab_label->priv->tab = NULL;
+	}
+
 	_tepl_signal_group_clear (&tab_label->priv->buffer_signal_group);
 
 	G_OBJECT_CLASS (tepl_tab_label_parent_class)->dispose (object);
@@ -199,7 +224,7 @@ tepl_tab_label_class_init (TeplTabLabelClass *klass)
 	/**
 	 * TeplTabLabel:tab:
 	 *
-	 * The associated #TeplTab. #TeplTabLabel has a strong reference to the
+	 * The associated #TeplTab. #TeplTabLabel has a weak reference to the
 	 * #TeplTab.
 	 *
 	 * Since: 3.0
@@ -277,7 +302,7 @@ tepl_tab_label_new (TeplTab *tab)
  * tepl_tab_label_get_tab:
  * @tab_label: a #TeplTabLabel.
  *
- * Returns: (transfer none): the #TeplTabLabel:tab.
+ * Returns: (transfer none) (nullable): the #TeplTabLabel:tab.
  * Since: 3.0
  */
 TeplTab *

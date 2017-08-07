@@ -201,6 +201,40 @@ amtk_factory_init (AmtkFactory *factory)
 }
 
 /**
+ * amtk_factory_new:
+ * @application: (nullable): a #GtkApplication, or %NULL.
+ *
+ * Creates a new #AmtkFactory object. Associating a #GtkApplication is optional.
+ *
+ * Returns: a new #AmtkFactory.
+ * Since: 3.0
+ */
+AmtkFactory *
+amtk_factory_new (GtkApplication *application)
+{
+	g_return_val_if_fail (application == NULL || GTK_IS_APPLICATION (application), NULL);
+
+	return g_object_new (AMTK_TYPE_FACTORY,
+			     "application", application,
+			     NULL);
+}
+
+/**
+ * amtk_factory_new_with_default_application:
+ *
+ * Calls amtk_factory_new() with g_application_get_default() (it must be a
+ * #GtkApplication).
+ *
+ * Returns: a new #AmtkFactory with the default #GtkApplication.
+ * Since: 3.0
+ */
+AmtkFactory *
+amtk_factory_new_with_default_application (void)
+{
+	return amtk_factory_new (GTK_APPLICATION (g_application_get_default ()));
+}
+
+/**
  * amtk_factory_get_application:
  * @factory: an #AmtkFactory.
  *

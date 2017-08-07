@@ -97,6 +97,13 @@ AmtkFactoryFlags	amtk_factory_get_default_flags			(AmtkFactory *factory);
 void			amtk_factory_set_default_flags			(AmtkFactory      *factory,
 									 AmtkFactoryFlags  default_flags);
 
+GtkWidget *		amtk_factory_create_menu_item			(AmtkFactory *factory,
+									 const gchar *action_name);
+
+GtkWidget *		amtk_factory_create_menu_item_full		(AmtkFactory      *factory,
+									 const gchar      *action_name,
+									 AmtkFactoryFlags  flags);
+
 GtkToolItem *		amtk_factory_create_tool_button			(AmtkFactory *factory,
 									 const gchar *action_name);
 

@@ -106,6 +106,8 @@ amtk_factory_new_with_default_application
 amtk_factory_get_application
 amtk_factory_get_default_flags
 amtk_factory_set_default_flags
+amtk_factory_create_menu_item
+amtk_factory_create_menu_item_full
 amtk_factory_create_tool_button
 amtk_factory_create_tool_button_full
 <SUBSECTION Standard>

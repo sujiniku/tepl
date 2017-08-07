@@ -27,7 +27,6 @@
       <xi:include href="xml/amtk-action-info-central-store.xml"/>
       <xi:include href="xml/amtk-action-map.xml"/>
       <xi:include href="xml/amtk-factory.xml"/>
-      <xi:include href="xml/amtk-factory-menu.xml"/>
       <xi:include href="xml/amtk-menu-item.xml"/>
       <xi:include href="xml/amtk-menu-shell.xml"/>
       <xi:include href="xml/amtk-utils.xml"/>

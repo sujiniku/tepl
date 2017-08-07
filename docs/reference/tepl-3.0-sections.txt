@@ -104,6 +104,8 @@ AmtkFactoryFlags
 amtk_factory_get_application
 amtk_factory_get_default_flags
 amtk_factory_set_default_flags
+amtk_factory_create_tool_button
+amtk_factory_create_tool_button_full
 <SUBSECTION Standard>
 AMTK_FACTORY
 AMTK_FACTORY_CLASS

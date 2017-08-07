@@ -361,6 +361,49 @@ amtk_factory_set_default_flags (AmtkFactory      *factory,
 	}
 }
 
+static AmtkActionInfo *
+common_create (AmtkFactory       *factory,
+	       const gchar       *action_name,
+	       AmtkFactoryFlags   flags,
+	       GtkWidget        **widget)
+{
+	AmtkActionInfoCentralStore *central_store;
+	AmtkActionInfo *action_info;
+
+	central_store = amtk_action_info_central_store_get_singleton ();
+	action_info = amtk_action_info_central_store_lookup (central_store, action_name);
+
+	if (action_info == NULL)
+	{
+		g_warning ("AmtkFactory create function: action name '%s' not found.",
+			   action_name);
+
+		g_object_ref_sink (*widget);
+		g_object_unref (*widget);
+		*widget = NULL;
+		return NULL;
+	}
+
+	if ((flags & AMTK_FACTORY_IGNORE_GACTION) == 0)
+	{
+		gtk_actionable_set_action_name (GTK_ACTIONABLE (*widget), action_name);
+	}
+
+	if ((flags & AMTK_FACTORY_IGNORE_ACCELS) == 0 &&
+	    (flags & AMTK_FACTORY_IGNORE_ACCELS_FOR_APP) == 0 &&
+	    factory->priv->app != NULL)
+	{
+		const gchar * const *accels;
+
+		accels = amtk_action_info_get_accels (action_info);
+		gtk_application_set_accels_for_action (factory->priv->app, action_name, accels);
+	}
+
+	amtk_action_info_mark_as_used (action_info);
+
+	return action_info;
+}
+
 /**
  * amtk_factory_create_menu_item:
  * @factory: an #AmtkFactory.
@@ -401,9 +444,9 @@ amtk_factory_create_menu_item_full (AmtkFactory      *factory,
 				    const gchar      *action_name,
 				    AmtkFactoryFlags  flags)
 {
-	AmtkActionInfoCentralStore *central_store;
-	AmtkActionInfo *action_info;
+	GtkWidget *widget;
 	GtkMenuItem *menu_item;
+	AmtkActionInfo *action_info;
 	const gchar * const *accels;
 	const gchar *icon_name;
 	const gchar *tooltip;
@@ -411,23 +454,13 @@ amtk_factory_create_menu_item_full (AmtkFactory      *factory,
 	g_return_val_if_fail (AMTK_IS_FACTORY (factory), NULL);
 	g_return_val_if_fail (action_name != NULL, NULL);
 
-	central_store = amtk_action_info_central_store_get_singleton ();
-	action_info = amtk_action_info_central_store_lookup (central_store, action_name);
+	widget = gtk_menu_item_new ();
+	menu_item = GTK_MENU_ITEM (widget);
 
+	action_info = common_create (factory, action_name, flags, &widget);
 	if (action_info == NULL)
 	{
-		g_warning ("%s(): action name '%s' not found.",
-			   G_STRFUNC,
-			   action_name);
-
 		return NULL;
-	}
-
-	menu_item = GTK_MENU_ITEM (gtk_menu_item_new ());
-
-	if ((flags & AMTK_FACTORY_IGNORE_GACTION) == 0)
-	{
-		gtk_actionable_set_action_name (GTK_ACTIONABLE (menu_item), action_name);
 	}
 
 	if ((flags & AMTK_FACTORY_IGNORE_LABEL) == 0)
@@ -475,16 +508,7 @@ amtk_factory_create_menu_item_full (AmtkFactory      *factory,
 		amtk_menu_item_set_long_description (menu_item, tooltip);
 	}
 
-	if ((flags & AMTK_FACTORY_IGNORE_ACCELS) == 0 &&
-	    (flags & AMTK_FACTORY_IGNORE_ACCELS_FOR_APP) == 0 &&
-	    factory->priv->app != NULL)
-	{
-		gtk_application_set_accels_for_action (factory->priv->app, action_name, accels);
-	}
-
-	amtk_action_info_mark_as_used (action_info);
-
-	return GTK_WIDGET (menu_item);
+	return widget;
 }
 
 /**
@@ -527,32 +551,22 @@ amtk_factory_create_tool_button_full (AmtkFactory      *factory,
 				      const gchar      *action_name,
 				      AmtkFactoryFlags  flags)
 {
-	AmtkActionInfoCentralStore *central_store;
-	AmtkActionInfo *action_info;
+	GtkWidget *widget;
 	GtkToolButton *tool_button;
+	AmtkActionInfo *action_info;
 	const gchar *icon_name;
 	const gchar *tooltip;
 
 	g_return_val_if_fail (AMTK_IS_FACTORY (factory), NULL);
 	g_return_val_if_fail (action_name != NULL, NULL);
 
-	central_store = amtk_action_info_central_store_get_singleton ();
-	action_info = amtk_action_info_central_store_lookup (central_store, action_name);
+	widget = GTK_WIDGET (gtk_tool_button_new (NULL, NULL));
+	tool_button = GTK_TOOL_BUTTON (widget);
 
+	action_info = common_create (factory, action_name, flags, &widget);
 	if (action_info == NULL)
 	{
-		g_warning ("%s(): action name '%s' not found.",
-			   G_STRFUNC,
-			   action_name);
-
 		return NULL;
-	}
-
-	tool_button = GTK_TOOL_BUTTON (gtk_tool_button_new (NULL, NULL));
-
-	if ((flags & AMTK_FACTORY_IGNORE_GACTION) == 0)
-	{
-		gtk_actionable_set_action_name (GTK_ACTIONABLE (tool_button), action_name);
 	}
 
 	if ((flags & AMTK_FACTORY_IGNORE_LABEL) == 0)
@@ -574,18 +588,6 @@ amtk_factory_create_tool_button_full (AmtkFactory      *factory,
 	{
 		gtk_tool_item_set_tooltip_text (GTK_TOOL_ITEM (tool_button), tooltip);
 	}
-
-	if ((flags & AMTK_FACTORY_IGNORE_ACCELS) == 0 &&
-	    (flags & AMTK_FACTORY_IGNORE_ACCELS_FOR_APP) == 0 &&
-	    factory->priv->app != NULL)
-	{
-		const gchar * const *accels;
-
-		accels = amtk_action_info_get_accels (action_info);
-		gtk_application_set_accels_for_action (factory->priv->app, action_name, accels);
-	}
-
-	amtk_action_info_mark_as_used (action_info);
 
 	return GTK_TOOL_ITEM (tool_button);
 }

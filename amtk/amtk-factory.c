@@ -133,6 +133,42 @@
  *   return menu_bar;
  * }
  * ]|
+ *
+ * # Toolbars
+ *
+ * #AmtkFactory has functions to create #GtkToolItem's.
+ *
+ * ## Code example to create a toolbar
+ *
+ * How to create a #GtkToolbar with #AmtkFactory.
+ *
+ * |[
+ * static GtkWidget *
+ * create_toolbar (void)
+ * {
+ *   GtkToolbar *toolbar;
+ *   AmtkFactory *factory;
+ *
+ *   toolbar = GTK_TOOLBAR (gtk_toolbar_new ());
+ *
+ *   // Do not associate a GtkApplication, because the menu has already been
+ *   // generated, the menu contains all actions, so
+ *   // gtk_application_set_accels_for_action() has already been called for all
+ *   // actions. Another way is to set the AMTK_FACTORY_IGNORE_ACCELS_FOR_APP
+ *   // flag.
+ *   factory = amtk_factory_new (NULL);
+ *   gtk_toolbar_insert (toolbar, amtk_factory_create_tool_button (factory, "win.new-file"), -1);
+ *   gtk_toolbar_insert (toolbar, amtk_factory_create_tool_button (factory, "win.open"), -1);
+ *   gtk_toolbar_insert (toolbar, amtk_factory_create_tool_button (factory, "win.save"), -1);
+ *   gtk_toolbar_insert (toolbar, gtk_separator_tool_item_new (), -1);
+ *   gtk_toolbar_insert (toolbar, amtk_factory_create_tool_button (factory, "win.cut"), -1);
+ *   gtk_toolbar_insert (toolbar, amtk_factory_create_tool_button (factory, "win.copy"), -1);
+ *   gtk_toolbar_insert (toolbar, amtk_factory_create_tool_button (factory, "win.paste"), -1);
+ *   g_object_unref (factory);
+ *
+ *   return GTK_WIDGET (toolbar);
+ * }
+ * ]|
  */
 
 struct _AmtkFactoryPrivate

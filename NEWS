@@ -1,8 +1,12 @@
-News in 2.99.3, 2017-xx-yy
+News in 2.99.3, 2017-08-09
 --------------------------
 
 Amtk:
 * Add amtk_init() and amtk_finalize().
+* Remove AmtkFactoryMenu class, move its functions to its parent class
+  AmtkFactory.
+* AmtkFactory: add functions to create GtkToolItem's.
+* Add amtk_application_window_create_open_recent_menu().
 * Improvements to the documentation.
 * Other small code improvements.
 
@@ -15,6 +19,10 @@ Framework:
   and select all. (Update the GAction:enabled properties).
 * Add "win.tepl-new-file" GAction.
 * Add the TeplAbstractFactory class to create TeplTab's and tab labels.
+* TeplBuffer: rename title -> full-title and add short-title.
+* Add the TeplTab::close-request signal.
+* Add the TeplTabLabel class (which shows the buffer short-title, plus a close
+  button; the tooltip is not yet handled).
 
 Misc:
 * Add tepl_init() and tepl_finalize(), do not use DSO constructors/destructors.

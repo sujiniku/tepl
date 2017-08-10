@@ -33,6 +33,9 @@ add_action_info_entries (TeplApplication *tepl_app)
 
 		{ "app.about", "help-about", "_About", NULL,
 		  "About this application" },
+
+		{ "win.show-side-panel", NULL, "_Side Panel", "F12",
+		  "Show or hide the side panel" },
 	};
 
 	store = tepl_application_get_app_action_info_store (tepl_app);
@@ -60,7 +63,7 @@ about_activate_cb (GSimpleAction *about_action,
 }
 
 static void
-add_action_entries (GApplication *app)
+add_app_action_entries (GApplication *app)
 {
 	const GActionEntry entries[] =
 	{
@@ -83,7 +86,7 @@ startup_cb (GApplication *g_app,
 	tepl_app = tepl_application_get_from_gtk_application (GTK_APPLICATION (g_app));
 
 	add_action_info_entries (tepl_app);
-	add_action_entries (g_app);
+	add_app_action_entries (g_app);
 }
 
 static GtkWidget *
@@ -99,6 +102,21 @@ create_file_submenu (void)
 	g_object_unref (factory);
 
 	return GTK_WIDGET (file_submenu);
+}
+
+static GtkWidget *
+create_view_submenu (void)
+{
+	GtkMenuShell *view_submenu;
+	AmtkFactory *factory;
+
+	view_submenu = GTK_MENU_SHELL (gtk_menu_new ());
+
+	factory = amtk_factory_new_with_default_application ();
+	gtk_menu_shell_append (view_submenu, amtk_factory_create_check_menu_item (factory, "win.show-side-panel"));
+	g_object_unref (factory);
+
+	return GTK_WIDGET (view_submenu);
 }
 
 static GtkWidget *
@@ -120,6 +138,7 @@ static GtkMenuBar *
 create_menu_bar (void)
 {
 	GtkWidget *file_menu_item;
+	GtkWidget *view_menu_item;
 	GtkWidget *help_menu_item;
 	GtkMenuBar *menu_bar;
 	TeplApplication *app;
@@ -129,12 +148,17 @@ create_menu_bar (void)
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (file_menu_item),
 				   create_file_submenu ());
 
+	view_menu_item = gtk_menu_item_new_with_mnemonic ("_View");
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (view_menu_item),
+				   create_view_submenu ());
+
 	help_menu_item = gtk_menu_item_new_with_mnemonic ("_Help");
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (help_menu_item),
 				   create_help_submenu ());
 
 	menu_bar = GTK_MENU_BAR (gtk_menu_bar_new ());
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), file_menu_item);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), view_menu_item);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), help_menu_item);
 
 	app = tepl_application_get_default ();
@@ -144,18 +168,15 @@ create_menu_bar (void)
 	return menu_bar;
 }
 
-static GtkWidget *
-create_window_content (void)
+static void
+add_win_actions (GtkApplicationWindow *window,
+		 GtkWidget            *side_panel)
 {
-	GtkWidget *vgrid;
+	GPropertyAction *side_panel_action;
 
-	vgrid = gtk_grid_new ();
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (vgrid), GTK_ORIENTATION_VERTICAL);
-
-	gtk_container_add (GTK_CONTAINER (vgrid), GTK_WIDGET (create_menu_bar ()));
-
-	gtk_widget_show_all (vgrid);
-	return vgrid;
+	side_panel_action = g_property_action_new ("show-side-panel", side_panel, "visible");
+	g_action_map_add_action (G_ACTION_MAP (window), G_ACTION (side_panel_action));
+	g_object_unref (side_panel_action);
 }
 
 static void
@@ -163,11 +184,28 @@ activate_cb (GApplication *g_app,
 	     gpointer      user_data)
 {
 	GtkWidget *window;
+	GtkWidget *vgrid;
+	GtkWidget *hgrid;
+	GtkWidget *side_panel;
 
 	window = gtk_application_window_new (GTK_APPLICATION (g_app));
 	gtk_window_set_default_size (GTK_WINDOW (window), 800, 600);
-	gtk_container_add (GTK_CONTAINER (window), create_window_content ());
-	gtk_widget_show (window);
+
+	vgrid = gtk_grid_new ();
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (vgrid), GTK_ORIENTATION_VERTICAL);
+
+	gtk_container_add (GTK_CONTAINER (vgrid), GTK_WIDGET (create_menu_bar ()));
+
+	hgrid = gtk_grid_new ();
+	side_panel = gtk_label_new ("Side panel");
+	gtk_container_add (GTK_CONTAINER (hgrid), side_panel);
+	gtk_container_add (GTK_CONTAINER (hgrid), gtk_label_new ("Text view"));
+	gtk_container_add (GTK_CONTAINER (vgrid), hgrid);
+
+	add_win_actions (GTK_APPLICATION_WINDOW (window), side_panel);
+
+	gtk_container_add (GTK_CONTAINER (window), vgrid);
+	gtk_widget_show_all (window);
 }
 
 int

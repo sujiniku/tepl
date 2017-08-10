@@ -58,8 +58,8 @@
       needed: a label (i.e. a short description), an icon, a tooltip (i.e. a
       longer description) and keyboard shortcuts. This is implemented by
       <link linkend="AmtkActionInfo">AmtkActionInfo</link>, with
-      <link linkend="AmtkFactory">AmtkFactory</link> classes to create menu and
-      toolbar items.
+      <link linkend="AmtkFactory">AmtkFactory</link> functions to create menu
+      and toolbar items.
     </para>
     <para>
       When writing an XML file to create a <link linkend="GMenu">GMenu</link>

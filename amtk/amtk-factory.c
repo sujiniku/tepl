@@ -25,12 +25,12 @@
 
 /**
  * SECTION:amtk-factory
- * @Short_description: Factory base class
+ * @Short_description: Factory functions
  * @Title: AmtkFactory
  *
- * #AmtkFactory is a base class to create menu or toolbar items (or anything
- * else) from #AmtkActionInfo's. A factory function accesses an #AmtkActionInfo
- * from the #AmtkActionInfoCentralStore.
+ * #AmtkFactory contains functions to create menu or toolbar items from
+ * #AmtkActionInfo's. A factory function accesses an #AmtkActionInfo from the
+ * #AmtkActionInfoCentralStore.
  *
  * A #GtkApplication can be associated so that factory functions can call
  * gtk_application_set_accels_for_action() with the accelerators returned by
@@ -41,12 +41,12 @@
  * #GtkApplication only if an #AmtkActionInfo is actually used.
  *
  * #AmtkFactoryFlags permits to control how a factory function creates the
- * object, to ignore some steps. Factory functions should be declined in two
- * variants: a simple form which takes the value of the
- * #AmtkFactory:default-flags property, and the same function with the `_full`
- * suffix which takes an #AmtkFactoryFlags argument and ignores the
- * #AmtkFactory:default-flags. See for example amtk_factory_create_menu_item()
- * and amtk_factory_create_menu_item_full().
+ * object, to ignore some steps. Factory functions are declined in two variants:
+ * a simple form which takes the value of the #AmtkFactory:default-flags
+ * property, and the same function with the `_full` suffix which takes an
+ * #AmtkFactoryFlags argument and ignores the #AmtkFactory:default-flags. See
+ * for example amtk_factory_create_menu_item() and
+ * amtk_factory_create_menu_item_full().
  *
  * # Static objects # {#amtk-factory-static-objects}
  *
@@ -61,7 +61,7 @@
  *
  * # Menus
  *
- * Some notes about the functions that create #GtkMenuItem's:
+ * Some general notes about the functions that create #GtkMenuItem's:
  * - If not ignored by an #AmtkFactoryFlags, the first accelerator returned by
  *   amtk_action_info_get_accels() is set to the #GtkAccelLabel of the
  *   #GtkMenuItem.
@@ -136,11 +136,15 @@
  *
  * # Toolbars
  *
- * #AmtkFactory has functions to create #GtkToolItem's.
+ * Some general notes about the functions that create #GtkToolItem's:
+ * - The accelerators returned by amtk_action_info_get_accels() are not used for
+ *   documentation purposes in a toolbar, so the
+ *   %AMTK_FACTORY_IGNORE_ACCELS_FOR_DOC flag has no impact. The accelerators
+ *   are documented only in menu items.
  *
  * ## Code example to create a toolbar
  *
- * How to create a #GtkToolbar with #AmtkFactory.
+ * How to create a basic #GtkToolbar with #AmtkFactory.
  *
  * |[
  * static GtkWidget *
@@ -151,6 +155,7 @@
  *
  *   toolbar = GTK_TOOLBAR (gtk_toolbar_new ());
  *
+ *   // Small performance improvement:
  *   // Do not associate a GtkApplication, because the menu has already been
  *   // generated, the menu contains all actions, so
  *   // gtk_application_set_accels_for_action() has already been called for all
@@ -315,7 +320,8 @@ amtk_factory_init (AmtkFactory *factory)
  * amtk_factory_new:
  * @application: (nullable): a #GtkApplication, or %NULL.
  *
- * Creates a new #AmtkFactory object. Associating a #GtkApplication is optional.
+ * Creates a new #AmtkFactory object. Associating a #GtkApplication is optional,
+ * if it is %NULL gtk_application_set_accels_for_action() won't be called.
  *
  * Returns: a new #AmtkFactory.
  * Since: 3.0
@@ -606,6 +612,9 @@ amtk_factory_create_menu_item_full (AmtkFactory      *factory,
  * Creates a new #GtkCheckMenuItem for @action_name with the
  * #AmtkFactory:default-flags.
  *
+ * See the documentation of amtk_factory_create_check_menu_item_full() for more
+ * information.
+ *
  * Returns: (transfer floating): a new #GtkCheckMenuItem for @action_name.
  * Since: 3.0
  */
@@ -629,6 +638,12 @@ amtk_factory_create_check_menu_item (AmtkFactory *factory,
  *
  * This function ignores the #AmtkFactory:default-flags property and takes the
  * @flags argument instead.
+ *
+ * Note that since it is a #GtkCheckMenuItem the icon is not set, even if it
+ * would be possible with amtk_menu_item_set_icon_name().
+ *
+ * If the action controls a boolean property, think about using
+ * #GPropertyAction.
  *
  * Returns: (transfer floating): a new #GtkCheckMenuItem for @action_name.
  * Since: 3.0
@@ -720,6 +735,9 @@ amtk_factory_create_tool_button_full (AmtkFactory      *factory,
  * Creates a new #GtkMenuToolButton for @action_name with the
  * #AmtkFactory:default-flags.
  *
+ * See the documentation of amtk_factory_create_menu_tool_button_full() for more
+ * information.
+ *
  * Returns: (transfer floating): a new #GtkMenuToolButton for @action_name.
  * Since: 3.0
  */
@@ -743,6 +761,9 @@ amtk_factory_create_menu_tool_button (AmtkFactory *factory,
  *
  * This function ignores the #AmtkFactory:default-flags property and takes the
  * @flags argument instead.
+ *
+ * After calling this function, you need to use the #GtkMenuToolButton API to
+ * set the menu and also possibly set a tooltip to the arrow.
  *
  * Returns: (transfer floating): a new #GtkMenuToolButton for @action_name.
  * Since: 3.0

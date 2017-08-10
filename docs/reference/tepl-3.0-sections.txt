@@ -111,6 +111,8 @@ amtk_factory_create_menu_item
 amtk_factory_create_menu_item_full
 amtk_factory_create_tool_button
 amtk_factory_create_tool_button_full
+amtk_factory_create_menu_tool_button
+amtk_factory_create_menu_tool_button_full
 <SUBSECTION Standard>
 AMTK_FACTORY
 AMTK_FACTORY_CLASS

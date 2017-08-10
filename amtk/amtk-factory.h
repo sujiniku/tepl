@@ -111,6 +111,13 @@ GtkToolItem *		amtk_factory_create_tool_button_full		(AmtkFactory      *factory,
 									 const gchar      *action_name,
 									 AmtkFactoryFlags  flags);
 
+GtkMenuToolButton *	amtk_factory_create_menu_tool_button		(AmtkFactory *factory,
+									 const gchar *action_name);
+
+GtkMenuToolButton *	amtk_factory_create_menu_tool_button_full	(AmtkFactory      *factory,
+									 const gchar      *action_name,
+									 AmtkFactoryFlags  flags);
+
 G_END_DECLS
 
 #endif /* AMTK_FACTORY_H */

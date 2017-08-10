@@ -65,7 +65,7 @@ void			amtk_application_window_set_statusbar			(AmtkApplicationWindow *amtk_wind
 										 GtkStatusbar          *statusbar);
 
 void			amtk_application_window_connect_menu_to_statusbar	(AmtkApplicationWindow *amtk_window,
-										 AmtkMenuShell         *amtk_menu_shell);
+										 GtkMenuShell          *menu_shell);
 
 void			amtk_application_window_connect_recent_chooser_menu_to_statusbar
 										(AmtkApplicationWindow *amtk_window,

@@ -90,6 +90,13 @@
           <link linkend="amtk-action-info-central-store-get-singleton">amtk_action_info_central_store_get_singleton()</link>.
         </para>
       </listitem>
+      <listitem>
+        <para>
+          <link linkend="amtk-application-window-connect-menu-to-statusbar">amtk_application_window_connect_menu_to_statusbar()</link>
+          now takes a <link linkend="GtkMenuShell">GtkMenuShell</link> parameter
+          instead of <link linkend="AmtkMenuShell">AmtkMenuShell</link>.
+        </para>
+      </listitem>
     </itemizedlist>
   </chapter>
 </part>

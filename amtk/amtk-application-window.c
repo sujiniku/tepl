@@ -462,12 +462,11 @@ statusbar_notify_cb (AmtkApplicationWindow *amtk_window,
 /**
  * amtk_application_window_connect_menu_to_statusbar:
  * @amtk_window: an #AmtkApplicationWindow.
- * @amtk_menu_shell: an #AmtkMenuShell.
+ * @menu_shell: a #GtkMenuShell.
  *
- * Connect to the #AmtkMenuShell::menu-item-selected and
- * #AmtkMenuShell::menu-item-deselected signals of @amtk_menu_shell to push/pop
- * the long description of #GtkMenuItem's to the
- * #AmtkApplicationWindow:statusbar.
+ * Connects to the #AmtkMenuShell::menu-item-selected and
+ * #AmtkMenuShell::menu-item-deselected signals of @menu_shell to push/pop the
+ * long description of #GtkMenuItem's to the #AmtkApplicationWindow:statusbar.
  *
  * The long description is retrieved with amtk_menu_item_get_long_description().
  * So amtk_menu_item_set_long_description() must have been called, which is the
@@ -477,10 +476,14 @@ statusbar_notify_cb (AmtkApplicationWindow *amtk_window,
  */
 void
 amtk_application_window_connect_menu_to_statusbar (AmtkApplicationWindow *amtk_window,
-						   AmtkMenuShell         *amtk_menu_shell)
+						   GtkMenuShell          *menu_shell)
 {
+	AmtkMenuShell *amtk_menu_shell;
+
 	g_return_if_fail (AMTK_IS_APPLICATION_WINDOW (amtk_window));
-	g_return_if_fail (AMTK_IS_MENU_SHELL (amtk_menu_shell));
+	g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
+
+	amtk_menu_shell = amtk_menu_shell_get_from_gtk_menu_shell (menu_shell);
 
 	g_signal_connect_object (amtk_menu_shell,
 				 "menu-item-selected",
@@ -530,7 +533,7 @@ amtk_application_window_connect_recent_chooser_menu_to_statusbar (AmtkApplicatio
 			   MENU_SHELL_FOR_RECENT_CHOOSER_KEY,
 			   GINT_TO_POINTER (TRUE));
 
-	amtk_application_window_connect_menu_to_statusbar (amtk_window, amtk_menu_shell);
+	amtk_application_window_connect_menu_to_statusbar (amtk_window, GTK_MENU_SHELL (menu));
 }
 
 static void

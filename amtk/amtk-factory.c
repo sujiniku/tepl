@@ -441,6 +441,60 @@ common_create (AmtkFactory       *factory,
 }
 
 static AmtkActionInfo *
+common_create_menu_item (AmtkFactory       *factory,
+			 const gchar       *action_name,
+			 AmtkFactoryFlags   flags,
+			 GtkMenuItem      **menu_item)
+{
+	AmtkActionInfo *action_info;
+	const gchar * const *accels;
+	const gchar *tooltip;
+
+	action_info = common_create (factory, action_name, flags, (GtkWidget **)menu_item);
+	if (action_info == NULL)
+	{
+		return NULL;
+	}
+
+	if ((flags & AMTK_FACTORY_IGNORE_LABEL) == 0)
+	{
+		gtk_menu_item_set_use_underline (*menu_item, TRUE);
+		gtk_menu_item_set_label (*menu_item, amtk_action_info_get_label (action_info));
+	}
+
+	accels = amtk_action_info_get_accels (action_info);
+	if ((flags & AMTK_FACTORY_IGNORE_ACCELS) == 0 &&
+	    (flags & AMTK_FACTORY_IGNORE_ACCELS_FOR_DOC) == 0 &&
+	    accels != NULL && accels[0] != NULL)
+	{
+		guint accel_key;
+		GdkModifierType accel_mods;
+
+		gtk_accelerator_parse (accels[0], &accel_key, &accel_mods);
+
+		if (accel_key != 0 || accel_mods != 0)
+		{
+			GtkWidget *child;
+
+			child = gtk_bin_get_child (GTK_BIN (*menu_item));
+
+			gtk_accel_label_set_accel (GTK_ACCEL_LABEL (child),
+						   accel_key,
+						   accel_mods);
+		}
+	}
+
+	tooltip = amtk_action_info_get_tooltip (action_info);
+	if ((flags & AMTK_FACTORY_IGNORE_TOOLTIP) == 0 &&
+	    tooltip != NULL)
+	{
+		amtk_menu_item_set_long_description (*menu_item, tooltip);
+	}
+
+	return action_info;
+}
+
+static AmtkActionInfo *
 common_create_tool_button (AmtkFactory       *factory,
 			   const gchar       *action_name,
 			   AmtkFactoryFlags   flags,
@@ -519,54 +573,19 @@ amtk_factory_create_menu_item_full (AmtkFactory      *factory,
 				    const gchar      *action_name,
 				    AmtkFactoryFlags  flags)
 {
-	GtkWidget *widget;
 	GtkMenuItem *menu_item;
 	AmtkActionInfo *action_info;
-	const gchar * const *accels;
 	const gchar *icon_name;
-	const gchar *tooltip;
 
 	g_return_val_if_fail (AMTK_IS_FACTORY (factory), NULL);
 	g_return_val_if_fail (action_name != NULL, NULL);
 
-	widget = gtk_menu_item_new ();
-	menu_item = GTK_MENU_ITEM (widget);
+	menu_item = GTK_MENU_ITEM (gtk_menu_item_new ());
 
-	action_info = common_create (factory, action_name, flags, &widget);
+	action_info = common_create_menu_item (factory, action_name, flags, &menu_item);
 	if (action_info == NULL)
 	{
 		return NULL;
-	}
-
-	if ((flags & AMTK_FACTORY_IGNORE_LABEL) == 0)
-	{
-		gtk_menu_item_set_use_underline (menu_item, TRUE);
-		gtk_menu_item_set_label (menu_item, amtk_action_info_get_label (action_info));
-	}
-
-	/* Set accel before setting icon, because
-	 * amtk_menu_item_set_icon_name() adds a GtkBox.
-	 */
-	accels = amtk_action_info_get_accels (action_info);
-	if ((flags & AMTK_FACTORY_IGNORE_ACCELS) == 0 &&
-	    (flags & AMTK_FACTORY_IGNORE_ACCELS_FOR_DOC) == 0 &&
-	    accels != NULL && accels[0] != NULL)
-	{
-		guint accel_key;
-		GdkModifierType accel_mods;
-
-		gtk_accelerator_parse (accels[0], &accel_key, &accel_mods);
-
-		if (accel_key != 0 || accel_mods != 0)
-		{
-			GtkWidget *child;
-
-			child = gtk_bin_get_child (GTK_BIN (menu_item));
-
-			gtk_accel_label_set_accel (GTK_ACCEL_LABEL (child),
-						   accel_key,
-						   accel_mods);
-		}
 	}
 
 	icon_name = amtk_action_info_get_icon_name (action_info);
@@ -576,14 +595,64 @@ amtk_factory_create_menu_item_full (AmtkFactory      *factory,
 		amtk_menu_item_set_icon_name (menu_item, icon_name);
 	}
 
-	tooltip = amtk_action_info_get_tooltip (action_info);
-	if ((flags & AMTK_FACTORY_IGNORE_TOOLTIP) == 0 &&
-	    tooltip != NULL)
+	return GTK_WIDGET (menu_item);
+}
+
+/**
+ * amtk_factory_create_check_menu_item:
+ * @factory: an #AmtkFactory.
+ * @action_name: an action name.
+ *
+ * Creates a new #GtkCheckMenuItem for @action_name with the
+ * #AmtkFactory:default-flags.
+ *
+ * Returns: (transfer floating): a new #GtkCheckMenuItem for @action_name.
+ * Since: 3.0
+ */
+GtkWidget *
+amtk_factory_create_check_menu_item (AmtkFactory *factory,
+				     const gchar *action_name)
+{
+	g_return_val_if_fail (AMTK_IS_FACTORY (factory), NULL);
+	g_return_val_if_fail (action_name != NULL, NULL);
+
+	return amtk_factory_create_check_menu_item_full (factory,
+							 action_name,
+							 factory->priv->default_flags);
+}
+
+/**
+ * amtk_factory_create_check_menu_item_full:
+ * @factory: an #AmtkFactory.
+ * @action_name: an action name.
+ * @flags: #AmtkFactoryFlags.
+ *
+ * This function ignores the #AmtkFactory:default-flags property and takes the
+ * @flags argument instead.
+ *
+ * Returns: (transfer floating): a new #GtkCheckMenuItem for @action_name.
+ * Since: 3.0
+ */
+GtkWidget *
+amtk_factory_create_check_menu_item_full (AmtkFactory      *factory,
+					  const gchar      *action_name,
+					  AmtkFactoryFlags  flags)
+{
+	GtkMenuItem *check_menu_item;
+	AmtkActionInfo *action_info;
+
+	g_return_val_if_fail (AMTK_IS_FACTORY (factory), NULL);
+	g_return_val_if_fail (action_name != NULL, NULL);
+
+	check_menu_item = GTK_MENU_ITEM (gtk_check_menu_item_new ());
+
+	action_info = common_create_menu_item (factory, action_name, flags, &check_menu_item);
+	if (action_info == NULL)
 	{
-		amtk_menu_item_set_long_description (menu_item, tooltip);
+		return NULL;
 	}
 
-	return widget;
+	return GTK_WIDGET (check_menu_item);
 }
 
 /**

@@ -104,6 +104,13 @@ GtkWidget *		amtk_factory_create_menu_item_full		(AmtkFactory      *factory,
 									 const gchar      *action_name,
 									 AmtkFactoryFlags  flags);
 
+GtkWidget *		amtk_factory_create_check_menu_item		(AmtkFactory *factory,
+									 const gchar *action_name);
+
+GtkWidget *		amtk_factory_create_check_menu_item_full	(AmtkFactory      *factory,
+									 const gchar      *action_name,
+									 AmtkFactoryFlags  flags);
+
 GtkToolItem *		amtk_factory_create_tool_button			(AmtkFactory *factory,
 									 const gchar *action_name);
 

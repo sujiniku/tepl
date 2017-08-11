@@ -51,7 +51,10 @@ struct _TeplTabLabel
  * @parent_class: The parent class.
  * @get_tooltip_markup: Virtual function pointer to create the tooltip markup
  *   string. %NULL must be returned if no tooltip is wanted. The result is
- *   intended to be used as an argument to gtk_widget_set_tooltip_markup().
+ *   intended to be used as an argument to gtk_widget_set_tooltip_markup(). The
+ *   default implementation returns the full #TeplFile:location if non-%NULL, or
+ *   %NULL otherwise. The return value must be freed with g_free() when no
+ *   longer needed.
  */
 struct _TeplTabLabelClass
 {

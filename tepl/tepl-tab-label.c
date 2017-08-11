@@ -22,6 +22,7 @@
 #include <glib/gi18n-lib.h>
 #include "tepl-tab.h"
 #include "tepl-buffer.h"
+#include "tepl-file.h"
 #include "tepl-signal-group.h"
 #include "tepl-utils.h"
 
@@ -36,7 +37,7 @@
  * - a #GtkLabel with the #TeplBuffer:tepl-short-title.
  * - a close button, when clicked the #TeplTab #TeplTab::close-request signal is
  *   emitted.
- * - a customizable tooltip.
+ * - a customizable tooltip, by default it shows the full #TeplFile:location.
  */
 
 struct _TeplTabLabelPrivate
@@ -45,6 +46,7 @@ struct _TeplTabLabelPrivate
 	TeplTab *tab;
 
 	TeplSignalGroup *buffer_signal_group;
+	TeplSignalGroup *file_signal_group;
 
 	GtkLabel *label;
 };
@@ -97,16 +99,28 @@ buffer_short_title_notify_cb (TeplBuffer   *buffer,
 }
 
 static void
+file_location_notify_cb (TeplFile     *file,
+			 GParamSpec   *pspec,
+			 TeplTabLabel *tab_label)
+{
+	tepl_tab_label_update_tooltip (tab_label);
+}
+
+static void
 buffer_changed (TeplTabLabel *tab_label)
 {
 	TeplBuffer *buffer;
+	TeplFile *file;
 
 	_tepl_signal_group_clear (&tab_label->priv->buffer_signal_group);
+	_tepl_signal_group_clear (&tab_label->priv->file_signal_group);
 
 	if (tab_label->priv->tab == NULL)
 	{
 		return;
 	}
+
+	/* Buffer */
 
 	buffer = tepl_tab_get_buffer (tab_label->priv->tab);
 	tab_label->priv->buffer_signal_group = _tepl_signal_group_new (G_OBJECT (buffer));
@@ -118,6 +132,19 @@ buffer_changed (TeplTabLabel *tab_label)
 						  tab_label));
 
 	update_label (tab_label);
+
+	/* File */
+
+	file = tepl_buffer_get_file (buffer);
+	tab_label->priv->file_signal_group = _tepl_signal_group_new (G_OBJECT (file));
+
+	_tepl_signal_group_add (tab_label->priv->file_signal_group,
+				g_signal_connect (file,
+						  "notify::location",
+						  G_CALLBACK (file_location_notify_cb),
+						  tab_label));
+
+	tepl_tab_label_update_tooltip (tab_label);
 }
 
 static void
@@ -209,6 +236,7 @@ tepl_tab_label_dispose (GObject *object)
 	}
 
 	_tepl_signal_group_clear (&tab_label->priv->buffer_signal_group);
+	_tepl_signal_group_clear (&tab_label->priv->file_signal_group);
 
 	G_OBJECT_CLASS (tepl_tab_label_parent_class)->dispose (object);
 }
@@ -216,7 +244,39 @@ tepl_tab_label_dispose (GObject *object)
 static gchar *
 tepl_tab_label_get_tooltip_markup_default (TeplTabLabel *tab_label)
 {
-	return NULL;
+	TeplBuffer *buffer;
+	TeplFile *file;
+	GFile *location;
+	gchar *parse_name;
+	gchar *parse_name_with_tilde;
+	gchar *tooltip_markup;
+
+	if (tab_label->priv->tab == NULL)
+	{
+		return NULL;
+	}
+
+	buffer = tepl_tab_get_buffer (tab_label->priv->tab);
+	file = tepl_buffer_get_file (buffer);
+	location = tepl_file_get_location (file);
+
+	if (location == NULL)
+	{
+		return NULL;
+	}
+
+	parse_name = g_file_get_parse_name (location);
+	parse_name_with_tilde = _tepl_utils_replace_home_dir_with_tilde (parse_name);
+
+	tooltip_markup = g_markup_printf_escaped ("<b>%s</b> %s",
+						  /* Translators: location of a file. */
+						  _("Location:"),
+						  parse_name_with_tilde);
+
+	g_free (parse_name_with_tilde);
+	g_free (parse_name);
+
+	return tooltip_markup;
 }
 
 static void

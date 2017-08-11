@@ -46,10 +46,20 @@ struct _TeplTabLabel
 	TeplTabLabelPrivate *priv;
 };
 
+/**
+ * TeplTabLabelClass:
+ * @parent_class: The parent class.
+ * @get_tooltip_markup: Virtual function pointer to create the tooltip markup
+ *   string. %NULL must be returned if no tooltip is wanted. The result is
+ *   intended to be used as an argument to gtk_widget_set_tooltip_markup().
+ */
 struct _TeplTabLabelClass
 {
 	GtkGridClass parent_class;
 
+	gchar *	(* get_tooltip_markup)	(TeplTabLabel *tab_label);
+
+	/*< private >*/
 	gpointer padding[12];
 };
 
@@ -58,6 +68,8 @@ GType		tepl_tab_label_get_type		(void);
 GtkWidget *	tepl_tab_label_new		(TeplTab *tab);
 
 TeplTab *	tepl_tab_label_get_tab		(TeplTabLabel *tab_label);
+
+void		tepl_tab_label_update_tooltip	(TeplTabLabel *tab_label);
 
 G_END_DECLS
 

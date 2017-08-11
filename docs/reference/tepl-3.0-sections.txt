@@ -480,8 +480,10 @@ tepl_tab_group_get_type
 <SECTION>
 <FILE>tab-label</FILE>
 TeplTabLabel
+TeplTabLabelClass
 tepl_tab_label_new
 tepl_tab_label_get_tab
+tepl_tab_label_update_tooltip
 <SUBSECTION Standard>
 TEPL_IS_TAB_LABEL
 TEPL_IS_TAB_LABEL_CLASS
@@ -489,7 +491,6 @@ TEPL_TAB_LABEL
 TEPL_TAB_LABEL_CLASS
 TEPL_TAB_LABEL_GET_CLASS
 TEPL_TYPE_TAB_LABEL
-TeplTabLabelClass
 TeplTabLabelPrivate
 tepl_tab_label_get_type
 </SECTION>

@@ -36,6 +36,7 @@
  * - a #GtkLabel with the #TeplBuffer:tepl-short-title.
  * - a close button, when clicked the #TeplTab #TeplTab::close-request signal is
  *   emitted.
+ * - a customizable tooltip.
  */
 
 struct _TeplTabLabelPrivate
@@ -212,6 +213,12 @@ tepl_tab_label_dispose (GObject *object)
 	G_OBJECT_CLASS (tepl_tab_label_parent_class)->dispose (object);
 }
 
+static gchar *
+tepl_tab_label_get_tooltip_markup_default (TeplTabLabel *tab_label)
+{
+	return NULL;
+}
+
 static void
 tepl_tab_label_class_init (TeplTabLabelClass *klass)
 {
@@ -220,6 +227,8 @@ tepl_tab_label_class_init (TeplTabLabelClass *klass)
 	object_class->get_property = tepl_tab_label_get_property;
 	object_class->set_property = tepl_tab_label_set_property;
 	object_class->dispose = tepl_tab_label_dispose;
+
+	klass->get_tooltip_markup = tepl_tab_label_get_tooltip_markup_default;
 
 	/**
 	 * TeplTabLabel:tab:
@@ -311,4 +320,26 @@ tepl_tab_label_get_tab (TeplTabLabel *tab_label)
 	g_return_val_if_fail (TEPL_IS_TAB_LABEL (tab_label), NULL);
 
 	return tab_label->priv->tab;
+}
+
+/**
+ * tepl_tab_label_update_tooltip:
+ * @tab_label: a #TeplTabLabel.
+ *
+ * Asks #TeplTabLabel to update its tooltip. The ::get_tooltip_markup virtual
+ * function is called and the result is set with
+ * gtk_widget_set_tooltip_markup().
+ *
+ * Since: 3.0
+ */
+void
+tepl_tab_label_update_tooltip (TeplTabLabel *tab_label)
+{
+	gchar *tooltip_markup;
+
+	g_return_if_fail (TEPL_IS_TAB_LABEL (tab_label));
+
+	tooltip_markup = TEPL_TAB_LABEL_GET_CLASS (tab_label)->get_tooltip_markup (tab_label);
+	gtk_widget_set_tooltip_markup (GTK_WIDGET (tab_label), tooltip_markup);
+	g_free (tooltip_markup);
 }

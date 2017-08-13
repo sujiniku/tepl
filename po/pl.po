@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: tepl\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-08-06 10:37+0000\n"
-"PO-Revision-Date: 2017-08-06 21:24+0200\n"
+"POT-Creation-Date: 2017-08-12 13:17+0000\n"
+"PO-Revision-Date: 2017-08-13 18:47+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -26,12 +26,12 @@ msgstr ""
 msgid "Open “%s”"
 msgstr "Otwórz „%s”"
 
-#: amtk/amtk-application-window.c:589
+#: amtk/amtk-application-window.c:630
 msgid "Open _Recent"
 msgstr "Ostatnio używane doku_menty"
 
 #. Translators: %s is the application name.
-#: amtk/amtk-application-window.c:592
+#: amtk/amtk-application-window.c:633
 #, c-format
 msgid "Open a file recently used with %s"
 msgstr "Otwarcie pliku ostatnio używanego w programie %s"
@@ -266,7 +266,12 @@ msgstr "Plik został zmodyfikowany poza programem."
 msgid "The buffer contains invalid characters."
 msgstr "Bufor zawiera nieprawidłowe znaki."
 
-#: tepl/tepl-tab-label.c:248
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:273
+msgid "Location:"
+msgstr "Położenie:"
+
+#: tepl/tepl-tab-label.c:342
 msgid "Close file"
 msgstr "Zamyka plik"
 

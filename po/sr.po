@@ -1,14 +1,14 @@
 # Serbian translation for tepl.
-# Copyright (C) 2017 tepl's COPYRIGHT HOLDER
+# Copyright © 2017 tepl's COPYRIGHT HOLDER
 # This file is distributed under the same license as the tepl package.
-# MirosNik <miroslavnikolic@rocketmail.com>, 2017.
 # Мирослав Николић <miroslavnikolic@rocketmail.com>, 2017.
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-12 14:35+0000\n"
-"PO-Revision-Date: 2017-03-13 15:14+0200\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=tepl&k"
+"eywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2017-08-12 13:17+0000\n"
+"PO-Revision-Date: 2017-08-13 15:21+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: српски <gnome-sr@googlegroups.org>\n"
 "Language: sr\n"
@@ -17,22 +17,79 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : "
 "n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Project-Style: gnome\n"
 
 #. Translators: %s is a filename.
-#: tepl/tepl-application-window.c:356
+#: amtk/amtk-application-window.c:374
 #, c-format
 msgid "Open “%s”"
 msgstr "Отварам „%s“"
 
-#: tepl/tepl-application-window.c:575
+#: amtk/amtk-application-window.c:630
 msgid "Open _Recent"
 msgstr "Отвори _скорашње"
 
 #. Translators: %s is the application name.
-#: tepl/tepl-application-window.c:578
+#: amtk/amtk-application-window.c:633
 #, c-format
 msgid "Open a file recently used with %s"
 msgstr "Отворите датотеку коју је недавно користио „%s“"
+
+#. action, icon, label, accel, tooltip
+#. File menu
+#. Why "file" and not "document"? "Document" is not the best
+#. word because the action is not always to create a new
+#. document. For example a LaTeX document can be composed of
+#. several _files_. Or for source code we do not really create a
+#. new "document".
+#: tepl/tepl-application.c:71
+msgid "_New"
+msgstr "_Нова"
+
+#: tepl/tepl-application.c:72
+msgid "New file"
+msgstr "Нова датотека"
+
+#. Edit menu
+#: tepl/tepl-application.c:76
+msgid "Cu_t"
+msgstr "_Исеци"
+
+#: tepl/tepl-application.c:77
+msgid "Cut the selection"
+msgstr "Исеците избор"
+
+#: tepl/tepl-application.c:79
+msgid "_Copy"
+msgstr "У_множи"
+
+#: tepl/tepl-application.c:80
+msgid "Copy the selection"
+msgstr "Умножите избор"
+
+#: tepl/tepl-application.c:82
+msgid "_Paste"
+msgstr "У_баци"
+
+#: tepl/tepl-application.c:83
+msgid "Paste the clipboard"
+msgstr "Убаците из оставе"
+
+#: tepl/tepl-application.c:85
+msgid "_Delete"
+msgstr "_Обриши"
+
+#: tepl/tepl-application.c:86
+msgid "Delete the selected text"
+msgstr "Обришите изабрани текст"
+
+#: tepl/tepl-application.c:88
+msgid "Select _All"
+msgstr "Изабери _све"
+
+#: tepl/tepl-application.c:89
+msgid "Select all the text"
+msgstr "Изаберите сав текст"
 
 #. UTF-8 first, so that it's the first encoding returned by
 #. * tepl_encoding_get_all().
@@ -200,143 +257,113 @@ msgstr "Датотека је превелика. Највише %s може б�
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Не могу аутоматски да одредим кодирање знакова."
 
-#: tepl/tepl-file-saver.c:776
+#: tepl/tepl-file-saver.c:784
 msgid "The file is externally modified."
 msgstr "Датотека је измењена споља."
 
-#: tepl/tepl-file-saver.c:1310
+#: tepl/tepl-file-saver.c:1318
 msgid "The buffer contains invalid characters."
 msgstr "Међумеморија садржи неисправне знаке."
 
-#: tepl/tepl-io-error-info-bar.c:74
-#, c-format
-msgid "Could not find the file “%s”."
-msgstr "Не могу да нађем датотеку „%s“."
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:273
+msgid "Location:"
+msgstr "Место:"
 
-#: tepl/tepl-io-error-info-bar.c:77 tepl/tepl-io-error-info-bar.c:104
-#: tepl/tepl-io-error-info-bar.c:111
-msgid "Please check that you typed the location correctly and try again."
-msgstr "Проверите да ли сте исправно укуцали место и пробајте поново."
+#: tepl/tepl-tab-label.c:342
+msgid "Close file"
+msgstr "Затвори датотеку"
 
-#. Translators: %s is a URI scheme (like for example
-#. * http:, ftp:, etc.).
-#.
-#: tepl/tepl-io-error-info-bar.c:90
-#, c-format
-msgid "Unable to handle “%s:” locations."
-msgstr "Не могу да радим са „%s:“ местима."
+#~ msgid "Could not find the file “%s”."
+#~ msgstr "Не могу да нађем датотеку „%s“."
 
-#: tepl/tepl-io-error-info-bar.c:98
-msgid "The location of the file cannot be accessed."
-msgstr "Не могу да приступим месту датотеке."
+#~ msgid "Please check that you typed the location correctly and try again."
+#~ msgstr "Проверите да ли сте исправно укуцали место и пробајте поново."
 
-#: tepl/tepl-io-error-info-bar.c:102
-#, c-format
-msgid "“%s” is a directory."
-msgstr "„%s“ је директоријум."
+#~ msgid "Unable to handle “%s:” locations."
+#~ msgstr "Не могу да радим са „%s:“ местима."
 
-#: tepl/tepl-io-error-info-bar.c:109
-#, c-format
-msgid "“%s” is not a valid location."
-msgstr "„%s“ није исправно место."
+#~ msgid "The location of the file cannot be accessed."
+#~ msgstr "Не могу да приступим месту датотеке."
 
-#. Translators: %s is a hostname.
-#: tepl/tepl-io-error-info-bar.c:141
-#, c-format
-msgid ""
-"Host “%s” could not be found. Please check that your proxy settings are "
-"correct and try again."
-msgstr ""
-"Не могу да нађем домаћина „%s“. Проверите да ли су ваша подешавања "
-"посредника исправна и пробајте поново."
+#~ msgid "“%s” is a directory."
+#~ msgstr "„%s“ је директоријум."
 
-#. Use the same string as INVALID_HOST.
-#: tepl/tepl-io-error-info-bar.c:150
-msgid ""
-"Hostname was invalid. Please check that you typed the location correctly and "
-"try again."
-msgstr ""
-"Назив домаћина беше неисправан. Проверите да ли сте исправно укуцали место и "
-"пробајте поново."
+#~ msgid "“%s” is not a valid location."
+#~ msgstr "„%s“ није исправно место."
 
-#: tepl/tepl-io-error-info-bar.c:159
-#, c-format
-msgid "“%s” is not a regular file."
-msgstr "„%s“ није обична датотека."
+#~ msgid ""
+#~ "Host “%s” could not be found. Please check that your proxy settings are "
+#~ "correct and try again."
+#~ msgstr ""
+#~ "Не могу да нађем домаћина „%s“. Проверите да ли су ваша подешавања "
+#~ "посредника исправна и пробајте поново."
 
-#: tepl/tepl-io-error-info-bar.c:164
-msgid "Connection timed out. Please try again."
-msgstr "Истекло је време за везу. Пробајте поново."
+#~ msgid ""
+#~ "Hostname was invalid. Please check that you typed the location correctly "
+#~ "and try again."
+#~ msgstr ""
+#~ "Назив домаћина беше неисправан. Проверите да ли сте исправно укуцали "
+#~ "место и пробајте поново."
 
-#: tepl/tepl-io-error-info-bar.c:168
-#, c-format
-msgid "Unexpected error: %s"
-msgstr "Неочекивана грешка: %s"
+#~ msgid "“%s” is not a regular file."
+#~ msgstr "„%s“ није обична датотека."
 
-#: tepl/tepl-io-error-info-bar.c:179 tepl/tepl-io-error-info-bar.c:212
-#: tepl/tepl-progress-info-bar.c:53
-msgid "_Cancel"
-msgstr "_Откажи"
+#~ msgid "Connection timed out. Please try again."
+#~ msgstr "Истекло је време за везу. Пробајте поново."
 
-#: tepl/tepl-io-error-info-bar.c:185 tepl/tepl-io-error-info-bar.c:195
-msgid "_Retry"
-msgstr "_Покушај поново"
+#~ msgid "Unexpected error: %s"
+#~ msgstr "Неочекивана грешка: %s"
 
-#: tepl/tepl-io-error-info-bar.c:201
-msgid "Edit Any_way"
-msgstr "Уреди _ипак"
+#~ msgid "_Cancel"
+#~ msgstr "_Откажи"
 
-#: tepl/tepl-io-error-info-bar.c:270
-msgid ""
-"The number of followed links is limited and the actual file could not be "
-"found within this limit."
-msgstr ""
-"Број праћених веза је ограничен, а стварну датотеку не могу пронаћи у овом "
-"опсегу."
+#~ msgid "_Retry"
+#~ msgstr "_Покушај поново"
 
-#: tepl/tepl-io-error-info-bar.c:275
-msgid "You do not have the permissions necessary to open the file."
-msgstr "Немате потребна овлашћења да отворите датотеку."
+#~ msgid "Edit Any_way"
+#~ msgstr "Уреди _ипак"
 
-#: tepl/tepl-io-error-info-bar.c:285
-msgid ""
-"Unable to detect the character encoding.\n"
-"Please check that you are not trying to open a binary file.\n"
-"Select a character encoding from the menu and try again."
-msgstr ""
-"Не могу да откријем кодирање знакова.\n"
-"Проверите да не покушавате да отворите бинарну датотеку.\n"
-"Изабери кодирање знакова из изборника и покушајте поново."
+#~ msgid ""
+#~ "The number of followed links is limited and the actual file could not be "
+#~ "found within this limit."
+#~ msgstr ""
+#~ "Број праћених веза је ограничен, а стварну датотеку не могу пронаћи у "
+#~ "овом опсегу."
 
-#: tepl/tepl-io-error-info-bar.c:294
-#, c-format
-msgid "There was a problem opening the file “%s”."
-msgstr "Дошло је до проблема при отварању датотеке „%s“."
+#~ msgid "You do not have the permissions necessary to open the file."
+#~ msgstr "Немате потребна овлашћења да отворите датотеку."
 
-#: tepl/tepl-io-error-info-bar.c:296
-msgid ""
-"The file you opened has some invalid characters. If you continue editing "
-"this file you could corrupt it.\n"
-"You can also choose another character encoding and try again."
-msgstr ""
-"Датотека коју сте отворили има неке неисправне знакове. Ако наставите да је "
-"уређујете можете да је оштетите.\n"
-"Такође можете да изаберете други кодни распоред и да покушате поново."
+#~ msgid ""
+#~ "Unable to detect the character encoding.\n"
+#~ "Please check that you are not trying to open a binary file.\n"
+#~ "Select a character encoding from the menu and try again."
+#~ msgstr ""
+#~ "Не могу да откријем кодирање знакова.\n"
+#~ "Проверите да не покушавате да отворите бинарну датотеку.\n"
+#~ "Изабери кодирање знакова из изборника и покушајте поново."
 
-#: tepl/tepl-io-error-info-bar.c:312
-#, c-format
-msgid "Could not open the file “%s” using the “%s” character encoding."
-msgstr "Не могу да отворим датотеку „%s“ користећи „%s“ кодирање знакова."
+#~ msgid "There was a problem opening the file “%s”."
+#~ msgstr "Дошло је до проблема при отварању датотеке „%s“."
 
-#: tepl/tepl-io-error-info-bar.c:316
-msgid ""
-"Please check that you are not trying to open a binary file.\n"
-"Select a different character encoding from the menu and try again."
-msgstr ""
-"Проверите да не покушавате да отворите бинарну датотеку.\n"
-"Изабери други кодни распоред из изборника и покушајте поново."
+#~ msgid ""
+#~ "The file you opened has some invalid characters. If you continue editing "
+#~ "this file you could corrupt it.\n"
+#~ "You can also choose another character encoding and try again."
+#~ msgstr ""
+#~ "Датотека коју сте отворили има неке неисправне знакове. Ако наставите да "
+#~ "је уређујете можете да је оштетите.\n"
+#~ "Такође можете да изаберете други кодни распоред и да покушате поново."
 
-#: tepl/tepl-io-error-info-bar.c:329
-#, c-format
-msgid "Could not open the file “%s”."
-msgstr "Не могу да отворим датотеку „%s“."
+#~ msgid "Could not open the file “%s” using the “%s” character encoding."
+#~ msgstr "Не могу да отворим датотеку „%s“ користећи „%s“ кодирање знакова."
+
+#~ msgid ""
+#~ "Please check that you are not trying to open a binary file.\n"
+#~ "Select a different character encoding from the menu and try again."
+#~ msgstr ""
+#~ "Проверите да не покушавате да отворите бинарну датотеку.\n"
+#~ "Изабери други кодни распоред из изборника и покушајте поново."
+
+#~ msgid "Could not open the file “%s”."
+#~ msgstr "Не могу да отворим датотеку „%s“."

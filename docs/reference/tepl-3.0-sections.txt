@@ -156,6 +156,7 @@ amtk_menu_shell_get_type
 <SECTION>
 <FILE>amtk-utils</FILE>
 amtk_utils_recent_chooser_menu_get_item_uri
+amtk_utils_bind_g_action_to_gtk_action
 </SECTION>
 
 <INCLUDE>tepl/tepl.h</INCLUDE>

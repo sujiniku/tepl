@@ -182,3 +182,71 @@ amtk_utils_recent_chooser_menu_get_item_uri (GtkRecentChooserMenu *menu,
 	g_strfreev (all_uris);
 	return item_uri;
 }
+
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+static void
+gtk_action_activate_cb (GtkAction *gtk_action,
+			GAction   *g_action)
+{
+	g_action_activate (g_action, NULL);
+}
+
+/**
+ * amtk_utils_bind_g_action_to_gtk_action:
+ * @g_action_map: a #GActionMap.
+ * @g_action_name: a #GAction name present in @g_action_map.
+ * @gtk_action_group: a #GtkActionGroup.
+ * @gtk_action_name: a #GtkAction name present in @gtk_action_group.
+ *
+ * Utility function to be able to port an application gradually to #GAction,
+ * when #GtkUIManager and #GtkAction are still used. Porting to #GAction should
+ * be the first step.
+ *
+ * This function:
+ * - Calls g_action_activate() (with a %NULL #GVariant parameter) when the
+ *   #GtkAction #GtkAction::activate signal is emitted.
+ * - Binds the #GAction #GAction:enabled property to the #GtkAction
+ *   #GtkAction:sensitive property. The binding is done with the
+ *   %G_BINDING_BIDIRECTIONAL and %G_BINDING_SYNC_CREATE flags, the source is
+ *   the #GAction and the target is the #GtkAction.
+ *
+ * When using this function, you should set the callback to %NULL in the
+ * corresponding #GtkActionEntry.
+ *
+ * Since: 3.0
+ */
+void
+amtk_utils_bind_g_action_to_gtk_action (GActionMap     *g_action_map,
+					const gchar    *g_action_name,
+					GtkActionGroup *gtk_action_group,
+					const gchar    *gtk_action_name)
+{
+	GAction *g_action;
+	const GVariantType *param_type;
+	GtkAction *gtk_action;
+
+	g_return_if_fail (G_IS_ACTION_MAP (g_action_map));
+	g_return_if_fail (g_action_name != NULL);
+	g_return_if_fail (GTK_IS_ACTION_GROUP (gtk_action_group));
+	g_return_if_fail (gtk_action_name != NULL);
+
+	g_action = g_action_map_lookup_action (g_action_map, g_action_name);
+	g_return_if_fail (g_action != NULL);
+
+	param_type = g_action_get_parameter_type (g_action);
+	g_return_if_fail (param_type == NULL);
+
+	gtk_action = gtk_action_group_get_action (gtk_action_group, gtk_action_name);
+	g_return_if_fail (gtk_action != NULL);
+
+	g_signal_connect_object (gtk_action,
+				 "activate",
+				 G_CALLBACK (gtk_action_activate_cb),
+				 g_action,
+				 0);
+
+	g_object_bind_property (g_action, "enabled",
+				gtk_action, "sensitive",
+				G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
+}
+G_GNUC_END_IGNORE_DEPRECATIONS

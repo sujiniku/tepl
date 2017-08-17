@@ -5,9 +5,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-10 19:19+0000\n"
-"PO-Revision-Date: 2017-03-10 18:36-0200\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=tepl&k"
+"eywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2017-08-12 13:17+0000\n"
+"PO-Revision-Date: 2017-08-17 07:43-0200\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
@@ -16,22 +17,79 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Virtaal 1.0.0-beta1\n"
+"X-Project-Style: gnome\n"
 
 #. Translators: %s is a filename.
-#: tepl/tepl-application-window.c:356
+#: amtk/amtk-application-window.c:374
 #, c-format
 msgid "Open “%s”"
 msgstr "Abrir “%s”"
 
-#: tepl/tepl-application-window.c:575
+#: amtk/amtk-application-window.c:630
 msgid "Open _Recent"
 msgstr "Abrir _recente"
 
 #. Translators: %s is the application name.
-#: tepl/tepl-application-window.c:578
+#: amtk/amtk-application-window.c:633
 #, c-format
 msgid "Open a file recently used with %s"
 msgstr "Abre um arquivo recentemente usado com %s"
+
+#. action, icon, label, accel, tooltip
+#. File menu
+#. Why "file" and not "document"? "Document" is not the best
+#. word because the action is not always to create a new
+#. document. For example a LaTeX document can be composed of
+#. several _files_. Or for source code we do not really create a
+#. new "document".
+#: tepl/tepl-application.c:71
+msgid "_New"
+msgstr "_Novo"
+
+#: tepl/tepl-application.c:72
+msgid "New file"
+msgstr "Novo arquivo"
+
+#. Edit menu
+#: tepl/tepl-application.c:76
+msgid "Cu_t"
+msgstr "Recor_tar"
+
+#: tepl/tepl-application.c:77
+msgid "Cut the selection"
+msgstr "Recorta a seleção"
+
+#: tepl/tepl-application.c:79
+msgid "_Copy"
+msgstr "_Copiar"
+
+#: tepl/tepl-application.c:80
+msgid "Copy the selection"
+msgstr "Copia a seleção"
+
+#: tepl/tepl-application.c:82
+msgid "_Paste"
+msgstr "C_olar"
+
+#: tepl/tepl-application.c:83
+msgid "Paste the clipboard"
+msgstr "Cola conteúdo da área de transferência"
+
+#: tepl/tepl-application.c:85
+msgid "_Delete"
+msgstr "E_xcluir"
+
+#: tepl/tepl-application.c:86
+msgid "Delete the selected text"
+msgstr "Exclui o texto selecionado"
+
+#: tepl/tepl-application.c:88
+msgid "Select _All"
+msgstr "Selecionar _tudo"
+
+#: tepl/tepl-application.c:89
+msgid "Select all the text"
+msgstr "Seleciona todo o texto"
 
 #. UTF-8 first, so that it's the first encoding returned by
 #. * tepl_encoding_get_all().
@@ -99,7 +157,7 @@ msgstr "Armênio"
 
 #: tepl/tepl-encoding.c:141 tepl/tepl-encoding.c:142 tepl/tepl-encoding.c:150
 msgid "Chinese Traditional"
-msgstr "Chinês Tradicional"
+msgstr "Chinês tradicional"
 
 #: tepl/tepl-encoding.c:143
 msgid "Cyrillic/Russian"
@@ -199,149 +257,121 @@ msgstr "O arquivo é grande demais. No máximo %s pode ser carregado."
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Não foi possível detectar a codificação de caracteres automaticamente."
 
-#: tepl/tepl-file-saver.c:776
+#: tepl/tepl-file-saver.c:784
 msgid "The file is externally modified."
 msgstr "O arquivo foi modificado externamente."
 
-#: tepl/tepl-file-saver.c:1310
+#: tepl/tepl-file-saver.c:1318
 msgid "The buffer contains invalid characters."
 msgstr "O buffer contém caracteres inválidos."
 
-#: tepl/tepl-io-error-info-bar.c:74
-#, c-format
-msgid "Could not find the file “%s”."
-msgstr "Não foi possível localizar o arquivo “%s”."
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:273
+msgid "Location:"
+msgstr "Localização:"
 
-#: tepl/tepl-io-error-info-bar.c:77 tepl/tepl-io-error-info-bar.c:104
-#: tepl/tepl-io-error-info-bar.c:111
-msgid "Please check that you typed the location correctly and try again."
-msgstr ""
-"Por favor, verifique se você digitou a localização correta e tente novamente."
+#: tepl/tepl-tab-label.c:342
+msgid "Close file"
+msgstr "Fecha o arquivo"
 
-#. Translators: %s is a URI scheme (like for example
-#. * http:, ftp:, etc.).
-#.
-#: tepl/tepl-io-error-info-bar.c:90
-#, c-format
-msgid "Unable to handle “%s:” locations."
-msgstr "Não é possível tratar de localizações “%s:”."
+#~ msgid "Could not find the file “%s”."
+#~ msgstr "Não foi possível localizar o arquivo “%s”."
 
-#: tepl/tepl-io-error-info-bar.c:98
-msgid "The location of the file cannot be accessed."
-msgstr "A localização do arquivo não pode ser acessada."
+#~ msgid "Please check that you typed the location correctly and try again."
+#~ msgstr ""
+#~ "Por favor, verifique se você digitou a localização correta e tente "
+#~ "novamente."
 
-#: tepl/tepl-io-error-info-bar.c:102
-#, c-format
-msgid "“%s” is a directory."
-msgstr "“%s” é um diretório."
+#~ msgid "Unable to handle “%s:” locations."
+#~ msgstr "Não é possível tratar de localizações “%s:”."
 
-#: tepl/tepl-io-error-info-bar.c:109
-#, c-format
-msgid "“%s” is not a valid location."
-msgstr "“%s” não é uma localização válida."
+#~ msgid "The location of the file cannot be accessed."
+#~ msgstr "A localização do arquivo não pode ser acessada."
 
-#. Translators: %s is a hostname.
-#: tepl/tepl-io-error-info-bar.c:141
-#, c-format
-msgid ""
-"Host “%s” could not be found. Please check that your proxy settings are "
-"correct and try again."
-msgstr ""
-"O host “%s” não pôde ser localizado. Por favor, verifique suas configurações "
-"de proxy e tente novamente."
+#~ msgid "“%s” is a directory."
+#~ msgstr "“%s” é um diretório."
 
-#. Use the same string as INVALID_HOST.
-#: tepl/tepl-io-error-info-bar.c:150
-msgid ""
-"Hostname was invalid. Please check that you typed the location correctly and "
-"try again."
-msgstr ""
-"Nome de máquina inválido. Por favor, verifique se você digitou a localização "
-"corretamente e tente novamente."
+#~ msgid "“%s” is not a valid location."
+#~ msgstr "“%s” não é uma localização válida."
 
-#: tepl/tepl-io-error-info-bar.c:159
-#, c-format
-msgid "“%s” is not a regular file."
-msgstr "“%s” não é uma arquivo comum."
+#~ msgid ""
+#~ "Host “%s” could not be found. Please check that your proxy settings are "
+#~ "correct and try again."
+#~ msgstr ""
+#~ "O host “%s” não pôde ser localizado. Por favor, verifique suas "
+#~ "configurações de proxy e tente novamente."
 
-#: tepl/tepl-io-error-info-bar.c:164
-msgid "Connection timed out. Please try again."
-msgstr "Tempo expirada. Por favor, tente novamente."
+#~ msgid ""
+#~ "Hostname was invalid. Please check that you typed the location correctly "
+#~ "and try again."
+#~ msgstr ""
+#~ "Nome de máquina inválido. Por favor, verifique se você digitou a "
+#~ "localização corretamente e tente novamente."
 
-#: tepl/tepl-io-error-info-bar.c:168
-#, c-format
-msgid "Unexpected error: %s"
-msgstr "Erro inesperado: %s"
+#~ msgid "“%s” is not a regular file."
+#~ msgstr "“%s” não é uma arquivo comum."
 
-#: tepl/tepl-io-error-info-bar.c:179 tepl/tepl-io-error-info-bar.c:212
-#: tepl/tepl-progress-info-bar.c:53
-msgid "_Cancel"
-msgstr "_Cancelar"
+#~ msgid "Connection timed out. Please try again."
+#~ msgstr "Tempo expirada. Por favor, tente novamente."
 
-#: tepl/tepl-io-error-info-bar.c:185 tepl/tepl-io-error-info-bar.c:195
-msgid "_Retry"
-msgstr "_Tentar novamente"
+#~ msgid "Unexpected error: %s"
+#~ msgstr "Erro inesperado: %s"
 
-#: tepl/tepl-io-error-info-bar.c:201
-msgid "Edit Any_way"
-msgstr "_Editar assim mesmo"
+#~ msgid "_Cancel"
+#~ msgstr "_Cancelar"
 
-#: tepl/tepl-io-error-info-bar.c:270
-msgid ""
-"The number of followed links is limited and the actual file could not be "
-"found within this limit."
-msgstr ""
-"O número de links seguidos é limitado e o arquivo não pôde ser localizado "
-"dentro deste limite."
+#~ msgid "_Retry"
+#~ msgstr "_Tentar novamente"
 
-#: tepl/tepl-io-error-info-bar.c:275
-msgid "You do not have the permissions necessary to open the file."
-msgstr "Você não possui as permissões necessárias para abrir o arquivo."
+#~ msgid "Edit Any_way"
+#~ msgstr "_Editar assim mesmo"
 
-#: tepl/tepl-io-error-info-bar.c:285
-msgid ""
-"Unable to detect the character encoding.\n"
-"Please check that you are not trying to open a binary file.\n"
-"Select a character encoding from the menu and try again."
-msgstr ""
-"Não foi possível detectar a codificação de caracteres.\n"
-"Por favor, certifique-se de que você não está tentando abrir um arquivo "
-"binário.\n"
-"Selecione uma codificação de caracteres do menu e tente novamente."
+#~ msgid ""
+#~ "The number of followed links is limited and the actual file could not be "
+#~ "found within this limit."
+#~ msgstr ""
+#~ "O número de links seguidos é limitado e o arquivo não pôde ser localizado "
+#~ "dentro deste limite."
 
-#: tepl/tepl-io-error-info-bar.c:294
-#, c-format
-msgid "There was a problem opening the file “%s”."
-msgstr "Houve um problema ao abrir o arquivo “%s”."
+#~ msgid "You do not have the permissions necessary to open the file."
+#~ msgstr "Você não possui as permissões necessárias para abrir o arquivo."
 
-#: tepl/tepl-io-error-info-bar.c:296
-msgid ""
-"The file you opened has some invalid characters. If you continue editing "
-"this file you could corrupt it.\n"
-"You can also choose another character encoding and try again."
-msgstr ""
-"O arquivo que você abrir possui alguns caracteres inválidos. Se você "
-"continuar a editar esse arquivo, você pode corrompê-lo.\n"
-"Você também pode escolher uma outra codificação de caracteres e tentar "
-"novamente."
+#~ msgid ""
+#~ "Unable to detect the character encoding.\n"
+#~ "Please check that you are not trying to open a binary file.\n"
+#~ "Select a character encoding from the menu and try again."
+#~ msgstr ""
+#~ "Não foi possível detectar a codificação de caracteres.\n"
+#~ "Por favor, certifique-se de que você não está tentando abrir um arquivo "
+#~ "binário.\n"
+#~ "Selecione uma codificação de caracteres do menu e tente novamente."
 
-#: tepl/tepl-io-error-info-bar.c:312
-#, c-format
-msgid "Could not open the file “%s” using the “%s” character encoding."
-msgstr ""
-"Não foi possível abrir o arquivo “%s” usando a codificação de caracteres "
-"“%s”."
+#~ msgid "There was a problem opening the file “%s”."
+#~ msgstr "Houve um problema ao abrir o arquivo “%s”."
 
-#: tepl/tepl-io-error-info-bar.c:316
-msgid ""
-"Please check that you are not trying to open a binary file.\n"
-"Select a different character encoding from the menu and try again."
-msgstr ""
-"Por favor, certifique-se de que você não está tentando abrir um arquivo "
-"binário.\n"
-"Selecione uma codificação de caracteres diferente do menu e tente novamente."
+#~ msgid ""
+#~ "The file you opened has some invalid characters. If you continue editing "
+#~ "this file you could corrupt it.\n"
+#~ "You can also choose another character encoding and try again."
+#~ msgstr ""
+#~ "O arquivo que você abrir possui alguns caracteres inválidos. Se você "
+#~ "continuar a editar esse arquivo, você pode corrompê-lo.\n"
+#~ "Você também pode escolher uma outra codificação de caracteres e tentar "
+#~ "novamente."
 
-#: tepl/tepl-io-error-info-bar.c:329
-#, c-format
-msgid "Could not open the file “%s”."
-msgstr "Não foi possível abrir o arquivo “%s”."
+#~ msgid "Could not open the file “%s” using the “%s” character encoding."
+#~ msgstr ""
+#~ "Não foi possível abrir o arquivo “%s” usando a codificação de caracteres "
+#~ "“%s”."
+
+#~ msgid ""
+#~ "Please check that you are not trying to open a binary file.\n"
+#~ "Select a different character encoding from the menu and try again."
+#~ msgstr ""
+#~ "Por favor, certifique-se de que você não está tentando abrir um arquivo "
+#~ "binário.\n"
+#~ "Selecione uma codificação de caracteres diferente do menu e tente "
+#~ "novamente."
+
+#~ msgid "Could not open the file “%s”."
+#~ msgstr "Não foi possível abrir o arquivo “%s”."

@@ -293,7 +293,7 @@ update_paste_action_sensitivity (TeplApplicationWindow *tepl_window)
 }
 
 static void
-update_edit_actions_sensitivity (TeplApplicationWindow *tepl_window)
+update_basic_edit_actions_sensitivity (TeplApplicationWindow *tepl_window)
 {
 	TeplView *view;
 	TeplBuffer *buffer;
@@ -342,7 +342,7 @@ update_edit_actions_sensitivity (TeplApplicationWindow *tepl_window)
 static void
 update_actions_sensitivity (TeplApplicationWindow *tepl_window)
 {
-	update_edit_actions_sensitivity (tepl_window);
+	update_basic_edit_actions_sensitivity (tepl_window);
 	update_paste_action_sensitivity (tepl_window);
 }
 
@@ -632,7 +632,7 @@ tepl_application_window_get_application_window (TeplApplicationWindow *tepl_wind
 static void
 active_tab_changed (TeplApplicationWindow *tepl_window)
 {
-	update_edit_actions_sensitivity (tepl_window);
+	update_basic_edit_actions_sensitivity (tepl_window);
 	update_paste_action_sensitivity (tepl_window);
 }
 
@@ -641,7 +641,7 @@ active_view_editable_notify_cb (GtkTextView           *active_view,
 				GParamSpec            *pspec,
 				TeplApplicationWindow *tepl_window)
 {
-	update_edit_actions_sensitivity (tepl_window);
+	update_basic_edit_actions_sensitivity (tepl_window);
 	update_paste_action_sensitivity (tepl_window);
 }
 
@@ -672,7 +672,7 @@ active_buffer_has_selection_notify_cb (GtkTextBuffer         *buffer,
 				       GParamSpec            *pspec,
 				       TeplApplicationWindow *tepl_window)
 {
-	update_edit_actions_sensitivity (tepl_window);
+	update_basic_edit_actions_sensitivity (tepl_window);
 }
 
 static void
@@ -697,7 +697,7 @@ active_buffer_changed (TeplApplicationWindow *tepl_window)
 						  tepl_window));
 
 end:
-	update_edit_actions_sensitivity (tepl_window);
+	update_basic_edit_actions_sensitivity (tepl_window);
 }
 
 static void

@@ -63,6 +63,10 @@
  * - `"win.tepl-paste"`: calls tepl_view_paste_clipboard() on the active view.
  * - `"win.tepl-delete"`: calls tepl_view_delete_selection() on the active view.
  * - `"win.tepl-select-all"`: calls tepl_view_select_all() on the active view.
+ * - `"win.tepl-indent"`: calls gtk_source_view_indent_lines() on the selected
+ *   text of the active view.
+ * - `"win.tepl-unindent"`: calls gtk_source_view_unindent_lines() on the
+ *   selected text of the active view.
  *
  * See the tepl_menu_shell_append_edit_actions() convenience function.
  */
@@ -233,6 +237,50 @@ select_all_cb (GSimpleAction *action,
 	if (active_view != NULL)
 	{
 		tepl_view_select_all (active_view);
+	}
+}
+
+static void
+indent_cb (GSimpleAction *action,
+	   GVariant      *parameter,
+	   gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplView *view;
+
+	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (view != NULL)
+	{
+		TeplBuffer *buffer;
+		GtkTextIter start;
+		GtkTextIter end;
+
+		buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
+		gtk_text_buffer_get_selection_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
+		gtk_source_view_indent_lines (GTK_SOURCE_VIEW (view), &start, &end);
+	}
+}
+
+static void
+unindent_cb (GSimpleAction *action,
+	     GVariant      *parameter,
+	     gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplView *view;
+
+	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (view != NULL)
+	{
+		TeplBuffer *buffer;
+		GtkTextIter start;
+		GtkTextIter end;
+
+		buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
+		gtk_text_buffer_get_selection_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
+		gtk_source_view_unindent_lines (GTK_SOURCE_VIEW (view), &start, &end);
 	}
 }
 
@@ -416,6 +464,14 @@ update_basic_edit_actions_sensitivity (TeplApplicationWindow *tepl_window)
 	action = g_action_map_lookup_action (action_map, "tepl-select-all");
 	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
 				     buffer != NULL);
+
+	action = g_action_map_lookup_action (action_map, "tepl-indent");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+				     view_is_editable);
+
+	action = g_action_map_lookup_action (action_map, "tepl-unindent");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+				     view_is_editable);
 }
 
 static void
@@ -448,6 +504,8 @@ add_actions (TeplApplicationWindow *tepl_window)
 		{ "tepl-paste", paste_cb },
 		{ "tepl-delete", delete_cb },
 		{ "tepl-select-all", select_all_cb },
+		{ "tepl-indent", indent_cb },
+		{ "tepl-unindent", unindent_cb },
 	};
 
 	amtk_action_map_add_action_entries_check_dups (G_ACTION_MAP (tepl_window->priv->gtk_window),

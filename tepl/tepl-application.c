@@ -93,6 +93,12 @@ init_tepl_action_info_store (TeplApplication *tepl_app)
 
 		{ "win.tepl-select-all", "edit-select-all", N_("Select _All"), "<Control>a",
 		  N_("Select all the text") },
+
+		{ "win.tepl-indent", "format-indent-more", N_("_Indent"), "Tab",
+		  N_("Indent the selected lines") },
+
+		{ "win.tepl-unindent", "format-indent-less", N_("_Unindent"), "<Shift>Tab",
+		  N_("Unindent the selected lines") },
 	};
 
 	g_assert (tepl_app->priv->tepl_action_info_store == NULL);

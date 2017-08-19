@@ -73,6 +73,12 @@ init_tepl_action_info_store (TeplApplication *tepl_app)
 
 		/* Edit menu */
 
+		{ "win.tepl-undo", "edit-undo", N_("_Undo"), "<Control>z",
+		  N_("Undo the last action") },
+
+		{ "win.tepl-redo", "edit-redo", N_("_Redo"), "<Shift><Control>z",
+		  N_("Redo the last undone action") },
+
 		{ "win.tepl-cut", "edit-cut", N_("Cu_t"), "<Control>x",
 		  N_("Cut the selection") },
 

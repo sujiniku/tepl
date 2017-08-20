@@ -1,3 +1,16 @@
+News in 2.99.4, 2017-08-20
+--------------------------
+
+Amtk:
+* Add factory functions to create GtkMenuToolButton's and GtkCheckMenuItem's.
+* Improve API of amtk_application_window_connect_menu_to_statusbar().
+* Add amtk_utils_bind_g_action_to_gtk_action(), to be able to port an
+  application gradually to GAction while still using GtkUIManager.
+
+Framework:
+* TeplTabLabel: add an overridable tooltip API, by default the tooltip shows
+  the file location.
+
 News in 2.99.3, 2017-08-09
 --------------------------
 

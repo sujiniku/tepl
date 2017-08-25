@@ -5,13 +5,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: tepl gtef-2.0\n"
+"Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-07-15 18:39+0000\n"
-"PO-Revision-Date: 2017-08-01 12:57+0200\n"
+"POT-Creation-Date: 2017-08-12 13:17+0000\n"
+"PO-Revision-Date: 2017-08-25 18:46+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
-"Language-Team: čeština <gnome-cs-list@gnome.org>>\n"
+"Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,227 +20,256 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.7\n"
 
 #. Translators: %s is a filename.
-#: gtef/gtef-application-window.c:356
+#: amtk/amtk-application-window.c:374
 #, c-format
 msgid "Open “%s”"
 msgstr "Otevřít „%s“"
 
-#: gtef/gtef-application-window.c:575
+#: amtk/amtk-application-window.c:630
 msgid "Open _Recent"
 msgstr "Otevřít ne_dávné"
 
 #. Translators: %s is the application name.
-#: gtef/gtef-application-window.c:578
+#: amtk/amtk-application-window.c:633
 #, c-format
 msgid "Open a file recently used with %s"
 msgstr "Otevřít soubor nedávno použitý aplikací %s"
 
+#. action, icon, label, accel, tooltip
+#. File menu
+#. Why "file" and not "document"? "Document" is not the best
+#. word because the action is not always to create a new
+#. document. For example a LaTeX document can be composed of
+#. several _files_. Or for source code we do not really create a
+#. new "document".
+#: tepl/tepl-application.c:71
+msgid "_New"
+msgstr "_Nový"
+
+#: tepl/tepl-application.c:72
+msgid "New file"
+msgstr "Nový soubor"
+
+#. Edit menu
+#: tepl/tepl-application.c:76
+msgid "Cu_t"
+msgstr "_Vyjmout"
+
+#: tepl/tepl-application.c:77
+msgid "Cut the selection"
+msgstr "Vyjmout výběr"
+
+#: tepl/tepl-application.c:79
+msgid "_Copy"
+msgstr "_Kopírovat"
+
+#: tepl/tepl-application.c:80
+msgid "Copy the selection"
+msgstr "Kopírovat výběr"
+
+#: tepl/tepl-application.c:82
+msgid "_Paste"
+msgstr "V_ložit"
+
+#: tepl/tepl-application.c:83
+msgid "Paste the clipboard"
+msgstr "Vložit obsah schránky"
+
+#: tepl/tepl-application.c:85
+msgid "_Delete"
+msgstr "_Smazat"
+
+#: tepl/tepl-application.c:86
+msgid "Delete the selected text"
+msgstr "Smazat vybraný text"
+
+#: tepl/tepl-application.c:88
+msgid "Select _All"
+msgstr "Vybr_at vše"
+
+#: tepl/tepl-application.c:89
+msgid "Select all the text"
+msgstr "Vybrat všechen text"
+
 #. UTF-8 first, so that it's the first encoding returned by
-#. * gtef_encoding_get_all().
+#. * tepl_encoding_get_all().
 #.
-#: gtef/gtef-encoding.c:115 gtef/gtef-encoding.c:132 gtef/gtef-encoding.c:133
-#: gtef/gtef-encoding.c:134 gtef/gtef-encoding.c:135 gtef/gtef-encoding.c:136
-#: gtef/gtef-encoding.c:137 gtef/gtef-encoding.c:138
+#: tepl/tepl-encoding.c:115 tepl/tepl-encoding.c:132 tepl/tepl-encoding.c:133
+#: tepl/tepl-encoding.c:134 tepl/tepl-encoding.c:135 tepl/tepl-encoding.c:136
+#: tepl/tepl-encoding.c:137 tepl/tepl-encoding.c:138
 msgid "Unicode"
 msgstr "Unikód"
 
 #. FIXME GEOSTD8 ?
-#: gtef/gtef-encoding.c:117 gtef/gtef-encoding.c:129 gtef/gtef-encoding.c:157
-#: gtef/gtef-encoding.c:180
+#: tepl/tepl-encoding.c:117 tepl/tepl-encoding.c:129 tepl/tepl-encoding.c:157
+#: tepl/tepl-encoding.c:180
 msgid "Western"
 msgstr "Západoevropské"
 
-#: gtef/gtef-encoding.c:118 gtef/gtef-encoding.c:158 gtef/gtef-encoding.c:178
+#: tepl/tepl-encoding.c:118 tepl/tepl-encoding.c:158 tepl/tepl-encoding.c:178
 msgid "Central European"
 msgstr "Středoevropské"
 
-#: gtef/gtef-encoding.c:119
+#: tepl/tepl-encoding.c:119
 msgid "South European"
 msgstr "Jihoevropské"
 
-#: gtef/gtef-encoding.c:120 gtef/gtef-encoding.c:127 gtef/gtef-encoding.c:185
+#: tepl/tepl-encoding.c:120 tepl/tepl-encoding.c:127 tepl/tepl-encoding.c:185
 msgid "Baltic"
 msgstr "Baltické"
 
-#: gtef/gtef-encoding.c:121 gtef/gtef-encoding.c:159 gtef/gtef-encoding.c:166
-#: gtef/gtef-encoding.c:168 gtef/gtef-encoding.c:169 gtef/gtef-encoding.c:179
+#: tepl/tepl-encoding.c:121 tepl/tepl-encoding.c:159 tepl/tepl-encoding.c:166
+#: tepl/tepl-encoding.c:168 tepl/tepl-encoding.c:169 tepl/tepl-encoding.c:179
 msgid "Cyrillic"
 msgstr "Azbuka"
 
-#: gtef/gtef-encoding.c:122 gtef/gtef-encoding.c:162 gtef/gtef-encoding.c:184
+#: tepl/tepl-encoding.c:122 tepl/tepl-encoding.c:162 tepl/tepl-encoding.c:184
 msgid "Arabic"
 msgstr "Arabské"
 
-#: gtef/gtef-encoding.c:123 gtef/gtef-encoding.c:181
+#: tepl/tepl-encoding.c:123 tepl/tepl-encoding.c:181
 msgid "Greek"
 msgstr "Řecké"
 
-#: gtef/gtef-encoding.c:124
+#: tepl/tepl-encoding.c:124
 msgid "Hebrew Visual"
 msgstr "Hebrejské vizuální"
 
-#: gtef/gtef-encoding.c:125 gtef/gtef-encoding.c:160 gtef/gtef-encoding.c:182
+#: tepl/tepl-encoding.c:125 tepl/tepl-encoding.c:160 tepl/tepl-encoding.c:182
 msgid "Turkish"
 msgstr "Turecké"
 
-#: gtef/gtef-encoding.c:126
+#: tepl/tepl-encoding.c:126
 msgid "Nordic"
 msgstr "Skandinávské"
 
-#: gtef/gtef-encoding.c:128
+#: tepl/tepl-encoding.c:128
 msgid "Celtic"
 msgstr "Keltské"
 
-#: gtef/gtef-encoding.c:130
+#: tepl/tepl-encoding.c:130
 msgid "Romanian"
 msgstr "Rumunské"
 
-#: gtef/gtef-encoding.c:140
+#: tepl/tepl-encoding.c:140
 msgid "Armenian"
 msgstr "Armenské"
 
-#: gtef/gtef-encoding.c:141 gtef/gtef-encoding.c:142 gtef/gtef-encoding.c:150
+#: tepl/tepl-encoding.c:141 tepl/tepl-encoding.c:142 tepl/tepl-encoding.c:150
 msgid "Chinese Traditional"
 msgstr "Čínské tradiční"
 
-#: gtef/gtef-encoding.c:143
+#: tepl/tepl-encoding.c:143
 msgid "Cyrillic/Russian"
 msgstr "Azbuka ruská"
 
-#: gtef/gtef-encoding.c:145 gtef/gtef-encoding.c:146 gtef/gtef-encoding.c:147
-#: gtef/gtef-encoding.c:164 gtef/gtef-encoding.c:172
+#: tepl/tepl-encoding.c:145 tepl/tepl-encoding.c:146 tepl/tepl-encoding.c:147
+#: tepl/tepl-encoding.c:164 tepl/tepl-encoding.c:172
 msgid "Japanese"
 msgstr "Japonské"
 
-#: gtef/gtef-encoding.c:149 gtef/gtef-encoding.c:165 gtef/gtef-encoding.c:167
-#: gtef/gtef-encoding.c:175
+#: tepl/tepl-encoding.c:149 tepl/tepl-encoding.c:165 tepl/tepl-encoding.c:167
+#: tepl/tepl-encoding.c:175
 msgid "Korean"
 msgstr "Korejské"
 
-#: gtef/gtef-encoding.c:152 gtef/gtef-encoding.c:153 gtef/gtef-encoding.c:154
+#: tepl/tepl-encoding.c:152 tepl/tepl-encoding.c:153 tepl/tepl-encoding.c:154
 msgid "Chinese Simplified"
 msgstr "Čínské zjednodušené"
 
-#: gtef/gtef-encoding.c:155
+#: tepl/tepl-encoding.c:155
 msgid "Georgian"
 msgstr "Gruzínské"
 
-#: gtef/gtef-encoding.c:161 gtef/gtef-encoding.c:183
+#: tepl/tepl-encoding.c:161 tepl/tepl-encoding.c:183
 msgid "Hebrew"
 msgstr "Hebrejské"
 
-#: gtef/gtef-encoding.c:170
+#: tepl/tepl-encoding.c:170
 msgid "Cyrillic/Ukrainian"
 msgstr "Azbuka ukrajinská"
 
-#: gtef/gtef-encoding.c:173 gtef/gtef-encoding.c:176 gtef/gtef-encoding.c:186
+#: tepl/tepl-encoding.c:173 tepl/tepl-encoding.c:176 tepl/tepl-encoding.c:186
 msgid "Vietnamese"
 msgstr "Vietnamské"
 
-#: gtef/gtef-encoding.c:174
+#: tepl/tepl-encoding.c:174
 msgid "Thai"
 msgstr "Thajské"
 
-#: gtef/gtef-encoding.c:365
+#: tepl/tepl-encoding.c:365
 msgid "Unknown"
 msgstr "Neznámé"
 
-#. Translators: This is the sorted list of encodings used by Gtef for
+#. Translators: This is the sorted list of encodings used by Tepl for
 #. * automatic detection of the file encoding. You may want to customize
 #. * it adding encodings that are common in your country, for instance the
 #. * GB18030 encoding for the Chinese translation. You may also want to
 #. * remove the ISO-8859-15 encoding (covering English and most Western
 #. * European languages) if you think people in your country will rarely
-#. * use it. 'CURRENT' is a magic value used by Gtef and it represents
+#. * use it. 'CURRENT' is a magic value used by Tepl and it represents
 #. * the encoding for the current locale, so please don't translate the
 #. * 'CURRENT' term. Keep the same format: square brackets, single quotes,
 #. * commas.
 #.
-#: gtef/gtef-encoding.c:640
+#: tepl/tepl-encoding.c:640
 msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 msgstr "['UTF-8', 'CURRENT', 'ISO-8859-2', 'WINDOWS-1250', 'UTF-16']"
 
-#: gtef/gtef-encoding-converter.c:302
+#: tepl/tepl-encoding-converter.c:302
 #, c-format
 msgid "Conversion from character set “%s” to “%s” is not supported."
 msgstr "Převod ze znakové sady „%s“ do „%s“ není podporován."
 
-#: gtef/gtef-encoding-converter.c:311
+#: tepl/tepl-encoding-converter.c:311
 #, c-format
 msgid "Could not open converter from “%s” to “%s”: %s"
 msgstr "Nelze otevřít převodník z „%s“ do „%s“: %s"
 
-#: gtef/gtef-encoding-converter.c:368
+#: tepl/tepl-encoding-converter.c:368
 msgid "The input data contains an invalid sequence."
 msgstr "Vstupní data obsahují neplatnou posloupnost."
 
-#: gtef/gtef-encoding-converter.c:377
+#: tepl/tepl-encoding-converter.c:377
 #, c-format
 msgid "Error when converting data: %s"
 msgstr "Chyba při převodu dat: %s"
 
-#: gtef/gtef-encoding-converter.c:556
+#: tepl/tepl-encoding-converter.c:556
 msgid "The input data ends with an incomplete multi-byte sequence."
 msgstr "Vstupní data končí neúplnou víceznakovou posloupností."
 
-#: gtef/gtef-encoding-converter.c:579
+#: tepl/tepl-encoding-converter.c:579
 msgid "The input content ends with incomplete data."
 msgstr "Obsah vstupu končí neúplnými daty."
 
-#: gtef/gtef-file.c:413
+#: tepl/tepl-file.c:413
 #, c-format
 msgid "Untitled File %d"
 msgstr "Nepojmenovaný soubor %d"
 
-#: gtef/gtef-file-content-loader.c:334
+#: tepl/tepl-file-content-loader.c:334
 #, c-format
 msgid "The file is too big. Maximum %s can be loaded."
 msgstr "Soubor je příliš velký. Načteno může být nanejvýše %s."
 
-#: gtef/gtef-file-loader.c:925
+#: tepl/tepl-file-loader.c:925
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Není možné automaticky zjistit kódování znaků."
 
-#: gtef/gtef-file-saver.c:784
+#: tepl/tepl-file-saver.c:784
 msgid "The file is externally modified."
 msgstr "Soubor byl externě změněn."
 
-#: gtef/gtef-file-saver.c:1318
+#: tepl/tepl-file-saver.c:1318
 msgid "The buffer contains invalid characters."
 msgstr "Vyrovnávací paměť obsahuje neplatné znaky."
 
-#~ msgid "_New"
-#~ msgstr "_Nový"
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:273
+msgid "Location:"
+msgstr "Umístění:"
 
-#~ msgid "New file"
-#~ msgstr "Nový soubor"
-
-#~ msgid "Cu_t"
-#~ msgstr "_Vyjmout"
-
-#~ msgid "Cut the selection"
-#~ msgstr "Vyjmout výběr"
-
-#~ msgid "_Copy"
-#~ msgstr "_Kopírovat"
-
-#~ msgid "Copy the selection"
-#~ msgstr "Kopírovat výběr"
-
-#~ msgid "_Paste"
-#~ msgstr "V_ložit"
-
-#~ msgid "Paste the clipboard"
-#~ msgstr "Vložit obsah schránky"
-
-#~ msgid "_Delete"
-#~ msgstr "_Smazat"
-
-#~ msgid "Delete the selected text"
-#~ msgstr "Smazat vybraný text"
-
-#~ msgid "Select _All"
-#~ msgstr "Vybr_at vše"
-
-#~ msgid "Select all the text"
-#~ msgstr "Vybrat všechen text"
+#: tepl/tepl-tab-label.c:342
+msgid "Close file"
+msgstr "Zavřít soubor"

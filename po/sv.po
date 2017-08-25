@@ -2,37 +2,95 @@
 # Copyright © 2017 tepl's COPYRIGHT HOLDER
 # This file is distributed under the same license as the tepl package.
 # Anders Jonsson <anders.jonsson@norsjovallen.se>, 2017.
+# Josef Andersson <l10nl18nsweja@gmail.com>, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-10 16:40+0000\n"
-"PO-Revision-Date: 2017-03-10 19:52+0100\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
+"product=tepl&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2017-08-18 09:59+0000\n"
+"PO-Revision-Date: 2017-08-25 21:19+0200\n"
+"Last-Translator: Josef Andersson <l10nl18nsweja@gmail.com>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #. Translators: %s is a filename.
-#: tepl/tepl-application-window.c:356
+#: amtk/amtk-application-window.c:374
 #, c-format
 msgid "Open “%s”"
 msgstr "Öppna ”%s”"
 
-#: tepl/tepl-application-window.c:575
+#: amtk/amtk-application-window.c:630
 msgid "Open _Recent"
 msgstr "Öppna _senaste"
 
 #. Translators: %s is the application name.
-#: tepl/tepl-application-window.c:578
+#: amtk/amtk-application-window.c:633
 #, c-format
 msgid "Open a file recently used with %s"
 msgstr "Öppna en fil som tidigare använts med %s"
+
+#. action, icon, label, accel, tooltip
+#. File menu
+#. Why "file" and not "document"? "Document" is not the best
+#. word because the action is not always to create a new
+#. document. For example a LaTeX document can be composed of
+#. several _files_. Or for source code we do not really create a
+#. new "document".
+#: tepl/tepl-application.c:71
+msgid "_New"
+msgstr "_Ny"
+
+#: tepl/tepl-application.c:72
+msgid "New file"
+msgstr "Ny fil"
+
+#. Edit menu
+#: tepl/tepl-application.c:76
+msgid "Cu_t"
+msgstr "Klipp u_t"
+
+#: tepl/tepl-application.c:77
+msgid "Cut the selection"
+msgstr "Klipp ut markering"
+
+#: tepl/tepl-application.c:79
+msgid "_Copy"
+msgstr "_Kopiera"
+
+#: tepl/tepl-application.c:80
+msgid "Copy the selection"
+msgstr "Kopiera markeringen"
+
+#: tepl/tepl-application.c:82
+msgid "_Paste"
+msgstr "K_listra in"
+
+#: tepl/tepl-application.c:83
+msgid "Paste the clipboard"
+msgstr "Klistra in urklipp"
+
+#: tepl/tepl-application.c:85
+msgid "_Delete"
+msgstr "_Ta bort"
+
+#: tepl/tepl-application.c:86
+msgid "Delete the selected text"
+msgstr "Ta bort den markerade texten"
+
+#: tepl/tepl-application.c:88
+msgid "Select _All"
+msgstr "Markera _allt"
+
+#: tepl/tepl-application.c:89
+msgid "Select all the text"
+msgstr "Markera all text"
 
 #. UTF-8 first, so that it's the first encoding returned by
 #. * tepl_encoding_get_all().
@@ -200,143 +258,113 @@ msgstr "Filen är för stor. Högst %s kan läsas in."
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Det går inte att identifiera teckenkodningen automatiskt."
 
-#: tepl/tepl-file-saver.c:776
+#: tepl/tepl-file-saver.c:784
 msgid "The file is externally modified."
 msgstr "Filen har ändrats externt."
 
-#: tepl/tepl-file-saver.c:1310
+#: tepl/tepl-file-saver.c:1318
 msgid "The buffer contains invalid characters."
 msgstr "Bufferten innehåller ogiltiga tecken."
 
-#: tepl/tepl-io-error-info-bar.c:74
-#, c-format
-msgid "Could not find the file “%s”."
-msgstr "Kunde inte hitta filen ”%s”."
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:273
+msgid "Location:"
+msgstr "Plats:"
 
-#: tepl/tepl-io-error-info-bar.c:77 tepl/tepl-io-error-info-bar.c:104
-#: tepl/tepl-io-error-info-bar.c:111
-msgid "Please check that you typed the location correctly and try again."
-msgstr "Kontrollera att du angav platsen korrekt och försök igen."
+#: tepl/tepl-tab-label.c:342
+msgid "Close file"
+msgstr "Stäng fil"
 
-#. Translators: %s is a URI scheme (like for example
-#. * http:, ftp:, etc.).
-#.
-#: tepl/tepl-io-error-info-bar.c:90
-#, c-format
-msgid "Unable to handle “%s:” locations."
-msgstr "Kan inte hantera ”%s:”-platser."
+#~ msgid "Could not find the file “%s”."
+#~ msgstr "Kunde inte hitta filen ”%s”."
 
-#: tepl/tepl-io-error-info-bar.c:98
-msgid "The location of the file cannot be accessed."
-msgstr "Platsen för filen kan inte kommas åt."
+#~ msgid "Please check that you typed the location correctly and try again."
+#~ msgstr "Kontrollera att du angav platsen korrekt och försök igen."
 
-#: tepl/tepl-io-error-info-bar.c:102
-#, c-format
-msgid "“%s” is a directory."
-msgstr "”%s” är en katalog."
+#~ msgid "Unable to handle “%s:” locations."
+#~ msgstr "Kan inte hantera ”%s:”-platser."
 
-#: tepl/tepl-io-error-info-bar.c:109
-#, c-format
-msgid "“%s” is not a valid location."
-msgstr "”%s” är inte en giltig plats."
+#~ msgid "The location of the file cannot be accessed."
+#~ msgstr "Platsen för filen kan inte kommas åt."
 
-#. Translators: %s is a hostname.
-#: tepl/tepl-io-error-info-bar.c:141
-#, c-format
-msgid ""
-"Host “%s” could not be found. Please check that your proxy settings are "
-"correct and try again."
-msgstr ""
-"Värden ”%s” kunde inte hittas. Kontrollera att dina proxyinställningar är "
-"korrekta och försök igen."
+#~ msgid "“%s” is a directory."
+#~ msgstr "”%s” är en katalog."
 
-#. Use the same string as INVALID_HOST.
-#: tepl/tepl-io-error-info-bar.c:150
-msgid ""
-"Hostname was invalid. Please check that you typed the location correctly and "
-"try again."
-msgstr ""
-"Värdnamnet var ogiltigt. Kontrollera att du angav platsen korrekt och försök "
-"igen."
+#~ msgid "“%s” is not a valid location."
+#~ msgstr "”%s” är inte en giltig plats."
 
-#: tepl/tepl-io-error-info-bar.c:159
-#, c-format
-msgid "“%s” is not a regular file."
-msgstr "”%s” är inte en vanlig fil."
+#~ msgid ""
+#~ "Host “%s” could not be found. Please check that your proxy settings are "
+#~ "correct and try again."
+#~ msgstr ""
+#~ "Värden ”%s” kunde inte hittas. Kontrollera att dina proxyinställningar är "
+#~ "korrekta och försök igen."
 
-#: tepl/tepl-io-error-info-bar.c:164
-msgid "Connection timed out. Please try again."
-msgstr "Anslutningens tidsgräns överskreds. Försök igen."
+#~ msgid ""
+#~ "Hostname was invalid. Please check that you typed the location correctly "
+#~ "and try again."
+#~ msgstr ""
+#~ "Värdnamnet var ogiltigt. Kontrollera att du angav platsen korrekt och "
+#~ "försök igen."
 
-#: tepl/tepl-io-error-info-bar.c:168
-#, c-format
-msgid "Unexpected error: %s"
-msgstr "Oväntat fel: %s"
+#~ msgid "“%s” is not a regular file."
+#~ msgstr "”%s” är inte en vanlig fil."
 
-#: tepl/tepl-io-error-info-bar.c:179 tepl/tepl-io-error-info-bar.c:212
-#: tepl/tepl-progress-info-bar.c:53
-msgid "_Cancel"
-msgstr "A_vbryt"
+#~ msgid "Connection timed out. Please try again."
+#~ msgstr "Anslutningens tidsgräns överskreds. Försök igen."
 
-#: tepl/tepl-io-error-info-bar.c:185 tepl/tepl-io-error-info-bar.c:195
-msgid "_Retry"
-msgstr "_Försök igen"
+#~ msgid "Unexpected error: %s"
+#~ msgstr "Oväntat fel: %s"
 
-#: tepl/tepl-io-error-info-bar.c:201
-msgid "Edit Any_way"
-msgstr "Redigera än_då"
+#~ msgid "_Cancel"
+#~ msgstr "A_vbryt"
 
-#: tepl/tepl-io-error-info-bar.c:270
-msgid ""
-"The number of followed links is limited and the actual file could not be "
-"found within this limit."
-msgstr ""
-"Antalet följda länkar är begränsat och den faktiska filen kunde inte hittas "
-"inom denna gräns."
+#~ msgid "_Retry"
+#~ msgstr "_Försök igen"
 
-#: tepl/tepl-io-error-info-bar.c:275
-msgid "You do not have the permissions necessary to open the file."
-msgstr "Du har inte de rättigheter som krävs för att öppna filen."
+#~ msgid "Edit Any_way"
+#~ msgstr "Redigera än_då"
 
-#: tepl/tepl-io-error-info-bar.c:285
-msgid ""
-"Unable to detect the character encoding.\n"
-"Please check that you are not trying to open a binary file.\n"
-"Select a character encoding from the menu and try again."
-msgstr ""
-"Kan inte identifiera teckenkodningen.\n"
-"Kontrollera att du inte försöker öppna en binär fil.\n"
-"Välj en teckenkodning från menyn och försök igen."
+#~ msgid ""
+#~ "The number of followed links is limited and the actual file could not be "
+#~ "found within this limit."
+#~ msgstr ""
+#~ "Antalet följda länkar är begränsat och den faktiska filen kunde inte "
+#~ "hittas inom denna gräns."
 
-#: tepl/tepl-io-error-info-bar.c:294
-#, c-format
-msgid "There was a problem opening the file “%s”."
-msgstr "Det uppstod ett problem vid öppnandet av filen ”%s”."
+#~ msgid "You do not have the permissions necessary to open the file."
+#~ msgstr "Du har inte de rättigheter som krävs för att öppna filen."
 
-#: tepl/tepl-io-error-info-bar.c:296
-msgid ""
-"The file you opened has some invalid characters. If you continue editing "
-"this file you could corrupt it.\n"
-"You can also choose another character encoding and try again."
-msgstr ""
-"Filen du öppnade innehåller ogiltiga tecken. Om du fortsätter redigera denna "
-"fil kan du förstöra den.\n"
-"Du kan också välja en annan teckenkodning och försöka igen."
+#~ msgid ""
+#~ "Unable to detect the character encoding.\n"
+#~ "Please check that you are not trying to open a binary file.\n"
+#~ "Select a character encoding from the menu and try again."
+#~ msgstr ""
+#~ "Kan inte identifiera teckenkodningen.\n"
+#~ "Kontrollera att du inte försöker öppna en binär fil.\n"
+#~ "Välj en teckenkodning från menyn och försök igen."
 
-#: tepl/tepl-io-error-info-bar.c:312
-#, c-format
-msgid "Could not open the file “%s” using the “%s” character encoding."
-msgstr "Kunde inte öppna filen ”%s” med teckenkodningen ”%s”."
+#~ msgid "There was a problem opening the file “%s”."
+#~ msgstr "Det uppstod ett problem vid öppnandet av filen ”%s”."
 
-#: tepl/tepl-io-error-info-bar.c:316
-msgid ""
-"Please check that you are not trying to open a binary file.\n"
-"Select a different character encoding from the menu and try again."
-msgstr ""
-"Kontrollera att du inte försöker öppna en binär fil.\n"
-"Välj en annan teckenkodning från menyn och försök igen."
+#~ msgid ""
+#~ "The file you opened has some invalid characters. If you continue editing "
+#~ "this file you could corrupt it.\n"
+#~ "You can also choose another character encoding and try again."
+#~ msgstr ""
+#~ "Filen du öppnade innehåller ogiltiga tecken. Om du fortsätter redigera "
+#~ "denna fil kan du förstöra den.\n"
+#~ "Du kan också välja en annan teckenkodning och försöka igen."
 
-#: tepl/tepl-io-error-info-bar.c:329
-#, c-format
-msgid "Could not open the file “%s”."
-msgstr "Kunde inte öppna filen ”%s”."
+#~ msgid "Could not open the file “%s” using the “%s” character encoding."
+#~ msgstr "Kunde inte öppna filen ”%s” med teckenkodningen ”%s”."
+
+#~ msgid ""
+#~ "Please check that you are not trying to open a binary file.\n"
+#~ "Select a different character encoding from the menu and try again."
+#~ msgstr ""
+#~ "Kontrollera att du inte försöker öppna en binär fil.\n"
+#~ "Välj en annan teckenkodning från menyn och försök igen."
+
+#~ msgid "Could not open the file “%s”."
+#~ msgstr "Kunde inte öppna filen ”%s”."

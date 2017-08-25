@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-07-23 13:28+0000\n"
-"PO-Revision-Date: 2017-08-01 12:57+0200\n"
+"POT-Creation-Date: 2017-08-12 13:17+0000\n"
+"PO-Revision-Date: 2017-08-25 18:46+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
-"Language-Team: čeština <gnome-cs-list@gnome.org>>\n"
+"Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,17 +20,17 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.7\n"
 
 #. Translators: %s is a filename.
-#: amtk/amtk-application-window.c:356
+#: amtk/amtk-application-window.c:374
 #, c-format
 msgid "Open “%s”"
 msgstr "Otevřít „%s“"
 
-#: amtk/amtk-application-window.c:572
+#: amtk/amtk-application-window.c:630
 msgid "Open _Recent"
 msgstr "Otevřít ne_dávné"
 
 #. Translators: %s is the application name.
-#: amtk/amtk-application-window.c:575
+#: amtk/amtk-application-window.c:633
 #, c-format
 msgid "Open a file recently used with %s"
 msgstr "Otevřít soubor nedávno použitý aplikací %s"
@@ -264,3 +264,12 @@ msgstr "Soubor byl externě změněn."
 #: tepl/tepl-file-saver.c:1318
 msgid "The buffer contains invalid characters."
 msgstr "Vyrovnávací paměť obsahuje neplatné znaky."
+
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:273
+msgid "Location:"
+msgstr "Umístění:"
+
+#: tepl/tepl-tab-label.c:342
+msgid "Close file"
+msgstr "Zavřít soubor"

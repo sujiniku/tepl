@@ -17,9 +17,12 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "tepl-application-window.h"
 #include <amtk/amtk.h>
+#include <glib/gi18n-lib.h>
 #include "tepl-abstract-factory.h"
+#include "tepl-buffer.h"
 #include "tepl-tab-group.h"
 #include "tepl-view.h"
 #include "tepl-signal-group.h"
@@ -77,6 +80,8 @@ struct _TeplApplicationWindowPrivate
 	TeplTabGroup *tab_group;
 	TeplSignalGroup *view_signal_group;
 	TeplSignalGroup *buffer_signal_group;
+
+	guint handle_title : 1;
 };
 
 enum
@@ -86,6 +91,7 @@ enum
 	PROP_ACTIVE_TAB,
 	PROP_ACTIVE_VIEW,
 	PROP_ACTIVE_BUFFER,
+	PROP_HANDLE_TITLE,
 };
 
 #define TEPL_APPLICATION_WINDOW_KEY "tepl-application-window-key"
@@ -517,6 +523,62 @@ add_actions (TeplApplicationWindow *tepl_window)
 }
 
 static void
+update_title (TeplApplicationWindow *tepl_window)
+{
+	TeplView *active_view;
+
+	if (!tepl_window->priv->handle_title)
+	{
+		return;
+	}
+
+	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (active_view == NULL)
+	{
+		gtk_window_set_title (GTK_WINDOW (tepl_window->priv->gtk_window),
+				      g_get_application_name ());
+	}
+	else
+	{
+		TeplBuffer *active_buffer;
+		gchar *buffer_title;
+		gboolean read_only;
+		gchar *read_only_str = NULL;
+		gchar *window_title;
+
+		active_buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
+
+		/* It is fine to call gtk_window_set_title() with a too long
+		 * string, but in that case the application name is not visible.
+		 *
+		 * Possible improvement: pass an additional int parameter to
+		 * tepl_buffer_get_full_title() to middle-truncate its longest
+		 * component (either the filename or the directory).
+		 */
+		buffer_title = tepl_buffer_get_full_title (active_buffer);
+
+		read_only = !gtk_text_view_get_editable (GTK_TEXT_VIEW (active_view));
+		if (read_only)
+		{
+			read_only_str = g_strdup_printf (" [%s]", _("Read-Only"));
+		}
+
+		window_title = g_strdup_printf ("%s%s - %s",
+						buffer_title,
+						read_only ? read_only_str : "",
+						g_get_application_name ());
+
+		gtk_window_set_title (GTK_WINDOW (tepl_window->priv->gtk_window),
+				      window_title);
+
+		g_free (buffer_title);
+		g_free (read_only_str);
+		g_free (window_title);
+	}
+}
+
+static void
 tepl_application_window_get_property (GObject    *object,
 				      guint       prop_id,
 				      GValue     *value,
@@ -543,6 +605,10 @@ tepl_application_window_get_property (GObject    *object,
 			g_value_set_object (value, tepl_tab_group_get_active_buffer (tab_group));
 			break;
 
+		case PROP_HANDLE_TITLE:
+			g_value_set_boolean (value, tepl_application_window_get_handle_title (tepl_window));
+			break;
+
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 			break;
@@ -567,6 +633,11 @@ tepl_application_window_set_property (GObject      *object,
 
 		case PROP_ACTIVE_TAB:
 			tepl_tab_group_set_active_tab (tab_group, g_value_get_object (value));
+			break;
+
+		case PROP_HANDLE_TITLE:
+			tepl_application_window_set_handle_title (tepl_window,
+								  g_value_get_boolean (value));
 			break;
 
 		default:
@@ -649,6 +720,34 @@ tepl_application_window_class_init (TeplApplicationWindowClass *klass)
 	g_object_class_override_property (object_class, PROP_ACTIVE_TAB, "active-tab");
 	g_object_class_override_property (object_class, PROP_ACTIVE_VIEW, "active-view");
 	g_object_class_override_property (object_class, PROP_ACTIVE_BUFFER, "active-buffer");
+
+	/**
+	 * TeplApplicationWindow:handle-title:
+	 *
+	 * Whether to handle the #GtkWindow:title. The title is probably not
+	 * appropriate if a #GtkHeaderBar is used, the title is meant to be used
+	 * only for applications with a traditional UI.
+	 *
+	 * If %TRUE, the title will contain:
+	 * - the #TeplBuffer:tepl-full-title of the active buffer.
+	 * - if the active view is not #GtkTextView:editable, the
+	 *   `"[Read-Only]"` string.
+	 * - the application name as returned by g_get_application_name().
+	 *
+	 * If the active view is %NULL, the title contains only the application
+	 * name.
+	 *
+	 * Since: 3.2
+	 */
+	g_object_class_install_property (object_class,
+					 PROP_HANDLE_TITLE,
+					 g_param_spec_boolean ("handle-title",
+							       "handle-title",
+							       "",
+							       FALSE,
+							       G_PARAM_READWRITE |
+							       G_PARAM_CONSTRUCT |
+							       G_PARAM_STATIC_STRINGS));
 }
 
 static GList *
@@ -775,6 +874,8 @@ active_tab_changed (TeplApplicationWindow *tepl_window)
 	update_undo_redo_actions_sensitivity (tepl_window);
 	update_basic_edit_actions_sensitivity (tepl_window);
 	update_paste_action_sensitivity (tepl_window);
+
+	update_title (tepl_window);
 }
 
 static void
@@ -785,6 +886,8 @@ active_view_editable_notify_cb (GtkTextView           *active_view,
 	update_undo_redo_actions_sensitivity (tepl_window);
 	update_basic_edit_actions_sensitivity (tepl_window);
 	update_paste_action_sensitivity (tepl_window);
+
+	update_title (tepl_window);
 }
 
 static void
@@ -834,6 +937,14 @@ active_buffer_can_redo_notify_cb (GtkSourceBuffer       *buffer,
 }
 
 static void
+active_buffer_full_title_notify_cb (TeplBuffer            *buffer,
+				    GParamSpec            *pspec,
+				    TeplApplicationWindow *tepl_window)
+{
+	update_title (tepl_window);
+}
+
+static void
 active_buffer_changed (TeplApplicationWindow *tepl_window)
 {
 	TeplBuffer *active_buffer;
@@ -866,9 +977,17 @@ active_buffer_changed (TeplApplicationWindow *tepl_window)
 						  G_CALLBACK (active_buffer_can_redo_notify_cb),
 						  tepl_window));
 
+	_tepl_signal_group_add (tepl_window->priv->buffer_signal_group,
+				g_signal_connect (active_buffer,
+						  "notify::tepl-full-title",
+						  G_CALLBACK (active_buffer_full_title_notify_cb),
+						  tepl_window));
+
 end:
 	update_undo_redo_actions_sensitivity (tepl_window);
 	update_basic_edit_actions_sensitivity (tepl_window);
+
+	update_title (tepl_window);
 }
 
 static void
@@ -959,6 +1078,46 @@ tepl_application_window_set_tab_group (TeplApplicationWindow *tepl_window,
 
 		active_buffer_changed (tepl_window);
 		g_object_notify (G_OBJECT (tepl_window), "active-buffer");
+	}
+}
+
+/**
+ * tepl_application_window_get_handle_title:
+ * @tepl_window: a #TeplApplicationWindow.
+ *
+ * Returns: the value of the #TeplApplicationWindow:handle-title property.
+ * Since: 3.2
+ */
+gboolean
+tepl_application_window_get_handle_title (TeplApplicationWindow *tepl_window)
+{
+	g_return_val_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window), FALSE);
+
+	return tepl_window->priv->handle_title;
+}
+
+/**
+ * tepl_application_window_set_handle_title:
+ * @tepl_window: a #TeplApplicationWindow.
+ * @handle_title: the new value.
+ *
+ * Sets the #TeplApplicationWindow:handle-title property.
+ *
+ * Since: 3.2
+ */
+void
+tepl_application_window_set_handle_title (TeplApplicationWindow *tepl_window,
+					  gboolean               handle_title)
+{
+	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));
+
+	handle_title = handle_title != FALSE;
+
+	if (tepl_window->priv->handle_title != handle_title)
+	{
+		tepl_window->priv->handle_title = handle_title;
+		update_title (tepl_window);
+		g_object_notify (G_OBJECT (tepl_window), "handle-title");
 	}
 }
 

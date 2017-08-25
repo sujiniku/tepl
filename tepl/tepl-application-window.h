@@ -62,6 +62,11 @@ GtkApplicationWindow *	tepl_application_window_get_application_window		(TeplAppl
 void			tepl_application_window_set_tab_group			(TeplApplicationWindow *tepl_window,
 										 TeplTabGroup          *tab_group);
 
+gboolean		tepl_application_window_get_handle_title		(TeplApplicationWindow *tepl_window);
+
+void			tepl_application_window_set_handle_title		(TeplApplicationWindow *tepl_window,
+										 gboolean               handle_title);
+
 G_END_DECLS
 
 #endif /* TEPL_APPLICATION_WINDOW_H */

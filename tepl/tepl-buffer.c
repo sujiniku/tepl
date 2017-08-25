@@ -18,6 +18,7 @@
  */
 
 #include "tepl-buffer.h"
+#include "tepl-abstract-factory.h"
 #include "tepl-file.h"
 #include "tepl-utils.h"
 
@@ -379,10 +380,12 @@ static void
 tepl_buffer_init (TeplBuffer *buffer)
 {
 	TeplBufferPrivate *priv;
+	TeplAbstractFactory *factory;
 
 	priv = tepl_buffer_get_instance_private (buffer);
 
-	priv->file = tepl_file_new ();
+	factory = tepl_abstract_factory_get_singleton ();
+	priv->file = tepl_abstract_factory_create_file (factory);
 
 	g_signal_connect_object (priv->file,
 				 "notify::short-name",
@@ -414,6 +417,8 @@ tepl_buffer_new (void)
  *
  * Returns the #TeplFile of @buffer. The returned object is guaranteed to be the
  * same for the lifetime of @buffer.
+ *
+ * #TeplBuffer creates the #TeplFile with tepl_abstract_factory_create_file().
  *
  * Returns: (transfer none): the associated #TeplFile.
  * Since: 1.0

@@ -18,6 +18,7 @@
  */
 
 #include "tepl-abstract-factory.h"
+#include "tepl-file.h"
 #include "tepl-tab.h"
 #include "tepl-tab-label.h"
 
@@ -75,6 +76,12 @@ tepl_abstract_factory_create_tab_label_default (TeplAbstractFactory *factory,
 	return tepl_tab_label_new (tab);
 }
 
+static TeplFile *
+tepl_abstract_factory_create_file_default (TeplAbstractFactory *factory)
+{
+	return tepl_file_new ();
+}
+
 static void
 tepl_abstract_factory_class_init (TeplAbstractFactoryClass *klass)
 {
@@ -84,6 +91,7 @@ tepl_abstract_factory_class_init (TeplAbstractFactoryClass *klass)
 
 	klass->create_tab = tepl_abstract_factory_create_tab_default;
 	klass->create_tab_label = tepl_abstract_factory_create_tab_label_default;
+	klass->create_file = tepl_abstract_factory_create_file_default;
 }
 
 static void
@@ -190,4 +198,19 @@ tepl_abstract_factory_create_tab_label (TeplAbstractFactory *factory,
 	g_return_val_if_fail (TEPL_IS_TAB (tab), NULL);
 
 	return TEPL_ABSTRACT_FACTORY_GET_CLASS (factory)->create_tab_label (factory, tab);
+}
+
+/**
+ * tepl_abstract_factory_create_file:
+ * @factory: the #TeplAbstractFactory.
+ *
+ * Returns: (transfer full): a new #TeplFile.
+ * Since: 3.2
+ */
+TeplFile *
+tepl_abstract_factory_create_file (TeplAbstractFactory *factory)
+{
+	g_return_val_if_fail (TEPL_IS_ABSTRACT_FACTORY (factory), NULL);
+
+	return TEPL_ABSTRACT_FACTORY_GET_CLASS (factory)->create_file (factory);
 }

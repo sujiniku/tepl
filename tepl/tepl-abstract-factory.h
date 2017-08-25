@@ -51,6 +51,9 @@ struct _TeplAbstractFactory
  * @create_tab_label: Virtual function pointer for
  *   tepl_abstract_factory_create_tab_label(). By default the tab label is
  *   created with tepl_tab_label_new().
+ * @create_file: Virtual function pointer for
+ *   tepl_abstract_factory_create_file(). By default the #TeplFile is created
+ *   with tepl_file_new().
  */
 struct _TeplAbstractFactoryClass
 {
@@ -61,8 +64,10 @@ struct _TeplAbstractFactoryClass
 	GtkWidget *	(* create_tab_label)	(TeplAbstractFactory *factory,
 						 TeplTab             *tab);
 
+	TeplFile *	(* create_file)		(TeplAbstractFactory *factory);
+
 	/*< private >*/
-	gpointer padding[12];
+	gpointer padding[11];
 };
 
 GType			tepl_abstract_factory_get_type			(void);
@@ -75,6 +80,8 @@ TeplTab *		tepl_abstract_factory_create_tab		(TeplAbstractFactory *factory);
 
 GtkWidget *		tepl_abstract_factory_create_tab_label		(TeplAbstractFactory *factory,
 									 TeplTab             *tab);
+
+TeplFile *		tepl_abstract_factory_create_file		(TeplAbstractFactory *factory);
 
 G_GNUC_INTERNAL
 void			_tepl_abstract_factory_unref_singleton		(void);

@@ -313,6 +313,11 @@ tepl_tab_group_append_tab (TeplTabGroup *tab_group,
 
 	if (jump_to)
 	{
+		TeplView *view;
+
 		tepl_tab_group_set_active_tab (tab_group, tab);
+
+		view = tepl_tab_get_view (tab);
+		gtk_widget_grab_focus (GTK_WIDGET (view));
 	}
 }

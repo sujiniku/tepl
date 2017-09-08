@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-07-23 13:28+0000\n"
-"PO-Revision-Date: 2017-07-28 22:41+0200\n"
+"POT-Creation-Date: 2017-08-25 16:53+0000\n"
+"PO-Revision-Date: 2017-09-08 20:02+0200\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -21,17 +21,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Translators: %s is a filename.
-#: amtk/amtk-application-window.c:356
+#: amtk/amtk-application-window.c:374
 #, c-format
 msgid "Open “%s”"
 msgstr "»%s« öffnen"
 
-#: amtk/amtk-application-window.c:572
+#: amtk/amtk-application-window.c:630
 msgid "Open _Recent"
 msgstr "Zu_letzt geöffnet"
 
 #. Translators: %s is the application name.
-#: amtk/amtk-application-window.c:575
+#: amtk/amtk-application-window.c:633
 #, c-format
 msgid "Open a file recently used with %s"
 msgstr "Eine kürzlich von »%s« verwendete Datei öffnen"
@@ -221,7 +221,7 @@ msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 #: tepl/tepl-encoding-converter.c:302
 #, c-format
 msgid "Conversion from character set “%s” to “%s” is not supported."
-msgstr "Umwandlung von Zeichensatz »%s« in »%s« wird nicht unterstützt"
+msgstr "Umwandlung von Zeichensatz »%s« in »%s« wird nicht unterstützt."
 
 #: tepl/tepl-encoding-converter.c:311
 #, c-format
@@ -261,8 +261,17 @@ msgstr "Die Zeichenkodierung kann nicht automatisch erkannt werden."
 
 #: tepl/tepl-file-saver.c:784
 msgid "The file is externally modified."
-msgstr "Die Datei wurde extern verändert"
+msgstr "Die Datei wurde extern verändert."
 
 #: tepl/tepl-file-saver.c:1318
 msgid "The buffer contains invalid characters."
 msgstr "Zwischenspeicher enthält ungültige Zeichen."
+
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:273
+msgid "Location:"
+msgstr "Ort:"
+
+#: tepl/tepl-tab-label.c:342
+msgid "Close file"
+msgstr "Datei schließen"

@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-08-25 16:53+0000\n"
-"PO-Revision-Date: 2017-08-29 17:41+0200\n"
+"POT-Creation-Date: 2017-09-09 11:48+0000\n"
+"PO-Revision-Date: 2017-09-10 18:33+0200\n"
 "Last-Translator: Meskó Balázs <meskobalazs@fedoraproject.org>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
@@ -52,44 +52,80 @@ msgstr "Új fájl"
 
 #. Edit menu
 #: tepl/tepl-application.c:76
+msgid "_Undo"
+msgstr "V_isszavonás"
+
+#: tepl/tepl-application.c:77
+msgid "Undo the last action"
+msgstr "Az utolsó művelet visszavonása"
+
+#: tepl/tepl-application.c:79
+msgid "_Redo"
+msgstr "Új_ra"
+
+#: tepl/tepl-application.c:80
+msgid "Redo the last undone action"
+msgstr "A visszavont művelet ismételt végrehajtása"
+
+#: tepl/tepl-application.c:82
 msgid "Cu_t"
 msgstr "_Kivágás"
 
-#: tepl/tepl-application.c:77
+#: tepl/tepl-application.c:83
 msgid "Cut the selection"
 msgstr "A kijelölés kivágása"
 
-#: tepl/tepl-application.c:79
+#: tepl/tepl-application.c:85
 msgid "_Copy"
 msgstr "_Másolás"
 
-#: tepl/tepl-application.c:80
+#: tepl/tepl-application.c:86
 msgid "Copy the selection"
 msgstr "A kijelölés másolása"
 
-#: tepl/tepl-application.c:82
+#: tepl/tepl-application.c:88
 msgid "_Paste"
 msgstr "_Beillesztés"
 
-#: tepl/tepl-application.c:83
+#: tepl/tepl-application.c:89
 msgid "Paste the clipboard"
 msgstr "A vágólap tartalmának beillesztése"
 
-#: tepl/tepl-application.c:85
+#: tepl/tepl-application.c:91
 msgid "_Delete"
 msgstr "_Törlés"
 
-#: tepl/tepl-application.c:86
+#: tepl/tepl-application.c:92
 msgid "Delete the selected text"
 msgstr "A kijelölt szöveg törlése"
 
-#: tepl/tepl-application.c:88
+#: tepl/tepl-application.c:94
 msgid "Select _All"
 msgstr "Az össz_es kijelölése"
 
-#: tepl/tepl-application.c:89
+#: tepl/tepl-application.c:95
 msgid "Select all the text"
 msgstr "Az összes szöveg kijelölése"
+
+#: tepl/tepl-application.c:97
+msgid "_Indent"
+msgstr "_Behúzás"
+
+#: tepl/tepl-application.c:98
+msgid "Indent the selected lines"
+msgstr "A kijelölt sorok behúzása"
+
+#: tepl/tepl-application.c:100
+msgid "_Unindent"
+msgstr "Behúzás _visszavonása"
+
+#: tepl/tepl-application.c:101
+msgid "Unindent the selected lines"
+msgstr "A kijelölt sorok behúzásának visszavonása"
+
+#: tepl/tepl-application-window.c:564
+msgid "Read-Only"
+msgstr "Írásvédett"
 
 #. UTF-8 first, so that it's the first encoding returned by
 #. * tepl_encoding_get_all().

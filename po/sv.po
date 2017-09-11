@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-08-18 09:59+0000\n"
-"PO-Revision-Date: 2017-08-25 21:19+0200\n"
-"Last-Translator: Josef Andersson <l10nl18nsweja@gmail.com>\n"
+"POT-Creation-Date: 2017-09-09 11:48+0000\n"
+"PO-Revision-Date: 2017-09-11 21:56+0200\n"
+"Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
@@ -53,44 +53,80 @@ msgstr "Ny fil"
 
 #. Edit menu
 #: tepl/tepl-application.c:76
-msgid "Cu_t"
-msgstr "Klipp u_t"
+msgid "_Undo"
+msgstr "Å_ngra"
 
 #: tepl/tepl-application.c:77
+msgid "Undo the last action"
+msgstr "Ångra den senaste åtgärden"
+
+#: tepl/tepl-application.c:79
+msgid "_Redo"
+msgstr "_Gör om"
+
+#: tepl/tepl-application.c:80
+msgid "Redo the last undone action"
+msgstr "Gör om senaste ångrade åtgärden"
+
+#: tepl/tepl-application.c:82
+msgid "Cu_t"
+msgstr "Klipp _ut"
+
+#: tepl/tepl-application.c:83
 msgid "Cut the selection"
 msgstr "Klipp ut markering"
 
-#: tepl/tepl-application.c:79
+#: tepl/tepl-application.c:85
 msgid "_Copy"
 msgstr "_Kopiera"
 
-#: tepl/tepl-application.c:80
+#: tepl/tepl-application.c:86
 msgid "Copy the selection"
 msgstr "Kopiera markeringen"
 
-#: tepl/tepl-application.c:82
+#: tepl/tepl-application.c:88
 msgid "_Paste"
 msgstr "K_listra in"
 
-#: tepl/tepl-application.c:83
+#: tepl/tepl-application.c:89
 msgid "Paste the clipboard"
 msgstr "Klistra in urklipp"
 
-#: tepl/tepl-application.c:85
+#: tepl/tepl-application.c:91
 msgid "_Delete"
 msgstr "_Ta bort"
 
-#: tepl/tepl-application.c:86
+#: tepl/tepl-application.c:92
 msgid "Delete the selected text"
 msgstr "Ta bort den markerade texten"
 
-#: tepl/tepl-application.c:88
+#: tepl/tepl-application.c:94
 msgid "Select _All"
 msgstr "Markera _allt"
 
-#: tepl/tepl-application.c:89
+#: tepl/tepl-application.c:95
 msgid "Select all the text"
 msgstr "Markera all text"
+
+#: tepl/tepl-application.c:97
+msgid "_Indent"
+msgstr "_Indentera"
+
+#: tepl/tepl-application.c:98
+msgid "Indent the selected lines"
+msgstr "Indentera de markerade raderna"
+
+#: tepl/tepl-application.c:100
+msgid "_Unindent"
+msgstr "_Avindentera"
+
+#: tepl/tepl-application.c:101
+msgid "Unindent the selected lines"
+msgstr "Avindentera de markerade raderna"
+
+#: tepl/tepl-application-window.c:564
+msgid "Read-Only"
+msgstr "Skrivskyddad"
 
 #. UTF-8 first, so that it's the first encoding returned by
 #. * tepl_encoding_get_all().

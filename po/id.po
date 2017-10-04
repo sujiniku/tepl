@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-08-12 13:17+0000\n"
-"PO-Revision-Date: 2017-08-15 10:48+0700\n"
+"POT-Creation-Date: 2017-09-09 11:48+0000\n"
+"PO-Revision-Date: 2017-10-04 16:48+0700\n"
 "Last-Translator: Kukuh Syafaat <syafaatkukuh@gmail.com>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
@@ -51,44 +51,80 @@ msgstr "Berkas baru"
 
 #. Edit menu
 #: tepl/tepl-application.c:76
+msgid "_Undo"
+msgstr "Tak _Jadi"
+
+#: tepl/tepl-application.c:77
+msgid "Undo the last action"
+msgstr "Batalkan aksi terakhir"
+
+#: tepl/tepl-application.c:79
+msgid "_Redo"
+msgstr "_Jadi Lagi"
+
+#: tepl/tepl-application.c:80
+msgid "Redo the last undone action"
+msgstr "Jadikan lagi aksi terakhir yang dibatalkan"
+
+#: tepl/tepl-application.c:82
 msgid "Cu_t"
 msgstr "Po_tong"
 
-#: tepl/tepl-application.c:77
+#: tepl/tepl-application.c:83
 msgid "Cut the selection"
 msgstr "Potong bagian yang dipilih"
 
-#: tepl/tepl-application.c:79
+#: tepl/tepl-application.c:85
 msgid "_Copy"
 msgstr "Sali_n"
 
-#: tepl/tepl-application.c:80
+#: tepl/tepl-application.c:86
 msgid "Copy the selection"
 msgstr "Salin bagian yang dipilih"
 
-#: tepl/tepl-application.c:82
+#: tepl/tepl-application.c:88
 msgid "_Paste"
 msgstr "Tem_pel"
 
-#: tepl/tepl-application.c:83
+#: tepl/tepl-application.c:89
 msgid "Paste the clipboard"
 msgstr "Tempel papan klip"
 
-#: tepl/tepl-application.c:85
+#: tepl/tepl-application.c:91
 msgid "_Delete"
 msgstr "_Hapus"
 
-#: tepl/tepl-application.c:86
+#: tepl/tepl-application.c:92
 msgid "Delete the selected text"
 msgstr "Hapus teks yang dipilih"
 
-#: tepl/tepl-application.c:88
+#: tepl/tepl-application.c:94
 msgid "Select _All"
 msgstr "Pilih Semu_a"
 
-#: tepl/tepl-application.c:89
+#: tepl/tepl-application.c:95
 msgid "Select all the text"
 msgstr "Pilih semua teks"
+
+#: tepl/tepl-application.c:97
+msgid "_Indent"
+msgstr "_Indentasi"
+
+#: tepl/tepl-application.c:98
+msgid "Indent the selected lines"
+msgstr "Indentasi baris yang dipilih"
+
+#: tepl/tepl-application.c:100
+msgid "_Unindent"
+msgstr "Hap_us indentasi"
+
+#: tepl/tepl-application.c:101
+msgid "Unindent the selected lines"
+msgstr "Hapus indentasi baris yang dipilih"
+
+#: tepl/tepl-application-window.c:564
+msgid "Read-Only"
+msgstr "Hanya-Baca"
 
 #. UTF-8 first, so that it's the first encoding returned by
 #. * tepl_encoding_get_all().

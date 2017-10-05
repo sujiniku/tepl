@@ -22,6 +22,7 @@
 #include <amtk/amtk.h>
 #include <glib/gi18n-lib.h>
 #include "tepl-abstract-factory.h"
+#include "tepl-application.h"
 #include "tepl-buffer.h"
 #include "tepl-tab-group.h"
 #include "tepl-view.h"
@@ -52,6 +53,7 @@
  *
  * - `"win.tepl-new-file"`: creates a new #TeplTab, appends it with
  *   tepl_tab_group_append_tab() and set it as the active tab.
+ * - `"win.tepl-open"`: shows a #GtkFileChooser to open a new file.
  *
  * ## For the Edit menu
  *
@@ -120,6 +122,65 @@ new_file_cb (GSimpleAction *action,
 	gtk_widget_show (GTK_WIDGET (new_tab));
 
 	tepl_tab_group_append_tab (TEPL_TAB_GROUP (tepl_window), new_tab, TRUE);
+}
+
+static void
+open_file_chooser_response_cb (GtkFileChooserDialog  *file_chooser_dialog,
+			       gint                   response_id,
+			       TeplApplicationWindow *tepl_window)
+{
+	if (response_id == GTK_RESPONSE_ACCEPT)
+	{
+		GFile *file;
+		GtkApplication *gtk_app;
+		TeplApplication *tepl_app;
+
+		file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (file_chooser_dialog));
+
+		gtk_app = gtk_window_get_application (GTK_WINDOW (tepl_window->priv->gtk_window));
+		tepl_app = tepl_application_get_from_gtk_application (gtk_app);
+		tepl_application_open_simple (tepl_app, file);
+
+		g_object_unref (file);
+	}
+
+	gtk_widget_destroy (GTK_WIDGET (file_chooser_dialog));
+}
+
+static void
+open_cb (GSimpleAction *open_action,
+	 GVariant      *parameter,
+	 gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	GtkWidget *file_chooser_dialog;
+
+	/* Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
+	 * with GtkFileChooserNative the GFile that we obtain (in flatpak)
+	 * doesn't have the real path to the file, so it would screw up some
+	 * features for text editors:
+	 * - showing the directory in parentheses in the window title, or in the
+	 *   tab tooltip;
+	 * - opening a recent file.
+	 * Basically everywhere where the directory is shown.
+	 */
+	file_chooser_dialog = gtk_file_chooser_dialog_new (_("Open File"),
+							   GTK_WINDOW (tepl_window->priv->gtk_window),
+							   GTK_FILE_CHOOSER_ACTION_OPEN,
+							   _("_Cancel"), GTK_RESPONSE_CANCEL,
+							   _("_Open"), GTK_RESPONSE_ACCEPT,
+							   NULL);
+
+	gtk_dialog_set_default_response (GTK_DIALOG (file_chooser_dialog), GTK_RESPONSE_ACCEPT);
+	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_chooser_dialog), FALSE);
+
+	g_signal_connect_object (file_chooser_dialog,
+				 "response",
+				 G_CALLBACK (open_file_chooser_response_cb),
+				 tepl_window,
+				 0);
+
+	gtk_widget_show (file_chooser_dialog);
 }
 
 static void
@@ -501,6 +562,7 @@ add_actions (TeplApplicationWindow *tepl_window)
 	const GActionEntry entries[] = {
 		/* File menu */
 		{ "tepl-new-file", new_file_cb },
+		{ "tepl-open", open_cb },
 
 		/* Edit menu */
 		{ "tepl-undo", undo_cb },

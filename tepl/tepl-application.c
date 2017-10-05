@@ -71,6 +71,9 @@ init_tepl_action_info_store (TeplApplication *tepl_app)
 		{ "win.tepl-new-file", "document-new", N_("_New"), "<Control>n",
 		  N_("New file") },
 
+		{ "win.tepl-open", "document-open", N_("_Open"), "<Control>o",
+		  N_("Open a file") },
+
 		/* Edit menu */
 
 		{ "win.tepl-undo", "edit-undo", N_("_Undo"), "<Control>z",

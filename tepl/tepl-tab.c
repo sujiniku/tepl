@@ -17,9 +17,13 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "tepl-tab.h"
+#include <glib/gi18n-lib.h>
 #include "tepl-view.h"
 #include "tepl-buffer.h"
+#include "tepl-file-loader.h"
+#include "tepl-file-metadata.h"
 #include "tepl-info-bar.h"
 #include "tepl-tab-group.h"
 
@@ -437,4 +441,110 @@ tepl_tab_add_info_bar (TeplTab    *tab,
 	_tepl_info_bar_set_size_request (info_bar);
 
 	TEPL_TAB_GET_CLASS (tab)->pack_info_bar (tab, info_bar);
+}
+
+static void
+load_metadata_cb (GObject      *source_object,
+		  GAsyncResult *result,
+		  gpointer      user_data)
+{
+	TeplFileMetadata *metadata = TEPL_FILE_METADATA (source_object);
+	TeplTab *tab = TEPL_TAB (user_data);
+	GError *error = NULL;
+
+	tepl_file_metadata_load_finish (metadata, result, &error);
+
+	if (error != NULL)
+	{
+		g_warning ("Error when loading metadata: %s", error->message);
+		g_clear_error (&error);
+	}
+
+	g_object_unref (tab);
+}
+
+static void
+load_file_content_cb (GObject      *source_object,
+		      GAsyncResult *result,
+		      gpointer      user_data)
+{
+	TeplFileLoader *loader = TEPL_FILE_LOADER (source_object);
+	TeplTab *tab = TEPL_TAB (user_data);
+	TeplBuffer *buffer;
+	GError *error = NULL;
+
+	buffer = tepl_tab_get_buffer (tab);
+
+	if (tepl_file_loader_load_finish (loader, result, &error))
+	{
+		TeplFile *file;
+		TeplFileMetadata *metadata;
+
+		// TODO
+		//tepl_file_add_uri_to_recent_manager (buffer);
+
+		file = tepl_buffer_get_file (buffer);
+		metadata = tepl_file_get_file_metadata (file);
+
+		tepl_file_metadata_load_async (metadata,
+					       G_PRIORITY_DEFAULT,
+					       NULL,
+					       load_metadata_cb,
+					       g_object_ref (tab));
+	}
+
+	if (error != NULL)
+	{
+		TeplInfoBar *info_bar;
+
+		info_bar = tepl_info_bar_new_simple (GTK_MESSAGE_ERROR,
+						     _("Error when loading file."),
+						     error->message);
+
+		tepl_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
+		gtk_widget_show (GTK_WIDGET (info_bar));
+
+		g_clear_error (&error);
+	}
+
+	g_object_unref (loader);
+	g_object_unref (tab);
+}
+
+/**
+ * tepl_tab_load_file:
+ * @tab: a #TeplTab.
+ * @location: a #GFile.
+ *
+ * Unconditionally loads a file in @tab, regardless if there are unsaved changes
+ * in the #GtkTextBuffer. The previous buffer content is lost.
+ *
+ * This function is asynchronous, there is no way to know when the file loading
+ * is finished.
+ *
+ * Since: 3.2
+ */
+void
+tepl_tab_load_file (TeplTab *tab,
+		    GFile   *location)
+{
+	TeplBuffer *buffer;
+	TeplFile *file;
+	TeplFileLoader *loader;
+
+	g_return_if_fail (TEPL_IS_TAB (tab));
+	g_return_if_fail (G_IS_FILE (location));
+
+	buffer = tepl_tab_get_buffer (tab);
+	file = tepl_buffer_get_file (buffer);
+
+	tepl_file_set_location (file, location);
+	loader = tepl_file_loader_new (buffer, file);
+
+	tepl_file_loader_load_async (loader,
+				     G_PRIORITY_DEFAULT,
+				     NULL, /* cancellable */
+				     NULL, NULL, NULL, /* progress */
+				     load_file_content_cb,
+				     g_object_ref (tab));
 }

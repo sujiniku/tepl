@@ -24,6 +24,7 @@
 #include "tepl-abstract-factory.h"
 #include "tepl-application.h"
 #include "tepl-buffer.h"
+#include "tepl-tab.h"
 #include "tepl-tab-group.h"
 #include "tepl-view.h"
 #include "tepl-signal-group.h"
@@ -1181,6 +1182,49 @@ tepl_application_window_set_handle_title (TeplApplicationWindow *tepl_window,
 		update_title (tepl_window);
 		g_object_notify (G_OBJECT (tepl_window), "handle-title");
 	}
+}
+
+/**
+ * tepl_application_window_open_file:
+ * @tepl_window: a #TeplApplicationWindow.
+ * @location: a #GFile.
+ *
+ * Opens a file in @tepl_window. If the active tab is untouched (see
+ * tepl_buffer_is_untouched()), then the file is loaded in that tab. Otherwise a
+ * new tab is created and becomes the new active tab.
+ *
+ * This function is asynchronous, the file loading is done with the
+ * tepl_tab_load_file() function. There is no way to know when the file loading
+ * is finished.
+ *
+ * Since: 3.2
+ */
+void
+tepl_application_window_open_file (TeplApplicationWindow *tepl_window,
+				   GFile                 *location)
+{
+	TeplTab *tab;
+	TeplBuffer *buffer;
+
+	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));
+	g_return_if_fail (G_IS_FILE (location));
+
+	tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
+	buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
+
+	if (buffer == NULL ||
+	    !tepl_buffer_is_untouched (buffer))
+	{
+		TeplAbstractFactory *factory;
+
+		factory = tepl_abstract_factory_get_singleton ();
+		tab = tepl_abstract_factory_create_tab (factory);
+		gtk_widget_show (GTK_WIDGET (tab));
+
+		tepl_tab_group_append_tab (TEPL_TAB_GROUP (tepl_window), tab, TRUE);
+	}
+
+	tepl_tab_load_file (tab, location);
 }
 
 /* ex:set ts=8 noet: */

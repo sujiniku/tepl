@@ -67,6 +67,9 @@ gboolean		tepl_application_window_get_handle_title		(TeplApplicationWindow *tepl
 void			tepl_application_window_set_handle_title		(TeplApplicationWindow *tepl_window,
 										 gboolean               handle_title);
 
+void			tepl_application_window_open_file			(TeplApplicationWindow *tepl_window,
+										 GFile                 *location);
+
 G_END_DECLS
 
 #endif /* TEPL_APPLICATION_WINDOW_H */

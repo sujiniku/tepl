@@ -94,6 +94,9 @@ TeplBuffer *	tepl_tab_get_buffer		(TeplTab *tab);
 void		tepl_tab_add_info_bar		(TeplTab    *tab,
 						 GtkInfoBar *info_bar);
 
+void		tepl_tab_load_file		(TeplTab *tab,
+						 GFile   *location);
+
 G_END_DECLS
 
 #endif /* TEPL_TAB_H */

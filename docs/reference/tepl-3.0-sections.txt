@@ -216,6 +216,7 @@ tepl_application_window_get_application_window
 tepl_application_window_set_tab_group
 tepl_application_window_get_handle_title
 tepl_application_window_set_handle_title
+tepl_application_window_open_file
 <SUBSECTION Standard>
 TEPL_APPLICATION_WINDOW
 TEPL_APPLICATION_WINDOW_CLASS
@@ -450,6 +451,7 @@ tepl_tab_new_with_view
 tepl_tab_get_view
 tepl_tab_get_buffer
 tepl_tab_add_info_bar
+tepl_tab_load_file
 <SUBSECTION Standard>
 TEPL_IS_TAB
 TEPL_IS_TAB_CLASS

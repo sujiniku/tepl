@@ -1145,6 +1145,35 @@ tepl_application_window_set_tab_group (TeplApplicationWindow *tepl_window,
 }
 
 /**
+ * tepl_application_window_is_main_window:
+ * @gtk_window: a #GtkApplicationWindow.
+ *
+ * Returns %TRUE iff @gtk_window has an associated #TeplTabGroup (i.e. if
+ * tepl_application_window_set_tab_group() has been called).
+ *
+ * This function takes a #GtkApplicationWindow parameter to avoid creating the
+ * #TeplApplicationWindow object if it hasn't been created.
+ *
+ * Returns: whether @gtk_window is considered a main application window.
+ * Since: 3.2
+ */
+gboolean
+tepl_application_window_is_main_window (GtkApplicationWindow *gtk_window)
+{
+	TeplApplicationWindow *tepl_window;
+
+	g_return_val_if_fail (GTK_IS_APPLICATION_WINDOW (gtk_window), FALSE);
+
+	tepl_window = g_object_get_data (G_OBJECT (gtk_window), TEPL_APPLICATION_WINDOW_KEY);
+	if (tepl_window == NULL)
+	{
+		return FALSE;
+	}
+
+	return tepl_window->priv->tab_group != NULL;
+}
+
+/**
  * tepl_application_window_get_handle_title:
  * @tepl_window: a #TeplApplicationWindow.
  *

@@ -128,6 +128,8 @@ gboolean	 	tepl_file_is_deleted			(TeplFile *file);
 
 gboolean	 	tepl_file_is_readonly			(TeplFile *file);
 
+void			tepl_file_add_uri_to_recent_manager	(TeplFile *file);
+
 G_GNUC_INTERNAL
 void			_tepl_file_set_encoding			(TeplFile           *file,
 								 const TeplEncoding *encoding);

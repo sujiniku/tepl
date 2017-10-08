@@ -999,3 +999,39 @@ tepl_file_is_readonly (TeplFile *file)
 	priv = tepl_file_get_instance_private (file);
 	return priv->readonly;
 }
+
+/**
+ * tepl_file_add_uri_to_recent_manager:
+ * @file: a #TeplFile.
+ *
+ * If the #TeplFile:location isn't %NULL, adds its URI to the default
+ * #GtkRecentManager with gtk_recent_manager_add_item().
+ *
+ * Since: 3.2
+ */
+
+/* In the future a vfunc could be added for this function if it is desirable to
+ * customize it in an application.
+ */
+void
+tepl_file_add_uri_to_recent_manager (TeplFile *file)
+{
+	TeplFilePrivate *priv;
+	GtkRecentManager *recent_manager;
+	gchar *uri;
+
+	g_return_if_fail (TEPL_IS_FILE (file));
+
+	priv = tepl_file_get_instance_private (file);
+
+	if (priv->location == NULL)
+	{
+		return;
+	}
+
+	recent_manager = gtk_recent_manager_get_default ();
+
+	uri = g_file_get_uri (priv->location);
+	gtk_recent_manager_add_item (recent_manager, uri);
+	g_free (uri);
+}

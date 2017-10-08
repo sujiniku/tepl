@@ -480,10 +480,9 @@ load_file_content_cb (GObject      *source_object,
 		TeplFile *file;
 		TeplFileMetadata *metadata;
 
-		// TODO
-		//tepl_file_add_uri_to_recent_manager (buffer);
-
 		file = tepl_buffer_get_file (buffer);
+		tepl_file_add_uri_to_recent_manager (file);
+
 		metadata = tepl_file_get_file_metadata (file);
 
 		tepl_file_metadata_load_async (metadata,

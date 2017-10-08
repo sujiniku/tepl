@@ -165,6 +165,33 @@ _tepl_abstract_factory_unref_singleton (void)
 }
 
 /**
+ * tepl_abstract_factory_create_main_window:
+ * @factory: the #TeplAbstractFactory.
+ * @app: a #GtkApplication.
+ *
+ * Creates a main #GtkApplicationWindow in the sense of
+ * tepl_application_window_is_main_window().
+ *
+ * Returns: (transfer floating) (nullable): a new main application window, or
+ * %NULL if the vfunc is not implemented.
+ */
+GtkApplicationWindow *
+tepl_abstract_factory_create_main_window (TeplAbstractFactory *factory,
+					  GtkApplication      *app)
+{
+	g_return_val_if_fail (TEPL_IS_ABSTRACT_FACTORY (factory), NULL);
+	g_return_val_if_fail (GTK_IS_APPLICATION (app), NULL);
+
+	if (TEPL_ABSTRACT_FACTORY_GET_CLASS (factory)->create_main_window != NULL)
+	{
+		return TEPL_ABSTRACT_FACTORY_GET_CLASS (factory)->create_main_window (factory, app);
+	}
+
+	g_warning ("The TeplAbstractFactory::create_main_window vfunc is not implemented.");
+	return NULL;
+}
+
+/**
  * tepl_abstract_factory_create_tab:
  * @factory: the #TeplAbstractFactory.
  *

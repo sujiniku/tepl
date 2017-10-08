@@ -54,20 +54,30 @@ struct _TeplAbstractFactory
  * @create_file: Virtual function pointer for
  *   tepl_abstract_factory_create_file(). By default the #TeplFile is created
  *   with tepl_file_new().
+ * @create_main_window: Virtual function pointer for
+ *   tepl_abstract_factory_create_main_window(). It is not implemented by
+ *   default.
+ */
+/* TODO move create_main_window on top, to have a more logical order, for next
+ * API break. Keyword: "deprecated" (to find this TODO when it needs to be
+ * done).
  */
 struct _TeplAbstractFactoryClass
 {
 	GObjectClass parent_class;
 
-	TeplTab *	(* create_tab)		(TeplAbstractFactory *factory);
+	TeplTab *		(* create_tab)		(TeplAbstractFactory *factory);
 
-	GtkWidget *	(* create_tab_label)	(TeplAbstractFactory *factory,
-						 TeplTab             *tab);
+	GtkWidget *		(* create_tab_label)	(TeplAbstractFactory *factory,
+							 TeplTab             *tab);
 
-	TeplFile *	(* create_file)		(TeplAbstractFactory *factory);
+	TeplFile *		(* create_file)		(TeplAbstractFactory *factory);
+
+	GtkApplicationWindow *	(* create_main_window)	(TeplAbstractFactory *factory,
+							 GtkApplication      *app);
 
 	/*< private >*/
-	gpointer padding[11];
+	gpointer padding[10];
 };
 
 GType			tepl_abstract_factory_get_type			(void);
@@ -75,6 +85,9 @@ GType			tepl_abstract_factory_get_type			(void);
 void			tepl_abstract_factory_set_singleton		(TeplAbstractFactory *factory);
 
 TeplAbstractFactory *	tepl_abstract_factory_get_singleton		(void);
+
+GtkApplicationWindow *	tepl_abstract_factory_create_main_window	(TeplAbstractFactory *factory,
+									 GtkApplication      *app);
 
 TeplTab *		tepl_abstract_factory_create_tab		(TeplAbstractFactory *factory);
 

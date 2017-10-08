@@ -20,6 +20,7 @@
 #include "config.h"
 #include "tepl-application.h"
 #include <glib/gi18n-lib.h>
+#include "tepl-application-window.h"
 
 /**
  * SECTION:application
@@ -312,6 +313,41 @@ tepl_application_get_tepl_action_info_store (TeplApplication *tepl_app)
 	g_return_val_if_fail (TEPL_IS_APPLICATION (tepl_app), NULL);
 
 	return tepl_app->priv->tepl_action_info_store;
+}
+
+/**
+ * tepl_application_get_active_main_window:
+ * @tepl_app: a #TeplApplication.
+ *
+ * Like gtk_application_get_active_window(), but returns the main window in the
+ * sense of tepl_application_window_is_main_window().
+ *
+ * Returns: (transfer none) (nullable): the active main #GtkApplicationWindow,
+ * or %NULL.
+ * Since: 3.2
+ */
+GtkApplicationWindow *
+tepl_application_get_active_main_window (TeplApplication *tepl_app)
+{
+	GList *windows;
+	GList *l;
+
+	g_return_val_if_fail (TEPL_IS_APPLICATION (tepl_app), NULL);
+
+	windows = gtk_application_get_windows (tepl_app->priv->gtk_app);
+
+	for (l = windows; l != NULL; l = l->next)
+	{
+		GtkWindow *window = l->data;
+
+		if (GTK_IS_APPLICATION_WINDOW (window) &&
+		    tepl_application_window_is_main_window (GTK_APPLICATION_WINDOW (window)))
+		{
+			return GTK_APPLICATION_WINDOW (window);
+		}
+	}
+
+	return NULL;
 }
 
 /**

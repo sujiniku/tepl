@@ -20,6 +20,7 @@
 #include "config.h"
 #include "tepl-application.h"
 #include <glib/gi18n-lib.h>
+#include "tepl-abstract-factory.h"
 #include "tepl-application-window.h"
 
 /**
@@ -40,6 +41,8 @@ struct _TeplApplicationPrivate
 	GtkApplication *gtk_app;
 	AmtkActionInfoStore *app_action_info_store;
 	AmtkActionInfoStore *tepl_action_info_store;
+
+	guint handle_open : 1;
 };
 
 enum
@@ -370,6 +373,84 @@ tepl_application_open_simple (TeplApplication *tepl_app,
 
 	files[0] = file;
 	g_application_open (G_APPLICATION (tepl_app->priv->gtk_app), files, 1, "");
+}
+
+static void
+open_cb (GApplication     *g_app,
+	 GFile           **files,
+	 gint              n_files,
+	 const gchar      *hint,
+	 TeplApplication  *tepl_app)
+{
+	GtkApplicationWindow *main_window;
+	TeplApplicationWindow *tepl_window;
+	gint i;
+
+	if (n_files < 1)
+	{
+		return;
+	}
+
+	main_window = tepl_application_get_active_main_window (tepl_app);
+
+	if (main_window == NULL)
+	{
+		TeplAbstractFactory *factory;
+
+		factory = tepl_abstract_factory_get_singleton ();
+		main_window = tepl_abstract_factory_create_main_window (factory, tepl_app->priv->gtk_app);
+		g_return_if_fail (main_window != NULL);
+
+		gtk_widget_show (GTK_WIDGET (main_window));
+	}
+
+	tepl_window = tepl_application_window_get_from_gtk_application_window (main_window);
+
+	/* TODO: improve this, currently all the files are open at the same time
+	 * in parallel, it would be better to open them sequentially, and jump
+	 * only to the first one. Maybe by writing a MultiFileLoader class:
+	 * 1. Create all the tabs, jump only to the first one.
+	 * 2. Set locations.
+	 * 3. Set editable=FALSE on all those views (+ set tab state/locking?).
+	 * 4. Load the files one by one. Needs an async/finish API to load one
+	 *    file.
+	 */
+	for (i = 0; i < n_files; i++)
+	{
+		GFile *cur_file = files[i];
+
+		tepl_application_window_open_file (tepl_window, cur_file);
+	}
+}
+
+/**
+ * tepl_application_handle_open:
+ * @tepl_app: a #TeplApplication.
+ *
+ * Connects a generic function handler for the #GApplication::open signal.
+ *
+ * It calls tepl_application_window_open_file() for each #GFile to open, on the
+ * active main window as returned by tepl_application_get_active_main_window().
+ * If the active main window is %NULL, it creates one with
+ * tepl_abstract_factory_create_main_window().
+ *
+ * Since: 3.2
+ */
+void
+tepl_application_handle_open (TeplApplication *tepl_app)
+{
+	g_return_if_fail (TEPL_IS_APPLICATION (tepl_app));
+
+	if (!tepl_app->priv->handle_open)
+	{
+		g_signal_connect_object (tepl_app->priv->gtk_app,
+					 "open",
+					 G_CALLBACK (open_cb),
+					 tepl_app,
+					 0);
+
+		tepl_app->priv->handle_open = TRUE;
+	}
 }
 
 /* ex:set ts=8 noet: */

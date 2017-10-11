@@ -449,8 +449,8 @@ open_cb (GApplication     *g_app,
 	tepl_window = tepl_application_window_get_from_gtk_application_window (main_window);
 
 	/* TODO: improve this, currently all the files are open at the same time
-	 * in parallel, it would be better to open them sequentially, and jump
-	 * only to the first one. Maybe by writing a MultiFileLoader class:
+	 * in parallel, it would be better to open them sequentially. Maybe by
+	 * writing a MultiFileLoader class:
 	 * 1. Create all the tabs, jump only to the first one.
 	 * 2. Set locations.
 	 * 3. Set editable=FALSE on all those views (+ set tab state/locking?).

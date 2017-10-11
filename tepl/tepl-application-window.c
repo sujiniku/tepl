@@ -1217,10 +1217,11 @@ tepl_application_window_set_handle_title (TeplApplicationWindow *tepl_window,
  * tepl_application_window_open_file:
  * @tepl_window: a #TeplApplicationWindow.
  * @location: a #GFile.
+ * @jump_to: whether to set the tab where the file is loaded as the active tab.
  *
  * Opens a file in @tepl_window. If the active tab is untouched (see
  * tepl_buffer_is_untouched()), then the file is loaded in that tab. Otherwise a
- * new tab is created and becomes the new active tab.
+ * new tab is created.
  *
  * This function is asynchronous, the file loading is done with the
  * tepl_tab_load_file() function. There is no way to know when the file loading
@@ -1230,7 +1231,8 @@ tepl_application_window_set_handle_title (TeplApplicationWindow *tepl_window,
  */
 void
 tepl_application_window_open_file (TeplApplicationWindow *tepl_window,
-				   GFile                 *location)
+				   GFile                 *location,
+				   gboolean               jump_to)
 {
 	TeplTab *tab;
 	TeplBuffer *buffer;
@@ -1250,7 +1252,7 @@ tepl_application_window_open_file (TeplApplicationWindow *tepl_window,
 		tab = tepl_abstract_factory_create_tab (factory);
 		gtk_widget_show (GTK_WIDGET (tab));
 
-		tepl_tab_group_append_tab (TEPL_TAB_GROUP (tepl_window), tab, TRUE);
+		tepl_tab_group_append_tab (TEPL_TAB_GROUP (tepl_window), tab, jump_to);
 	}
 
 	tepl_tab_load_file (tab, location);

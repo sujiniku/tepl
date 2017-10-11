@@ -70,7 +70,8 @@ void			tepl_application_window_set_handle_title		(TeplApplicationWindow *tepl_wi
 										 gboolean               handle_title);
 
 void			tepl_application_window_open_file			(TeplApplicationWindow *tepl_window,
-										 GFile                 *location);
+										 GFile                 *location,
+										 gboolean               jump_to);
 
 G_END_DECLS
 

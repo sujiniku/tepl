@@ -426,7 +426,7 @@ open_cb (GApplication     *g_app,
 {
 	GtkApplicationWindow *main_window;
 	TeplApplicationWindow *tepl_window;
-	gint i;
+	gint file_num;
 
 	if (n_files < 1)
 	{
@@ -457,11 +457,12 @@ open_cb (GApplication     *g_app,
 	 * 4. Load the files one by one. Needs an async/finish API to load one
 	 *    file.
 	 */
-	for (i = 0; i < n_files; i++)
+	for (file_num = 0; file_num < n_files; file_num++)
 	{
-		GFile *cur_file = files[i];
+		GFile *cur_file = files[file_num];
+		gboolean jump_to = file_num == 0;
 
-		tepl_application_window_open_file (tepl_window, cur_file);
+		tepl_application_window_open_file (tepl_window, cur_file, jump_to);
 	}
 }
 

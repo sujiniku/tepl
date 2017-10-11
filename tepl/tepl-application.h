@@ -71,6 +71,8 @@ GtkApplicationWindow *	tepl_application_get_active_main_window		(TeplApplication
 void			tepl_application_open_simple			(TeplApplication *tepl_app,
 									 GFile           *file);
 
+void			tepl_application_handle_activate		(TeplApplication *tepl_app);
+
 void			tepl_application_handle_open			(TeplApplication *tepl_app);
 
 G_END_DECLS

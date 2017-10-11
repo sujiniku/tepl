@@ -42,6 +42,7 @@ struct _TeplApplicationPrivate
 	AmtkActionInfoStore *app_action_info_store;
 	AmtkActionInfoStore *tepl_action_info_store;
 
+	guint handle_activate : 1;
 	guint handle_open : 1;
 };
 
@@ -373,6 +374,47 @@ tepl_application_open_simple (TeplApplication *tepl_app,
 
 	files[0] = file;
 	g_application_open (G_APPLICATION (tepl_app->priv->gtk_app), files, 1, "");
+}
+
+static void
+activate_cb (GApplication    *g_app,
+	     TeplApplication *tepl_app)
+{
+	TeplAbstractFactory *factory;
+	GtkApplicationWindow *main_window;
+
+	factory = tepl_abstract_factory_get_singleton ();
+	main_window = tepl_abstract_factory_create_main_window (factory, tepl_app->priv->gtk_app);
+	g_return_if_fail (main_window != NULL);
+
+	gtk_widget_show (GTK_WIDGET (main_window));
+}
+
+/**
+ * tepl_application_handle_activate:
+ * @tepl_app: a #TeplApplication.
+ *
+ * Connects a generic function handler for the #GApplication::activate signal.
+ *
+ * It creates a main window with tepl_abstract_factory_create_main_window().
+ *
+ * Since: 3.2
+ */
+void
+tepl_application_handle_activate (TeplApplication *tepl_app)
+{
+	g_return_if_fail (TEPL_IS_APPLICATION (tepl_app));
+
+	if (!tepl_app->priv->handle_activate)
+	{
+		g_signal_connect_object (tepl_app->priv->gtk_app,
+					 "activate",
+					 G_CALLBACK (activate_cb),
+					 tepl_app,
+					 0);
+
+		tepl_app->priv->handle_activate = TRUE;
+	}
 }
 
 static void

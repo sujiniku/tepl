@@ -30,6 +30,11 @@
  *
  * #TeplApplication extends the #GtkApplication class.
  *
+ * For some features, the Tepl framework gets the default #GtkApplication with
+ * g_application_get_default(), for example to call g_application_hold(),
+ * g_application_mark_busy(), etc. Normally a GTK+ application has only one
+ * #GApplication per process, so this shouldn't cause any problem.
+ *
  * Note that #TeplApplication extends the #GtkApplication class but without
  * subclassing it, because several libraries might want to extend
  * #GtkApplication and an application needs to be able to use all those
@@ -78,6 +83,12 @@ init_tepl_action_info_store (TeplApplication *tepl_app)
 
 		{ "win.tepl-open", "document-open", N_("_Open"), "<Control>o",
 		  N_("Open a file") },
+
+		{ "win.tepl-save", "document-save", N_("_Save"), "<Control>s",
+		  N_("Save the current file") },
+
+		{ "win.tepl-save-as", "document-save-as", N_("Save _As"), "<Shift><Control>s",
+		  N_("Save the current file to a different location") },
 
 		/* Edit menu */
 

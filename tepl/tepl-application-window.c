@@ -24,6 +24,9 @@
 #include "tepl-abstract-factory.h"
 #include "tepl-application.h"
 #include "tepl-buffer.h"
+#include "tepl-file.h"
+#include "tepl-file-saver.h"
+#include "tepl-info-bar.h"
 #include "tepl-tab.h"
 #include "tepl-tab-group.h"
 #include "tepl-view.h"
@@ -55,6 +58,9 @@
  * - `"win.tepl-new-file"`: creates a new #TeplTab, appends it with
  *   tepl_tab_group_append_tab() and set it as the active tab.
  * - `"win.tepl-open"`: shows a #GtkFileChooser to open a new file.
+ * - `"win.tepl-save"`: saves the current file.
+ * - `"win.tepl-save-as"`: shows a #GtkFileChooser to save the current file to a
+ *   different location.
  *
  * ## For the Edit menu
  *
@@ -179,6 +185,163 @@ open_cb (GSimpleAction *open_action,
 				 "response",
 				 G_CALLBACK (open_file_chooser_response_cb),
 				 tepl_window,
+				 0);
+
+	gtk_widget_show (file_chooser_dialog);
+}
+
+static void
+file_saver_cb (GObject      *source_object,
+	       GAsyncResult *result,
+	       gpointer      user_data)
+{
+	TeplFileSaver *saver = TEPL_FILE_SAVER (source_object);
+	TeplTab *tab = TEPL_TAB (user_data);
+	GError *error = NULL;
+	GApplication *app;
+
+	if (tepl_file_saver_save_finish (saver, result, &error))
+	{
+		TeplFile *file;
+
+		file = tepl_file_saver_get_file (saver);
+		tepl_file_add_uri_to_recent_manager (file);
+	}
+
+	if (error != NULL)
+	{
+		TeplInfoBar *info_bar;
+
+		info_bar = tepl_info_bar_new_simple (GTK_MESSAGE_ERROR,
+						     _("Error when saving the file."),
+						     error->message);
+		tepl_info_bar_add_close_button (info_bar);
+		tepl_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
+		gtk_widget_show (GTK_WIDGET (info_bar));
+
+		g_clear_error (&error);
+	}
+
+	app = g_application_get_default ();
+	g_application_unmark_busy (app);
+	g_application_release (app);
+
+	g_object_unref (saver);
+	g_object_unref (tab);
+}
+
+static void
+launch_saver (TeplTab       *tab,
+	      TeplFileSaver *saver)
+{
+	GApplication *app;
+
+	app = g_application_get_default ();
+	g_application_hold (app);
+	g_application_mark_busy (app);
+
+	tepl_file_saver_save_async (saver,
+				    G_PRIORITY_DEFAULT,
+				    NULL,
+				    NULL,
+				    NULL,
+				    NULL,
+				    file_saver_cb,
+				    g_object_ref (tab));
+}
+
+static void
+save_cb (GSimpleAction *save_action,
+	 GVariant      *parameter,
+	 gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplTab *tab;
+	TeplBuffer *buffer;
+	TeplFile *file;
+	GFile *location;
+
+	tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
+	g_return_if_fail (tab != NULL);
+
+	buffer = tepl_tab_get_buffer (tab);
+	file = tepl_buffer_get_file (buffer);
+	location = tepl_file_get_location (file);
+
+	if (location != NULL)
+	{
+		TeplFileSaver *saver;
+
+		saver = tepl_file_saver_new (buffer, file);
+		launch_saver (tab, saver);
+	}
+	else
+	{
+		g_action_group_activate_action (G_ACTION_GROUP (tepl_window->priv->gtk_window),
+						"tepl-save-as",
+						NULL);
+	}
+}
+
+static void
+save_file_chooser_response_cb (GtkFileChooserDialog *file_chooser_dialog,
+			       gint                  response_id,
+			       TeplTab              *tab)
+{
+	if (response_id == GTK_RESPONSE_ACCEPT)
+	{
+		TeplBuffer *buffer;
+		TeplFile *file;
+		GFile *location;
+		TeplFileSaver *saver;
+
+		buffer = tepl_tab_get_buffer (tab);
+		file = tepl_buffer_get_file (buffer);
+		location = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (file_chooser_dialog));
+
+		saver = tepl_file_saver_new_with_target (buffer, file, location);
+		launch_saver (tab, saver);
+
+		g_object_unref (location);
+	}
+
+	gtk_widget_destroy (GTK_WIDGET (file_chooser_dialog));
+}
+
+static void
+save_as_cb (GSimpleAction *save_as_action,
+	    GVariant      *parameter,
+	    gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplTab *tab;
+	GtkWidget *file_chooser_dialog;
+	GtkFileChooser *file_chooser;
+
+	tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
+	g_return_if_fail (tab != NULL);
+
+	file_chooser_dialog = gtk_file_chooser_dialog_new (_("Save File"),
+							   GTK_WINDOW (tepl_window->priv->gtk_window),
+							   GTK_FILE_CHOOSER_ACTION_SAVE,
+							   _("_Cancel"), GTK_RESPONSE_CANCEL,
+							   _("_Save"), GTK_RESPONSE_ACCEPT,
+							   NULL);
+
+	gtk_dialog_set_default_response (GTK_DIALOG (file_chooser_dialog), GTK_RESPONSE_ACCEPT);
+
+	/* Prevent tab from being destroyed. */
+	gtk_window_set_modal (GTK_WINDOW (file_chooser_dialog), TRUE);
+
+	file_chooser = GTK_FILE_CHOOSER (file_chooser_dialog);
+
+	gtk_file_chooser_set_do_overwrite_confirmation (file_chooser, TRUE);
+	gtk_file_chooser_set_local_only (file_chooser, FALSE);
+
+	g_signal_connect_object (file_chooser_dialog,
+				 "response",
+				 G_CALLBACK (save_file_chooser_response_cb),
+				 tab,
 				 0);
 
 	gtk_widget_show (file_chooser_dialog);
@@ -350,6 +513,26 @@ unindent_cb (GSimpleAction *action,
 		gtk_text_buffer_get_selection_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
 		gtk_source_view_unindent_lines (GTK_SOURCE_VIEW (view), &start, &end);
 	}
+}
+
+static void
+update_save_actions_sensitivity (TeplApplicationWindow *tepl_window)
+{
+	TeplBuffer *buffer;
+	GActionMap *action_map;
+	GAction *action;
+
+	buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
+
+	action_map = G_ACTION_MAP (tepl_window->priv->gtk_window);
+
+	action = g_action_map_lookup_action (action_map, "tepl-save");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+				     buffer != NULL);
+
+	action = g_action_map_lookup_action (action_map, "tepl-save-as");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+				     buffer != NULL);
 }
 
 static void
@@ -545,6 +728,7 @@ update_basic_edit_actions_sensitivity (TeplApplicationWindow *tepl_window)
 static void
 update_actions_sensitivity (TeplApplicationWindow *tepl_window)
 {
+	update_save_actions_sensitivity (tepl_window);
 	update_undo_redo_actions_sensitivity (tepl_window);
 	update_basic_edit_actions_sensitivity (tepl_window);
 	update_paste_action_sensitivity (tepl_window);
@@ -564,6 +748,8 @@ add_actions (TeplApplicationWindow *tepl_window)
 		/* File menu */
 		{ "tepl-new-file", new_file_cb },
 		{ "tepl-open", open_cb },
+		{ "tepl-save", save_cb },
+		{ "tepl-save-as", save_as_cb },
 
 		/* Edit menu */
 		{ "tepl-undo", undo_cb },
@@ -1047,6 +1233,7 @@ active_buffer_changed (TeplApplicationWindow *tepl_window)
 						  tepl_window));
 
 end:
+	update_save_actions_sensitivity (tepl_window);
 	update_undo_redo_actions_sensitivity (tepl_window);
 	update_basic_edit_actions_sensitivity (tepl_window);
 

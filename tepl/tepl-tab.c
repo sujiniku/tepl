@@ -497,7 +497,7 @@ load_file_content_cb (GObject      *source_object,
 		TeplInfoBar *info_bar;
 
 		info_bar = tepl_info_bar_new_simple (GTK_MESSAGE_ERROR,
-						     _("Error when loading file."),
+						     _("Error when loading the file."),
 						     error->message);
 
 		tepl_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));

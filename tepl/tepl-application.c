@@ -394,11 +394,13 @@ activate_cb (GApplication    *g_app,
 	TeplAbstractFactory *factory;
 	GtkApplicationWindow *main_window;
 
+	g_application_hold (g_app);
+
 	factory = tepl_abstract_factory_get_singleton ();
 	main_window = tepl_abstract_factory_create_main_window (factory, tepl_app->priv->gtk_app);
-	g_return_if_fail (main_window != NULL);
-
 	gtk_widget_show (GTK_WIDGET (main_window));
+
+	g_application_release (g_app);
 }
 
 /**
@@ -444,6 +446,8 @@ open_cb (GApplication     *g_app,
 		return;
 	}
 
+	g_application_hold (g_app);
+
 	main_window = tepl_application_get_active_main_window (tepl_app);
 
 	if (main_window == NULL)
@@ -452,7 +456,12 @@ open_cb (GApplication     *g_app,
 
 		factory = tepl_abstract_factory_get_singleton ();
 		main_window = tepl_abstract_factory_create_main_window (factory, tepl_app->priv->gtk_app);
-		g_return_if_fail (main_window != NULL);
+
+		if (main_window == NULL)
+		{
+			g_warn_if_reached ();
+			goto out;
+		}
 
 		gtk_widget_show (GTK_WIDGET (main_window));
 	}
@@ -475,6 +484,9 @@ open_cb (GApplication     *g_app,
 
 		tepl_application_window_open_file (tepl_window, cur_file, jump_to);
 	}
+
+out:
+	g_application_release (g_app);
 }
 
 /**

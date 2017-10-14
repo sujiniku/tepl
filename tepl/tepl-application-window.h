@@ -64,6 +64,8 @@ void			tepl_application_window_set_tab_group			(TeplApplicationWindow *tepl_wind
 
 gboolean		tepl_application_window_is_main_window			(GtkApplicationWindow *gtk_window);
 
+GtkWindowGroup *	tepl_application_window_get_window_group		(TeplApplicationWindow *tepl_window);
+
 gboolean		tepl_application_window_get_handle_title		(TeplApplicationWindow *tepl_window);
 
 void			tepl_application_window_set_handle_title		(TeplApplicationWindow *tepl_window,

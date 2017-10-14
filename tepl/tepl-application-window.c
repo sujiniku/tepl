@@ -86,6 +86,9 @@
 struct _TeplApplicationWindowPrivate
 {
 	GtkApplicationWindow *gtk_window;
+
+	GtkWindowGroup *window_group;
+
 	TeplTabGroup *tab_group;
 	TeplSignalGroup *view_signal_group;
 	TeplSignalGroup *buffer_signal_group;
@@ -932,6 +935,9 @@ tepl_application_window_dispose (GObject *object)
 	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (object);
 
 	tepl_window->priv->gtk_window = NULL;
+
+	g_clear_object (&tepl_window->priv->window_group);
+
 	g_clear_object (&tepl_window->priv->tab_group);
 	_tepl_signal_group_clear (&tepl_window->priv->view_signal_group);
 	_tepl_signal_group_clear (&tepl_window->priv->buffer_signal_group);
@@ -1358,6 +1364,49 @@ tepl_application_window_is_main_window (GtkApplicationWindow *gtk_window)
 	}
 
 	return tepl_window->priv->tab_group != NULL;
+}
+
+/**
+ * tepl_application_window_get_window_group:
+ * @tepl_window: a #TeplApplicationWindow.
+ *
+ * Gets the #GtkWindowGroup in which @tepl_window resides.
+ *
+ * You should call this function only on main windows, to add secondary windows
+ * to the #GtkWindowGroup.
+ *
+ * Returns: (transfer none): the #GtkWindowGroup.
+ * Since: 3.2
+ */
+GtkWindowGroup *
+tepl_application_window_get_window_group (TeplApplicationWindow *tepl_window)
+{
+	g_return_val_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window), NULL);
+
+	/* Lazy init.
+	 *
+	 * If the GtkWindowGroup was created in constructed() instead, this can
+	 * be dangerous because the mere fact of calling
+	 * tepl_application_window_get_from_gtk_application_window() would add
+	 * the window to a different GtkWindowGroup. If for one reason or
+	 * another the TeplApplicationWindow object is created for a secondary
+	 * window, it should not cause problems.
+	 *
+	 * It is not a problem if a main window is still part of the default
+	 * window group (i.e. if this function has never been called on that
+	 * main window). For example when creating a modal dialog, this function
+	 * will be called on the corresponding main window, and it'll still be
+	 * possible to interact with the other main windows that are part of the
+	 * default window group.
+	 */
+	if (tepl_window->priv->window_group == NULL)
+	{
+		tepl_window->priv->window_group = gtk_window_group_new ();
+		gtk_window_group_add_window (tepl_window->priv->window_group,
+					     GTK_WINDOW (tepl_window->priv->gtk_window));
+	}
+
+	return tepl_window->priv->window_group;
 }
 
 /**

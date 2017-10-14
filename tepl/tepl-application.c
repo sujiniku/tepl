@@ -457,14 +457,27 @@ static void
 activate_cb (GApplication    *g_app,
 	     TeplApplication *tepl_app)
 {
-	TeplAbstractFactory *factory;
 	GtkApplicationWindow *main_window;
 
 	g_application_hold (g_app);
 
-	factory = tepl_abstract_factory_get_singleton ();
-	main_window = tepl_abstract_factory_create_main_window (factory, tepl_app->priv->gtk_app);
-	gtk_widget_show (GTK_WIDGET (main_window));
+	main_window = tepl_application_get_active_main_window (tepl_app);
+
+	if (main_window == NULL)
+	{
+		TeplAbstractFactory *factory;
+
+		factory = tepl_abstract_factory_get_singleton ();
+		main_window = tepl_abstract_factory_create_main_window (factory, tepl_app->priv->gtk_app);
+		gtk_widget_show (GTK_WIDGET (main_window));
+	}
+	else
+	{
+		GtkWindow *active_window;
+
+		active_window = gtk_application_get_active_window (tepl_app->priv->gtk_app);
+		gtk_window_present (active_window);
+	}
 
 	g_application_release (g_app);
 }
@@ -475,7 +488,10 @@ activate_cb (GApplication    *g_app,
  *
  * Connects a generic function handler for the #GApplication::activate signal.
  *
- * It creates a main window with tepl_abstract_factory_create_main_window().
+ * If no main windows exist, it creates one with
+ * tepl_abstract_factory_create_main_window(). If a main window already exists,
+ * it calls gtk_window_present() on the most recently focused window of the
+ * application.
  *
  * Since: 3.2
  */

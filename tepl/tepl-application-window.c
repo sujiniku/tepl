@@ -141,17 +141,16 @@ open_file_chooser_response_cb (GtkFileChooserDialog  *file_chooser_dialog,
 {
 	if (response_id == GTK_RESPONSE_ACCEPT)
 	{
-		GFile *file;
-		GtkApplication *gtk_app;
-		TeplApplication *tepl_app;
+		GFile *location;
 
-		file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (file_chooser_dialog));
+		location = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (file_chooser_dialog));
+		tepl_application_window_open_file (tepl_window, location, TRUE);
+		g_object_unref (location);
 
-		gtk_app = gtk_window_get_application (GTK_WINDOW (tepl_window->priv->gtk_window));
-		tepl_app = tepl_application_get_from_gtk_application (gtk_app);
-		tepl_application_open_simple (tepl_app, file);
-
-		g_object_unref (file);
+		/* Present the window because it is not necessarily the most
+		 * recently focused window.
+		 */
+		gtk_window_present (GTK_WINDOW (tepl_window->priv->gtk_window));
 	}
 
 	gtk_widget_destroy (GTK_WIDGET (file_chooser_dialog));

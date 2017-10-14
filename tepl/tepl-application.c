@@ -39,6 +39,17 @@
  * subclassing it, because several libraries might want to extend
  * #GtkApplication and an application needs to be able to use all those
  * extensions at the same time.
+ *
+ * # GActions # {#tepl-application-gactions}
+ *
+ * This class adds the following #GAction's to the #GtkApplication.
+ * Corresponding #AmtkActionInfo's are available with
+ * tepl_application_get_tepl_action_info_store().
+ *
+ * ## For the File menu
+ *
+ * - `"app.tepl-new-window"`: creates a new main window with
+ *   tepl_abstract_factory_create_main_window().
  */
 
 struct _TeplApplicationPrivate
@@ -80,6 +91,9 @@ init_tepl_action_info_store (TeplApplication *tepl_app)
 		// new "document".
 		{ "win.tepl-new-file", "document-new", N_("_New"), "<Control>n",
 		  N_("New file") },
+
+		{ "app.tepl-new-window", NULL, N_("New _Window"), NULL,
+		  N_("Create a new window") },
 
 		{ "win.tepl-open", "document-open", N_("_Open"), "<Control>o",
 		  N_("Open a file") },
@@ -130,6 +144,43 @@ init_tepl_action_info_store (TeplApplication *tepl_app)
 }
 
 static void
+new_window_cb (GSimpleAction *action,
+	       GVariant      *parameter,
+	       gpointer       user_data)
+{
+	TeplApplication *tepl_app = TEPL_APPLICATION (user_data);
+	TeplAbstractFactory *factory;
+	GtkApplicationWindow *main_window;
+
+	factory = tepl_abstract_factory_get_singleton ();
+	main_window = tepl_abstract_factory_create_main_window (factory, tepl_app->priv->gtk_app);
+	g_return_if_fail (main_window != NULL);
+
+	gtk_widget_show (GTK_WIDGET (main_window));
+}
+
+static void
+add_actions (TeplApplication *tepl_app)
+{
+	/* The actions need to be namespaced, to not conflict with the
+	 * application or other libraries.
+	 *
+	 * Do not forget to document each action in the TeplApplication class
+	 * description, and to add the corresponding AmtkActionInfoEntry in
+	 * init_tepl_action_info_store().
+	 */
+	const GActionEntry entries[] = {
+		/* File menu */
+		{ "tepl-new-window", new_window_cb },
+	};
+
+	amtk_action_map_add_action_entries_check_dups (G_ACTION_MAP (tepl_app->priv->gtk_app),
+						       entries,
+						       G_N_ELEMENTS (entries),
+						       tepl_app);
+}
+
+static void
 tepl_application_get_property (GObject    *object,
 			       guint       prop_id,
 			       GValue     *value,
@@ -171,6 +222,19 @@ tepl_application_set_property (GObject      *object,
 }
 
 static void
+tepl_application_constructed (GObject *object)
+{
+	TeplApplication *tepl_app = TEPL_APPLICATION (object);
+
+	if (G_OBJECT_CLASS (tepl_application_parent_class)->constructed != NULL)
+	{
+		G_OBJECT_CLASS (tepl_application_parent_class)->constructed (object);
+	}
+
+	add_actions (tepl_app);
+}
+
+static void
 tepl_application_dispose (GObject *object)
 {
 	TeplApplication *tepl_app = TEPL_APPLICATION (object);
@@ -189,6 +253,7 @@ tepl_application_class_init (TeplApplicationClass *klass)
 
 	object_class->get_property = tepl_application_get_property;
 	object_class->set_property = tepl_application_set_property;
+	object_class->constructed = tepl_application_constructed;
 	object_class->dispose = tepl_application_dispose;
 
 	/**
@@ -316,8 +381,9 @@ tepl_application_get_app_action_info_store (TeplApplication *tepl_app)
  * @tepl_app: a #TeplApplication.
  *
  * The returned #AmtkActionInfoStore contains #AmtkActionInfo's for all the
- * #GAction's listed  in the [class description of
- * TeplApplicationWindow][tepl-application-window-gactions].
+ * #GAction's listed in the [class description of
+ * TeplApplicationWindow][tepl-application-window-gactions] and the [class
+ * description of TeplApplication][tepl-application-gactions].
  *
  * Returns: (transfer none): the #AmtkActionInfoStore of the Tepl library.
  * Since: 3.0

@@ -164,6 +164,7 @@ open_cb (GSimpleAction *open_action,
 {
 	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
 	GtkWidget *file_chooser_dialog;
+	GtkWindowGroup *window_group;
 
 	/* Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
 	 * with GtkFileChooserNative the GFile that we obtain (in flatpak)
@@ -183,6 +184,9 @@ open_cb (GSimpleAction *open_action,
 
 	gtk_dialog_set_default_response (GTK_DIALOG (file_chooser_dialog), GTK_RESPONSE_ACCEPT);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_chooser_dialog), FALSE);
+
+	window_group = tepl_application_window_get_window_group (tepl_window);
+	gtk_window_group_add_window (window_group, GTK_WINDOW (file_chooser_dialog));
 
 	g_signal_connect_object (file_chooser_dialog,
 				 "response",

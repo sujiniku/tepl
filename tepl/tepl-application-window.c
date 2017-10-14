@@ -320,6 +320,7 @@ save_as_cb (GSimpleAction *save_as_action,
 	TeplTab *tab;
 	GtkWidget *file_chooser_dialog;
 	GtkFileChooser *file_chooser;
+	GtkWindowGroup *window_group;
 
 	tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
 	g_return_if_fail (tab != NULL);
@@ -335,6 +336,9 @@ save_as_cb (GSimpleAction *save_as_action,
 
 	/* Prevent tab from being destroyed. */
 	gtk_window_set_modal (GTK_WINDOW (file_chooser_dialog), TRUE);
+
+	window_group = tepl_application_window_get_window_group (tepl_window);
+	gtk_window_group_add_window (window_group, GTK_WINDOW (file_chooser_dialog));
 
 	file_chooser = GTK_FILE_CHOOSER (file_chooser_dialog);
 

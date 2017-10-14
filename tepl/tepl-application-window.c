@@ -184,6 +184,11 @@ open_cb (GSimpleAction *open_action,
 	gtk_dialog_set_default_response (GTK_DIALOG (file_chooser_dialog), GTK_RESPONSE_ACCEPT);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_chooser_dialog), FALSE);
 
+	/* Do not set it modal, it's not absolutely required. But in that case
+	 * it's better to destroy the dialog when the main window is closed.
+	 */
+	gtk_window_set_destroy_with_parent (GTK_WINDOW (file_chooser_dialog), TRUE);
+
 	window_group = tepl_application_window_get_window_group (tepl_window);
 	gtk_window_group_add_window (window_group, GTK_WINDOW (file_chooser_dialog));
 

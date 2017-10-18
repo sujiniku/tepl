@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-10-08 09:45+0000\n"
-"PO-Revision-Date: 2017-10-08 14:15+0200\n"
+"POT-Creation-Date: 2017-10-14 16:07+0000\n"
+"PO-Revision-Date: 2017-10-18 08:59+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -42,92 +42,116 @@ msgstr "Otevřít soubor nedávno použitý aplikací %s"
 #. document. For example a LaTeX document can be composed of
 #. several _files_. Or for source code we do not really create a
 #. new "document".
-#: tepl/tepl-application.c:71
+#: tepl/tepl-application.c:92
 msgid "_New"
 msgstr "_Nový"
 
-#: tepl/tepl-application.c:72
+#: tepl/tepl-application.c:93
 msgid "New file"
 msgstr "Nový soubor"
 
-#: tepl/tepl-application.c:74 tepl/tepl-application-window.c:172
+#: tepl/tepl-application.c:95
+msgid "New _Window"
+msgstr "No_vé okno"
+
+#: tepl/tepl-application.c:96
+msgid "Create a new window"
+msgstr "Vytvořit nové okno"
+
+#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:181
 msgid "_Open"
 msgstr "_Otevřít"
 
-#: tepl/tepl-application.c:75
+#: tepl/tepl-application.c:99
 msgid "Open a file"
 msgstr "Otevřít soubor"
 
+#: tepl/tepl-application.c:101 tepl/tepl-application-window.c:340
+msgid "_Save"
+msgstr "_Uložit"
+
+#: tepl/tepl-application.c:102
+msgid "Save the current file"
+msgstr "Uložit aktuální soubor"
+
+#: tepl/tepl-application.c:104
+msgid "Save _As"
+msgstr "Uložit j_ako"
+
+#: tepl/tepl-application.c:105
+msgid "Save the current file to a different location"
+msgstr "Uložit aktuální soubor na jiné místo"
+
 #. Edit menu
-#: tepl/tepl-application.c:79
+#: tepl/tepl-application.c:109
 msgid "_Undo"
 msgstr "_Zpět"
 
-#: tepl/tepl-application.c:80
+#: tepl/tepl-application.c:110
 msgid "Undo the last action"
 msgstr "Vrátit zpět poslední úkon"
 
-#: tepl/tepl-application.c:82
+#: tepl/tepl-application.c:112
 msgid "_Redo"
 msgstr "Zno_vu"
 
-#: tepl/tepl-application.c:83
+#: tepl/tepl-application.c:113
 msgid "Redo the last undone action"
 msgstr "Znovu provást poslední vrácený úkon"
 
-#: tepl/tepl-application.c:85
+#: tepl/tepl-application.c:115
 msgid "Cu_t"
 msgstr "_Vyjmout"
 
-#: tepl/tepl-application.c:86
+#: tepl/tepl-application.c:116
 msgid "Cut the selection"
 msgstr "Vyjmout výběr"
 
-#: tepl/tepl-application.c:88
+#: tepl/tepl-application.c:118
 msgid "_Copy"
 msgstr "_Kopírovat"
 
-#: tepl/tepl-application.c:89
+#: tepl/tepl-application.c:119
 msgid "Copy the selection"
 msgstr "Kopírovat výběr"
 
-#: tepl/tepl-application.c:91
+#: tepl/tepl-application.c:121
 msgid "_Paste"
 msgstr "V_ložit"
 
-#: tepl/tepl-application.c:92
+#: tepl/tepl-application.c:122
 msgid "Paste the clipboard"
 msgstr "Vložit obsah schránky"
 
-#: tepl/tepl-application.c:94
+#: tepl/tepl-application.c:124
 msgid "_Delete"
 msgstr "_Smazat"
 
-#: tepl/tepl-application.c:95
+#: tepl/tepl-application.c:125
 msgid "Delete the selected text"
 msgstr "Smazat vybraný text"
 
-#: tepl/tepl-application.c:97
+#: tepl/tepl-application.c:127
 msgid "Select _All"
 msgstr "Vybr_at vše"
 
-#: tepl/tepl-application.c:98
+#: tepl/tepl-application.c:128
 msgid "Select all the text"
 msgstr "Vybrat všechen text"
 
-#: tepl/tepl-application.c:100
+#: tepl/tepl-application.c:130
 msgid "_Indent"
 msgstr "Odsad_it"
 
-#: tepl/tepl-application.c:101
+#: tepl/tepl-application.c:131
 msgid "Indent the selected lines"
 msgstr "Odsadit vybrané řádky"
 
-#: tepl/tepl-application.c:103
+#: tepl/tepl-application.c:133
 msgid "_Unindent"
 msgstr "Zr_ušit odsazení"
 
-#: tepl/tepl-application.c:104
+#: tepl/tepl-application.c:134
 msgid "Unindent the selected lines"
 msgstr "Zrušit odsazení vybraných řádků"
 
@@ -140,15 +164,23 @@ msgstr "Zrušit odsazení vybraných řádků"
 #. * - opening a recent file.
 #. * Basically everywhere where the directory is shown.
 #.
-#: tepl/tepl-application-window.c:168
+#: tepl/tepl-application-window.c:177
 msgid "Open File"
 msgstr "Otevření souboru"
 
-#: tepl/tepl-application-window.c:171
+#: tepl/tepl-application-window.c:180 tepl/tepl-application-window.c:339
 msgid "_Cancel"
 msgstr "_Zrušit"
 
-#: tepl/tepl-application-window.c:627
+#: tepl/tepl-application-window.c:227
+msgid "Error when saving the file."
+msgstr "Chyba při ukládání souboru."
+
+#: tepl/tepl-application-window.c:336
+msgid "Save File"
+msgstr "Uložení souboru"
+
+#: tepl/tepl-application-window.c:828
 msgid "Read-Only"
 msgstr "Jen ke čtení"
 
@@ -326,8 +358,8 @@ msgstr "Soubor byl externě změněn."
 msgid "The buffer contains invalid characters."
 msgstr "Vyrovnávací paměť obsahuje neplatné znaky."
 
-#: tepl/tepl-tab.c:501
-msgid "Error when loading file."
+#: tepl/tepl-tab.c:500
+msgid "Error when loading the file."
 msgstr "Chyba při načítání souboru."
 
 #. Translators: location of a file.

@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-07-23 13:28+0000\n"
-"PO-Revision-Date: 2017-07-27 09:46+0200\n"
+"POT-Creation-Date: 2017-10-14 16:07+0000\n"
+"PO-Revision-Date: 2017-10-19 13:11+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: es <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -20,17 +20,17 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.6\n"
 
 #. Translators: %s is a filename.
-#: amtk/amtk-application-window.c:356
+#: amtk/amtk-application-window.c:374
 #, c-format
 msgid "Open “%s”"
 msgstr "Abrir «%s»"
 
-#: amtk/amtk-application-window.c:572
+#: amtk/amtk-application-window.c:630
 msgid "Open _Recent"
 msgstr "Abir _reciente"
 
 #. Translators: %s is the application name.
-#: amtk/amtk-application-window.c:575
+#: amtk/amtk-application-window.c:633
 #, c-format
 msgid "Open a file recently used with %s"
 msgstr "Abrir un archivo usado recientemente con %s"
@@ -42,54 +42,152 @@ msgstr "Abrir un archivo usado recientemente con %s"
 #. document. For example a LaTeX document can be composed of
 #. several _files_. Or for source code we do not really create a
 #. new "document".
-#: tepl/tepl-application.c:71
+#: tepl/tepl-application.c:92
 msgid "_New"
 msgstr "_Nuevo"
 
-#: tepl/tepl-application.c:72
+#: tepl/tepl-application.c:93
 msgid "New file"
 msgstr "Archivo nuevo"
 
+#: tepl/tepl-application.c:95
+msgid "New _Window"
+msgstr "_Ventana nueva"
+
+#: tepl/tepl-application.c:96
+msgid "Create a new window"
+msgstr "Crear una ventana nueva"
+
+#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:181
+msgid "_Open"
+msgstr "Ab_rir"
+
+#: tepl/tepl-application.c:99
+#| msgid "New file"
+msgid "Open a file"
+msgstr "Abrir un archivo"
+
+#: tepl/tepl-application.c:101 tepl/tepl-application-window.c:340
+msgid "_Save"
+msgstr "_Guardar"
+
+#: tepl/tepl-application.c:102
+msgid "Save the current file"
+msgstr "Guardar el archivo actual"
+
+#: tepl/tepl-application.c:104
+msgid "Save _As"
+msgstr "Guardar _como"
+
+#: tepl/tepl-application.c:105
+msgid "Save the current file to a different location"
+msgstr "Guarda el archivo actual en un lugar diferente"
+
 #. Edit menu
-#: tepl/tepl-application.c:76
+#: tepl/tepl-application.c:109
+msgid "_Undo"
+msgstr "Des_hacer"
+
+#: tepl/tepl-application.c:110
+#| msgid "Copy the selection"
+msgid "Undo the last action"
+msgstr "Deshace la última acción"
+
+#: tepl/tepl-application.c:112
+msgid "_Redo"
+msgstr "_Rehacer"
+
+#: tepl/tepl-application.c:113
+msgid "Redo the last undone action"
+msgstr "Rehacer la última acción deshecha"
+
+#: tepl/tepl-application.c:115
 msgid "Cu_t"
 msgstr "C_ortar"
 
-#: tepl/tepl-application.c:77
+#: tepl/tepl-application.c:116
 msgid "Cut the selection"
 msgstr "Cortar la selección"
 
-#: tepl/tepl-application.c:79
+#: tepl/tepl-application.c:118
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: tepl/tepl-application.c:80
+#: tepl/tepl-application.c:119
 msgid "Copy the selection"
 msgstr "Copiar la selección"
 
-#: tepl/tepl-application.c:82
+#: tepl/tepl-application.c:121
 msgid "_Paste"
 msgstr "_Pegar"
 
-#: tepl/tepl-application.c:83
+#: tepl/tepl-application.c:122
 msgid "Paste the clipboard"
 msgstr "Pegar del portapapeles"
 
-#: tepl/tepl-application.c:85
+#: tepl/tepl-application.c:124
 msgid "_Delete"
 msgstr "_Eliminar"
 
-#: tepl/tepl-application.c:86
+#: tepl/tepl-application.c:125
 msgid "Delete the selected text"
 msgstr "Eliminar el texto seleccionado"
 
-#: tepl/tepl-application.c:88
+#: tepl/tepl-application.c:127
 msgid "Select _All"
 msgstr "Seleccionar _todo"
 
-#: tepl/tepl-application.c:89
+#: tepl/tepl-application.c:128
 msgid "Select all the text"
 msgstr "Seleccionar todo el texto"
+
+#: tepl/tepl-application.c:130
+msgid "_Indent"
+msgstr "_Sangrar"
+
+#: tepl/tepl-application.c:131
+#| msgid "Delete the selected text"
+msgid "Indent the selected lines"
+msgstr "Sangrar las líneas seleccionadas"
+
+#: tepl/tepl-application.c:133
+msgid "_Unindent"
+msgstr "Qui_tar sangrado"
+
+#: tepl/tepl-application.c:134
+#| msgid "Delete the selected text"
+msgid "Unindent the selected lines"
+msgstr "Quitar sangrado de las líneas seleccionadas"
+
+#. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
+#. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
+#. * doesn't have the real path to the file, so it would screw up some
+#. * features for text editors:
+#. * - showing the directory in parentheses in the window title, or in the
+#. *   tab tooltip;
+#. * - opening a recent file.
+#. * Basically everywhere where the directory is shown.
+#.
+#: tepl/tepl-application-window.c:177
+msgid "Open File"
+msgstr "Abrir archivo"
+
+#: tepl/tepl-application-window.c:180 tepl/tepl-application-window.c:339
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#: tepl/tepl-application-window.c:227
+#| msgid "Error when converting data: %s"
+msgid "Error when saving the file."
+msgstr "Error al guardar el archivo."
+
+#: tepl/tepl-application-window.c:336
+msgid "Save File"
+msgstr "Guardar archivo"
+
+#: tepl/tepl-application-window.c:828
+msgid "Read-Only"
+msgstr "Sólo lectura"
 
 #. UTF-8 first, so that it's the first encoding returned by
 #. * tepl_encoding_get_all().
@@ -266,3 +364,19 @@ msgstr "El archivo se ha modificado externamente."
 #: tepl/tepl-file-saver.c:1318
 msgid "The buffer contains invalid characters."
 msgstr "El búfer contiene caracteres no válidos."
+
+#: tepl/tepl-tab.c:500
+#| msgid "Error when converting data: %s"
+msgid "Error when loading the file."
+msgstr "Error al cargar el archivo."
+
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:273
+msgid "Location:"
+msgstr "Ubicación:"
+
+#: tepl/tepl-tab-label.c:342
+#, fuzzy
+#| msgid "New file"
+msgid "Close file"
+msgstr "Archivo nuevo"

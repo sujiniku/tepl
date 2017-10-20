@@ -20,6 +20,7 @@
 #include "config.h"
 #include "tepl-file-content-loader.h"
 #include <glib/gi18n-lib.h>
+#include "tepl-file-content.h"
 #include "tepl-file-loader.h" /* For TEPL_FILE_LOADER_ERROR */
 
 /* Just loads the content of a GFile, with a max size and a progress callback.
@@ -42,8 +43,7 @@ struct _TeplFileContentLoaderPrivate
 	GFileInfo *info;
 	gchar *etag;
 
-	/* List of GBytes*. */
-	GQueue *content;
+	TeplFileContent *content;
 };
 
 struct _TaskData
@@ -94,15 +94,10 @@ reset (TeplFileContentLoader *loader)
 {
 	g_clear_object (&loader->priv->task);
 	g_clear_object (&loader->priv->info);
+	g_clear_object (&loader->priv->content);
 
 	g_free (loader->priv->etag);
 	loader->priv->etag = NULL;
-
-	if (loader->priv->content != NULL)
-	{
-		g_queue_free_full (loader->priv->content, (GDestroyNotify)g_bytes_unref);
-		loader->priv->content = NULL;
-	}
 }
 
 static void
@@ -244,10 +239,12 @@ read_next_chunk_cb (GObject      *source_object,
 
 	if (loader->priv->content == NULL)
 	{
-		loader->priv->content = g_queue_new ();
+		loader->priv->content = _tepl_file_content_new ();
 	}
 
-	g_queue_push_tail (loader->priv->content, chunk);
+	_tepl_file_content_add_chunk (loader->priv->content, chunk);
+	g_clear_pointer (&chunk, (GDestroyNotify)g_bytes_unref);
+
 	task_data->total_bytes_read += chunk_size;
 
 	/* Read next chunk before calling the progress_cb, because the
@@ -580,10 +577,10 @@ _tepl_file_content_loader_get_content (TeplFileContentLoader *loader)
 
 	if (loader->priv->content == NULL)
 	{
-		loader->priv->content = g_queue_new ();
+		loader->priv->content = _tepl_file_content_new ();
 	}
 
-	return loader->priv->content;
+	return _tepl_file_content_get_chunks (loader->priv->content);
 }
 
 /* Should be called only after a successful load operation. */

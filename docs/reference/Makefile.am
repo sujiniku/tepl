@@ -29,6 +29,7 @@ IGNORE_HFILES =					\
 	tepl-buffer-input-stream.h		\
 	tepl-encoding-converter.h		\
 	tepl-encoding-private.h			\
+	tepl-file-content.h			\
 	tepl-file-content-loader.h		\
 	tepl-io-error-info-bar.h		\
 	tepl-progress-info-bar.h		\

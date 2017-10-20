@@ -17,6 +17,7 @@ tepl/tepl-buffer-input-stream.c
 tepl/tepl-encoding.c
 tepl/tepl-encoding-converter.c
 tepl/tepl-file.c
+tepl/tepl-file-content.c
 tepl/tepl-file-content-loader.c
 tepl/tepl-file-loader.c
 tepl/tepl-file-metadata.c

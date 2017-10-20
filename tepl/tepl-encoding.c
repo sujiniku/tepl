@@ -279,6 +279,9 @@ get_translated_name (const gchar *charset)
  * Creates a new #TeplEncoding from a character set such as "UTF-8" or
  * "ISO-8859-1".
  *
+ * The tepl_encoding_get_charset() function will return exactly the same string
+ * as the @charset passed in to this constructor.
+ *
  * Returns: the new #TeplEncoding. Free with tepl_encoding_free().
  * Since: 2.0
  */
@@ -352,7 +355,9 @@ tepl_encoding_get_charset (const TeplEncoding *enc)
  * tepl_encoding_get_name:
  * @enc: a #TeplEncoding.
  *
- * Gets the name of the #TeplEncoding such as "Unicode" or "Western".
+ * Gets the name of the #TeplEncoding such as "Unicode" or "Western". If the
+ * charset is unknown by #TeplEncoding, "Unknown" is returned. The return value
+ * is already translated by gettext.
  *
  * Returns: the name of the #TeplEncoding.
  * Since: 2.0
@@ -370,7 +375,8 @@ tepl_encoding_get_name (const TeplEncoding *enc)
  * @enc: a #TeplEncoding.
  *
  * Returns the encoding name with the charset in parenthesis, for example
- * "Unicode (UTF-8)". If the name is unknown, just the charset is returned.
+ * "Unicode (UTF-8)". If the name is unknown, just the charset is returned. The
+ * name is translated by gettext.
  *
  * Returns: a string representation. Free with g_free() when no longer needed.
  * Since: 2.0
@@ -393,6 +399,12 @@ tepl_encoding_to_string (const TeplEncoding *enc)
  * tepl_encoding_is_utf8:
  * @enc: a #TeplEncoding.
  *
+ * Returns whether @enc is a UTF-8 encoding.
+ *
+ * If @enc was created with tepl_encoding_new_utf8(), the charset is "UTF-8".
+ * But iconv supports other variants: "UTF8", "utf-8" and "utf8". This function
+ * returns %TRUE for all UTF-8 variants supported by iconv.
+ *
  * Returns: whether @enc is a UTF-8 encoding.
  * Since: 2.0
  */
@@ -410,7 +422,14 @@ tepl_encoding_is_utf8 (const TeplEncoding *enc)
  * @enc1: (nullable): a #TeplEncoding, or %NULL.
  * @enc2: (nullable): a #TeplEncoding, or %NULL.
  *
- * Returns: whether @enc1 and @enc2 are equals.
+ * Returns whether @enc1 and @enc2 are equal. It returns %TRUE iff:
+ * - Both @enc1 and @enc2 are %NULL;
+ * - Or both @enc1 and @enc2 have a UTF-8 charset (see
+ *   tepl_encoding_is_utf8());
+ * - Or the charsets are equal according to g_ascii_strcasecmp() (because
+ *   iconv-compatible charsets are case insensitive).
+ *
+ * Returns: whether @enc1 and @enc2 are equal.
  * Since: 2.0
  */
 gboolean

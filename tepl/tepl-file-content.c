@@ -20,6 +20,7 @@
 #include "tepl-file-content.h"
 #include <uchardet.h>
 #include "tepl-encoding.h"
+#include "tepl-encoding-converter.h"
 
 struct _TeplFileContentPrivate
 {
@@ -91,7 +92,7 @@ _tepl_file_content_get_chunks (TeplFileContent *content)
 }
 
 static TeplEncoding *
-create_encoding_for_charset (const gchar *charset)
+create_encoding_for_uchardet_charset (const gchar *charset)
 {
 	TeplEncoding *encoding_for_charset;
 	TeplEncoding *ascii_encoding;
@@ -132,18 +133,13 @@ create_encoding_for_charset (const gchar *charset)
 	return encoding_for_charset;
 }
 
-/* Returns: (transfer full) (nullable): the encoding, or %NULL if the encoding
- * detection failed.
- */
-TeplEncoding *
-_tepl_file_content_determine_encoding (TeplFileContent *content)
+static TeplEncoding *
+determine_encoding_with_uchardet (TeplFileContent *content)
 {
 	uchardet_t ud;
 	const gchar *charset;
 	TeplEncoding *encoding = NULL;
 	GList *l;
-
-	g_return_val_if_fail (TEPL_IS_FILE_CONTENT (content), NULL);
 
 	ud = uchardet_new ();
 
@@ -163,10 +159,103 @@ _tepl_file_content_determine_encoding (TeplFileContent *content)
 	charset = uchardet_get_charset (ud);
 	if (charset != NULL && charset[0] != '\0')
 	{
-		encoding = create_encoding_for_charset (charset);
+		encoding = create_encoding_for_uchardet_charset (charset);
 	}
 
 	uchardet_delete (ud);
+
+	return encoding;
+}
+
+static gboolean
+can_convert_successfully_with_encoding (TeplFileContent *content,
+					TeplEncoding    *from_encoding)
+{
+	TeplEncodingConverter *converter;
+	GList *l;
+	gboolean success = FALSE;
+
+	converter = _tepl_encoding_converter_new (-1);
+
+	if (!_tepl_encoding_converter_open (converter,
+					    "UTF-8",
+					    tepl_encoding_get_charset (from_encoding),
+					    NULL))
+	{
+		goto out;
+	}
+
+	for (l = content->priv->chunks->head; l != NULL; l = l->next)
+	{
+		GBytes *chunk = l->data;
+
+		g_assert (chunk_is_valid (chunk));
+
+		if (!_tepl_encoding_converter_feed (converter,
+						    g_bytes_get_data (chunk, NULL),
+						    g_bytes_get_size (chunk),
+						    NULL))
+		{
+			goto out;
+		}
+	}
+
+	if (!_tepl_encoding_converter_close (converter, NULL))
+	{
+		goto out;
+	}
+
+	success = TRUE;
+
+out:
+	g_object_unref (converter);
+	return success;
+}
+
+/* Try the candidate encodings one by one, taking the first without conversion
+ * error.
+ */
+static TeplEncoding *
+determine_encoding_with_fallback_mode (TeplFileContent *content)
+{
+	GSList *candidate_encodings;
+	GSList *l;
+	TeplEncoding *encoding = NULL;
+
+	candidate_encodings = tepl_encoding_get_default_candidates ();
+
+	for (l = candidate_encodings; l != NULL; l = l->next)
+	{
+		TeplEncoding *cur_encoding = l->data;
+
+		if (can_convert_successfully_with_encoding (content, cur_encoding))
+		{
+			encoding = tepl_encoding_copy (cur_encoding);
+			break;
+		}
+	}
+
+	g_slist_free_full (candidate_encodings, (GDestroyNotify)tepl_encoding_free);
+
+	return encoding;
+}
+
+/* Returns: (transfer full) (nullable): the encoding, or %NULL if the encoding
+ * detection failed.
+ */
+TeplEncoding *
+_tepl_file_content_determine_encoding (TeplFileContent *content)
+{
+	TeplEncoding *encoding;
+
+	g_return_val_if_fail (TEPL_IS_FILE_CONTENT (content), NULL);
+
+	encoding = determine_encoding_with_uchardet (content);
+
+	if (encoding == NULL)
+	{
+		encoding = determine_encoding_with_fallback_mode (content);
+	}
 
 	return encoding;
 }

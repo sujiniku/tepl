@@ -18,6 +18,8 @@
  */
 
 #include "tepl-file-content.h"
+#include <uchardet.h>
+#include "tepl-encoding.h"
 
 struct _TeplFileContentPrivate
 {
@@ -79,4 +81,86 @@ _tepl_file_content_get_chunks (TeplFileContent *content)
 	g_return_val_if_fail (TEPL_IS_FILE_CONTENT (content), NULL);
 
 	return content->priv->chunks;
+}
+
+static TeplEncoding *
+create_encoding_for_charset (const gchar *charset)
+{
+	TeplEncoding *encoding_for_charset;
+	TeplEncoding *ascii_encoding;
+	TeplEncoding *locale_encoding;
+
+	g_assert (charset != NULL);
+
+	encoding_for_charset = tepl_encoding_new (charset);
+
+	ascii_encoding = tepl_encoding_new ("ASCII");
+	locale_encoding = tepl_encoding_new_from_locale ();
+
+	/* ASCII -> UTF-8 if locale is UTF-8.
+	 *
+	 * uchardet returns ASCII if only ASCII chars are present. But since any
+	 * UTF-8 char can be inserted in a GtkTextView, it would be annoying for
+	 * the user to have an error each time the text becomes UTF-8. I think
+	 * most users expect their files to be UTF-8 if their locale is UTF-8.
+	 * The exception here is for example to keep source code ASCII-only,
+	 * maybe some projects prefer that, but I think that's the minority of
+	 * users.
+	 *
+	 * TODO: have a list of candidate encodings, and if ASCII is before
+	 * UTF-8, keep ASCII. This could be configurable if there is a GSetting
+	 * for the candidate encodings, with a GUI to configure the list, like
+	 * in gedit.
+	 */
+	if (tepl_encoding_equals (encoding_for_charset, ascii_encoding) &&
+	    tepl_encoding_is_utf8 (locale_encoding))
+	{
+		tepl_encoding_free (encoding_for_charset);
+		encoding_for_charset = tepl_encoding_new_utf8 ();
+	}
+
+	tepl_encoding_free (ascii_encoding);
+	tepl_encoding_free (locale_encoding);
+
+	return encoding_for_charset;
+}
+
+/* Returns: (transfer full) (nullable): the encoding, or %NULL if the encoding
+ * detection failed.
+ */
+TeplEncoding *
+_tepl_file_content_determine_encoding (TeplFileContent *content)
+{
+	uchardet_t ud;
+	const gchar *charset;
+	TeplEncoding *encoding = NULL;
+	GList *l;
+
+	g_return_val_if_fail (TEPL_IS_FILE_CONTENT (content), NULL);
+
+	ud = uchardet_new ();
+
+	for (l = content->priv->chunks->head; l != NULL; l = l->next)
+	{
+		GBytes *chunk = l->data;
+
+		g_assert (chunk != NULL);
+		g_assert (g_bytes_get_size (chunk) > 0);
+
+		uchardet_handle_data (ud,
+				      g_bytes_get_data (chunk, NULL),
+				      g_bytes_get_size (chunk));
+	}
+
+	uchardet_data_end (ud);
+
+	charset = uchardet_get_charset (ud);
+	if (charset != NULL && charset[0] != '\0')
+	{
+		encoding = create_encoding_for_charset (charset);
+	}
+
+	uchardet_delete (ud);
+
+	return encoding;
 }

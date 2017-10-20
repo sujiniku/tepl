@@ -21,6 +21,7 @@
 #define TEPL_FILE_CONTENT_H
 
 #include <glib-object.h>
+#include "tepl-types.h"
 
 G_BEGIN_DECLS
 
@@ -48,17 +49,20 @@ struct _TeplFileContentClass
 };
 
 G_GNUC_INTERNAL
-GType			_tepl_file_content_get_type	(void);
+GType			_tepl_file_content_get_type		(void);
 
 G_GNUC_INTERNAL
-TeplFileContent *	_tepl_file_content_new		(void);
+TeplFileContent *	_tepl_file_content_new			(void);
 
 G_GNUC_INTERNAL
-void			_tepl_file_content_add_chunk	(TeplFileContent *content,
-							 GBytes          *chunk);
+void			_tepl_file_content_add_chunk		(TeplFileContent *content,
+								 GBytes          *chunk);
 
 G_GNUC_INTERNAL
-GQueue *		_tepl_file_content_get_chunks	(TeplFileContent *content);
+GQueue *		_tepl_file_content_get_chunks		(TeplFileContent *content);
+
+G_GNUC_INTERNAL
+TeplEncoding *		_tepl_file_content_determine_encoding	(TeplFileContent *content);
 
 G_END_DECLS
 

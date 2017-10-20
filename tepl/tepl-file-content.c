@@ -29,6 +29,13 @@ struct _TeplFileContentPrivate
 
 G_DEFINE_TYPE_WITH_PRIVATE (TeplFileContent, _tepl_file_content, G_TYPE_OBJECT)
 
+static gboolean
+chunk_is_valid (GBytes *chunk)
+{
+	return (chunk != NULL &&
+		g_bytes_get_size (chunk) > 0);
+}
+
 static void
 _tepl_file_content_finalize (GObject *object)
 {
@@ -70,7 +77,7 @@ _tepl_file_content_add_chunk (TeplFileContent *content,
 			      GBytes          *chunk)
 {
 	g_return_if_fail (TEPL_IS_FILE_CONTENT (content));
-	g_return_if_fail (chunk != NULL);
+	g_return_if_fail (chunk_is_valid (chunk));
 
 	g_queue_push_tail (content->priv->chunks, g_bytes_ref (chunk));
 }
@@ -144,8 +151,7 @@ _tepl_file_content_determine_encoding (TeplFileContent *content)
 	{
 		GBytes *chunk = l->data;
 
-		g_assert (chunk != NULL);
-		g_assert (g_bytes_get_size (chunk) > 0);
+		g_assert (chunk_is_valid (chunk));
 
 		uchardet_handle_data (ud,
 				      g_bytes_get_data (chunk, NULL),

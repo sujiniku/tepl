@@ -567,10 +567,10 @@ _tepl_file_content_loader_load_finish (TeplFileContentLoader  *loader,
 /*
  * Should be called only after a successful load operation.
  *
- * Returns: (transfer none) (element-type GBytes): the content that has been
- * loaded by the last load operation on @loader.
+ * Returns: (transfer none): the content that has been loaded by the last load
+ * operation on @loader.
  */
-GQueue *
+TeplFileContent *
 _tepl_file_content_loader_get_content (TeplFileContentLoader *loader)
 {
 	g_return_val_if_fail (TEPL_IS_FILE_CONTENT_LOADER (loader), NULL);
@@ -580,7 +580,7 @@ _tepl_file_content_loader_get_content (TeplFileContentLoader *loader)
 		loader->priv->content = _tepl_file_content_new ();
 	}
 
-	return _tepl_file_content_get_chunks (loader->priv->content);
+	return loader->priv->content;
 }
 
 /* Should be called only after a successful load operation. */

@@ -23,6 +23,7 @@
 #include <glib/gi18n-lib.h>
 #include "tepl-buffer.h"
 #include "tepl-file.h"
+#include "tepl-file-content.h"
 #include "tepl-file-content-loader.h"
 #include "tepl-encoding.h"
 #include "tepl-encoding-converter.h"
@@ -794,7 +795,8 @@ convert_and_insert_content (GTask *task)
 	TeplFileLoaderPrivate *priv;
 	TaskData *task_data;
 	TeplEncodingConverter *converter = NULL;
-	GQueue *content;
+	TeplFileContent *content;
+	GQueue *chunks;
 	GList *l;
 	GError *error = NULL;
 
@@ -827,8 +829,9 @@ convert_and_insert_content (GTask *task)
 	}
 
 	content = _tepl_file_content_loader_get_content (task_data->content_loader);
+	chunks = _tepl_file_content_get_chunks (content);
 
-	for (l = content->head; l != NULL; l = l->next)
+	for (l = chunks->head; l != NULL; l = l->next)
 	{
 		GBytes *chunk = l->data;
 
@@ -922,7 +925,8 @@ determine_encoding (GTask *task)
 	TaskData *task_data;
 	uchardet_t ud;
 	const gchar *charset;
-	GQueue *content;
+	TeplFileContent *content;
+	GQueue *chunks;
 	GList *l;
 
 	loader = g_task_get_source_object (task);
@@ -933,8 +937,9 @@ determine_encoding (GTask *task)
 	ud = uchardet_new ();
 
 	content = _tepl_file_content_loader_get_content (task_data->content_loader);
+	chunks = _tepl_file_content_get_chunks (content);
 
-	for (l = content->head; l != NULL; l = l->next)
+	for (l = chunks->head; l != NULL; l = l->next)
 	{
 		GBytes *chunk = l->data;
 

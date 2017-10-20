@@ -21,6 +21,7 @@
 #define TEPL_FILE_CONTENT_LOADER_H
 
 #include <gio/gio.h>
+#include "tepl-file-content.h"
 
 G_BEGIN_DECLS
 
@@ -83,7 +84,7 @@ gboolean		_tepl_file_content_loader_load_finish		(TeplFileContentLoader  *loader
 									 GError                **error);
 
 G_GNUC_INTERNAL
-GQueue *		_tepl_file_content_loader_get_content		(TeplFileContentLoader *loader);
+TeplFileContent *	_tepl_file_content_loader_get_content		(TeplFileContentLoader *loader);
 
 G_GNUC_INTERNAL
 const gchar *		_tepl_file_content_loader_get_etag		(TeplFileContentLoader *loader);

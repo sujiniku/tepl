@@ -586,10 +586,13 @@ _tepl_encoding_remove_duplicates (GSList                 *list,
 
 /* Returns: (transfer full) (element-type TeplEncoding). */
 static GSList *
-strv_to_list (const gchar * const *enc_str)
+default_candidates_strv_to_list (const gchar * const *enc_str)
 {
+	GSList *all_encodings;
 	GSList *list = NULL;
 	gchar **p;
+
+	all_encodings = tepl_encoding_get_all ();
 
 	for (p = (gchar **)enc_str; p != NULL && *p != NULL; p++)
 	{
@@ -608,12 +611,27 @@ strv_to_list (const gchar * const *enc_str)
 		if (present_in_list (list, enc))
 		{
 			tepl_encoding_free (enc);
+			continue;
 		}
-		else
+
+		/* If the translator has not translated correctly the list of
+		 * default candidate encodings, ensure that it won't trigger a
+		 * file loading error.
+		 */
+		if (!present_in_list (all_encodings, enc))
 		{
-			list = g_slist_prepend (list, enc);
+			g_warning ("TeplEncoding: unknown charset '%s', "
+				   "ignoring it for the default candidates.",
+				   charset);
+
+			tepl_encoding_free (enc);
+			continue;
 		}
+
+		list = g_slist_prepend (list, enc);
 	}
+
+	g_slist_free_full (all_encodings, (GDestroyNotify)tepl_encoding_free);
 
 	return g_slist_reverse (list);
 }
@@ -695,7 +713,7 @@ tepl_encoding_get_default_candidates (void)
 	g_variant_ref_sink (encodings_variant);
 
 	encodings_strv = g_variant_get_strv (encodings_variant, NULL);
-	encodings_list = strv_to_list (encodings_strv);
+	encodings_list = default_candidates_strv_to_list (encodings_strv);
 	g_free ((gpointer) encodings_strv);
 
 	/* Ensure that UTF-8 and CURRENT are present. */

@@ -52,6 +52,9 @@ test_encoding_converter_SOURCES = test-encoding-converter.c
 UNIT_TEST_PROGS += test-file
 test_file_SOURCES = test-file.c
 
+UNIT_TEST_PROGS += test-file-content
+test_file_content_SOURCES = test-file-content.c
+
 UNIT_TEST_PROGS += test-file-loader
 test_file_loader_SOURCES = test-file-loader.c
 

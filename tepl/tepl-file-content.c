@@ -164,14 +164,14 @@ determine_encoding_with_uchardet (TeplFileContent *content)
 /* Try the candidate encodings one by one, taking the first without conversion
  * error.
  */
-static TeplEncoding *
-determine_encoding_with_fallback_mode (TeplFileContent *content)
+TeplEncoding *
+_tepl_file_content_determine_encoding_with_fallback_mode (TeplFileContent *content,
+							  GSList          *candidate_encodings)
 {
-	GSList *candidate_encodings;
-	GSList *l;
 	TeplEncoding *encoding = NULL;
+	GSList *l;
 
-	candidate_encodings = tepl_encoding_get_default_candidates ();
+	g_return_val_if_fail (TEPL_IS_FILE_CONTENT (content), NULL);
 
 	for (l = candidate_encodings; l != NULL; l = l->next)
 	{
@@ -183,8 +183,6 @@ determine_encoding_with_fallback_mode (TeplFileContent *content)
 			break;
 		}
 	}
-
-	g_slist_free_full (candidate_encodings, (GDestroyNotify)tepl_encoding_free);
 
 	return encoding;
 }
@@ -203,7 +201,12 @@ _tepl_file_content_determine_encoding (TeplFileContent *content)
 
 	if (encoding == NULL)
 	{
-		encoding = determine_encoding_with_fallback_mode (content);
+		GSList *candidate_encodings;
+
+		candidate_encodings = tepl_encoding_get_default_candidates ();
+		encoding = _tepl_file_content_determine_encoding_with_fallback_mode (content,
+										     candidate_encodings);
+		g_slist_free_full (candidate_encodings, (GDestroyNotify)tepl_encoding_free);
 	}
 
 	return encoding;
@@ -262,7 +265,7 @@ out:
 	return success;
 }
 
-/* For the unit tests. */
+/* For unit tests. */
 gint64
 _tepl_file_content_get_encoding_converter_buffer_size (void)
 {

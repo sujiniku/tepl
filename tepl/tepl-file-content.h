@@ -69,8 +69,14 @@ gboolean		_tepl_file_content_convert_to_utf8	(TeplFileContent                 *c
 								 gpointer                         callback_user_data,
 								 GError                         **error);
 
+/* For unit tests */
+
 G_GNUC_INTERNAL
-gint64			_tepl_file_content_get_encoding_converter_buffer_size (void);
+TeplEncoding *		_tepl_file_content_determine_encoding_with_fallback_mode	(TeplFileContent *content,
+											 GSList          *candidate_encodings);
+
+G_GNUC_INTERNAL
+gint64			_tepl_file_content_get_encoding_converter_buffer_size		(void);
 
 G_END_DECLS
 

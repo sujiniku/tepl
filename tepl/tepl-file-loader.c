@@ -25,7 +25,6 @@
 #include "tepl-file-content.h"
 #include "tepl-file-content-loader.h"
 #include "tepl-encoding.h"
-#include "tepl-encoding-converter.h"
 
 /**
  * SECTION:file-loader
@@ -111,9 +110,6 @@ enum
 	PROP_CHUNK_SIZE,
 	N_PROPERTIES
 };
-
-/* Take the default buffer-size of TeplEncodingConverter. */
-#define ENCODING_CONVERTER_BUFFER_SIZE (-1)
 
 static GParamSpec *properties[N_PROPERTIES];
 
@@ -1209,18 +1205,4 @@ tepl_file_loader_get_newline_type (TeplFileLoader *loader)
 
 	priv = tepl_file_loader_get_instance_private (loader);
 	return priv->detected_newline_type;
-}
-
-/* For the unit tests. */
-gint64
-_tepl_file_loader_get_encoding_converter_buffer_size (void)
-{
-	TeplEncodingConverter *converter;
-	gint64 buffer_size;
-
-	converter = _tepl_encoding_converter_new (ENCODING_CONVERTER_BUFFER_SIZE);
-	buffer_size = _tepl_encoding_converter_get_buffer_size (converter);
-	g_object_unref (converter);
-
-	return buffer_size;
 }

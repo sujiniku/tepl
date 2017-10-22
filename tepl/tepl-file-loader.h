@@ -98,9 +98,6 @@ const TeplEncoding *	tepl_file_loader_get_encoding				(TeplFileLoader *loader);
 
 TeplNewlineType		tepl_file_loader_get_newline_type			(TeplFileLoader *loader);
 
-G_GNUC_INTERNAL
-gint64			_tepl_file_loader_get_encoding_converter_buffer_size	(void);
-
 G_END_DECLS
 
 #endif /* TEPL_FILE_LOADER_H */

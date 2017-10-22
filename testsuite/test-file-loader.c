@@ -20,6 +20,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <tepl/tepl.h>
+#include "tepl/tepl-file-content.h"
 
 #define DEFAULT_CONTENTS "My shiny content!"
 #define MAX_SIZE 10000
@@ -331,7 +332,7 @@ test_split_cr_lf (void)
 	gchar *content;
 	gint expected_line_count;
 
-	block_size = _tepl_file_loader_get_encoding_converter_buffer_size ();
+	block_size = _tepl_file_content_get_encoding_converter_buffer_size ();
 	/* Remove terminating nul byte */
 	block_size--;
 

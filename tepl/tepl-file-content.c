@@ -27,6 +27,9 @@ struct _TeplFileContentPrivate
 	GQueue *chunks;
 };
 
+/* Take the default buffer-size of TeplEncodingConverter. */
+#define ENCODING_CONVERTER_BUFFER_SIZE (-1)
+
 G_DEFINE_TYPE_WITH_PRIVATE (TeplFileContent, _tepl_file_content, G_TYPE_OBJECT)
 
 static gboolean
@@ -221,7 +224,7 @@ _tepl_file_content_convert_to_utf8 (TeplFileContent                 *content,
 	g_return_val_if_fail (from_encoding != NULL, FALSE);
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
-	converter = _tepl_encoding_converter_new (-1);
+	converter = _tepl_encoding_converter_new (ENCODING_CONVERTER_BUFFER_SIZE);
 	_tepl_encoding_converter_set_callback (converter, callback, callback_user_data);
 
 	if (!_tepl_encoding_converter_open (converter,
@@ -257,4 +260,18 @@ _tepl_file_content_convert_to_utf8 (TeplFileContent                 *content,
 out:
 	g_object_unref (converter);
 	return success;
+}
+
+/* For the unit tests. */
+gint64
+_tepl_file_content_get_encoding_converter_buffer_size (void)
+{
+	TeplEncodingConverter *converter;
+	gint64 buffer_size;
+
+	converter = _tepl_encoding_converter_new (ENCODING_CONVERTER_BUFFER_SIZE);
+	buffer_size = _tepl_encoding_converter_get_buffer_size (converter);
+	g_object_unref (converter);
+
+	return buffer_size;
 }

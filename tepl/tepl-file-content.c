@@ -20,6 +20,7 @@
 #include "tepl-file-content.h"
 #include <uchardet.h>
 #include "tepl-encoding.h"
+#include "tepl-encoding-private.h"
 
 struct _TeplFileContentPrivate
 {
@@ -204,8 +205,14 @@ _tepl_file_content_determine_encoding (TeplFileContent *content)
 		GSList *candidate_encodings;
 
 		candidate_encodings = tepl_encoding_get_default_candidates ();
+		candidate_encodings = g_slist_concat (candidate_encodings,
+						      tepl_encoding_get_all ());
+		candidate_encodings = _tepl_encoding_remove_duplicates (candidate_encodings,
+									TEPL_ENCODING_DUPLICATES_KEEP_FIRST);
+
 		encoding = _tepl_file_content_determine_encoding_with_fallback_mode (content,
 										     candidate_encodings);
+
 		g_slist_free_full (candidate_encodings, (GDestroyNotify)tepl_encoding_free);
 	}
 

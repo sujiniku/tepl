@@ -22,6 +22,7 @@
 
 #include <glib-object.h>
 #include "tepl-types.h"
+#include "tepl-encoding-converter.h"
 
 G_BEGIN_DECLS
 
@@ -63,6 +64,13 @@ GQueue *		_tepl_file_content_get_chunks		(TeplFileContent *content);
 
 G_GNUC_INTERNAL
 TeplEncoding *		_tepl_file_content_determine_encoding	(TeplFileContent *content);
+
+G_GNUC_INTERNAL
+gboolean		_tepl_file_content_convert_to_utf8	(TeplFileContent                 *content,
+								 TeplEncoding                    *from_encoding,
+								 TeplEncodingConversionCallback   callback,
+								 gpointer                         callback_user_data,
+								 GError                         **error);
 
 G_END_DECLS
 

@@ -793,10 +793,7 @@ convert_and_insert_content (GTask *task)
 	TeplFileLoader *loader;
 	TeplFileLoaderPrivate *priv;
 	TaskData *task_data;
-	TeplEncodingConverter *converter = NULL;
 	TeplFileContent *content;
-	GQueue *chunks;
-	GList *l;
 	GError *error = NULL;
 
 	loader = g_task_get_source_object (task);
@@ -810,50 +807,19 @@ convert_and_insert_content (GTask *task)
 		return;
 	}
 
-	converter = _tepl_encoding_converter_new (ENCODING_CONVERTER_BUFFER_SIZE);
-
-	_tepl_encoding_converter_set_callback (converter,
-					       content_converted_cb,
-					       task);
+	content = _tepl_file_content_loader_get_content (task_data->content_loader);
 
 	g_assert (priv->detected_encoding != NULL);
-	_tepl_encoding_converter_open (converter,
-				       "UTF-8",
-				       tepl_encoding_get_charset (priv->detected_encoding),
-				       &error);
+	_tepl_file_content_convert_to_utf8 (content,
+					    priv->detected_encoding,
+					    content_converted_cb,
+					    task,
+					    &error);
+
 	if (error != NULL)
 	{
 		g_task_return_error (task, error);
-		goto out;
-	}
-
-	content = _tepl_file_content_loader_get_content (task_data->content_loader);
-	chunks = _tepl_file_content_get_chunks (content);
-
-	for (l = chunks->head; l != NULL; l = l->next)
-	{
-		GBytes *chunk = l->data;
-
-		g_assert (chunk != NULL);
-		g_assert (g_bytes_get_size (chunk) > 0);
-
-		_tepl_encoding_converter_feed (converter,
-					       g_bytes_get_data (chunk, NULL),
-					       g_bytes_get_size (chunk),
-					       &error);
-
-		if (error != NULL)
-		{
-			g_task_return_error (task, error);
-			goto out;
-		}
-	}
-
-	_tepl_encoding_converter_close (converter, &error);
-	if (error != NULL)
-	{
-		g_task_return_error (task, error);
-		goto out;
+		return;
 	}
 
 	if (task_data->insert_carriage_return)
@@ -869,9 +835,6 @@ convert_and_insert_content (GTask *task)
 	remove_trailing_newline_if_needed (loader);
 
 	g_task_return_boolean (task, TRUE);
-
-out:
-	g_clear_object (&converter);
 }
 
 static void

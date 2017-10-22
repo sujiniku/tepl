@@ -628,6 +628,10 @@ strv_to_list (const gchar * const *enc_str)
  * language, country and default encoding). The UTF-8 encoding and the current
  * locale encoding are guaranteed to be present in the returned list.
  *
+ * Note that the returned list doesn't contain all encodings known by
+ * #TeplEncoding, it is a limited list that contains only the encodings that
+ * have the most likelihood to fit for the current locale.
+ *
  * Returns: (transfer full) (element-type TeplEncoding): the list of default
  * candidate encodings.
  * Since: 2.0

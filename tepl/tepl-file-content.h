@@ -60,9 +60,6 @@ void			_tepl_file_content_add_chunk		(TeplFileContent *content,
 								 GBytes          *chunk);
 
 G_GNUC_INTERNAL
-GQueue *		_tepl_file_content_get_chunks		(TeplFileContent *content);
-
-G_GNUC_INTERNAL
 TeplEncoding *		_tepl_file_content_determine_encoding	(TeplFileContent *content);
 
 G_GNUC_INTERNAL

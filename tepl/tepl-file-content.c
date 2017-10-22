@@ -82,14 +82,6 @@ _tepl_file_content_add_chunk (TeplFileContent *content,
 	g_queue_push_tail (content->priv->chunks, g_bytes_ref (chunk));
 }
 
-GQueue *
-_tepl_file_content_get_chunks (TeplFileContent *content)
-{
-	g_return_val_if_fail (TEPL_IS_FILE_CONTENT (content), NULL);
-
-	return content->priv->chunks;
-}
-
 static TeplEncoding *
 create_encoding_for_uchardet_charset (const gchar *charset)
 {

@@ -45,7 +45,7 @@ gchar *		amtk_utils_recent_chooser_menu_get_item_uri	(GtkRecentChooserMenu *menu
 
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 void		amtk_utils_bind_g_action_to_gtk_action		(GActionMap     *g_action_map,
-								 const gchar    *g_action_name,
+								 const gchar    *detailed_g_action_name,
 								 GtkActionGroup *gtk_action_group,
 								 const gchar    *gtk_action_name);
 G_GNUC_END_IGNORE_DEPRECATIONS

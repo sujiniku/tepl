@@ -183,18 +183,36 @@ amtk_utils_recent_chooser_menu_get_item_uri (GtkRecentChooserMenu *menu,
 	return item_uri;
 }
 
+static gboolean
+variant_type_equal_null_safe (const GVariantType *type1,
+			      const GVariantType *type2)
+{
+	if (type1 == NULL || type2 == NULL)
+	{
+		return type1 == NULL && type2 == NULL;
+	}
+
+	return g_variant_type_equal (type1, type2);
+}
+
+#define AMTK_GVARIANT_PARAM_KEY "amtk-gvariant-param-key"
+
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 gtk_action_activate_cb (GtkAction *gtk_action,
 			GAction   *g_action)
 {
-	g_action_activate (g_action, NULL);
+	GVariant *param;
+
+	param = g_object_get_data (G_OBJECT (gtk_action), AMTK_GVARIANT_PARAM_KEY);
+	g_action_activate (g_action, param);
 }
 
 /**
  * amtk_utils_bind_g_action_to_gtk_action:
  * @g_action_map: a #GActionMap.
- * @g_action_name: a #GAction name present in @g_action_map.
+ * @detailed_g_action_name: a detailed #GAction name; the #GAction must be
+ *   present in @g_action_map.
  * @gtk_action_group: a #GtkActionGroup.
  * @gtk_action_name: a #GtkAction name present in @gtk_action_group.
  *
@@ -202,9 +220,18 @@ gtk_action_activate_cb (GtkAction *gtk_action,
  * when #GtkUIManager and #GtkAction are still used. Porting to #GAction should
  * be the first step.
  *
+ * For @detailed_g_action_name, see the g_action_parse_detailed_name() function.
+ * The `"app."` or `"win."` prefix (or any other #GActionMap prefix) must not be
+ * included in @detailed_g_action_name. For example a valid
+ * @detailed_g_action_name is `"open"` or `"insert-command::foobar"`.
+ *
+ * The same #GAction can be bound to several #GtkAction's (with different
+ * parameter values for the #GAction), but the reverse is not true, one
+ * #GtkAction cannot be bound to several #GAction's.
+ *
  * This function:
- * - Calls g_action_activate() (with a %NULL #GVariant parameter) when the
- *   #GtkAction #GtkAction::activate signal is emitted.
+ * - Calls g_action_activate() when the #GtkAction #GtkAction::activate signal
+ *   is emitted.
  * - Binds the #GAction #GAction:enabled property to the #GtkAction
  *   #GtkAction:sensitive property. The binding is done with the
  *   %G_BINDING_BIDIRECTIONAL and %G_BINDING_SYNC_CREATE flags, the source is
@@ -213,31 +240,89 @@ gtk_action_activate_cb (GtkAction *gtk_action,
  * When using this function, you should set the callback to %NULL in the
  * corresponding #GtkActionEntry.
  *
- * Since: 3.0
+ * Since: 3.2
  */
 void
 amtk_utils_bind_g_action_to_gtk_action (GActionMap     *g_action_map,
-					const gchar    *g_action_name,
+					const gchar    *detailed_g_action_name,
 					GtkActionGroup *gtk_action_group,
 					const gchar    *gtk_action_name)
 {
+	gchar *g_action_name = NULL;
+	GVariant *target_value = NULL;
 	GAction *g_action;
-	const GVariantType *param_type;
 	GtkAction *gtk_action;
+	GError *error = NULL;
 
 	g_return_if_fail (G_IS_ACTION_MAP (g_action_map));
-	g_return_if_fail (g_action_name != NULL);
+	g_return_if_fail (detailed_g_action_name != NULL);
 	g_return_if_fail (GTK_IS_ACTION_GROUP (gtk_action_group));
 	g_return_if_fail (gtk_action_name != NULL);
 
-	g_action = g_action_map_lookup_action (g_action_map, g_action_name);
-	g_return_if_fail (g_action != NULL);
+	g_action_parse_detailed_name (detailed_g_action_name,
+				      &g_action_name,
+				      &target_value,
+				      &error);
 
-	param_type = g_action_get_parameter_type (g_action);
-	g_return_if_fail (param_type == NULL);
+	/* The doc of g_action_parse_detailed_name() doesn't explain if it
+	 * returns a floating ref for the GVariant.
+	 */
+	if (target_value != NULL &&
+	    g_variant_is_floating (target_value))
+	{
+		g_variant_ref_sink (target_value);
+	}
+
+	if (error != NULL)
+	{
+		g_warning ("Error when parsing detailed GAction name '%s': %s",
+			   detailed_g_action_name,
+			   error->message);
+
+		g_clear_error (&error);
+		goto out;
+	}
+
+	g_action = g_action_map_lookup_action (g_action_map, g_action_name);
+	if (g_action == NULL)
+	{
+		g_warn_if_reached ();
+		goto out;
+	}
+
+	/* Sanity check, ensure that the GVariant target has the good type. */
+	{
+		const GVariantType *g_action_param_type;
+		const GVariantType *target_value_type = NULL;
+
+		g_action_param_type = g_action_get_parameter_type (g_action);
+
+		if (target_value != NULL)
+		{
+			target_value_type = g_variant_get_type (target_value);
+		}
+
+		if (!variant_type_equal_null_safe (g_action_param_type, target_value_type))
+		{
+			g_warn_if_reached ();
+			goto out;
+		}
+	}
 
 	gtk_action = gtk_action_group_get_action (gtk_action_group, gtk_action_name);
-	g_return_if_fail (gtk_action != NULL);
+	if (gtk_action == NULL)
+	{
+		g_warn_if_reached ();
+		goto out;
+	}
+
+	if (target_value != NULL)
+	{
+		g_object_set_data_full (G_OBJECT (gtk_action),
+					AMTK_GVARIANT_PARAM_KEY,
+					g_variant_ref (target_value),
+					(GDestroyNotify)g_variant_unref);
+	}
 
 	g_signal_connect_object (gtk_action,
 				 "activate",
@@ -248,5 +333,9 @@ amtk_utils_bind_g_action_to_gtk_action (GActionMap     *g_action_map,
 	g_object_bind_property (g_action, "enabled",
 				gtk_action, "sensitive",
 				G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
+
+out:
+	g_free (g_action_name);
+	g_clear_pointer (&target_value, (GDestroyNotify)g_variant_unref);
 }
 G_GNUC_END_IGNORE_DEPRECATIONS

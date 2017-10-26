@@ -453,35 +453,6 @@ tepl_encoding_equals (const TeplEncoding *enc1,
 	return g_ascii_strcasecmp (enc1->charset, enc2->charset) == 0;
 }
 
-/**
- * tepl_encoding_get_all:
- *
- * Gets a list of all encodings known by #TeplEncoding.
- *
- * Returns: (transfer full) (element-type TeplEncoding): a list of
- * #TeplEncoding's.
- * Since: 2.0
- */
-GSList *
-tepl_encoding_get_all (void)
-{
-	GSList *list = NULL;
-	gint i;
-
-	for (i = G_N_ELEMENTS (encodings_table) - 1; i >= 0; i--)
-	{
-		const EncodingData *cur_data = encodings_table + i;
-		TeplEncoding *enc;
-
-		enc = _tepl_encoding_new_full (cur_data->charset,
-					       _(cur_data->name_to_translate));
-
-		list = g_slist_prepend (list, enc);
-	}
-
-	return list;
-}
-
 static gboolean
 present_in_list (const GSList       *list,
 		 const TeplEncoding *enc)
@@ -499,6 +470,49 @@ present_in_list (const GSList       *list,
 	}
 
 	return FALSE;
+}
+
+/**
+ * tepl_encoding_get_all:
+ *
+ * Gets a list of all encodings known by #TeplEncoding.
+ *
+ * Returns: (transfer full) (element-type TeplEncoding): a list of
+ * #TeplEncoding's.
+ * Since: 2.0
+ */
+GSList *
+tepl_encoding_get_all (void)
+{
+	GSList *list = NULL;
+	TeplEncoding *locale_enc;
+	gint i;
+
+	for (i = G_N_ELEMENTS (encodings_table) - 1; i >= 0; i--)
+	{
+		const EncodingData *cur_data = encodings_table + i;
+		TeplEncoding *enc;
+
+		enc = _tepl_encoding_new_full (cur_data->charset,
+					       _(cur_data->name_to_translate));
+
+		list = g_slist_prepend (list, enc);
+	}
+
+	/* Add locale encoding first. */
+
+	locale_enc = tepl_encoding_new_from_locale ();
+
+	if (present_in_list (list, locale_enc))
+	{
+		tepl_encoding_free (locale_enc);
+	}
+	else
+	{
+		list = g_slist_prepend (list, locale_enc);
+	}
+
+	return list;
 }
 
 static GSList *

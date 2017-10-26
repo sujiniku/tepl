@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+ <!ENTITY % local.common.attrib "xmlns:xi CDATA #FIXED 'http://www.w3.org/2003/XInclude'">
+ <!ENTITY % gtkdocentities SYSTEM "xml/gtkdocentities.ent">
+ %gtkdocentities;
+]>
+
+<part id="porting-guides">
+  <title>Porting Guides</title>
+
+  <chapter id="porting-guide-file-loading-and-saving">
+    <title>GtkSourceView to Tepl file loading and saving porting guide</title>
+
+    <refsect1>
+      <title>Introduction</title>
+
+      <para>
+        The file loading and saving feature of GtkSourceView has been forked in
+        Tepl in order to improve the implementation and to develop higher-level
+        APIs, without being constrained by API backward-compatibility
+        requirements.
+      </para>
+
+      <para>
+        The file loading and saving in GtkSourceView contains only the backend
+        part, it doesn't deal with the GUI/frontend; as such the API is still a
+        little low-level. With the Tepl framework, it is possible to implement
+        higher-level APIs.
+      </para>
+
+      <para>
+        Another thing that we wanted to improve was the file loader, to use
+        <ulink url="https://www.freedesktop.org/wiki/Software/uchardet/">uchardet</ulink>,
+        to have better encoding auto-detection, but the file loader implementation
+        in GtkSourceView was not appropriate at all to use uchardet, so a new
+        implementation needed to be written from scratch. Developing this new
+        implementation in GtkSourceView itself would have been more difficult,
+        since in GtkSourceView it's better to keep the API backward-compatible,
+        and it can take a long time before the new implementation supports all
+        features that the old implementation supported (so to not introduce
+        regressions in applications, the new implementation can be merged into
+        GtkSourceView only when all previous features are implemented).
+      </para>
+    </refsect1>
+
+    <refsect1>
+      <title>GtkSourceFileSaver to TeplFileSaver</title>
+
+      <para>
+        <link linkend="TeplFileSaver">TeplFileSaver</link> has almost the same
+        API as <link linkend="GtkSourceFileSaver">GtkSourceFileSaver</link>. One
+        difference is that
+        <link linkend="tepl-file-saver-new-with-target">tepl_file_saver_new_with_target()</link>
+        adds the
+        <link linkend="TEPL-FILE-SAVER-FLAGS-IGNORE-MODIFICATION-TIME:CAPS"><literal>TEPL_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME</literal></link>
+        flag. Without that flag, a “save as” operation (i.e. saving to a
+        different location) is not guaranteed to work with
+        <link linkend="TeplFileSaver">TeplFileSaver</link>.
+      </para>
+    </refsect1>
+
+    <refsect1>
+      <title>GtkSourceFileLoader to TeplFileLoader</title>
+
+      <para>
+        <link linkend="TeplFileLoader">TeplFileLoader</link> has an API similar
+        to <link linkend="GtkSourceFileLoader">GtkSourceFileLoader</link>, but
+        <link linkend="TeplFileLoader">TeplFileLoader</link> doesn't support yet
+        all features of <link linkend="GtkSourceFileLoader">GtkSourceFileLoader</link>.
+      </para>
+    </refsect1>
+
+    <refsect1>
+      <title>GtkSourceEncoding to TeplEncoding</title>
+
+      <para>
+        <link linkend="TeplEncoding">TeplEncoding</link> is quite different
+        compared to <link linkend="GtkSourceEncoding">GtkSourceEncoding</link>.
+        The API has been modified to accomodate the needs of the new file
+        loader.
+      </para>
+
+      <para>
+        Differences between
+        <link linkend="GtkSourceEncoding">GtkSourceEncoding</link> and
+        <link linkend="TeplEncoding">TeplEncoding</link>:
+      </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>
+            The <link linkend="TeplEncoding">TeplEncoding</link> “objects”
+            returned by the <code>tepl_encoding_new*()</code> functions need to
+            be freed, while the <link linkend="GtkSourceEncoding">GtkSourceEncoding</link>
+            “objects” are owned by the GtkSourceView library.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Likewise, the
+            <link linkend="tepl-encoding-get-all">tepl_encoding_get_all()</link>
+            function has the (transfer full) annotation for the return value.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <link linkend="tepl-encoding-new">tepl_encoding_new()</link> copies
+            the charset string as-is without modifying it, while
+            <link linkend="gtk-source-encoding-get-from-charset">gtk_source_encoding_get_from_charset()</link>
+            returns NULL if <link linkend="GtkSourceEncoding">GtkSourceEncoding</link>
+            doesn't know the charset. This permits to not loose any information
+            from what uchardet returns (uchardet might return a charset unknown
+            by <link linkend="TeplEncoding">TeplEncoding</link>).
+          </para>
+        </listitem>
+      </itemizedlist>
+    </refsect1>
+  </chapter>
+</part>

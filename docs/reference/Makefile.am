@@ -45,7 +45,8 @@ HTML_IMAGES =
 content_files =			\
 	amtk-intro.xml		\
 	api-breaks.xml		\
-	intro.xml
+	intro.xml		\
+	porting-guides.xml
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS =

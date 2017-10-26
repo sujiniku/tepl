@@ -521,7 +521,7 @@ load_file_content_cb (GObject      *source_object,
  * This function is asynchronous, there is no way to know when the file loading
  * is finished.
  *
- * Since: 3.2
+ * Since: 4.0
  */
 void
 tepl_tab_load_file (TeplTab *tab,

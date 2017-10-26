@@ -240,7 +240,7 @@ gtk_action_activate_cb (GtkAction *gtk_action,
  * When using this function, you should set the callback to %NULL in the
  * corresponding #GtkActionEntry.
  *
- * Since: 3.2
+ * Since: 4.0
  */
 void
 amtk_utils_bind_g_action_to_gtk_action (GActionMap     *g_action_map,

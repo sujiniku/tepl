@@ -1004,7 +1004,7 @@ tepl_application_window_class_init (TeplApplicationWindowClass *klass)
 	 * If the active view is %NULL, the title contains only the application
 	 * name.
 	 *
-	 * Since: 3.2
+	 * Since: 4.0
 	 */
 	g_object_class_install_property (object_class,
 					 PROP_HANDLE_TITLE,
@@ -1360,7 +1360,7 @@ tepl_application_window_set_tab_group (TeplApplicationWindow *tepl_window,
  * #TeplApplicationWindow object if it hasn't been created.
  *
  * Returns: whether @gtk_window is considered a main application window.
- * Since: 3.2
+ * Since: 4.0
  */
 gboolean
 tepl_application_window_is_main_window (GtkApplicationWindow *gtk_window)
@@ -1388,7 +1388,7 @@ tepl_application_window_is_main_window (GtkApplicationWindow *gtk_window)
  * to the #GtkWindowGroup.
  *
  * Returns: (transfer none): the #GtkWindowGroup.
- * Since: 3.2
+ * Since: 4.0
  */
 GtkWindowGroup *
 tepl_application_window_get_window_group (TeplApplicationWindow *tepl_window)
@@ -1426,7 +1426,7 @@ tepl_application_window_get_window_group (TeplApplicationWindow *tepl_window)
  * @tepl_window: a #TeplApplicationWindow.
  *
  * Returns: the value of the #TeplApplicationWindow:handle-title property.
- * Since: 3.2
+ * Since: 4.0
  */
 gboolean
 tepl_application_window_get_handle_title (TeplApplicationWindow *tepl_window)
@@ -1443,7 +1443,7 @@ tepl_application_window_get_handle_title (TeplApplicationWindow *tepl_window)
  *
  * Sets the #TeplApplicationWindow:handle-title property.
  *
- * Since: 3.2
+ * Since: 4.0
  */
 void
 tepl_application_window_set_handle_title (TeplApplicationWindow *tepl_window,
@@ -1475,7 +1475,7 @@ tepl_application_window_set_handle_title (TeplApplicationWindow *tepl_window,
  * tepl_tab_load_file() function. There is no way to know when the file loading
  * is finished.
  *
- * Since: 3.2
+ * Since: 4.0
  */
 void
 tepl_application_window_open_file (TeplApplicationWindow *tepl_window,

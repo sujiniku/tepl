@@ -405,7 +405,7 @@ tepl_application_get_tepl_action_info_store (TeplApplication *tepl_app)
  *
  * Returns: (transfer none) (nullable): the active main #GtkApplicationWindow,
  * or %NULL.
- * Since: 3.2
+ * Since: 4.0
  */
 GtkApplicationWindow *
 tepl_application_get_active_main_window (TeplApplication *tepl_app)
@@ -493,7 +493,7 @@ activate_cb (GApplication    *g_app,
  * it calls gtk_window_present() on the most recently focused window of the
  * application.
  *
- * Since: 3.2
+ * Since: 4.0
  */
 void
 tepl_application_handle_activate (TeplApplication *tepl_app)
@@ -582,7 +582,7 @@ out:
  * If the active main window is %NULL, it creates one with
  * tepl_abstract_factory_create_main_window().
  *
- * Since: 3.2
+ * Since: 4.0
  */
 void
 tepl_application_handle_open (TeplApplication *tepl_app)

@@ -232,7 +232,7 @@ tepl_abstract_factory_create_tab_label (TeplAbstractFactory *factory,
  * @factory: the #TeplAbstractFactory.
  *
  * Returns: (transfer full): a new #TeplFile.
- * Since: 3.2
+ * Since: 4.0
  */
 TeplFile *
 tepl_abstract_factory_create_file (TeplAbstractFactory *factory)

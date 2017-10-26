@@ -1007,7 +1007,7 @@ tepl_file_is_readonly (TeplFile *file)
  * If the #TeplFile:location isn't %NULL, adds its URI to the default
  * #GtkRecentManager with gtk_recent_manager_add_item().
  *
- * Since: 3.2
+ * Since: 4.0
  */
 
 /* In the future a vfunc could be added for this function if it is desirable to

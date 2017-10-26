@@ -177,10 +177,10 @@ Tepl_@TEPL_API_VERSION@_gir_FILES =	\
 	$(tepl_built_public_c_files)
 
 # FIXME: list Amtk too?
-#Tepl_@TEPL_API_VERSION@_gir_INCLUDES = Gtk-3.0 GtkSource-3.0 Amtk-@TEPL_API_VERSION@
-#Tepl_@TEPL_API_VERSION@_gir_PACKAGES = gtk+-3.0 gtksourceview-3.0 amtk-@TEPL_API_VERSION@
-Tepl_@TEPL_API_VERSION@_gir_INCLUDES = Gtk-3.0 GtkSource-3.0
-Tepl_@TEPL_API_VERSION@_gir_PACKAGES = gtk+-3.0 gtksourceview-3.0
+#Tepl_@TEPL_API_VERSION@_gir_INCLUDES = Gtk-3.0 GtkSource-4 Amtk-@TEPL_API_VERSION@
+#Tepl_@TEPL_API_VERSION@_gir_PACKAGES = gtk+-3.0 gtksourceview-4 amtk-@TEPL_API_VERSION@
+Tepl_@TEPL_API_VERSION@_gir_INCLUDES = Gtk-3.0 GtkSource-4
+Tepl_@TEPL_API_VERSION@_gir_PACKAGES = gtk+-3.0 gtksourceview-4
 Tepl_@TEPL_API_VERSION@_gir_EXPORT_PACKAGES = tepl-@TEPL_API_VERSION@
 
 girdir = $(datadir)/gir-1.0

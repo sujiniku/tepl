@@ -282,6 +282,24 @@ test_loader (const gchar     *contents,
 }
 
 static void
+test_empty (void)
+{
+	/* uchardet returns unknown encoding, this relies on the fallback mode
+	 * to determine the encoding.
+	 * See uchardet bug:
+	 * https://bugs.freedesktop.org/show_bug.cgi?id=103280
+	 */
+	test_loader ("",
+		     "",
+		     0, 0,
+		     "UTF-8",
+		     TEPL_NEWLINE_TYPE_DEFAULT,
+		     1,
+		     TRUE,
+		     MAX_SIZE);
+}
+
+static void
 test_loader_newlines (gboolean         implicit_trailing_newline,
 		      const gchar     *contents,
 		      const gchar     *expected_buffer_content,
@@ -648,12 +666,13 @@ test_readonly (void)
 }
 #endif /* !G_OS_WIN32 */
 
-gint
-main (gint   argc,
-      gchar *argv[])
+int
+main (int    argc,
+      char **argv)
 {
 	gtk_test_init (&argc, &argv);
 
+	g_test_add_func ("/file-loader/empty", test_empty);
 	g_test_add_func ("/file-loader/newlines", test_newlines);
 	g_test_add_func ("/file-loader/split-cr-lf", test_split_cr_lf);
 	g_test_add_func ("/file-loader/max-size", test_max_size);

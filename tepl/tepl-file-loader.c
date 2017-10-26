@@ -53,6 +53,18 @@
  * gtk_text_buffer_set_modified() is called with %FALSE.
  */
 
+/* Implementation notes:
+ *
+ * TeplFileLoader tries to delegate as much work as possible to other internal
+ * classes:
+ * - TeplFileContentLoader
+ * - TeplFileContent
+ * - TeplEncodingConverter
+ *
+ * Those internal classes should be re-usable outside of GtkTextView, the
+ * GtkTextView-specific code should be in this class.
+ */
+
 typedef struct _TeplFileLoaderPrivate TeplFileLoaderPrivate;
 typedef struct _TaskData TaskData;
 

@@ -21,8 +21,8 @@ Dependencies
 ------------
 
 - GLib >= 2.52
-- GTK+ >= 3.20
-- GtkSourceView >= 3.22
+- GTK+ >= 3.22
+- GtkSourceView >= 3.99.6
 - libxml2 >= 2.5
 - uchardet
 

@@ -57,8 +57,8 @@ AC_SUBST(TEPL_API_VERSION)
 
 # Dependencies
 glib_req=2.52
-gtk_req=3.20
-gtksourceview_req=3.22
+gtk_req=3.22
+gtksourceview_req=3.99.6
 libxml_req=2.5
 
 AC_CONFIG_SRCDIR([tepl/tepl.h])
@@ -100,7 +100,7 @@ AX_PKG_CHECK_MODULES([AMTK_DEP],
 		     [AMTK_PACKAGE_REQUIRES_PRIVATE])
 
 AX_PKG_CHECK_MODULES([TEPL_DEP],
-		     [glib-2.0 >= $glib_req  gtk+-3.0 >= $gtk_req  gtksourceview-3.0 >= $gtksourceview_req],
+		     [glib-2.0 >= $glib_req  gtk+-3.0 >= $gtk_req  gtksourceview-4 >= $gtksourceview_req],
 		     [libxml-2.0 >= $libxml_req  uchardet],
 		     [], [],
 		     [TEPL_PACKAGE_REQUIRES],

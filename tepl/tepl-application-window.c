@@ -24,13 +24,12 @@
 #include "tepl-abstract-factory.h"
 #include "tepl-application.h"
 #include "tepl-buffer.h"
-#include "tepl-file.h"
 #include "tepl-file-saver.h"
-#include "tepl-info-bar.h"
+#include "tepl-signal-group.h"
 #include "tepl-tab.h"
 #include "tepl-tab-group.h"
+#include "tepl-tab-saving.h"
 #include "tepl-view.h"
-#include "tepl-signal-group.h"
 
 /**
  * SECTION:application-window
@@ -202,66 +201,6 @@ open_cb (GSimpleAction *open_action,
 }
 
 static void
-file_saver_cb (GObject      *source_object,
-	       GAsyncResult *result,
-	       gpointer      user_data)
-{
-	TeplFileSaver *saver = TEPL_FILE_SAVER (source_object);
-	TeplTab *tab = TEPL_TAB (user_data);
-	GError *error = NULL;
-	GApplication *app;
-
-	if (tepl_file_saver_save_finish (saver, result, &error))
-	{
-		TeplFile *file;
-
-		file = tepl_file_saver_get_file (saver);
-		tepl_file_add_uri_to_recent_manager (file);
-	}
-
-	if (error != NULL)
-	{
-		TeplInfoBar *info_bar;
-
-		info_bar = tepl_info_bar_new_simple (GTK_MESSAGE_ERROR,
-						     _("Error when saving the file."),
-						     error->message);
-		tepl_info_bar_add_close_button (info_bar);
-		tepl_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
-		gtk_widget_show (GTK_WIDGET (info_bar));
-
-		g_clear_error (&error);
-	}
-
-	app = g_application_get_default ();
-	g_application_unmark_busy (app);
-	g_application_release (app);
-
-	g_object_unref (saver);
-	g_object_unref (tab);
-}
-
-static void
-launch_saver (TeplTab       *tab,
-	      TeplFileSaver *saver)
-{
-	GApplication *app;
-
-	app = g_application_get_default ();
-	g_application_hold (app);
-	g_application_mark_busy (app);
-
-	tepl_file_saver_save_async (saver,
-				    G_PRIORITY_DEFAULT,
-				    NULL,
-				    NULL,
-				    NULL,
-				    NULL,
-				    file_saver_cb,
-				    g_object_ref (tab));
-}
-
-static void
 save_cb (GSimpleAction *save_action,
 	 GVariant      *parameter,
 	 gpointer       user_data)
@@ -284,7 +223,8 @@ save_cb (GSimpleAction *save_action,
 		TeplFileSaver *saver;
 
 		saver = tepl_file_saver_new (buffer, file);
-		launch_saver (tab, saver);
+		_tepl_tab_saving_save (tab, saver);
+		g_object_unref (saver);
 	}
 	else
 	{
@@ -311,7 +251,8 @@ save_file_chooser_response_cb (GtkFileChooserDialog *file_chooser_dialog,
 		location = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (file_chooser_dialog));
 
 		saver = tepl_file_saver_new_with_target (buffer, file, location);
-		launch_saver (tab, saver);
+		_tepl_tab_saving_save (tab, saver);
+		g_object_unref (saver);
 
 		g_object_unref (location);
 	}

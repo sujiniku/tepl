@@ -33,7 +33,8 @@ IGNORE_HFILES =					\
 	tepl-file-content-loader.h		\
 	tepl-io-error-info-bar.h		\
 	tepl-progress-info-bar.h		\
-	tepl-signal-group.h
+	tepl-signal-group.h			\
+	tepl-tab-saving.h
 
 # Extra options to supply to gtkdoc-mkdb
 MKDB_OPTIONS = --xml-mode --output-format=xml

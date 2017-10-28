@@ -19,6 +19,7 @@
 
 #include "tepl-init.h"
 #include <amtk/amtk.h>
+#include <gtksourceview/gtksource.h>
 #include "tepl-abstract-factory.h"
 #include "tepl-metadata-manager.h"
 
@@ -30,7 +31,7 @@
  * This function can be called several times, but is meant to be called at the
  * beginning of main(), before any other Tepl function call.
  *
- * This function also calls amtk_init().
+ * This function also calls amtk_init() and gtk_source_init().
  *
  * Since: 3.0
  */
@@ -38,6 +39,7 @@ void
 tepl_init (void)
 {
 	amtk_init ();
+	gtk_source_init ();
 }
 
 /**
@@ -47,7 +49,7 @@ tepl_init (void)
  * objects. It also properly shutdowns the metadata manager by calling
  * tepl_metadata_manager_shutdown().
  *
- * This function also calls amtk_finalize().
+ * This function also calls amtk_finalize() and gtk_source_finalize().
  *
  * It is not mandatory to call this function, it's just to be friendlier to
  * memory debugging tools (but if you don't call this function and you use the
@@ -79,10 +81,12 @@ tepl_finalize (void)
 		tepl_metadata_manager_shutdown ();
 		_tepl_abstract_factory_unref_singleton ();
 
-		/* Since Tepl depends on Amtk, it's better to first finalize
-		 * Tepl stuff and then finalize Amtk, in case the Tepl
-		 * singletons depends on Amtk.
+		/* Since Tepl depends on Amtk and GtkSourceView, it's better to
+		 * first finalize Tepl stuff and then finalize the underlying
+		 * libraries, in case the Tepl singletons depend on Amtk or
+		 * GtkSourceView.
 		 */
+		gtk_source_finalize ();
 		amtk_finalize ();
 
 		done = TRUE;

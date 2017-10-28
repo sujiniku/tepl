@@ -58,7 +58,7 @@ AC_SUBST(TEPL_API_VERSION)
 # Dependencies
 glib_req=2.52
 gtk_req=3.22
-gtksourceview_req=3.99.6
+gtksourceview_req=3.99.7
 libxml_req=2.5
 
 AC_CONFIG_SRCDIR([tepl/tepl.h])

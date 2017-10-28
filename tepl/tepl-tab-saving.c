@@ -123,9 +123,9 @@ _tepl_tab_saving_save_finish (TeplTab      *tab,
 }
 
 static void
-save_cb (GObject      *source_object,
-	 GAsyncResult *result,
-	 gpointer      user_data)
+save_async_simple_cb (GObject      *source_object,
+		      GAsyncResult *result,
+		      gpointer      user_data)
 {
 	TeplTab *tab = TEPL_TAB (source_object);
 
@@ -133,17 +133,20 @@ save_cb (GObject      *source_object,
 	g_object_unref (tab);
 }
 
-/* It's also an async function. Useful when we don't care about:
+/* Useful when we don't care about:
  * - when the operation is finished.
  * - the result.
  */
 void
-_tepl_tab_saving_save (TeplTab       *tab,
-		       TeplFileSaver *saver)
+_tepl_tab_saving_save_async_simple (TeplTab       *tab,
+				    TeplFileSaver *saver)
 {
 	g_return_if_fail (TEPL_IS_TAB (tab));
 	g_return_if_fail (TEPL_IS_FILE_SAVER (saver));
 
 	g_object_ref (tab);
-	_tepl_tab_saving_save_async (tab, saver, save_cb, NULL);
+	_tepl_tab_saving_save_async (tab,
+				     saver,
+				     save_async_simple_cb,
+				     NULL);
 }

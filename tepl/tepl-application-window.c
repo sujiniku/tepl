@@ -223,7 +223,7 @@ save_cb (GSimpleAction *save_action,
 		TeplFileSaver *saver;
 
 		saver = tepl_file_saver_new (buffer, file);
-		_tepl_tab_saving_save (tab, saver);
+		_tepl_tab_saving_save_async_simple (tab, saver);
 		g_object_unref (saver);
 	}
 	else
@@ -251,7 +251,7 @@ save_file_chooser_response_cb (GtkFileChooserDialog *file_chooser_dialog,
 		location = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (file_chooser_dialog));
 
 		saver = tepl_file_saver_new_with_target (buffer, file, location);
-		_tepl_tab_saving_save (tab, saver);
+		_tepl_tab_saving_save_async_simple (tab, saver);
 		g_object_unref (saver);
 
 		g_object_unref (location);

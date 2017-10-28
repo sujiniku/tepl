@@ -26,18 +26,18 @@
 G_BEGIN_DECLS
 
 G_GNUC_INTERNAL
-void		_tepl_tab_saving_save_async	(TeplTab             *tab,
-						 TeplFileSaver       *saver,
-						 GAsyncReadyCallback  callback,
-						 gpointer             user_data);
+void		_tepl_tab_saving_save_async		(TeplTab             *tab,
+							 TeplFileSaver       *saver,
+							 GAsyncReadyCallback  callback,
+							 gpointer             user_data);
 
 G_GNUC_INTERNAL
-gboolean	_tepl_tab_saving_save_finish	(TeplTab      *tab,
-						 GAsyncResult *result);
+gboolean	_tepl_tab_saving_save_finish		(TeplTab      *tab,
+							 GAsyncResult *result);
 
 G_GNUC_INTERNAL
-void		_tepl_tab_saving_save		(TeplTab       *tab,
-						 TeplFileSaver *saver);
+void		_tepl_tab_saving_save_async_simple	(TeplTab       *tab,
+							 TeplFileSaver *saver);
 
 G_END_DECLS
 

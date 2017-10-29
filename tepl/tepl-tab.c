@@ -20,12 +20,14 @@
 #include "config.h"
 #include "tepl-tab.h"
 #include <glib/gi18n-lib.h>
-#include "tepl-view.h"
 #include "tepl-buffer.h"
 #include "tepl-file-loader.h"
 #include "tepl-file-metadata.h"
+#include "tepl-file-saver.h"
 #include "tepl-info-bar.h"
 #include "tepl-tab-group.h"
+#include "tepl-tab-saving.h"
+#include "tepl-view.h"
 
 /**
  * SECTION:tab
@@ -546,4 +548,91 @@ tepl_tab_load_file (TeplTab *tab,
 				     NULL, NULL, NULL, /* progress */
 				     load_file_content_cb,
 				     g_object_ref (tab));
+}
+
+/**
+ * tepl_tab_save_async:
+ * @tab: a #TeplTab.
+ * @callback: (scope async): a #GAsyncReadyCallback to call when the request is
+ *   satisfied.
+ * @user_data: user data to pass to @callback.
+ *
+ * Saves asynchronously the content of the @tab. The #TeplFile:location must not
+ * be %NULL.
+ *
+ * See the #GAsyncResult documentation to know how to use this function.
+ *
+ * Since: 4.0
+ */
+void
+tepl_tab_save_async (TeplTab             *tab,
+		     GAsyncReadyCallback  callback,
+		     gpointer             user_data)
+{
+	TeplBuffer *buffer;
+	TeplFile *file;
+	GFile *location;
+	TeplFileSaver *saver;
+
+	g_return_if_fail (TEPL_IS_TAB (tab));
+
+	buffer = tepl_tab_get_buffer (tab);
+	file = tepl_buffer_get_file (buffer);
+	location = tepl_file_get_location (file);
+	g_return_if_fail (location != NULL);
+
+	saver = tepl_file_saver_new (buffer, file);
+	_tepl_tab_saving_save_async (tab, saver, callback, user_data);
+	g_object_unref (saver);
+}
+
+/**
+ * tepl_tab_save_finish:
+ * @tab: a #TeplTab.
+ * @result: a #GAsyncResult.
+ *
+ * Finishes a tab saving started with tepl_tab_save_async().
+ *
+ * Returns: whether the tab was saved successfully.
+ * Since: 4.0
+ */
+gboolean
+tepl_tab_save_finish (TeplTab      *tab,
+		      GAsyncResult *result)
+{
+	return _tepl_tab_saving_save_finish (tab, result);
+}
+
+static void
+save_async_simple_cb (GObject      *source_object,
+		      GAsyncResult *result,
+		      gpointer      user_data)
+{
+	TeplTab *tab = TEPL_TAB (source_object);
+
+	tepl_tab_save_finish (tab, result);
+	g_object_unref (tab);
+}
+
+/**
+ * tepl_tab_save_async_simple:
+ * @tab: a #TeplTab.
+ *
+ * The same as tepl_tab_save_async(), but without callback.
+ *
+ * This function is useful when you don't need to know:
+ * - when the operation is finished;
+ * - and whether the operation ran successfully.
+ *
+ * Since: 4.0
+ */
+void
+tepl_tab_save_async_simple (TeplTab *tab)
+{
+	g_return_if_fail (TEPL_IS_TAB (tab));
+
+	g_object_ref (tab);
+	tepl_tab_save_async (tab,
+			     save_async_simple_cb,
+			     NULL);
 }

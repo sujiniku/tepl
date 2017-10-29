@@ -97,6 +97,15 @@ void		tepl_tab_add_info_bar		(TeplTab    *tab,
 void		tepl_tab_load_file		(TeplTab *tab,
 						 GFile   *location);
 
+void		tepl_tab_save_async		(TeplTab             *tab,
+						 GAsyncReadyCallback  callback,
+						 gpointer             user_data);
+
+gboolean	tepl_tab_save_finish		(TeplTab      *tab,
+						 GAsyncResult *result);
+
+void		tepl_tab_save_async_simple	(TeplTab *tab);
+
 G_END_DECLS
 
 #endif /* TEPL_TAB_H */

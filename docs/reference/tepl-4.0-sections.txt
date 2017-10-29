@@ -459,6 +459,9 @@ tepl_tab_get_view
 tepl_tab_get_buffer
 tepl_tab_add_info_bar
 tepl_tab_load_file
+tepl_tab_save_async
+tepl_tab_save_finish
+tepl_tab_save_async_simple
 <SUBSECTION Standard>
 TEPL_IS_TAB
 TEPL_IS_TAB_CLASS

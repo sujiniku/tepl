@@ -220,11 +220,7 @@ save_cb (GSimpleAction *save_action,
 
 	if (location != NULL)
 	{
-		TeplFileSaver *saver;
-
-		saver = tepl_file_saver_new (buffer, file);
-		_tepl_tab_saving_save_async_simple (tab, saver);
-		g_object_unref (saver);
+		tepl_tab_save_async_simple (tab);
 	}
 	else
 	{

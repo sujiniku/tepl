@@ -1,48 +1,48 @@
 News in 3.99.1, 2017-xx-yy (not yet released)
 --------------------------
 
-General:
-* Use GtkSourceView 4.
+* General:
+ - Use GtkSourceView 4.
 
-Amtk:
-* Improve amtk_utils_bind_g_action_to_gtk_action() to support _detailed_
-  GAction names.
+* Amtk:
+ - Improve amtk_utils_bind_g_action_to_gtk_action() to support _detailed_
+   GAction names.
 
-Framework:
-* Add more GAction's and corresponding AmtkActionInfo's:
-	* win.tepl-undo
-	* win.tepl-redo
-	* win.tepl-indent
-	* win.tepl-unindent
-	* win.tepl-open
-	* win.tepl-save
-	* win.tepl-save-as
-	* app.tepl-new-window
-* Add TeplApplicationWindow:handle-title boolean property to handle the window
-  title.
-* Add more vfuncs to TeplAbstractFactory: create_file and create_main_window.
-* Add functions related to main windows:
-	* tepl_application_get_active_main_window()
-	* tepl_application_window_is_main_window()
-	* tepl_application_window_get_window_group()
-* TeplApplication: add options to handle the GApplication::activate and
-  GApplication::open signals.
-* Start to write high-level APIs for loading and saving files.
+* Framework:
+ - Add more GAction's and corresponding AmtkActionInfo's:
+	- win.tepl-undo
+	- win.tepl-redo
+	- win.tepl-indent
+	- win.tepl-unindent
+	- win.tepl-open
+	- win.tepl-save
+	- win.tepl-save-as
+	- app.tepl-new-window
+ - Add TeplApplicationWindow:handle-title boolean property to handle the window
+   title.
+ - Add more vfuncs to TeplAbstractFactory: create_file and create_main_window.
+ - Add functions related to main windows:
+	- tepl_application_get_active_main_window()
+	- tepl_application_window_is_main_window()
+	- tepl_application_window_get_window_group()
+ - TeplApplication: add options to handle the GApplication::activate and
+   GApplication::open signals.
+ - Start to write high-level functions for loading and saving files.
 
-File loading and saving toolkit:
-* TeplFileLoader:
-	* Internal code refactorings to have more re-usable code independent of
+* File loading and saving toolkit:
+ - TeplFileLoader:
+	- Internal code refactorings to have more re-usable code independent of
 	  GtkTextView.
-	* Add fallback mode to determine encoding if uchardet fails.
-	* Write more unit tests.
-* TeplEncoding:
-	* Make tepl_encoding_get_default_candidates() more robust in case of
+	- Add fallback mode to determine encoding if uchardet fails.
+	- Write more unit tests.
+ - TeplEncoding:
+	- Make tepl_encoding_get_default_candidates() more robust in case of
 	  mis-translation.
-	* Improve API documentation.
-* Write GtkSourceView to Tepl file loading and saving porting guide.
+	- Improve API documentation.
+ - Write GtkSourceView to Tepl file loading and saving porting guide.
 
-Misc:
-* Translation updates.
+* Misc:
+ - Translation updates.
 
 News in 3.0.0, 2017-09-09
 -------------------------

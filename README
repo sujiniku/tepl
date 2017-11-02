@@ -22,17 +22,14 @@ Dependencies
 
 - GLib >= 2.52
 - GTK+ >= 3.22
-- GtkSourceView >= 3.99.6
+- GtkSourceView >= 3.99.7
 - libxml2 >= 2.5
-- uchardet
-
-Since uchardet is a fairly new library, here is the URL:
-https://www.freedesktop.org/wiki/Software/uchardet/
+- uchardet - https://www.freedesktop.org/wiki/Software/uchardet/
 
 Installation
 ------------
 
-Simple install procedure:
+Simple install procedure from a tarball:
 
   $ ./configure
   $ make

@@ -90,7 +90,7 @@ struct _TeplFileSaverClass
 {
 	GObjectClass parent_class;
 
-	gpointer padding[10];
+	gpointer padding[12];
 };
 
 GType			 tepl_file_saver_get_type		(void);

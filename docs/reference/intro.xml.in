@@ -159,7 +159,7 @@
     <title>GTK+ and GtkSourceView dependencies</title>
     <para>
       Tepl&nbsp;@TEPL_API_VERSION@ depends on GTK+&nbsp;3 and
-      GtkSourceView&nbsp;3.
+      GtkSourceView&nbsp;4.
     </para>
   </refsect1>
 

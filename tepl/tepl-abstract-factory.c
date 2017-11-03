@@ -37,6 +37,12 @@
  * #TeplView overrides to create a #TeplBuffer. How the #TeplView and
  * #TeplBuffer are created can be customized with the ::create_tab vfunc of
  * #TeplAbstractFactory.
+ *
+ * Recommendation for the subclass name: in Tepl, #TeplAbstractFactory is an
+ * abstract class, but in an application it is a concrete class. So
+ * “MyappAbstractFactory” is not a good name for a #TeplAbstractFactory
+ * subclass. “MyappFactory” is a better name (of course change “Myapp” with the
+ * application namespace).
  */
 
 /* API design:

@@ -189,6 +189,22 @@ tepl_abstract_factory_get_type
 </SECTION>
 
 <SECTION>
+<FILE>abstract-factory-vala</FILE>
+TeplAbstractFactoryVala
+TeplAbstractFactoryValaClass
+tepl_abstract_factory_vala_set_singleton_vala
+tepl_abstract_factory_vala_create_main_window_vala
+<SUBSECTION Standard>
+TEPL_ABSTRACT_FACTORY_VALA
+TEPL_ABSTRACT_FACTORY_VALA_CLASS
+TEPL_ABSTRACT_FACTORY_VALA_GET_CLASS
+TEPL_IS_ABSTRACT_FACTORY_VALA
+TEPL_IS_ABSTRACT_FACTORY_VALA_CLASS
+TEPL_TYPE_ABSTRACT_FACTORY_VALA
+tepl_abstract_factory_vala_get_type
+</SECTION>
+
+<SECTION>
 <FILE>application</FILE>
 TeplApplication
 tepl_application_get_from_gtk_application

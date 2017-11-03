@@ -46,6 +46,9 @@ struct _TeplAbstractFactory
 /**
  * TeplAbstractFactoryClass:
  * @parent_class: The parent class.
+ * @create_main_window: Virtual function pointer for
+ *   tepl_abstract_factory_create_main_window(). It is not implemented by
+ *   default.
  * @create_tab: Virtual function pointer for tepl_abstract_factory_create_tab().
  *   By default the #TeplTab is created with tepl_tab_new().
  * @create_tab_label: Virtual function pointer for
@@ -54,17 +57,13 @@ struct _TeplAbstractFactory
  * @create_file: Virtual function pointer for
  *   tepl_abstract_factory_create_file(). By default the #TeplFile is created
  *   with tepl_file_new().
- * @create_main_window: Virtual function pointer for
- *   tepl_abstract_factory_create_main_window(). It is not implemented by
- *   default.
- */
-/* TODO move create_main_window on top, to have a more logical order, for next
- * API break. Keyword: "deprecated" (to find this TODO when it needs to be
- * done).
  */
 struct _TeplAbstractFactoryClass
 {
 	GObjectClass parent_class;
+
+	GtkApplicationWindow *	(* create_main_window)	(TeplAbstractFactory *factory,
+							 GtkApplication      *app);
 
 	TeplTab *		(* create_tab)		(TeplAbstractFactory *factory);
 
@@ -73,11 +72,8 @@ struct _TeplAbstractFactoryClass
 
 	TeplFile *		(* create_file)		(TeplAbstractFactory *factory);
 
-	GtkApplicationWindow *	(* create_main_window)	(TeplAbstractFactory *factory,
-							 GtkApplication      *app);
-
 	/*< private >*/
-	gpointer padding[10];
+	gpointer padding[12];
 };
 
 GType			tepl_abstract_factory_get_type			(void);

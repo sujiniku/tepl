@@ -27,6 +27,7 @@ IGNORE_HFILES =					\
 	amtk.h					\
 	tepl.h					\
 	tepl-buffer-input-stream.h		\
+	tepl-close-confirm-dialog-single.h	\
 	tepl-encoding-converter.h		\
 	tepl-encoding-private.h			\
 	tepl-file-content.h			\

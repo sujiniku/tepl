@@ -15,6 +15,7 @@ tepl/tepl-application.c
 tepl/tepl-application-window.c
 tepl/tepl-buffer.c
 tepl/tepl-buffer-input-stream.c
+tepl/tepl-close-confirm-dialog-single.c
 tepl/tepl-encoding.c
 tepl/tepl-encoding-converter.c
 tepl/tepl-file.c

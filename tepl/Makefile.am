@@ -64,6 +64,7 @@ tepl_public_c_files =				\
 
 tepl_private_headers =				\
 	tepl-buffer-input-stream.h		\
+	tepl-close-confirm-dialog-single.h	\
 	tepl-encoding-converter.h		\
 	tepl-encoding-private.h			\
 	tepl-file-content.h			\
@@ -75,6 +76,7 @@ tepl_private_headers =				\
 
 tepl_private_c_files =				\
 	tepl-buffer-input-stream.c		\
+	tepl-close-confirm-dialog-single.c	\
 	tepl-encoding-converter.c		\
 	tepl-file-content.c			\
 	tepl-file-content-loader.c		\

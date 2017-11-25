@@ -17,10 +17,121 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "tepl-close-confirm-dialog-single.h"
+#include <glib/gi18n-lib.h>
+#include "tepl-application-window.h"
+#include "tepl-buffer.h"
+#include "tepl-file.h"
 #include "tepl-tab.h"
 
+#define CAN_CLOSE (TRUE)
+#define CANNOT_CLOSE (FALSE)
+
 /* When closing a TeplTab, show a message dialog if the buffer is modified. */
+
+static void
+save_tab_cb (GObject      *source_object,
+	     GAsyncResult *result,
+	     gpointer      user_data)
+{
+	TeplTab *tab = TEPL_TAB (source_object);
+	GTask *task = G_TASK (user_data);
+	gboolean can_close;
+
+	can_close = tepl_tab_save_finish (tab, result);
+
+	g_task_return_boolean (task, can_close);
+	g_object_unref (task);
+}
+
+static void
+save_tab (GTask *task)
+{
+	TeplTab *tab;
+
+	tab = g_task_get_source_object (task);
+	tepl_tab_save_async (tab, save_tab_cb, task);
+}
+
+static void
+dialog_response_cb (GtkDialog *dialog,
+		    gint       response_id,
+		    GTask     *task)
+{
+	if (response_id == GTK_RESPONSE_ACCEPT)
+	{
+		save_tab (task);
+	}
+	else if (response_id == GTK_RESPONSE_CLOSE)
+	{
+		g_task_return_boolean (task, CAN_CLOSE);
+		g_object_unref (task);
+	}
+	else
+	{
+		g_task_return_boolean (task, CANNOT_CLOSE);
+		g_object_unref (task);
+	}
+
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+static void
+create_dialog (GTask *task)
+{
+	TeplTab *tab;
+	TeplBuffer *buffer;
+	TeplFile *file;
+	const gchar *file_short_name;
+	GtkWidget *toplevel;
+	GtkWindow *window = NULL;
+	GtkWidget *dialog;
+
+	tab = g_task_get_source_object (task);
+	buffer = tepl_tab_get_buffer (tab);
+	file = tepl_buffer_get_file (buffer);
+
+	file_short_name = tepl_file_get_short_name (file);
+
+	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (tab));
+	if (gtk_widget_is_toplevel (toplevel))
+	{
+		window = GTK_WINDOW (toplevel);
+	}
+
+	dialog = gtk_message_dialog_new (window,
+					 GTK_DIALOG_DESTROY_WITH_PARENT |
+					 GTK_DIALOG_MODAL,
+					 GTK_MESSAGE_WARNING,
+					 GTK_BUTTONS_NONE,
+					 _("Save changes to file “%s” before closing?"),
+					 file_short_name);
+
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+				_("Close _without Saving"), GTK_RESPONSE_CLOSE,
+				_("_Cancel"), GTK_RESPONSE_CANCEL,
+				_("_Save"), GTK_RESPONSE_ACCEPT,
+				NULL);
+
+	if (GTK_IS_APPLICATION_WINDOW (window) &&
+	    tepl_application_window_is_main_window (GTK_APPLICATION_WINDOW (window)))
+	{
+		TeplApplicationWindow *tepl_window;
+		GtkWindowGroup *window_group;
+
+		tepl_window = tepl_application_window_get_from_gtk_application_window (GTK_APPLICATION_WINDOW (window));
+		window_group = tepl_application_window_get_window_group (tepl_window);
+		gtk_window_group_add_window (window_group, GTK_WINDOW (dialog));
+	}
+
+	g_signal_connect (dialog,
+			  "response",
+			  G_CALLBACK (dialog_response_cb),
+			  task);
+
+	gtk_widget_show (dialog);
+}
 
 void
 _tepl_close_confirm_dialog_single_async (TeplTab             *tab,
@@ -28,13 +139,33 @@ _tepl_close_confirm_dialog_single_async (TeplTab             *tab,
 					 gpointer             user_data)
 {
 	GTask *task;
+	TeplBuffer *buffer;
+	TeplFile *file;
+	GFile *location;
 
 	g_return_if_fail (TEPL_IS_TAB (tab));
 
 	task = g_task_new (tab, NULL, callback, user_data);
 
-	g_task_return_boolean (task, FALSE);
-	g_object_unref (task);
+	buffer = tepl_tab_get_buffer (tab);
+	if (!gtk_text_buffer_get_modified (GTK_TEXT_BUFFER (buffer)))
+	{
+		g_task_return_boolean (task, CAN_CLOSE);
+		g_object_unref (task);
+		return;
+	}
+
+	file = tepl_buffer_get_file (buffer);
+	location = tepl_file_get_location (file);
+	if (location == NULL)
+	{
+		/* TODO propose to save as. */
+		g_task_return_boolean (task, CANNOT_CLOSE);
+		g_object_unref (task);
+		return;
+	}
+
+	create_dialog (task);
 }
 
 /* Returns: %TRUE if @tab can be closed, %FALSE otherwise. */

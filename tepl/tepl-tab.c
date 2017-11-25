@@ -338,7 +338,10 @@ tepl_tab_class_init (TeplTabClass *klass)
 	 * close the #TeplTab, for example if the user clicks on a close button.
 	 *
 	 * The default object method handler does the following:
-	 * - Nothing.
+	 * - If the buffer is not modified (according to
+	 *   gtk_text_buffer_get_modified()), close the tab.
+	 * - Else, show a message dialog to propose to save the file before
+	 *   closing.
 	 *
 	 * To override the default object method handler, either override the
 	 * virtual function in a #TeplTab subclass or connect to the signal and

@@ -6,8 +6,11 @@ AM_CPPFLAGS = 			\
 
 AM_LDFLAGS = $(WARN_LDFLAGS)
 
-LDADD = $(top_builddir)/amtk/libamtk-core.la	\
-	$(top_builddir)/tepl/libtepl-core.la	\
+# The order is important here: link Amtk after Tepl, since Tepl uses Amtk.
+# This is how Unix linkers work by default, see for example the documentation
+# of the --library option in the ld manpage.
+LDADD = $(top_builddir)/tepl/libtepl-core.la	\
+	$(top_builddir)/amtk/libamtk-core.la	\
 	$(AMTK_DEP_LIBS)			\
 	$(TEPL_DEP_LIBS)
 

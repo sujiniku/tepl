@@ -112,6 +112,12 @@
           is still GTK+&nbsp;3.
         </para>
       </listitem>
+      <listitem>
+        <para>
+          The <link linkend="TeplTab-close-request">TeplTab::close-request</link>
+          signal has now a default object method handler.
+        </para>
+      </listitem>
     </itemizedlist>
   </chapter>
 </part>

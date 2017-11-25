@@ -21,6 +21,7 @@
 #include "tepl-tab.h"
 #include <glib/gi18n-lib.h>
 #include "tepl-buffer.h"
+#include "tepl-close-confirm-dialog-single.h"
 #include "tepl-file-loader.h"
 #include "tepl-file-metadata.h"
 #include "tepl-file-saver.h"
@@ -173,6 +174,25 @@ tepl_tab_pack_info_bar_default (TeplTab    *tab,
 }
 
 static void
+close_confirm_dialog_single_cb (GObject      *source_object,
+				GAsyncResult *result,
+				gpointer      user_data)
+{
+	TeplTab *tab = TEPL_TAB (source_object);
+
+	if (_tepl_close_confirm_dialog_single_finish (tab, result))
+	{
+		gtk_widget_destroy (GTK_WIDGET (tab));
+	}
+}
+
+static void
+tepl_tab_close_request_default (TeplTab *tab)
+{
+	_tepl_close_confirm_dialog_single_async (tab, close_confirm_dialog_single_cb, NULL);
+}
+
+static void
 buffer_notify_cb (GtkTextView *view,
 		  GParamSpec  *pspec,
 		  TeplTab     *tab)
@@ -286,6 +306,7 @@ tepl_tab_class_init (TeplTabClass *klass)
 
 	klass->pack_view = tepl_tab_pack_view_default;
 	klass->pack_info_bar = tepl_tab_pack_info_bar_default;
+	klass->close_request = tepl_tab_close_request_default;
 
 	/**
 	 * TeplTab:view:
@@ -315,6 +336,13 @@ tepl_tab_class_init (TeplTabClass *klass)
 	 *
 	 * The ::close-request signal is emitted when there is a request to
 	 * close the #TeplTab, for example if the user clicks on a close button.
+	 *
+	 * The default object method handler does the following:
+	 * - Nothing.
+	 *
+	 * To override the default object method handler, either override the
+	 * virtual function in a #TeplTab subclass or connect to the signal and
+	 * call g_signal_stop_emission_by_name().
 	 *
 	 * Since: 3.0
 	 */

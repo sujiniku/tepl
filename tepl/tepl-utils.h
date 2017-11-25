@@ -53,6 +53,10 @@ gchar *		_tepl_utils_get_fallback_basename_for_display	(GFile *location);
 
 GtkWidget *	_tepl_utils_create_close_button			(void);
 
+G_GNUC_INTERNAL
+void		_tepl_utils_associate_secondary_window		(GtkWindow *secondary_window,
+								 GtkWidget *main_window_widget);
+
 G_END_DECLS
 
 #endif /* TEPL_UTILS_H */

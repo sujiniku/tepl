@@ -24,6 +24,7 @@
 
 #include "tepl-utils.h"
 #include <string.h>
+#include "tepl-application-window.h"
 
 /*
  * SECTION:utils
@@ -384,4 +385,55 @@ _tepl_utils_create_close_button (void)
 	gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_FLAT);
 
 	return close_button;
+}
+
+/* For a secondary window (e.g. a GtkDialog):
+ * - Set transient parent.
+ * - Add it to the GtkWindowGroup.
+ * Just by giving a widget inside the main window.
+ */
+void
+_tepl_utils_associate_secondary_window (GtkWindow *secondary_window,
+					GtkWidget *main_window_widget)
+{
+	GtkWidget *toplevel;
+	GtkWindow *main_window = NULL;
+
+	g_return_if_fail (GTK_IS_WINDOW (secondary_window));
+	g_return_if_fail (GTK_IS_WIDGET (main_window_widget));
+
+	/* gtk_widget_get_toplevel() is a bit evil, normally it's a bad practice
+	 * when an object is aware of who contains it, i.e. it's fine that a
+	 * container knows what it contains (of course) but the reverse is not
+	 * true.
+	 *
+	 * But here it's just to setup correctly e.g. a GtkDialog, it's
+	 * something a bit specific to GTK+. As long as this bad practice is
+	 * applied only in this case (setting the transient parent and adding
+	 * the secondary window to a GtkWindowGroup), it should be fine. It
+	 * would be more problematic to call other TeplApplicationWindow
+	 * functions.
+	 */
+	toplevel = gtk_widget_get_toplevel (main_window_widget);
+	if (gtk_widget_is_toplevel (toplevel))
+	{
+		main_window = GTK_WINDOW (toplevel);
+	}
+
+	if (main_window != NULL)
+	{
+		gtk_window_set_transient_for (secondary_window, main_window);
+	}
+
+	if (GTK_IS_APPLICATION_WINDOW (main_window) &&
+	    tepl_application_window_is_main_window (GTK_APPLICATION_WINDOW (main_window)))
+	{
+		TeplApplicationWindow *tepl_window;
+		GtkWindowGroup *window_group;
+
+		tepl_window = tepl_application_window_get_from_gtk_application_window (GTK_APPLICATION_WINDOW (main_window));
+
+		window_group = tepl_application_window_get_window_group (tepl_window);
+		gtk_window_group_add_window (window_group, secondary_window);
+	}
 }

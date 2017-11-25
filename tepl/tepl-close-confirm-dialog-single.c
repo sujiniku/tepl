@@ -20,10 +20,10 @@
 #include "config.h"
 #include "tepl-close-confirm-dialog-single.h"
 #include <glib/gi18n-lib.h>
-#include "tepl-application-window.h"
 #include "tepl-buffer.h"
 #include "tepl-file.h"
 #include "tepl-tab.h"
+#include "tepl-utils.h"
 
 #define CAN_CLOSE (TRUE)
 #define CANNOT_CLOSE (FALSE)
@@ -84,8 +84,6 @@ create_dialog (GTask *task)
 	TeplBuffer *buffer;
 	TeplFile *file;
 	const gchar *file_short_name;
-	GtkWidget *toplevel;
-	GtkWindow *window = NULL;
 	GtkWidget *dialog;
 
 	tab = g_task_get_source_object (task);
@@ -94,13 +92,7 @@ create_dialog (GTask *task)
 
 	file_short_name = tepl_file_get_short_name (file);
 
-	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (tab));
-	if (gtk_widget_is_toplevel (toplevel))
-	{
-		window = GTK_WINDOW (toplevel);
-	}
-
-	dialog = gtk_message_dialog_new (window,
+	dialog = gtk_message_dialog_new (NULL,
 					 GTK_DIALOG_DESTROY_WITH_PARENT |
 					 GTK_DIALOG_MODAL,
 					 GTK_MESSAGE_WARNING,
@@ -114,16 +106,8 @@ create_dialog (GTask *task)
 				_("_Save"), GTK_RESPONSE_ACCEPT,
 				NULL);
 
-	if (GTK_IS_APPLICATION_WINDOW (window) &&
-	    tepl_application_window_is_main_window (GTK_APPLICATION_WINDOW (window)))
-	{
-		TeplApplicationWindow *tepl_window;
-		GtkWindowGroup *window_group;
-
-		tepl_window = tepl_application_window_get_from_gtk_application_window (GTK_APPLICATION_WINDOW (window));
-		window_group = tepl_application_window_get_window_group (tepl_window);
-		gtk_window_group_add_window (window_group, GTK_WINDOW (dialog));
-	}
+	_tepl_utils_associate_secondary_window (GTK_WINDOW (dialog),
+						GTK_WIDGET (tab));
 
 	g_signal_connect (dialog,
 			  "response",

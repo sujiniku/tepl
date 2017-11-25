@@ -30,6 +30,7 @@ G_BEGIN_DECLS
 
 /* String utilities */
 
+G_GNUC_INTERNAL
 gchar *		_tepl_utils_str_middle_truncate			(const gchar *str,
 								 guint        truncate_length);
 
@@ -51,6 +52,7 @@ gchar *		_tepl_utils_get_fallback_basename_for_display	(GFile *location);
 
 /* Widget utilities */
 
+G_GNUC_INTERNAL
 GtkWidget *	_tepl_utils_create_close_button			(void);
 
 G_GNUC_INTERNAL

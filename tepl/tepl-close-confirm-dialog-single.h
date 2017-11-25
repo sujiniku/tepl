@@ -25,10 +25,12 @@
 
 G_BEGIN_DECLS
 
+G_GNUC_INTERNAL
 void		_tepl_close_confirm_dialog_single_async		(TeplTab             *tab,
 								 GAsyncReadyCallback  callback,
 								 gpointer             user_data);
 
+G_GNUC_INTERNAL
 gboolean	_tepl_close_confirm_dialog_single_finish	(TeplTab      *tab,
 								 GAsyncResult *result);
 

@@ -213,8 +213,8 @@ gtk_action_activate_cb (GtkAction *gtk_action,
 /**
  * amtk_utils_bind_g_action_to_gtk_action:
  * @g_action_map: a #GActionMap.
- * @detailed_g_action_name: a detailed #GAction name; the #GAction must be
- *   present in @g_action_map.
+ * @detailed_g_action_name_without_prefix: a detailed #GAction name without the
+ *   #GActionMap prefix; the #GAction must be present in @g_action_map.
  * @gtk_action_group: a #GtkActionGroup.
  * @gtk_action_name: a #GtkAction name present in @gtk_action_group.
  *
@@ -222,10 +222,12 @@ gtk_action_activate_cb (GtkAction *gtk_action,
  * when #GtkUIManager and #GtkAction are still used. Porting to #GAction should
  * be the first step.
  *
- * For @detailed_g_action_name, see the g_action_parse_detailed_name() function.
- * The `"app."` or `"win."` prefix (or any other #GActionMap prefix) must not be
- * included in @detailed_g_action_name. For example a valid
- * @detailed_g_action_name is `"open"` or `"insert-command::foobar"`.
+ * For @detailed_g_action_name_without_prefix, see the
+ * g_action_parse_detailed_name() function.  The `"app."` or `"win."` prefix (or
+ * any other #GActionMap prefix) must not be included in
+ * @detailed_g_action_name_without_prefix. For example a valid
+ * @detailed_g_action_name_without_prefix is `"open"` or
+ * `"insert-command::foobar"`.
  *
  * The same #GAction can be bound to several #GtkAction's (with different
  * parameter values for the #GAction), but the reverse is not true, one
@@ -246,7 +248,7 @@ gtk_action_activate_cb (GtkAction *gtk_action,
  */
 void
 amtk_utils_bind_g_action_to_gtk_action (GActionMap     *g_action_map,
-					const gchar    *detailed_g_action_name,
+					const gchar    *detailed_g_action_name_without_prefix,
 					GtkActionGroup *gtk_action_group,
 					const gchar    *gtk_action_name)
 {
@@ -257,11 +259,11 @@ amtk_utils_bind_g_action_to_gtk_action (GActionMap     *g_action_map,
 	GError *error = NULL;
 
 	g_return_if_fail (G_IS_ACTION_MAP (g_action_map));
-	g_return_if_fail (detailed_g_action_name != NULL);
+	g_return_if_fail (detailed_g_action_name_without_prefix != NULL);
 	g_return_if_fail (GTK_IS_ACTION_GROUP (gtk_action_group));
 	g_return_if_fail (gtk_action_name != NULL);
 
-	g_action_parse_detailed_name (detailed_g_action_name,
+	g_action_parse_detailed_name (detailed_g_action_name_without_prefix,
 				      &g_action_name,
 				      &target_value,
 				      &error);
@@ -278,7 +280,7 @@ amtk_utils_bind_g_action_to_gtk_action (GActionMap     *g_action_map,
 	if (error != NULL)
 	{
 		g_warning ("Error when parsing detailed GAction name '%s': %s",
-			   detailed_g_action_name,
+			   detailed_g_action_name_without_prefix,
 			   error->message);
 
 		g_clear_error (&error);

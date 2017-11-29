@@ -48,6 +48,11 @@ void		amtk_utils_bind_g_action_to_gtk_action		(GActionMap     *g_action_map,
 								 const gchar    *detailed_g_action_name,
 								 GtkActionGroup *gtk_action_group,
 								 const gchar    *gtk_action_name);
+
+void		amtk_utils_create_gtk_action			(GActionMap     *g_action_map,
+								 const gchar    *detailed_g_action_name_with_prefix,
+								 GtkActionGroup *gtk_action_group,
+								 const gchar    *gtk_action_name);
 G_GNUC_END_IGNORE_DEPRECATIONS
 
 G_END_DECLS

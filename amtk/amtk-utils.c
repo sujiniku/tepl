@@ -19,6 +19,8 @@
 
 #include "amtk-utils.h"
 #include <string.h>
+#include "amtk-action-info.h"
+#include "amtk-action-info-central-store.h"
 
 /**
  * SECTION:amtk-utils
@@ -337,5 +339,85 @@ amtk_utils_bind_g_action_to_gtk_action (GActionMap     *g_action_map,
 out:
 	g_free (g_action_name);
 	g_clear_pointer (&target_value, (GDestroyNotify)g_variant_unref);
+}
+
+/**
+ * amtk_utils_create_gtk_action:
+ * @g_action_map: a #GActionMap.
+ * @detailed_g_action_name_with_prefix: a detailed #GAction name with the
+ *   #GActionMap prefix; the #GAction must be present in @g_action_map.
+ * @gtk_action_group: a #GtkActionGroup.
+ * @gtk_action_name: the name of the #GtkAction to create and add to
+ *   @gtk_action_group.
+ *
+ * Utility function to be able to port an application gradually to #GAction and
+ * #AmtkActionInfo, when #GtkUIManager is still used. This function goes one
+ * step further compared to amtk_utils_bind_g_action_to_gtk_action(). With
+ * amtk_utils_bind_g_action_to_gtk_action(), only the #GAction must exist. With
+ * amtk_utils_create_gtk_action(), both the #GAction and #AmtkActionInfo must
+ * exist (so typically you need to convert the #GtkActionEntry's into
+ * #AmtkActionInfoEntry's).
+ *
+ * This function creates a #GtkAction from a #GAction plus its corresponding
+ * #AmtkActionInfo.
+ *
+ * The #GtkAction is created with the information provided by the
+ * #AmtkActionInfo (retrieved with amtk_action_info_central_store_lookup() with
+ * @detailed_g_action_name_with_prefix as argument). Only the first accelerator
+ * is taken into account.
+ *
+ * Once the #GtkAction is created, it is added to the @gtk_action_group, and
+ * amtk_utils_bind_g_action_to_gtk_action() is called.
+ *
+ * Since: 4.0
+ */
+void
+amtk_utils_create_gtk_action (GActionMap     *g_action_map,
+			      const gchar    *detailed_g_action_name_with_prefix,
+			      GtkActionGroup *gtk_action_group,
+			      const gchar    *gtk_action_name)
+{
+	AmtkActionInfoCentralStore *central_store;
+	AmtkActionInfo *g_action_info;
+	GtkAction *gtk_action;
+	const gchar * const *accels;
+	const gchar *first_accel;
+	const gchar *detailed_g_action_name_without_prefix;
+
+	g_return_if_fail (G_IS_ACTION_MAP (g_action_map));
+	g_return_if_fail (detailed_g_action_name_with_prefix != NULL);
+	g_return_if_fail (GTK_IS_ACTION_GROUP (gtk_action_group));
+	g_return_if_fail (gtk_action_name != NULL);
+
+	central_store = amtk_action_info_central_store_get_singleton ();
+	g_action_info = amtk_action_info_central_store_lookup (central_store, detailed_g_action_name_with_prefix);
+
+	gtk_action = gtk_action_new (gtk_action_name,
+				     amtk_action_info_get_label (g_action_info),
+				     amtk_action_info_get_tooltip (g_action_info),
+				     NULL);
+
+	gtk_action_set_icon_name (gtk_action, amtk_action_info_get_icon_name (g_action_info));
+
+	accels = amtk_action_info_get_accels (g_action_info);
+	first_accel = accels != NULL ? accels[0] : NULL;
+
+	gtk_action_group_add_action_with_accel (gtk_action_group, gtk_action, first_accel);
+	g_object_unref (gtk_action);
+
+	detailed_g_action_name_without_prefix = strchr (detailed_g_action_name_with_prefix, '.');
+	if (detailed_g_action_name_without_prefix != NULL)
+	{
+		detailed_g_action_name_without_prefix++;
+	}
+	else
+	{
+		detailed_g_action_name_without_prefix = detailed_g_action_name_with_prefix;
+	}
+
+	amtk_utils_bind_g_action_to_gtk_action (g_action_map,
+						detailed_g_action_name_without_prefix,
+						gtk_action_group,
+						gtk_action_name);
 }
 G_GNUC_END_IGNORE_DEPRECATIONS

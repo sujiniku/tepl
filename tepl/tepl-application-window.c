@@ -22,13 +22,11 @@
 #include <amtk/amtk.h>
 #include <glib/gi18n-lib.h>
 #include "tepl-abstract-factory.h"
-#include "tepl-application.h"
 #include "tepl-buffer.h"
-#include "tepl-file-saver.h"
+#include "tepl-file.h"
 #include "tepl-signal-group.h"
 #include "tepl-tab.h"
 #include "tepl-tab-group.h"
-#include "tepl-tab-saving.h"
 #include "tepl-view.h"
 
 /**
@@ -231,72 +229,17 @@ save_cb (GSimpleAction *save_action,
 }
 
 static void
-save_file_chooser_response_cb (GtkFileChooserDialog *file_chooser_dialog,
-			       gint                  response_id,
-			       TeplTab              *tab)
-{
-	if (response_id == GTK_RESPONSE_ACCEPT)
-	{
-		TeplBuffer *buffer;
-		TeplFile *file;
-		GFile *location;
-		TeplFileSaver *saver;
-
-		buffer = tepl_tab_get_buffer (tab);
-		file = tepl_buffer_get_file (buffer);
-		location = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (file_chooser_dialog));
-
-		saver = tepl_file_saver_new_with_target (buffer, file, location);
-		_tepl_tab_saving_save_async_simple (tab, saver);
-		g_object_unref (saver);
-
-		g_object_unref (location);
-	}
-
-	gtk_widget_destroy (GTK_WIDGET (file_chooser_dialog));
-}
-
-static void
 save_as_cb (GSimpleAction *save_as_action,
 	    GVariant      *parameter,
 	    gpointer       user_data)
 {
 	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
 	TeplTab *tab;
-	GtkWidget *file_chooser_dialog;
-	GtkFileChooser *file_chooser;
-	GtkWindowGroup *window_group;
 
 	tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
 	g_return_if_fail (tab != NULL);
 
-	file_chooser_dialog = gtk_file_chooser_dialog_new (_("Save File"),
-							   GTK_WINDOW (tepl_window->priv->gtk_window),
-							   GTK_FILE_CHOOSER_ACTION_SAVE,
-							   _("_Cancel"), GTK_RESPONSE_CANCEL,
-							   _("_Save"), GTK_RESPONSE_ACCEPT,
-							   NULL);
-
-	gtk_dialog_set_default_response (GTK_DIALOG (file_chooser_dialog), GTK_RESPONSE_ACCEPT);
-
-	/* Prevent tab from being destroyed. */
-	gtk_window_set_modal (GTK_WINDOW (file_chooser_dialog), TRUE);
-
-	window_group = tepl_application_window_get_window_group (tepl_window);
-	gtk_window_group_add_window (window_group, GTK_WINDOW (file_chooser_dialog));
-
-	file_chooser = GTK_FILE_CHOOSER (file_chooser_dialog);
-
-	gtk_file_chooser_set_do_overwrite_confirmation (file_chooser, TRUE);
-	gtk_file_chooser_set_local_only (file_chooser, FALSE);
-
-	g_signal_connect_object (file_chooser_dialog,
-				 "response",
-				 G_CALLBACK (save_file_chooser_response_cb),
-				 tab,
-				 0);
-
-	gtk_widget_show (file_chooser_dialog);
+	tepl_tab_save_as_async_simple (tab);
 }
 
 static void

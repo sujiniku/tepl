@@ -25,6 +25,13 @@
 #include "tepl-info-bar.h"
 #include "tepl-tab.h"
 
+/* The functions in this file permits to run a TeplFileSaver, shows
+ * TeplInfoBar's, until the operation is successful or if there is an
+ * unrecoverable error.
+ *
+ * If this becomes a class, a good name would be TeplTabSaver.
+ */
+
 static void
 launch_saver_cb (GObject      *source_object,
 		 GAsyncResult *result,

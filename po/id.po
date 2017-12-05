@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-09-09 11:48+0000\n"
-"PO-Revision-Date: 2017-10-04 16:48+0700\n"
+"POT-Creation-Date: 2017-12-01 09:23+0000\n"
+"PO-Revision-Date: 2017-12-05 14:52+0700\n"
 "Last-Translator: Kukuh Syafaat <syafaatkukuh@gmail.com>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.4\n"
 
 #. Translators: %s is a filename.
 #: amtk/amtk-application-window.c:374
@@ -41,90 +41,154 @@ msgstr "Membuka dokumen yang baru-baru ini dipakai dengan %s"
 #. document. For example a LaTeX document can be composed of
 #. several _files_. Or for source code we do not really create a
 #. new "document".
-#: tepl/tepl-application.c:71
+#: tepl/tepl-application.c:92
 msgid "_New"
 msgstr "_Baru"
 
-#: tepl/tepl-application.c:72
+#: tepl/tepl-application.c:93
 msgid "New file"
 msgstr "Berkas baru"
 
+#: tepl/tepl-application.c:95
+msgid "New _Window"
+msgstr "_Jendela Baru"
+
+#: tepl/tepl-application.c:96
+msgid "Create a new window"
+msgstr "Membuat jendela baru"
+
+#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:178
+msgid "_Open"
+msgstr "_Buka"
+
+#: tepl/tepl-application.c:99
+msgid "Open a file"
+msgstr "Buka suatu berkas"
+
+#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:144
+#: tepl/tepl-tab.c:752
+msgid "_Save"
+msgstr "_Simpan"
+
+#: tepl/tepl-application.c:102
+msgid "Save the current file"
+msgstr "Simpan berkas saat ini"
+
+#: tepl/tepl-application.c:104
+msgid "Save _As"
+msgstr "Simp_an Sebagai"
+
+#: tepl/tepl-application.c:105
+msgid "Save the current file to a different location"
+msgstr "Simpan berkas saat ini ke lokasi yang berbeda"
+
 #. Edit menu
-#: tepl/tepl-application.c:76
+#: tepl/tepl-application.c:109
 msgid "_Undo"
 msgstr "Tak _Jadi"
 
-#: tepl/tepl-application.c:77
+#: tepl/tepl-application.c:110
 msgid "Undo the last action"
 msgstr "Batalkan aksi terakhir"
 
-#: tepl/tepl-application.c:79
+#: tepl/tepl-application.c:112
 msgid "_Redo"
 msgstr "_Jadi Lagi"
 
-#: tepl/tepl-application.c:80
+#: tepl/tepl-application.c:113
 msgid "Redo the last undone action"
 msgstr "Jadikan lagi aksi terakhir yang dibatalkan"
 
-#: tepl/tepl-application.c:82
+#: tepl/tepl-application.c:115
 msgid "Cu_t"
 msgstr "Po_tong"
 
-#: tepl/tepl-application.c:83
+#: tepl/tepl-application.c:116
 msgid "Cut the selection"
 msgstr "Potong bagian yang dipilih"
 
-#: tepl/tepl-application.c:85
+#: tepl/tepl-application.c:118
 msgid "_Copy"
 msgstr "Sali_n"
 
-#: tepl/tepl-application.c:86
+#: tepl/tepl-application.c:119
 msgid "Copy the selection"
 msgstr "Salin bagian yang dipilih"
 
-#: tepl/tepl-application.c:88
+#: tepl/tepl-application.c:121
 msgid "_Paste"
 msgstr "Tem_pel"
 
-#: tepl/tepl-application.c:89
+#: tepl/tepl-application.c:122
 msgid "Paste the clipboard"
 msgstr "Tempel papan klip"
 
-#: tepl/tepl-application.c:91
+#: tepl/tepl-application.c:124
 msgid "_Delete"
 msgstr "_Hapus"
 
-#: tepl/tepl-application.c:92
+#: tepl/tepl-application.c:125
 msgid "Delete the selected text"
 msgstr "Hapus teks yang dipilih"
 
-#: tepl/tepl-application.c:94
+#: tepl/tepl-application.c:127
 msgid "Select _All"
 msgstr "Pilih Semu_a"
 
-#: tepl/tepl-application.c:95
+#: tepl/tepl-application.c:128
 msgid "Select all the text"
 msgstr "Pilih semua teks"
 
-#: tepl/tepl-application.c:97
+#: tepl/tepl-application.c:130
 msgid "_Indent"
 msgstr "_Indentasi"
 
-#: tepl/tepl-application.c:98
+#: tepl/tepl-application.c:131
 msgid "Indent the selected lines"
 msgstr "Indentasi baris yang dipilih"
 
-#: tepl/tepl-application.c:100
+#: tepl/tepl-application.c:133
 msgid "_Unindent"
 msgstr "Hap_us indentasi"
 
-#: tepl/tepl-application.c:101
+#: tepl/tepl-application.c:134
 msgid "Unindent the selected lines"
 msgstr "Hapus indentasi baris yang dipilih"
 
-#: tepl/tepl-application-window.c:564
+#. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
+#. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
+#. * doesn't have the real path to the file, so it would screw up some
+#. * features for text editors:
+#. * - showing the directory in parentheses in the window title, or in the
+#. *   tab tooltip;
+#. * - opening a recent file.
+#. * Basically everywhere where the directory is shown.
+#.
+#: tepl/tepl-application-window.c:174
+msgid "Open File"
+msgstr "Buka Berkas"
+
+#: tepl/tepl-application-window.c:177
+#: tepl/tepl-close-confirm-dialog-single.c:138 tepl/tepl-tab.c:751
+msgid "_Cancel"
+msgstr "Ba_tal"
+
+#: tepl/tepl-application-window.c:708
 msgid "Read-Only"
 msgstr "Hanya-Baca"
+
+#: tepl/tepl-close-confirm-dialog-single.c:133
+#, c-format
+msgid "Save changes to file “%s” before closing?"
+msgstr "Simpan perubahan ke berkas \"%s\" sebelum ditutup?"
+
+#: tepl/tepl-close-confirm-dialog-single.c:137
+msgid "Close _without Saving"
+msgstr "Tutup _tanpa Menyimpan"
+
+#: tepl/tepl-close-confirm-dialog-single.c:150
+msgid "_Save As…"
+msgstr "_Simpan Sebagai…"
 
 #. UTF-8 first, so that it's the first encoding returned by
 #. * tepl_encoding_get_all().
@@ -232,7 +296,7 @@ msgstr "Vietnam"
 msgid "Thai"
 msgstr "Thai"
 
-#: tepl/tepl-encoding.c:365
+#: tepl/tepl-encoding.c:370
 msgid "Unknown"
 msgstr "Tidak Dikenal"
 
@@ -247,7 +311,7 @@ msgstr "Tidak Dikenal"
 #. * 'CURRENT' term. Keep the same format: square brackets, single quotes,
 #. * commas.
 #.
-#: tepl/tepl-encoding.c:640
+#: tepl/tepl-encoding.c:695
 msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 
@@ -283,12 +347,12 @@ msgstr "Isi masukan berakhir dengan data yang tidak lengkap."
 msgid "Untitled File %d"
 msgstr "Berkas Tanpa Nama %d"
 
-#: tepl/tepl-file-content-loader.c:334
+#: tepl/tepl-file-content-loader.c:331
 #, c-format
 msgid "The file is too big. Maximum %s can be loaded."
 msgstr "Berkas telalu besar. Maksimum %s dapat dimuat."
 
-#: tepl/tepl-file-loader.c:925
+#: tepl/tepl-file-loader.c:872
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Tak mungkin mendeteksi pengkodean karakter secara otomatis."
 
@@ -300,6 +364,14 @@ msgstr "Berkas telah diubah secara eksternal."
 msgid "The buffer contains invalid characters."
 msgstr "Penyangga mengandung karakter tak valid."
 
+#: tepl/tepl-tab.c:534
+msgid "Error when loading the file."
+msgstr "Galat saat memuat berkas."
+
+#: tepl/tepl-tab.c:748
+msgid "Save File"
+msgstr "Simpan Berkas"
+
 #. Translators: location of a file.
 #: tepl/tepl-tab-label.c:273
 msgid "Location:"
@@ -308,6 +380,10 @@ msgstr "Lokasi:"
 #: tepl/tepl-tab-label.c:342
 msgid "Close file"
 msgstr "Tutup berkas"
+
+#: tepl/tepl-tab-saving.c:64
+msgid "Error when saving the file."
+msgstr "Galat saat menyimpan berkas."
 
 #~ msgid "Could not find the file “%s”."
 #~ msgstr "Tak bisa temukan berkas \"%s\"."
@@ -349,9 +425,6 @@ msgstr "Tutup berkas"
 
 #~ msgid "Unexpected error: %s"
 #~ msgstr "Kesalahan yang tidak diduga: %s"
-
-#~ msgid "_Cancel"
-#~ msgstr "Ba_tal"
 
 #~ msgid "_Retry"
 #~ msgstr "_Ulangi"

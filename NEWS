@@ -1,4 +1,4 @@
-News in 3.99.1, 2017-xx-yy (not yet released)
+News in 3.99.1, 2017-12-09
 --------------------------
 
 * General:
@@ -7,6 +7,7 @@ News in 3.99.1, 2017-xx-yy (not yet released)
 * Amtk:
  - Improve amtk_utils_bind_g_action_to_gtk_action() to support _detailed_
    GAction names.
+ - Add amtk_utils_create_gtk_action().
 
 * Framework:
  - Add more GAction's and corresponding AmtkActionInfo's:
@@ -21,6 +22,7 @@ News in 3.99.1, 2017-xx-yy (not yet released)
  - Add TeplApplicationWindow:handle-title boolean property to handle the window
    title.
  - Add more vfuncs to TeplAbstractFactory: create_file and create_main_window.
+ - Add TeplAbstractFactoryVala class to work-around Vala bugs.
  - Add functions related to main windows:
 	- tepl_application_get_active_main_window()
 	- tepl_application_window_is_main_window()
@@ -28,6 +30,7 @@ News in 3.99.1, 2017-xx-yy (not yet released)
  - TeplApplication: add options to handle the GApplication::activate and
    GApplication::open signals.
  - Start to write high-level functions for loading and saving files.
+ - On Tab::close-request, show close confirmation dialog.
 
 * File loading and saving toolkit:
  - TeplFileLoader:

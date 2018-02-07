@@ -1,15 +1,15 @@
 # Czech translation for tepl.
 # Copyright (C) 2017 tepl's COPYRIGHT HOLDER
 # This file is distributed under the same license as the tepl package.
-# Marek Černocký <marek@manet.cz>, 2017.
+# Marek Černocký <marek@manet.cz>, 2017, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-10-14 16:07+0000\n"
-"PO-Revision-Date: 2017-10-18 08:59+0200\n"
+"POT-Creation-Date: 2017-12-01 09:23+0000\n"
+"PO-Revision-Date: 2018-02-07 08:02+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -58,7 +58,7 @@ msgstr "No_vé okno"
 msgid "Create a new window"
 msgstr "Vytvořit nové okno"
 
-#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:181
+#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:178
 msgid "_Open"
 msgstr "_Otevřít"
 
@@ -66,7 +66,8 @@ msgstr "_Otevřít"
 msgid "Open a file"
 msgstr "Otevřít soubor"
 
-#: tepl/tepl-application.c:101 tepl/tepl-application-window.c:340
+#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:144
+#: tepl/tepl-tab.c:752
 msgid "_Save"
 msgstr "_Uložit"
 
@@ -164,25 +165,31 @@ msgstr "Zrušit odsazení vybraných řádků"
 #. * - opening a recent file.
 #. * Basically everywhere where the directory is shown.
 #.
-#: tepl/tepl-application-window.c:177
+#: tepl/tepl-application-window.c:174
 msgid "Open File"
 msgstr "Otevření souboru"
 
-#: tepl/tepl-application-window.c:180 tepl/tepl-application-window.c:339
+#: tepl/tepl-application-window.c:177
+#: tepl/tepl-close-confirm-dialog-single.c:138 tepl/tepl-tab.c:751
 msgid "_Cancel"
 msgstr "_Zrušit"
 
-#: tepl/tepl-application-window.c:227
-msgid "Error when saving the file."
-msgstr "Chyba při ukládání souboru."
-
-#: tepl/tepl-application-window.c:336
-msgid "Save File"
-msgstr "Uložení souboru"
-
-#: tepl/tepl-application-window.c:828
+#: tepl/tepl-application-window.c:708
 msgid "Read-Only"
 msgstr "Jen ke čtení"
+
+#: tepl/tepl-close-confirm-dialog-single.c:133
+#, c-format
+msgid "Save changes to file “%s” before closing?"
+msgstr "Uložit před zavřením změny do souboru „%s“?"
+
+#: tepl/tepl-close-confirm-dialog-single.c:137
+msgid "Close _without Saving"
+msgstr "Zavřít _bez uložení"
+
+#: tepl/tepl-close-confirm-dialog-single.c:150
+msgid "_Save As…"
+msgstr "Uložit j_ako…"
 
 #. UTF-8 first, so that it's the first encoding returned by
 #. * tepl_encoding_get_all().
@@ -290,7 +297,7 @@ msgstr "Vietnamské"
 msgid "Thai"
 msgstr "Thajské"
 
-#: tepl/tepl-encoding.c:365
+#: tepl/tepl-encoding.c:370
 msgid "Unknown"
 msgstr "Neznámé"
 
@@ -305,7 +312,7 @@ msgstr "Neznámé"
 #. * 'CURRENT' term. Keep the same format: square brackets, single quotes,
 #. * commas.
 #.
-#: tepl/tepl-encoding.c:640
+#: tepl/tepl-encoding.c:695
 msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 msgstr "['UTF-8', 'CURRENT', 'ISO-8859-2', 'WINDOWS-1250', 'UTF-16']"
 
@@ -341,12 +348,12 @@ msgstr "Obsah vstupu končí neúplnými daty."
 msgid "Untitled File %d"
 msgstr "Nepojmenovaný soubor %d"
 
-#: tepl/tepl-file-content-loader.c:334
+#: tepl/tepl-file-content-loader.c:331
 #, c-format
 msgid "The file is too big. Maximum %s can be loaded."
 msgstr "Soubor je příliš velký. Načteno může být nanejvýše %s."
 
-#: tepl/tepl-file-loader.c:925
+#: tepl/tepl-file-loader.c:872
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Není možné automaticky zjistit kódování znaků."
 
@@ -358,9 +365,13 @@ msgstr "Soubor byl externě změněn."
 msgid "The buffer contains invalid characters."
 msgstr "Vyrovnávací paměť obsahuje neplatné znaky."
 
-#: tepl/tepl-tab.c:500
+#: tepl/tepl-tab.c:534
 msgid "Error when loading the file."
 msgstr "Chyba při načítání souboru."
+
+#: tepl/tepl-tab.c:748
+msgid "Save File"
+msgstr "Uložení souboru"
 
 #. Translators: location of a file.
 #: tepl/tepl-tab-label.c:273
@@ -370,3 +381,7 @@ msgstr "Umístění:"
 #: tepl/tepl-tab-label.c:342
 msgid "Close file"
 msgstr "Zavřít soubor"
+
+#: tepl/tepl-tab-saving.c:64
+msgid "Error when saving the file."
+msgstr "Chyba při ukládání souboru."

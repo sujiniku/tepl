@@ -100,7 +100,7 @@ tepl_abstract_factory_vala_set_singleton_vala (TeplAbstractFactoryVala *factory_
 {
 	g_return_if_fail (TEPL_IS_ABSTRACT_FACTORY_VALA (factory_vala));
 
-	tepl_abstract_factory_set_singleton (g_object_ref (factory_vala));
+	tepl_abstract_factory_set_singleton (g_object_ref (TEPL_ABSTRACT_FACTORY (factory_vala)));
 }
 
 /**

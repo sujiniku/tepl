@@ -1,14 +1,14 @@
 # Serbian translation for tepl.
 # Copyright © 2017 tepl's COPYRIGHT HOLDER
 # This file is distributed under the same license as the tepl package.
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2017.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2017–2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=tepl&k"
 "eywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-08-12 13:17+0000\n"
-"PO-Revision-Date: 2017-08-13 15:21+0200\n"
+"POT-Creation-Date: 2017-12-01 09:23+0000\n"
+"PO-Revision-Date: 2018-02-23 00:49+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: српски <gnome-sr@googlegroups.org>\n"
 "Language: sr\n"
@@ -42,54 +42,158 @@ msgstr "Отворите датотеку коју је недавно кори�
 #. document. For example a LaTeX document can be composed of
 #. several _files_. Or for source code we do not really create a
 #. new "document".
-#: tepl/tepl-application.c:71
+#: tepl/tepl-application.c:92
 msgid "_New"
 msgstr "_Нова"
 
-#: tepl/tepl-application.c:72
+#: tepl/tepl-application.c:93
 msgid "New file"
 msgstr "Нова датотека"
 
+#: tepl/tepl-application.c:95
+msgid "New _Window"
+msgstr "Нови _прозор"
+
+#: tepl/tepl-application.c:96
+msgid "Create a new window"
+msgstr "Направите нови прозор"
+
+#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:178
+msgid "_Open"
+msgstr "_Отвори"
+
+#: tepl/tepl-application.c:99
+#| msgid "New file"
+msgid "Open a file"
+msgstr "Отворите датотеку"
+
+#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:144
+#: tepl/tepl-tab.c:752
+msgid "_Save"
+msgstr "_Сачувај"
+
+#: tepl/tepl-application.c:102
+msgid "Save the current file"
+msgstr "Сачувајте текућу датотеку"
+
+#: tepl/tepl-application.c:104
+msgid "Save _As"
+msgstr "Сачувај _као"
+
+#: tepl/tepl-application.c:105
+msgid "Save the current file to a different location"
+msgstr "Сачувајте текућу датотеку на другом месту"
+
 #. Edit menu
-#: tepl/tepl-application.c:76
+#: tepl/tepl-application.c:109
+msgid "_Undo"
+msgstr "_Опозови"
+
+#: tepl/tepl-application.c:110
+#| msgid "Copy the selection"
+msgid "Undo the last action"
+msgstr "Опозовите последњу радњу"
+
+#: tepl/tepl-application.c:112
+msgid "_Redo"
+msgstr "_Понови"
+
+#: tepl/tepl-application.c:113
+msgid "Redo the last undone action"
+msgstr "Поништите последњу раду опозива"
+
+#: tepl/tepl-application.c:115
 msgid "Cu_t"
 msgstr "_Исеци"
 
-#: tepl/tepl-application.c:77
+#: tepl/tepl-application.c:116
 msgid "Cut the selection"
 msgstr "Исеците избор"
 
-#: tepl/tepl-application.c:79
+#: tepl/tepl-application.c:118
 msgid "_Copy"
 msgstr "У_множи"
 
-#: tepl/tepl-application.c:80
+#: tepl/tepl-application.c:119
 msgid "Copy the selection"
 msgstr "Умножите избор"
 
-#: tepl/tepl-application.c:82
+#: tepl/tepl-application.c:121
 msgid "_Paste"
 msgstr "У_баци"
 
-#: tepl/tepl-application.c:83
+#: tepl/tepl-application.c:122
 msgid "Paste the clipboard"
 msgstr "Убаците из оставе"
 
-#: tepl/tepl-application.c:85
+#: tepl/tepl-application.c:124
 msgid "_Delete"
 msgstr "_Обриши"
 
-#: tepl/tepl-application.c:86
+#: tepl/tepl-application.c:125
 msgid "Delete the selected text"
 msgstr "Обришите изабрани текст"
 
-#: tepl/tepl-application.c:88
+#: tepl/tepl-application.c:127
 msgid "Select _All"
 msgstr "Изабери _све"
 
-#: tepl/tepl-application.c:89
+#: tepl/tepl-application.c:128
 msgid "Select all the text"
 msgstr "Изаберите сав текст"
+
+#: tepl/tepl-application.c:130
+msgid "_Indent"
+msgstr "_Увуци"
+
+#: tepl/tepl-application.c:131
+#| msgid "Delete the selected text"
+msgid "Indent the selected lines"
+msgstr "Увуците изабране редове"
+
+#: tepl/tepl-application.c:133
+msgid "_Unindent"
+msgstr "_Поништи увлачење"
+
+#: tepl/tepl-application.c:134
+#| msgid "Delete the selected text"
+msgid "Unindent the selected lines"
+msgstr "Поништите увлачење изабраних редова"
+
+#. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
+#. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
+#. * doesn't have the real path to the file, so it would screw up some
+#. * features for text editors:
+#. * - showing the directory in parentheses in the window title, or in the
+#. *   tab tooltip;
+#. * - opening a recent file.
+#. * Basically everywhere where the directory is shown.
+#.
+#: tepl/tepl-application-window.c:174
+msgid "Open File"
+msgstr "Отвори датотеку"
+
+#: tepl/tepl-application-window.c:177
+#: tepl/tepl-close-confirm-dialog-single.c:138 tepl/tepl-tab.c:751
+msgid "_Cancel"
+msgstr "_Откажи"
+
+#: tepl/tepl-application-window.c:708
+msgid "Read-Only"
+msgstr "Само за читање"
+
+#: tepl/tepl-close-confirm-dialog-single.c:133
+#, c-format
+msgid "Save changes to file “%s” before closing?"
+msgstr "Да сачувам измене у датотеку „%s“ пре затварања?"
+
+#: tepl/tepl-close-confirm-dialog-single.c:137
+msgid "Close _without Saving"
+msgstr "Затвори _без чувања"
+
+#: tepl/tepl-close-confirm-dialog-single.c:150
+msgid "_Save As…"
+msgstr "_Сачувај као…"
 
 #. UTF-8 first, so that it's the first encoding returned by
 #. * tepl_encoding_get_all().
@@ -197,7 +301,7 @@ msgstr "Вијетнамски"
 msgid "Thai"
 msgstr "Тајландски"
 
-#: tepl/tepl-encoding.c:365
+#: tepl/tepl-encoding.c:370
 msgid "Unknown"
 msgstr "Непознат"
 
@@ -212,7 +316,7 @@ msgstr "Непознат"
 #. * 'CURRENT' term. Keep the same format: square brackets, single quotes,
 #. * commas.
 #.
-#: tepl/tepl-encoding.c:640
+#: tepl/tepl-encoding.c:695
 msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 
@@ -248,12 +352,12 @@ msgstr "Улаз садржи крај са непотпуним подацим�
 msgid "Untitled File %d"
 msgstr "Неименована датотека %d"
 
-#: tepl/tepl-file-content-loader.c:334
+#: tepl/tepl-file-content-loader.c:331
 #, c-format
 msgid "The file is too big. Maximum %s can be loaded."
 msgstr "Датотека је превелика. Највише %s може бити учитано."
 
-#: tepl/tepl-file-loader.c:925
+#: tepl/tepl-file-loader.c:872
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Не могу аутоматски да одредим кодирање знакова."
 
@@ -265,6 +369,15 @@ msgstr "Датотека је измењена споља."
 msgid "The buffer contains invalid characters."
 msgstr "Међумеморија садржи неисправне знаке."
 
+#: tepl/tepl-tab.c:534
+#| msgid "Error when converting data: %s"
+msgid "Error when loading the file."
+msgstr "Грешка приликом учитавања датотеке."
+
+#: tepl/tepl-tab.c:748
+msgid "Save File"
+msgstr "Сачувај датотеку"
+
 #. Translators: location of a file.
 #: tepl/tepl-tab-label.c:273
 msgid "Location:"
@@ -273,6 +386,11 @@ msgstr "Место:"
 #: tepl/tepl-tab-label.c:342
 msgid "Close file"
 msgstr "Затвори датотеку"
+
+#: tepl/tepl-tab-saving.c:64
+#| msgid "Error when converting data: %s"
+msgid "Error when saving the file."
+msgstr "Грешка приликом чувања датотеке."
 
 #~ msgid "Could not find the file “%s”."
 #~ msgstr "Не могу да нађем датотеку „%s“."
@@ -314,9 +432,6 @@ msgstr "Затвори датотеку"
 
 #~ msgid "Unexpected error: %s"
 #~ msgstr "Неочекивана грешка: %s"
-
-#~ msgid "_Cancel"
-#~ msgstr "_Откажи"
 
 #~ msgid "_Retry"
 #~ msgstr "_Покушај поново"

@@ -97,7 +97,8 @@ amtk-enum-types.c: amtk-enum-types.c.template $(ENUM_TYPES) $(GLIB_MKENUMS)
 
 EXTRA_DIST =				\
 	amtk-enum-types.c.template	\
-	amtk-enum-types.h.template
+	amtk-enum-types.h.template	\
+	NOTES
 
 CLEANFILES = $(BUILT_SOURCES)
 

@@ -1,23 +1,23 @@
 # Hungarian translation for tepl.
-# Copyright (C) 2017 Free Software Foundation, Inc.
+# Copyright (C) 2017, 2018 Free Software Foundation, Inc.
 # This file is distributed under the same license as the tepl package.
 #
-# Balázs Úr <urbalazs@gmail.com>, 2017.
+# Balázs Úr <urbalazs at gmail dot com>, 2017, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-10-14 16:07+0000\n"
-"PO-Revision-Date: 2017-10-17 19:50+0200\n"
-"Last-Translator: Meskó Balázs <meskobalazs@fedoraproject.org>\n"
+"POT-Creation-Date: 2017-12-01 09:23+0000\n"
+"PO-Revision-Date: 2018-02-26 23:33+0100\n"
+"Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Lokalize 1.2\n"
 
 #. Translators: %s is a filename.
 #: amtk/amtk-application-window.c:374
@@ -58,7 +58,7 @@ msgstr "Új _ablak"
 msgid "Create a new window"
 msgstr "Új ablak létrehozása"
 
-#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:181
+#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:178
 msgid "_Open"
 msgstr "_Megnyitás"
 
@@ -66,7 +66,8 @@ msgstr "_Megnyitás"
 msgid "Open a file"
 msgstr "Fájl megnyitása"
 
-#: tepl/tepl-application.c:101 tepl/tepl-application-window.c:340
+#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:144
+#: tepl/tepl-tab.c:752
 msgid "_Save"
 msgstr "M_entés"
 
@@ -164,25 +165,31 @@ msgstr "A kijelölt sorok behúzásának visszavonása"
 #. * - opening a recent file.
 #. * Basically everywhere where the directory is shown.
 #.
-#: tepl/tepl-application-window.c:177
+#: tepl/tepl-application-window.c:174
 msgid "Open File"
 msgstr "Fájl megnyitása"
 
-#: tepl/tepl-application-window.c:180 tepl/tepl-application-window.c:339
+#: tepl/tepl-application-window.c:177
+#: tepl/tepl-close-confirm-dialog-single.c:138 tepl/tepl-tab.c:751
 msgid "_Cancel"
 msgstr "_Mégse"
 
-#: tepl/tepl-application-window.c:227
-msgid "Error when saving the file."
-msgstr "Hiba a fájl mentésekor."
-
-#: tepl/tepl-application-window.c:336
-msgid "Save File"
-msgstr "Fájl mentése"
-
-#: tepl/tepl-application-window.c:828
+#: tepl/tepl-application-window.c:708
 msgid "Read-Only"
 msgstr "Írásvédett"
+
+#: tepl/tepl-close-confirm-dialog-single.c:133
+#, c-format
+msgid "Save changes to file “%s” before closing?"
+msgstr "Menti a változtatásokat a(z) „%s” fájlba bezárás előtt?"
+
+#: tepl/tepl-close-confirm-dialog-single.c:137
+msgid "Close _without Saving"
+msgstr "Bezárás mentés _nélkül"
+
+#: tepl/tepl-close-confirm-dialog-single.c:150
+msgid "_Save As…"
+msgstr "M_entés másként…"
 
 #. UTF-8 first, so that it's the first encoding returned by
 #. * tepl_encoding_get_all().
@@ -290,7 +297,7 @@ msgstr "Vietnami"
 msgid "Thai"
 msgstr "Thai"
 
-#: tepl/tepl-encoding.c:365
+#: tepl/tepl-encoding.c:370
 msgid "Unknown"
 msgstr "Ismeretlen"
 
@@ -305,7 +312,7 @@ msgstr "Ismeretlen"
 #. * 'CURRENT' term. Keep the same format: square brackets, single quotes,
 #. * commas.
 #.
-#: tepl/tepl-encoding.c:640
+#: tepl/tepl-encoding.c:695
 msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 msgstr "['UTF-8', 'CURRENT', 'ISO-8859-2', 'WINDOWS-1250', 'IBM852', 'UTF-16']"
 
@@ -343,12 +350,12 @@ msgstr "A bemeneti tartalom befejezetlen adattal végződik."
 msgid "Untitled File %d"
 msgstr "%d. névtelen fájl"
 
-#: tepl/tepl-file-content-loader.c:334
+#: tepl/tepl-file-content-loader.c:331
 #, c-format
 msgid "The file is too big. Maximum %s can be loaded."
 msgstr "A fájl túl nagy. Legfeljebb %s lehet betöltve."
 
-#: tepl/tepl-file-loader.c:925
+#: tepl/tepl-file-loader.c:872
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Nem lehetséges a karakterkódolást automatikusan felismerni."
 
@@ -360,9 +367,13 @@ msgstr "A fájlt külsőleg módosították."
 msgid "The buffer contains invalid characters."
 msgstr "A puffer érvénytelen karaktereket tartalmaz."
 
-#: tepl/tepl-tab.c:500
+#: tepl/tepl-tab.c:534
 msgid "Error when loading the file."
 msgstr "Hiba a fájl betöltésekor."
+
+#: tepl/tepl-tab.c:748
+msgid "Save File"
+msgstr "Fájl mentése"
 
 #. Translators: location of a file.
 #: tepl/tepl-tab-label.c:273
@@ -372,3 +383,8 @@ msgstr "Hely:"
 #: tepl/tepl-tab-label.c:342
 msgid "Close file"
 msgstr "Fájl bezárása"
+
+#: tepl/tepl-tab-saving.c:64
+msgid "Error when saving the file."
+msgstr "Hiba a fájl mentésekor."
+

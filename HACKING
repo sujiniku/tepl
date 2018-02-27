@@ -5,6 +5,11 @@ Tepl follows the same guidelines and code conventions as GtkSourceView:
 
     https://git.gnome.org/browse/gtksourceview/tree/HACKING
 
-The bugzilla product of Tepl is available at:
+Tepl is hosted on the GNOME GitLab instance, you can fork the repository
+and then do a merge request:
 
-    https://bugzilla.gnome.org/page.cgi?id=browse.html&product=tepl
+    https://gitlab.gnome.org/GNOME/tepl
+
+Read the following wiki page to know the conventions for the commit messages:
+
+    https://wiki.gnome.org/Git/CommitMessages

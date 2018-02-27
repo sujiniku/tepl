@@ -7,7 +7,7 @@ m4_define(tepl_package_version, 3.99.2)
 
 AC_INIT([tepl],
 	[tepl_package_version],
-	[https://bugzilla.gnome.org/enter_bug.cgi?product=tepl],
+	[https://gitlab.gnome.org/GNOME/tepl/issues],
 	[tepl],
 	[https://wiki.gnome.org/Projects/Tepl])
 

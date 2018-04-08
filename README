@@ -1,7 +1,7 @@
 Tepl - Text editor product line
 ===============================
 
-This is version 3.99.2 of Tepl.
+This is version 4.0.0 of Tepl.
 
 Tepl is a library that eases the development of GtkSourceView-based text
 editors and IDEs.
@@ -22,7 +22,7 @@ Dependencies
 
 - GLib >= 2.52
 - GTK+ >= 3.22
-- GtkSourceView >= 3.99.7
+- GtkSourceView >= 4.0
 - libxml2 >= 2.5
 - uchardet - https://www.freedesktop.org/wiki/Software/uchardet/
 

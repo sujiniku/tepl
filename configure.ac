@@ -33,13 +33,6 @@ AX_IS_RELEASE([git-directory])
 #
 # When incrementing the API version (usually for a new major package version),
 # set CURRENT, REVISION and AGE to 0 since it's like a new library.
-
-AMTK_LT_CURRENT=0
-AMTK_LT_REVISION=0
-AMTK_LT_AGE=0
-AMTK_LT_VERSION="$AMTK_LT_CURRENT:$AMTK_LT_REVISION:$AMTK_LT_AGE"
-AC_SUBST([AMTK_LT_VERSION])
-
 TEPL_LT_CURRENT=0
 TEPL_LT_REVISION=0
 TEPL_LT_AGE=0
@@ -53,12 +46,13 @@ AC_SUBST([TEPL_LT_VERSION])
 # Because as far as I've tested, it is not easily feasible to not hardcode the
 # API version in those places (swilmet).
 TEPL_API_VERSION=4
-AC_SUBST(TEPL_API_VERSION)
+AC_SUBST([TEPL_API_VERSION])
 
 # Dependencies
 glib_req=2.52
 gtk_req=3.22
 gtksourceview_req=4.0
+amtk_req=4.99.0
 libxml_req=2.5
 
 AC_CONFIG_SRCDIR([tepl/tepl.h])
@@ -66,7 +60,7 @@ AC_CONFIG_HEADER([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
 # gnu strictness to generate the INSTALL file
-AM_INIT_AUTOMAKE([1.14 tar-ustar dist-xz no-dist-gzip gnu subdir-objects -Wno-portability])
+AM_INIT_AUTOMAKE([1.14 tar-ustar dist-xz no-dist-gzip gnu -Wno-portability])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
@@ -92,15 +86,9 @@ AX_COMPILER_FLAGS([WARN_CFLAGS], [WARN_LDFLAGS], [yes])
 
 # Dynamic linking dependencies
 AX_REQUIRE_DEFINED([AX_PKG_CHECK_MODULES])
-AX_PKG_CHECK_MODULES([AMTK_DEP],
-		     [glib-2.0 >= $glib_req  gtk+-3.0 >= $gtk_req],
-		     [],
-		     [], [],
-		     [AMTK_PACKAGE_REQUIRES],
-		     [AMTK_PACKAGE_REQUIRES_PRIVATE])
-
+# TODO simplify
 AX_PKG_CHECK_MODULES([TEPL_DEP],
-		     [glib-2.0 >= $glib_req  gtk+-3.0 >= $gtk_req  gtksourceview-4 >= $gtksourceview_req],
+		     [glib-2.0 >= $glib_req  gtk+-3.0 >= $gtk_req  gtksourceview-4 >= $gtksourceview_req  amtk-5 >= $amtk_req],
 		     [libxml-2.0 >= $libxml_req  uchardet],
 		     [], [],
 		     [TEPL_PACKAGE_REQUIRES],
@@ -151,12 +139,9 @@ PKG_CHECK_VAR([GLIB_PREFIX], [glib-2.0], [prefix])
 
 # Output files
 AC_CONFIG_FILES([
-	amtk-${TEPL_API_VERSION}.pc:amtk.pc.in
 	tepl-${TEPL_API_VERSION}.pc:tepl.pc.in
 	Makefile
-	amtk/Makefile
 	docs/Makefile
-	docs/reference/amtk-intro.xml
 	docs/reference/intro.xml
 	docs/reference/Makefile
 	docs/reference/tepl-docs.xml

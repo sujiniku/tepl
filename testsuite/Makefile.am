@@ -13,35 +13,16 @@ VALGRIND_SUPPRESSIONS_FILES =					\
 AM_CPPFLAGS = 			\
 	-I$(top_srcdir) 	\
 	$(WARN_CFLAGS) 		\
-	$(AMTK_DEP_CFLAGS)	\
 	$(TEPL_DEP_CFLAGS)
 
 AM_LDFLAGS = $(WARN_LDFLAGS)
 
-# The order is important here: link Amtk after Tepl, since Tepl uses Amtk.
-# This is how Unix linkers work by default, see for example the documentation
-# of the --library option in the ld manpage.
 LDADD = $(top_builddir)/tepl/libtepl-core.la	\
-	$(top_builddir)/amtk/libamtk-core.la	\
-	$(AMTK_DEP_LIBS)			\
 	$(TEPL_DEP_LIBS)
 
 noinst_PROGRAMS = $(UNIT_TEST_PROGS)
 TESTS = $(UNIT_TEST_PROGS)
 UNIT_TEST_PROGS =
-
-# Amtk
-
-UNIT_TEST_PROGS += amtk-test-action-info-store
-amtk_test_action_info_store_SOURCES = amtk/test-action-info-store.c
-
-UNIT_TEST_PROGS += amtk-test-action-map
-amtk_test_action_map_SOURCES = amtk/test-action-map.c
-
-UNIT_TEST_PROGS += amtk-test-utils
-amtk_test_utils_SOURCES = amtk/test-utils.c
-
-# Tepl
 
 UNIT_TEST_PROGS += test-buffer-input-stream
 test_buffer_input_stream_SOURCES = test-buffer-input-stream.c

@@ -124,9 +124,8 @@ lib_LTLIBRARIES = libtepl-@TEPL_API_VERSION@.la
 
 libtepl_@TEPL_API_VERSION@_la_SOURCES =
 
-libtepl_@TEPL_API_VERSION@_la_LIBADD =				\
-	libtepl-core.la						\
-	$(top_builddir)/amtk/libamtk-@TEPL_API_VERSION@.la	\
+libtepl_@TEPL_API_VERSION@_la_LIBADD =	\
+	libtepl-core.la			\
 	$(TEPL_DEP_LIBS)
 
 libtepl_@TEPL_API_VERSION@_la_LDFLAGS =		\
@@ -165,11 +164,7 @@ INTROSPECTION_SCANNER_ARGS =		\
 	-I$(top_srcdir)			\
 	-I$(top_builddir)		\
 	--c-include=tepl/tepl.h		\
-	--warn-all			\
-	--include-uninstalled=$(top_builddir)/amtk/Amtk-@TEPL_API_VERSION@.gir
-
-INTROSPECTION_COMPILER_ARGS =			\
-	--includedir=$(top_builddir)/amtk/
+	--warn-all
 
 Tepl_@TEPL_API_VERSION@_gir_NAMESPACE = Tepl
 Tepl_@TEPL_API_VERSION@_gir_VERSION = @TEPL_API_VERSION@
@@ -182,11 +177,8 @@ Tepl_@TEPL_API_VERSION@_gir_FILES =	\
 	$(tepl_built_public_headers)	\
 	$(tepl_built_public_c_files)
 
-# FIXME: list Amtk too?
-#Tepl_@TEPL_API_VERSION@_gir_INCLUDES = Gtk-3.0 GtkSource-4 Amtk-@TEPL_API_VERSION@
-#Tepl_@TEPL_API_VERSION@_gir_PACKAGES = gtk+-3.0 gtksourceview-4 amtk-@TEPL_API_VERSION@
-Tepl_@TEPL_API_VERSION@_gir_INCLUDES = Gtk-3.0 GtkSource-4
-Tepl_@TEPL_API_VERSION@_gir_PACKAGES = gtk+-3.0 gtksourceview-4
+Tepl_@TEPL_API_VERSION@_gir_INCLUDES = Gtk-3.0 GtkSource-4 Amtk-5
+Tepl_@TEPL_API_VERSION@_gir_PACKAGES = gtk+-3.0 gtksourceview-4 amtk-5
 Tepl_@TEPL_API_VERSION@_gir_EXPORT_PACKAGES = tepl-@TEPL_API_VERSION@
 
 girdir = $(datadir)/gir-1.0

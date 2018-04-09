@@ -15,16 +15,15 @@ DOC_MAIN_SGML_FILE = tepl-docs.xml
 SCAN_OPTIONS = --rebuild-types
 
 # The directory containing the source code. Relative to $(srcdir)
-DOC_SOURCE_DIR = $(top_srcdir)/tepl $(top_srcdir)/amtk
+DOC_SOURCE_DIR = $(top_srcdir)/tepl
 
 # Used for dependencies
-HFILE_GLOB = $(top_srcdir)/tepl/*.h $(top_srcdir)/amtk/*.h
-CFILE_GLOB = $(top_srcdir)/tepl/*.c $(top_srcdir)/amtk/*.c
+HFILE_GLOB = $(top_srcdir)/tepl/*.h
+CFILE_GLOB = $(top_srcdir)/tepl/*.c
 
 # Header files or dirs to ignore when scanning. Use base file/dir names
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h private_code
 IGNORE_HFILES =					\
-	amtk.h					\
 	tepl.h					\
 	tepl-buffer-input-stream.h		\
 	tepl-close-confirm-dialog-single.h	\
@@ -45,7 +44,6 @@ HTML_IMAGES =
 
 # Extra XML files that are included by $(DOC_MAIN_SGML_FILE)
 content_files =			\
-	amtk-intro.xml		\
 	api-breaks.xml		\
 	intro.xml		\
 	porting-guides.xml
@@ -56,11 +54,9 @@ FIXXREF_OPTIONS =
 # CFLAGS and LDFLAGS for compiling gtkdoc-scangobj with your library.
 # Only needed if you are using gtkdoc-scangobj to dynamically query widget
 # signals and properties.
-GTKDOC_CFLAGS = -I$(top_srcdir) $(AMTK_DEP_CFLAGS) $(TEPL_DEP_CFLAGS)
+GTKDOC_CFLAGS = -I$(top_srcdir) $(TEPL_DEP_CFLAGS)
 GTKDOC_LIBS =							\
-	$(top_builddir)/amtk/libamtk-@TEPL_API_VERSION@.la	\
 	$(top_builddir)/tepl/libtepl-@TEPL_API_VERSION@.la	\
-	$(AMTK_DEP_LIBS)					\
 	$(TEPL_DEP_LIBS)
 
 MAINTAINERCLEANFILES =			\
@@ -71,13 +67,11 @@ MAINTAINERCLEANFILES =			\
 include $(top_srcdir)/gtk-doc.make
 
 EXTRA_DIST +=			\
-	amtk-intro.xml.in	\
 	intro.xml.in		\
 	tepl-docs.xml.in
 
-DISTCLEANFILES =		\
-	amtk-intro.xml		\
-	intro.xml		\
+DISTCLEANFILES =	\
+	intro.xml	\
 	tepl-docs.xml
 
 -include $(top_srcdir)/git.mk

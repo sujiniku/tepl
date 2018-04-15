@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.64)
 
 # Package version of the form 'major.minor.micro'.
-m4_define(tepl_package_version, 4.1.0)
+m4_define(tepl_package_version, 4.1.1)
 
 AC_INIT([tepl],
 	[tepl_package_version],
@@ -52,7 +52,7 @@ AC_SUBST([TEPL_API_VERSION])
 glib_req=2.52
 gtk_req=3.22
 gtksourceview_req=4.0
-amtk_req=4.99.0
+amtk_req=4.99.1
 libxml_req=2.5
 
 AC_CONFIG_SRCDIR([tepl/tepl.h])

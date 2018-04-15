@@ -1,3 +1,8 @@
+News in 4.1.1, 2018-04-15
+-------------------------
+* Remove the Amtk library, it has been moved to its own git repository, see:
+  https://wiki.gnome.org/Projects/Amtk
+
 News in 4.0.0, 2018-04-08
 -------------------------
 - Project moved to GNOME GitLab.

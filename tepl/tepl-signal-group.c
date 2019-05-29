@@ -22,12 +22,8 @@
 /* Small utility to disconnect signal handlers without the need to keep around
  * the GObject instance where the signals were connected.
  *
- * It is similar to DzlSignalGroup from libdazzle. TeplSignalGroup is less
- * convenient to use, it contains less features, but this has the advantage that
- * the implementation is *much* simpler, and I can thus be more confident that
- * it is bug-free (which is more important to me). If one day DzlSignalGroup is
- * included in GObject or GIO (after being properly reviewed), then I'll
- * probably start using it. -- swilmet
+ * It was inspired by DzlSignalGroup from libdazzle. TeplSignalGroup has a much
+ * simpler implementation, it applies the "worse is better" philosophy.
  */
 
 struct _TeplSignalGroup

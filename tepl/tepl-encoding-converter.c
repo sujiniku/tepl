@@ -39,6 +39,8 @@
  *   callback is called.
  */
 
+/* FIXME: I think errno should be reset to 0 after an errno error. */
+
 struct _TeplEncodingConverterPrivate
 {
 	GIConv conv;

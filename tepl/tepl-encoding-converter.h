@@ -58,6 +58,9 @@ struct _TeplEncodingConverterClass
  * nul-byte at a different place; as long as you modify and access @str inside
  * its [0, @length] bounds.
  */
+/* TODO: when there is an invalid char, call a callback instead of returning an
+ * error. By extending this callback, or by creating another callback function.
+ */
 typedef void (*TeplEncodingConversionCallback) (const gchar *str,
 						gsize        length,
 						gpointer     user_data);

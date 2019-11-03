@@ -108,8 +108,8 @@
         <para>
           Tepl&nbsp;3 depended on GtkSourceView&nbsp;3, Tepl&nbsp;4 depends on
           GtkSourceView&nbsp;4. So to be able to use Tepl&nbsp;4, you need to
-          port your code to GtkSourceView&nbsp;4. Note that the GTK+ dependency
-          is still GTK+&nbsp;3.
+          port your code to GtkSourceView&nbsp;4. Note that the GTK dependency
+          is still GTK&nbsp;3.
         </para>
       </listitem>
       <listitem>

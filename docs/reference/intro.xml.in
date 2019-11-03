@@ -108,8 +108,8 @@
       backward-compatible with Tepl 17.0 (those versions don't necessarily exist,
       it's just an example). But the peculiarity of Tepl is that new major
       versions are released more often, at most every 6 months if needed.
-      Different major versions can be installed in parallel, like GTK+&nbsp;2
-      and GTK+&nbsp;3.
+      Different major versions can be installed in parallel, like GTK&nbsp;2
+      and GTK&nbsp;3.
     </para>
 
     <para>
@@ -134,9 +134,9 @@
   </refsect1>
 
   <refsect1>
-    <title>GTK+ and GtkSourceView dependencies</title>
+    <title>GTK and GtkSourceView dependencies</title>
     <para>
-      Tepl&nbsp;@TEPL_API_VERSION@ depends on GTK+&nbsp;3 and
+      Tepl&nbsp;@TEPL_API_VERSION@ depends on GTK&nbsp;3 and
       GtkSourceView&nbsp;4.
     </para>
   </refsect1>

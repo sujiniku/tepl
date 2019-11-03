@@ -30,7 +30,7 @@
  * @See_also: #TeplFileSaver, #TeplFileLoader
  *
  * The #TeplEncoding boxed type represents a character encoding. It is used
- * for example by #TeplFile. Note that the text in GTK+ widgets is always
+ * for example by #TeplFile. Note that the text in GTK widgets is always
  * encoded in UTF-8.
  *
  * #TeplEncoding is a fork of #GtkSourceEncoding with a different API to

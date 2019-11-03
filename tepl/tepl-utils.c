@@ -408,7 +408,7 @@ _tepl_utils_associate_secondary_window (GtkWindow *secondary_window,
 	 * true.
 	 *
 	 * But here it's just to setup correctly e.g. a GtkDialog, it's
-	 * something a bit specific to GTK+. As long as this bad practice is
+	 * something a bit specific to GTK. As long as this bad practice is
 	 * applied only in this case (setting the transient parent and adding
 	 * the secondary window to a GtkWindowGroup), it should be fine. It
 	 * would be more problematic to call other TeplApplicationWindow

@@ -32,7 +32,7 @@
  *
  * For some features, the Tepl framework gets the default #GtkApplication with
  * g_application_get_default(), for example to call g_application_hold(),
- * g_application_mark_busy(), etc. Normally a GTK+ application has only one
+ * g_application_mark_busy(), etc. Normally a GTK application has only one
  * #GApplication per process, so this shouldn't cause any problem.
  *
  * Note that #TeplApplication extends the #GtkApplication class but without

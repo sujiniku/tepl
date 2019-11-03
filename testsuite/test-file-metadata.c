@@ -77,7 +77,7 @@ do_test_get_set_metadata (gboolean use_gvfs_metadata)
 	metadata = tepl_file_get_file_metadata (file);
 
 	value = tepl_file_metadata_get (metadata, TEST_KEY);
-	g_assert (value == NULL);
+	g_assert_true (value == NULL);
 
 	tepl_file_metadata_set (metadata, TEST_KEY, "zippy");
 	value = tepl_file_metadata_get (metadata, TEST_KEY);
@@ -85,7 +85,7 @@ do_test_get_set_metadata (gboolean use_gvfs_metadata)
 	g_free (value);
 
 	value = tepl_file_metadata_get (metadata, TEST_OTHER_KEY);
-	g_assert (value == NULL);
+	g_assert_true (value == NULL);
 
 	tepl_file_metadata_set (metadata, TEST_KEY, "zippiness");
 	value = tepl_file_metadata_get (metadata, TEST_KEY);
@@ -95,12 +95,12 @@ do_test_get_set_metadata (gboolean use_gvfs_metadata)
 	/* Unset */
 	tepl_file_metadata_set (metadata, TEST_KEY, NULL);
 	value = tepl_file_metadata_get (metadata, TEST_KEY);
-	g_assert (value == NULL);
+	g_assert_true (value == NULL);
 
 	/* Unset non-set metadata */
 	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, NULL);
 	value = tepl_file_metadata_get (metadata, TEST_OTHER_KEY);
-	g_assert (value == NULL);
+	g_assert_true (value == NULL);
 
 	g_object_unref (file);
 }
@@ -134,11 +134,11 @@ do_test_load_save_metadata_sync (gboolean use_gvfs_metadata)
 
 	ok = tepl_file_metadata_load (metadata, NULL, &error);
 	g_assert_no_error (error);
-	g_assert (!ok);
+	g_assert_true (!ok);
 
 	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);
-	g_assert (!ok);
+	g_assert_true (!ok);
 
 	value = tepl_file_metadata_get (metadata, TEST_KEY);
 	g_assert_cmpstr (value, ==, "epica");
@@ -154,14 +154,14 @@ do_test_load_save_metadata_sync (gboolean use_gvfs_metadata)
 	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	if (use_gvfs_metadata)
 	{
-		g_assert (error != NULL); /* No such file or directory */
+		g_assert_true (error != NULL); /* No such file or directory */
 		g_clear_error (&error);
-		g_assert (!ok);
+		g_assert_true (!ok);
 	}
 	else
 	{
 		g_assert_no_error (error);
-		g_assert (ok);
+		g_assert_true (ok);
 	}
 
 	g_file_set_contents (path, "blum", -1, &error);
@@ -169,7 +169,7 @@ do_test_load_save_metadata_sync (gboolean use_gvfs_metadata)
 
 	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);
-	g_assert (ok);
+	g_assert_true (ok);
 
 	g_object_unref (file);
 
@@ -183,10 +183,10 @@ do_test_load_save_metadata_sync (gboolean use_gvfs_metadata)
 
 	ok = tepl_file_metadata_load (metadata, NULL, &error);
 	g_assert_no_error (error);
-	g_assert (ok);
+	g_assert_true (ok);
 
 	value = tepl_file_metadata_get (metadata, TEST_OTHER_KEY);
-	g_assert (value == NULL);
+	g_assert_true (value == NULL);
 
 	value = tepl_file_metadata_get (metadata, TEST_KEY);
 	g_assert_cmpstr (value, ==, "epica");
@@ -197,14 +197,14 @@ do_test_load_save_metadata_sync (gboolean use_gvfs_metadata)
 	tepl_file_metadata_set (metadata, TEST_KEY, NULL);
 	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);
-	g_assert (ok);
+	g_assert_true (ok);
 
 	ok = tepl_file_metadata_load (metadata, NULL, &error);
 	g_assert_no_error (error);
-	g_assert (ok);
+	g_assert_true (ok);
 
 	value = tepl_file_metadata_get (metadata, TEST_KEY);
-	g_assert (value == NULL);
+	g_assert_true (value == NULL);
 
 	/* Clean-up */
 
@@ -214,14 +214,14 @@ do_test_load_save_metadata_sync (gboolean use_gvfs_metadata)
 	ok = tepl_file_metadata_load (metadata, NULL, &error);
 	if (use_gvfs_metadata)
 	{
-		g_assert (error != NULL); /* No such file or directory */
+		g_assert_true (error != NULL); /* No such file or directory */
 		g_clear_error (&error);
-		g_assert (!ok);
+		g_assert_true (!ok);
 	}
 	else
 	{
 		g_assert_no_error (error);
-		g_assert (ok);
+		g_assert_true (ok);
 	}
 
 	g_free (path);
@@ -254,7 +254,7 @@ load_metadata_async_cb (GObject      *source_object,
 
 	ok = tepl_file_metadata_load_finish (metadata, result, &error);
 	g_assert_no_error (error);
-	g_assert (ok);
+	g_assert_true (ok);
 
 	value = tepl_file_metadata_get (metadata, TEST_KEY);
 	g_assert_cmpstr (value, ==, "in flames");
@@ -265,7 +265,7 @@ load_metadata_async_cb (GObject      *source_object,
 	tepl_file_metadata_set (metadata, TEST_KEY, NULL);
 	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);
-	g_assert (ok);
+	g_assert_true (ok);
 
 	location = tepl_file_get_location (file);
 	g_file_delete (location, NULL, &error);
@@ -286,7 +286,7 @@ save_metadata_async_cb (GObject      *source_object,
 
 	ok = tepl_file_metadata_save_finish (metadata, result, &error);
 	g_assert_no_error (error);
-	g_assert (ok);
+	g_assert_true (ok);
 
 	tepl_file_metadata_set (metadata, TEST_KEY, NULL);
 
@@ -367,7 +367,7 @@ do_test_set_without_load (gboolean use_gvfs_metadata)
 	tepl_file_metadata_set (metadata, TEST_KEY, "dimmu");
 	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);
-	g_assert (ok);
+	g_assert_true (ok);
 
 	g_object_unref (file);
 
@@ -378,12 +378,12 @@ do_test_set_without_load (gboolean use_gvfs_metadata)
 	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, "borgir");
 	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);
-	g_assert (ok);
+	g_assert_true (ok);
 
 	/* Load */
 	ok = tepl_file_metadata_load (metadata, NULL, &error);
 	g_assert_no_error (error);
-	g_assert (ok);
+	g_assert_true (ok);
 
 	/* Check that the two metadata are present */
 	value = tepl_file_metadata_get (metadata, TEST_KEY);
@@ -399,7 +399,7 @@ do_test_set_without_load (gboolean use_gvfs_metadata)
 	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, NULL);
 	ok = tepl_file_metadata_save (metadata, NULL, &error);
 	g_assert_no_error (error);
-	g_assert (ok);
+	g_assert_true (ok);
 
 	g_file_delete (location, NULL, &error);
 	g_assert_no_error (error);

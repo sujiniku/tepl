@@ -66,9 +66,9 @@ save_cb (GObject      *source_object,
 	tepl_file_saver_save_finish (saver, result, &error);
 	if (expect_externally_modified_error)
 	{
-		g_assert (g_error_matches (error,
-					   TEPL_FILE_SAVER_ERROR,
-					   TEPL_FILE_SAVER_ERROR_EXTERNALLY_MODIFIED));
+		g_assert_true (g_error_matches (error,
+						TEPL_FILE_SAVER_ERROR,
+						TEPL_FILE_SAVER_ERROR_EXTERNALLY_MODIFIED));
 		g_clear_error (&error);
 	}
 	else
@@ -153,9 +153,9 @@ test_externally_modified (void)
 	file = tepl_buffer_get_file (buffer);
 
 	/* With NULL location */
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 	tepl_file_check_file_on_disk (file);
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 
 	/* Set location, but not yet loaded or saved */
 	path = g_build_filename (g_get_tmp_dir (), "tepl-test-file", NULL);
@@ -164,21 +164,21 @@ test_externally_modified (void)
 
 	location = g_file_new_for_path (path);
 	tepl_file_set_location (file, location);
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 	tepl_file_check_file_on_disk (file);
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 
 	/* Load */
 	load (buffer);
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 	tepl_file_check_file_on_disk (file);
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 
 	/* Save */
 	save (buffer, FALSE);
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 	tepl_file_check_file_on_disk (file);
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 
 	/* Modify externally and then save.
 	 * Sleep one second to force the timestamp/etag to change.
@@ -187,31 +187,31 @@ test_externally_modified (void)
 	g_file_set_contents (path, "b", -1, &error);
 	g_assert_no_error (error);
 	tepl_file_check_file_on_disk (file);
-	g_assert (tepl_file_is_externally_modified (file));
+	g_assert_true (tepl_file_is_externally_modified (file));
 
 	save (buffer, TRUE);
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 	tepl_file_check_file_on_disk (file);
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 
 	/* Modify externally and then load */
 	sleep (1);
 	g_file_set_contents (path, "c", -1, &error);
 	g_assert_no_error (error);
 	tepl_file_check_file_on_disk (file);
-	g_assert (tepl_file_is_externally_modified (file));
+	g_assert_true (tepl_file_is_externally_modified (file));
 
 	load (buffer);
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 	tepl_file_check_file_on_disk (file);
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 
 	/* Modify externally and then save as */
 	sleep (1);
 	g_file_set_contents (path, "d", -1, &error);
 	g_assert_no_error (error);
 	tepl_file_check_file_on_disk (file);
-	g_assert (tepl_file_is_externally_modified (file));
+	g_assert_true (tepl_file_is_externally_modified (file));
 
 	new_path = g_build_filename (g_get_tmp_dir (), "tepl-test-file-2", NULL);
 	g_file_set_contents (new_path, "e", -1, &error);
@@ -219,23 +219,23 @@ test_externally_modified (void)
 
 	new_location = g_file_new_for_path (new_path);
 	save_as (buffer, new_location);
-	g_assert (g_file_equal (new_location, tepl_file_get_location (file)));
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (g_file_equal (new_location, tepl_file_get_location (file)));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 	tepl_file_check_file_on_disk (file);
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 
 	/* Modify externally and then save as to same location */
 	sleep (1);
 	g_file_set_contents (new_path, "f", -1, &error);
 	g_assert_no_error (error);
 	tepl_file_check_file_on_disk (file);
-	g_assert (tepl_file_is_externally_modified (file));
+	g_assert_true (tepl_file_is_externally_modified (file));
 
-	g_assert (g_file_equal (new_location, tepl_file_get_location (file)));
+	g_assert_true (g_file_equal (new_location, tepl_file_get_location (file)));
 	save_as (buffer, new_location);
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 	tepl_file_check_file_on_disk (file);
-	g_assert (!tepl_file_is_externally_modified (file));
+	g_assert_true (!tepl_file_is_externally_modified (file));
 
 	/* Cleanup */
 	g_file_delete (location, NULL, &error);

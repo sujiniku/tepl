@@ -50,7 +50,7 @@ check_determine_encoding_fallback (GSList       *candidate_encodings,
 	detected_encoding = _tepl_file_content_determine_encoding_with_fallback_mode (content,
 										      candidate_encodings);
 
-	g_assert (tepl_encoding_equals (detected_encoding, expected_encoding));
+	g_assert_true (tepl_encoding_equals (detected_encoding, expected_encoding));
 
 	g_object_unref (content);
 	tepl_encoding_free (detected_encoding);

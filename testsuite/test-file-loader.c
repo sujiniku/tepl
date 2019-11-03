@@ -54,7 +54,7 @@ test_data_new (const gchar     *expected_buffer_content,
 {
 	TestData *data;
 
-	g_assert (expected_buffer_content != NULL);
+	g_assert_true (expected_buffer_content != NULL);
 
 	data = g_new0 (TestData, 1);
 	data->expected_buffer_content = g_strdup (expected_buffer_content);
@@ -137,7 +137,7 @@ check_buffer_state (GtkTextBuffer *buffer)
 	g_assert_cmpint (offset, ==, 0);
 
 	modified = gtk_text_buffer_get_modified (buffer);
-	g_assert (!modified);
+	g_assert_true (!modified);
 }
 
 static void
@@ -181,8 +181,8 @@ load_cb (GObject      *source_object,
 		g_assert_cmpint (tepl_file_get_compression_type (file), ==, TEPL_COMPRESSION_TYPE_NONE);
 		g_assert_cmpint (tepl_file_loader_get_newline_type (loader), ==, data->expected_newline_type);
 		g_assert_cmpint (tepl_file_get_newline_type (file), ==, data->expected_newline_type);
-		g_assert (!tepl_file_is_externally_modified (file));
-		g_assert (!tepl_file_is_deleted (file));
+		g_assert_true (!tepl_file_is_externally_modified (file));
+		g_assert_true (!tepl_file_is_deleted (file));
 
 		if (data->expected_line_count != -1)
 		{
@@ -200,9 +200,9 @@ load_cb (GObject      *source_object,
 	}
 	else
 	{
-		g_assert (g_error_matches (error,
-					   data->expected_error_domain,
-					   data->expected_error_code));
+		g_assert_true (g_error_matches (error,
+						data->expected_error_domain,
+						data->expected_error_code));
 		g_clear_error (&error);
 	}
 
@@ -359,8 +359,8 @@ test_split_cr_lf (void)
 	test_loader_split_cr_lf (content, expected_line_count);
 
 	/* End block size by \r */
-	g_assert (content[block_size - 1] != '\n');
-	g_assert (content[block_size] == '\0');
+	g_assert_true (content[block_size - 1] != '\n');
+	g_assert_true (content[block_size] == '\0');
 	content[block_size - 1] = '\r';
 	expected_line_count++;
 	test_loader_split_cr_lf (content, expected_line_count);
@@ -370,9 +370,9 @@ test_split_cr_lf (void)
 	 * Start of block 2: a
 	 */
 	content = generate_content (block_size + 1, &expected_line_count);
-	g_assert (content[block_size - 1] != '\n');
-	g_assert (content[block_size] == 'a');
-	g_assert (content[block_size + 1] == '\0');
+	g_assert_true (content[block_size - 1] != '\n');
+	g_assert_true (content[block_size] == 'a');
+	g_assert_true (content[block_size + 1] == '\0');
 	content[block_size - 1] = '\r';
 	expected_line_count++;
 	test_loader_split_cr_lf (content, expected_line_count);
@@ -381,9 +381,9 @@ test_split_cr_lf (void)
 	 * End of block 1: \r
 	 * Start of block 2: \n
 	 */
-	g_assert (content[block_size - 1] == '\r');
-	g_assert (content[block_size] == 'a');
-	g_assert (content[block_size + 1] == '\0');
+	g_assert_true (content[block_size - 1] == '\r');
+	g_assert_true (content[block_size] == 'a');
+	g_assert_true (content[block_size + 1] == '\0');
 	content[block_size] = '\n';
 	test_loader_split_cr_lf (content, expected_line_count);
 	g_free (content);
@@ -393,10 +393,10 @@ test_split_cr_lf (void)
 	 * Start of block 2: \na
 	 */
 	content = generate_content (block_size + 2, &expected_line_count);
-	g_assert (content[block_size - 1] != '\n');
-	g_assert (content[block_size] != '\n');
-	g_assert (content[block_size + 1] == 'a');
-	g_assert (content[block_size + 2] == '\0');
+	g_assert_true (content[block_size - 1] != '\n');
+	g_assert_true (content[block_size] != '\n');
+	g_assert_true (content[block_size + 1] == 'a');
+	g_assert_true (content[block_size + 2] == '\0');
 	content[block_size - 1] = '\r';
 	content[block_size] = '\n';
 	expected_line_count++;
@@ -410,14 +410,14 @@ test_split_cr_lf (void)
 	 */
 	content = generate_content (block_size * 2, &expected_line_count);
 
-	g_assert (content[block_size - 1] != '\n');
-	g_assert (content[block_size] != '\n');
+	g_assert_true (content[block_size - 1] != '\n');
+	g_assert_true (content[block_size] != '\n');
 	content[block_size - 1] = '\r';
 	content[block_size] = '\n';
 	expected_line_count++;
 
-	g_assert (content[block_size*2 - 1] != '\n');
-	g_assert (content[block_size*2] == '\0');
+	g_assert_true (content[block_size*2 - 1] != '\n');
+	g_assert_true (content[block_size*2] == '\0');
 	content[block_size*2 - 1] = '\r';
 	expected_line_count++;
 

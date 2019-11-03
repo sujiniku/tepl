@@ -50,13 +50,13 @@ test_decode_uri (void)
 	/* Basic test, for what is used in Tepl (the host). */
 	ret = _tepl_utils_decode_uri ("smb://example.net/home/file.c",
 				      NULL, NULL, &host, NULL, NULL);
-	g_assert (ret);
+	g_assert_true (ret);
 	g_assert_cmpstr (host, ==, "example.net");
 	g_free (host);
 
 	ret = _tepl_utils_decode_uri ("smb://154.23.201.4/home/file.c",
 				      NULL, NULL, &host, NULL, NULL);
-	g_assert (ret);
+	g_assert_true (ret);
 	g_assert_cmpstr (host, ==, "154.23.201.4");
 	g_free (host);
 }

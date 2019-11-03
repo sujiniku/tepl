@@ -39,8 +39,8 @@ test_remove_duplicates (void)
 	list = _tepl_encoding_remove_duplicates (list, TEPL_ENCODING_DUPLICATES_KEEP_FIRST);
 
 	g_assert_cmpint (2, ==, g_slist_length (list));
-	g_assert (tepl_encoding_equals (list->data, utf8));
-	g_assert (tepl_encoding_equals (list->next->data, iso));
+	g_assert_true (tepl_encoding_equals (list->data, utf8));
+	g_assert_true (tepl_encoding_equals (list->next->data, iso));
 
 	/* Before: [UTF-8, ISO-8859-15, UTF-8] */
 	list = g_slist_append (list, tepl_encoding_copy (utf8));
@@ -49,8 +49,8 @@ test_remove_duplicates (void)
 	list = _tepl_encoding_remove_duplicates (list, TEPL_ENCODING_DUPLICATES_KEEP_LAST);
 
 	g_assert_cmpint (2, ==, g_slist_length (list));
-	g_assert (tepl_encoding_equals (list->data, iso));
-	g_assert (tepl_encoding_equals (list->next->data, utf8));
+	g_assert_true (tepl_encoding_equals (list->data, iso));
+	g_assert_true (tepl_encoding_equals (list->next->data, utf8));
 
 	g_slist_free_full (list, (GDestroyNotify)tepl_encoding_free);
 	tepl_encoding_free (utf8);

@@ -35,11 +35,11 @@ check_list_equal (GList *expected_list,
 		gpointer expected_data = l1->data;
 		gpointer received_data = l2->data;
 
-		g_assert (expected_data == received_data);
+		g_assert_true (expected_data == received_data);
 	}
 
-	g_assert (l1 == NULL);
-	g_assert (l2 == NULL);
+	g_assert_true (l1 == NULL);
+	g_assert_true (l2 == NULL);
 }
 
 static void
@@ -60,8 +60,8 @@ test_tab_group_basic (void)
 	gtk_widget_show (GTK_WIDGET (notebook));
 
 	/* Empty */
-	g_assert (tepl_tab_group_get_tabs (tab_group) == NULL);
-	g_assert (tepl_tab_group_get_active_tab (tab_group) == NULL);
+	g_assert_true (tepl_tab_group_get_tabs (tab_group) == NULL);
+	g_assert_true (tepl_tab_group_get_active_tab (tab_group) == NULL);
 
 	/* One child, but not a TeplTab */
 	other_widget = gtk_grid_new ();
@@ -69,8 +69,8 @@ test_tab_group_basic (void)
 	gtk_notebook_append_page (notebook, other_widget, NULL);
 
 	g_assert_cmpint (gtk_notebook_get_n_pages (notebook), ==, 1);
-	g_assert (tepl_tab_group_get_tabs (tab_group) == NULL);
-	g_assert (tepl_tab_group_get_active_tab (tab_group) == NULL);
+	g_assert_true (tepl_tab_group_get_tabs (tab_group) == NULL);
+	g_assert_true (tepl_tab_group_get_active_tab (tab_group) == NULL);
 
 	/* Append one TeplTab */
 	tab1 = tepl_tab_new ();
@@ -79,7 +79,7 @@ test_tab_group_basic (void)
 	expected_list = g_list_append (NULL, tab1);
 
 	g_assert_cmpint (gtk_notebook_get_n_pages (notebook), ==, 2);
-	g_assert (tepl_tab_group_get_active_tab (tab_group) == tab1);
+	g_assert_true (tepl_tab_group_get_active_tab (tab_group) == tab1);
 
 	received_list = tepl_tab_group_get_tabs (tab_group);
 	check_list_equal (expected_list, received_list);
@@ -87,7 +87,7 @@ test_tab_group_basic (void)
 	received_list = NULL;
 
 	gtk_notebook_set_current_page (notebook, 0);
-	g_assert (tepl_tab_group_get_active_tab (tab_group) == NULL);
+	g_assert_true (tepl_tab_group_get_active_tab (tab_group) == NULL);
 
 	received_list = tepl_tab_group_get_tabs (tab_group);
 	check_list_equal (expected_list, received_list);
@@ -101,13 +101,13 @@ test_tab_group_basic (void)
 	expected_list = g_list_append (expected_list, tab2);
 
 	gtk_notebook_set_current_page (notebook, gtk_notebook_page_num (notebook, other_widget));
-	g_assert (tepl_tab_group_get_active_tab (tab_group) == NULL);
+	g_assert_true (tepl_tab_group_get_active_tab (tab_group) == NULL);
 
 	tepl_tab_group_set_active_tab (tab_group, tab1);
-	g_assert (tepl_tab_group_get_active_tab (tab_group) == tab1);
+	g_assert_true (tepl_tab_group_get_active_tab (tab_group) == tab1);
 
 	tepl_tab_group_set_active_tab (tab_group, tab2);
-	g_assert (tepl_tab_group_get_active_tab (tab_group) == tab2);
+	g_assert_true (tepl_tab_group_get_active_tab (tab_group) == tab2);
 
 	received_list = tepl_tab_group_get_tabs (tab_group);
 	check_list_equal (expected_list, received_list);
@@ -219,8 +219,8 @@ test_tab_group_notify_signals (void)
 	/* Remove tab -> active-tab is NULL. */
 	gtk_widget_destroy (GTK_WIDGET (tab1));
 	check_notify_delta_counters (&delta_counters, 1, 1);
-	g_assert (tepl_tab_group_get_tabs (tab_group) == NULL);
-	g_assert (tepl_tab_group_get_active_tab (tab_group) == NULL);
+	g_assert_true (tepl_tab_group_get_tabs (tab_group) == NULL);
+	g_assert_true (tepl_tab_group_get_active_tab (tab_group) == NULL);
 
 	/* Re-create first tab. */
 	tab1 = tepl_tab_new ();
@@ -256,21 +256,21 @@ test_tab_group_notify_signals (void)
 	/* Reorder non-active tab */
 	gtk_notebook_reorder_child (notebook, GTK_WIDGET (tab1), 1);
 	check_notify_delta_counters (&delta_counters, 0, 0);
-	g_assert (tepl_tab_group_get_active_tab (tab_group) == tab2);
+	g_assert_true (tepl_tab_group_get_active_tab (tab_group) == tab2);
 
 	/* Reorder active tab.
 	 * The order is reset to tab1 -> tab2.
 	 */
 	gtk_notebook_reorder_child (notebook, GTK_WIDGET (tab2), 1);
 	check_notify_delta_counters (&delta_counters, 0, 0);
-	g_assert (tepl_tab_group_get_active_tab (tab_group) == tab2);
+	g_assert_true (tepl_tab_group_get_active_tab (tab_group) == tab2);
 
 	/* Append a third tab. */
 	tab3 = tepl_tab_new ();
 	gtk_widget_show (GTK_WIDGET (tab3));
 	tepl_tab_group_append_tab (tab_group, tab3, FALSE);
 	check_notify_delta_counters (&delta_counters, 0, 0);
-	g_assert (tepl_tab_group_get_active_tab (tab_group) == tab2);
+	g_assert_true (tepl_tab_group_get_active_tab (tab_group) == tab2);
 
 	/* Remove a non-active tab. */
 	gtk_widget_destroy (GTK_WIDGET (tab1));
@@ -279,7 +279,7 @@ test_tab_group_notify_signals (void)
 	/* Remove active tab. */
 	gtk_widget_destroy (GTK_WIDGET (tab2));
 	check_notify_delta_counters (&delta_counters, 1, 1);
-	g_assert (tepl_tab_group_get_active_tab (tab_group) == tab3);
+	g_assert_true (tepl_tab_group_get_active_tab (tab_group) == tab3);
 
 	g_object_unref (notebook);
 }

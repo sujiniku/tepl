@@ -47,8 +47,8 @@ compare_outputs (GQueue *received_output,
 		g_assert_cmpstr (received_chunk, ==, expected_chunk);
 	}
 
-	g_assert (received_node == NULL);
-	g_assert (expected_node == NULL);
+	g_assert_true (received_node == NULL);
+	g_assert_true (expected_node == NULL);
 }
 
 static void
@@ -290,7 +290,7 @@ test_invalid_sequence (void)
 				       -1,
 				       &error);
 
-	g_assert (g_error_matches (error, G_CONVERT_ERROR, G_CONVERT_ERROR_ILLEGAL_SEQUENCE));
+	g_assert_true (g_error_matches (error, G_CONVERT_ERROR, G_CONVERT_ERROR_ILLEGAL_SEQUENCE));
 	g_clear_error (&error);
 
 	_tepl_encoding_converter_close (converter, &error);
@@ -315,7 +315,7 @@ test_end_with_incomplete_input (void)
 	g_assert_no_error (error);
 
 	_tepl_encoding_converter_close (converter, &error);
-	g_assert (g_error_matches (error, G_CONVERT_ERROR, G_CONVERT_ERROR_PARTIAL_INPUT));
+	g_assert_true (g_error_matches (error, G_CONVERT_ERROR, G_CONVERT_ERROR_PARTIAL_INPUT));
 	g_clear_error (&error);
 
 	g_object_unref (converter);

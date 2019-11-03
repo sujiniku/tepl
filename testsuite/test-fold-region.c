@@ -88,7 +88,7 @@ test_fold (void)
 	fold_region = test_create_fold_region (buffer, 1, 3);
 	tepl_fold_region_set_folded (fold_region, TRUE);
 
-	g_assert (test_next_visible_line (buffer, 1) == 4);
+	g_assert_true (test_next_visible_line (buffer, 1) == 4);
 
 	g_object_unref (fold_region);
 	g_object_unref (buffer);
@@ -106,7 +106,7 @@ test_unfold (void)
 	tepl_fold_region_set_folded (fold_region, TRUE);
 	tepl_fold_region_set_folded (fold_region, FALSE);
 
-	g_assert (test_next_visible_line (buffer, 1) == 2);
+	g_assert_true (test_next_visible_line (buffer, 1) == 2);
 
 	g_object_unref (fold_region);
 	g_object_unref (buffer);
@@ -124,17 +124,17 @@ test_toggle (void)
 	fold_region = test_create_fold_region (buffer, 1, 3);
 
 	folded = tepl_fold_region_get_folded (fold_region);
-	g_assert (folded == FALSE);
+	g_assert_true (folded == FALSE);
 
 	folded = !folded;
 	tepl_fold_region_set_folded (fold_region, folded);
 	folded = tepl_fold_region_get_folded (fold_region);
-	g_assert (folded == TRUE);
+	g_assert_true (folded == TRUE);
 
 	folded = !folded;
 	tepl_fold_region_set_folded (fold_region, folded);
 	folded = tepl_fold_region_get_folded (fold_region);
-	g_assert (folded == FALSE);
+	g_assert_true (folded == FALSE);
 
 	g_object_unref (fold_region);
 	g_object_unref (buffer);
@@ -152,8 +152,8 @@ test_set_bounds (void)
 	test_set_bounds_with_line_number (fold_region, 2, 4);
 	tepl_fold_region_set_folded (fold_region, TRUE);
 
-	g_assert (test_next_visible_line (buffer, 1) == 2);
-	g_assert (test_next_visible_line (buffer, 2) == 5);
+	g_assert_true (test_next_visible_line (buffer, 1) == 2);
+	g_assert_true (test_next_visible_line (buffer, 2) == 5);
 
 	g_object_unref (fold_region);
 	g_object_unref (buffer);
@@ -171,8 +171,8 @@ test_set_bounds_while_folded (void)
 	tepl_fold_region_set_folded (fold_region, TRUE);
 	test_set_bounds_with_line_number (fold_region, 2, 4);
 
-	g_assert (test_next_visible_line (buffer, 1) == 2);
-	g_assert (test_next_visible_line (buffer, 2) == 5);
+	g_assert_true (test_next_visible_line (buffer, 1) == 2);
+	g_assert_true (test_next_visible_line (buffer, 2) == 5);
 
 	g_object_unref (fold_region);
 	g_object_unref (buffer);
@@ -197,7 +197,7 @@ test_get_bounds (void)
 	start_line = gtk_text_iter_get_line (&start_iter);
 	end_line = gtk_text_iter_get_line (&end_iter);
 
-	g_assert (test_next_visible_line (buffer, start_line) == end_line + 1);
+	g_assert_true (test_next_visible_line (buffer, start_line) == end_line + 1);
 
 	g_object_unref (fold_region);
 	g_object_unref (buffer);
@@ -215,7 +215,7 @@ test_unref_while_folded (void)
 	tepl_fold_region_set_folded (fold_region, TRUE);
 	g_clear_object (&fold_region);
 
-	g_assert (test_next_visible_line (buffer, 1) == 2);
+	g_assert_true (test_next_visible_line (buffer, 1) == 2);
 
 	g_object_unref (buffer);
 }
@@ -236,8 +236,8 @@ test_clear_buffer (void)
 
 	tepl_fold_region_get_bounds (fold_region, &start_iter, &end_iter);
 
-	g_assert (gtk_text_iter_get_line (&start_iter) == 0);
-	g_assert (gtk_text_iter_get_line (&end_iter) == 0);
+	g_assert_true (gtk_text_iter_get_line (&start_iter) == 0);
+	g_assert_true (gtk_text_iter_get_line (&end_iter) == 0);
 
 	g_object_unref (fold_region);
 	g_object_unref (buffer);
@@ -262,7 +262,7 @@ test_bounds_at_middle_of_line (void)
 	fold_region = tepl_fold_region_new (buffer, &start_iter, &end_iter);
 
 	tepl_fold_region_set_folded (fold_region, TRUE);
-	g_assert (test_next_visible_line (buffer, 1) == 4);
+	g_assert_true (test_next_visible_line (buffer, 1) == 4);
 
 	g_object_unref (fold_region);
 	g_object_unref (buffer);
@@ -289,7 +289,7 @@ test_bounds_at_end_of_line (void)
 	fold_region = tepl_fold_region_new (buffer, &start_iter, &end_iter);
 
 	tepl_fold_region_set_folded (fold_region, TRUE);
-	g_assert (test_next_visible_line (buffer, 1) == 4);
+	g_assert_true (test_next_visible_line (buffer, 1) == 4);
 
 	g_object_unref (fold_region);
 	g_object_unref (buffer);
@@ -307,11 +307,11 @@ test_double_fold (void)
 	tepl_fold_region_set_folded (fold_region, TRUE);
 	tepl_fold_region_set_folded (fold_region, TRUE);
 
-	g_assert (test_next_visible_line (buffer, 1) == 4);
+	g_assert_true (test_next_visible_line (buffer, 1) == 4);
 
 	tepl_fold_region_set_folded (fold_region, FALSE);
 
-	g_assert (test_next_visible_line (buffer, 1) == 2);
+	g_assert_true (test_next_visible_line (buffer, 1) == 2);
 
 	g_object_unref (fold_region);
 	g_object_unref (buffer);
@@ -330,11 +330,11 @@ test_double_unfold (void)
 	tepl_fold_region_set_folded (fold_region, FALSE);
 	tepl_fold_region_set_folded (fold_region, FALSE);
 
-	g_assert (test_next_visible_line (buffer, 1) == 2);
+	g_assert_true (test_next_visible_line (buffer, 1) == 2);
 
 	tepl_fold_region_set_folded (fold_region, TRUE);
 
-	g_assert (test_next_visible_line (buffer, 1) == 4);
+	g_assert_true (test_next_visible_line (buffer, 1) == 4);
 
 	g_object_unref (fold_region);
 	g_object_unref (buffer);
@@ -353,30 +353,30 @@ test_overlapping_regions (void)
 	fold_region2 = test_create_fold_region (buffer, 2, 4);
 
 	tepl_fold_region_set_folded (fold_region1, TRUE);
-	g_assert (test_next_visible_line (buffer, 1) == 4);
+	g_assert_true (test_next_visible_line (buffer, 1) == 4);
 	tepl_fold_region_set_folded (fold_region2, TRUE);
-	g_assert (test_next_visible_line (buffer, 1) == 5);
+	g_assert_true (test_next_visible_line (buffer, 1) == 5);
 
 	tepl_fold_region_set_folded (fold_region1, FALSE);
 	tepl_fold_region_set_folded (fold_region2, FALSE);
 
 	tepl_fold_region_set_folded (fold_region2, TRUE);
-	g_assert (test_next_visible_line (buffer, 2) == 5);
+	g_assert_true (test_next_visible_line (buffer, 2) == 5);
 	tepl_fold_region_set_folded (fold_region1, TRUE);
-	g_assert (test_next_visible_line (buffer, 1) == 5);
+	g_assert_true (test_next_visible_line (buffer, 1) == 5);
 
 	tepl_fold_region_set_folded (fold_region1, FALSE);
-	g_assert (test_next_visible_line (buffer, 2) == 5);
+	g_assert_true (test_next_visible_line (buffer, 2) == 5);
 	tepl_fold_region_set_folded (fold_region2, FALSE);
-	g_assert (test_next_visible_line (buffer, 2) == 3);
+	g_assert_true (test_next_visible_line (buffer, 2) == 3);
 
 	tepl_fold_region_set_folded (fold_region1, TRUE);
 	tepl_fold_region_set_folded (fold_region2, TRUE);
 
 	tepl_fold_region_set_folded (fold_region2, FALSE);
-	g_assert (test_next_visible_line (buffer, 1) == 4);
+	g_assert_true (test_next_visible_line (buffer, 1) == 4);
 	tepl_fold_region_set_folded (fold_region1, FALSE);
-	g_assert (test_next_visible_line (buffer, 2) == 3);
+	g_assert_true (test_next_visible_line (buffer, 2) == 3);
 
 	g_object_unref (fold_region1);
 	g_object_unref (fold_region2);

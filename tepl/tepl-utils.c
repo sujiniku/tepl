@@ -26,10 +26,10 @@
 #include <string.h>
 #include "tepl-application-window.h"
 
-/*
+/**
  * SECTION:utils
- * @title: TeplUtils
- * @short_description: Utility functions
+ * @Short_description: Utility functions
+ * @Title: TeplUtils
  *
  * Utility functions.
  */
@@ -93,9 +93,22 @@ str_truncate (const gchar *string,
 	return g_string_free (truncated, FALSE);
 }
 
+/**
+ * tepl_utils_str_middle_truncate:
+ * @str: a UTF-8 string.
+ * @truncate_length: maximum length allowed for @str, in UTF-8 characters (not
+ *   bytes).
+ *
+ * If @str is longer than @truncate_length, then this function returns @str
+ * truncated in the middle with a “…” character. Otherwise it just returns a
+ * copy of @str.
+ *
+ * Returns: the truncated string. Free with g_free().
+ * Since: 4.4
+ */
 gchar *
-_tepl_utils_str_middle_truncate (const gchar *str,
-				 guint        truncate_length)
+tepl_utils_str_middle_truncate (const gchar *str,
+				guint        truncate_length)
 {
 	return str_truncate (str, truncate_length, TRUE);
 }

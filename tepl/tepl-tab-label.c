@@ -82,7 +82,7 @@ update_label (TeplTabLabel *tab_label)
 	/* A GtkNotebook tab label doesn't support well an ellipsizing GtkLabel.
 	 * So, ellipsize ourself.
 	 */
-	truncated_short_title = _tepl_utils_str_middle_truncate (short_title, MAX_LABEL_CHARS_LENGTH);
+	truncated_short_title = tepl_utils_str_middle_truncate (short_title, MAX_LABEL_CHARS_LENGTH);
 
 	gtk_label_set_text (tab_label->priv->label, truncated_short_title);
 

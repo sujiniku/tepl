@@ -386,6 +386,11 @@ tepl_notebook_get_type
 </SECTION>
 
 <SECTION>
+<FILE>utils</FILE>
+tepl_utils_str_middle_truncate
+</SECTION>
+
+<SECTION>
 <FILE>view</FILE>
 TeplView
 tepl_view_new

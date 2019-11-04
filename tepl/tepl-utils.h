@@ -30,8 +30,7 @@ G_BEGIN_DECLS
 
 /* String utilities */
 
-G_GNUC_INTERNAL
-gchar *		_tepl_utils_str_middle_truncate			(const gchar *str,
+gchar *		tepl_utils_str_middle_truncate			(const gchar *str,
 								 guint        truncate_length);
 
 /* File utilities */

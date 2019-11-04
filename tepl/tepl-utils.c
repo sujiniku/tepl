@@ -113,15 +113,23 @@ tepl_utils_str_middle_truncate (const gchar *str,
 	return str_truncate (str, truncate_length, TRUE);
 }
 
-#if 0
-/* Not yet used in Tepl. */
+/**
+ * tepl_utils_str_end_truncate:
+ * @str: a UTF-8 string.
+ * @truncate_length: maximum length allowed for @str, in UTF-8 characters (not
+ *   bytes).
+ *
+ * Like tepl_utils_str_middle_truncate() but the “…” character is at the end.
+ *
+ * Returns: the truncated string. Free with g_free().
+ * Since: 4.4
+ */
 gchar *
-_tepl_utils_str_end_truncate (const gchar *str,
+tepl_utils_str_end_truncate (const gchar *str,
 			     guint        truncate_length)
 {
 	return str_truncate (str, truncate_length, FALSE);
 }
-#endif
 
 /*
  * _tepl_utils_replace_home_dir_with_tilde:

@@ -33,6 +33,9 @@ G_BEGIN_DECLS
 gchar *		tepl_utils_str_middle_truncate			(const gchar *str,
 								 guint        truncate_length);
 
+gchar *		tepl_utils_str_end_truncate			(const gchar *str,
+								 guint        truncate_length);
+
 /* File utilities */
 
 G_GNUC_INTERNAL

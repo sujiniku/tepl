@@ -96,8 +96,8 @@ str_truncate (const gchar *string,
 /**
  * tepl_utils_str_middle_truncate:
  * @str: a UTF-8 string.
- * @truncate_length: maximum length allowed for @str, in UTF-8 characters (not
- *   bytes).
+ * @truncate_length: truncate the string at that length, in UTF-8 characters
+ *   (not bytes).
  *
  * If @str is longer than @truncate_length, then this function returns @str
  * truncated in the middle with a “…” character. Otherwise it just returns a
@@ -116,8 +116,8 @@ tepl_utils_str_middle_truncate (const gchar *str,
 /**
  * tepl_utils_str_end_truncate:
  * @str: a UTF-8 string.
- * @truncate_length: maximum length allowed for @str, in UTF-8 characters (not
- *   bytes).
+ * @truncate_length: truncate the string at that length, in UTF-8 characters
+ *   (not bytes).
  *
  * Like tepl_utils_str_middle_truncate() but the “…” character is at the end.
  *

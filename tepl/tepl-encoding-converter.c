@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016, 2019 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -38,8 +38,6 @@
  * - the buffer size of this object can be adjusted, to control how often the
  *   callback is called.
  */
-
-/* FIXME: I think errno should be reset to 0 after an errno error. */
 
 struct _TeplEncodingConverterPrivate
 {
@@ -296,7 +294,10 @@ _tepl_encoding_converter_open (TeplEncodingConverter  *converter,
 
 	if (converter->priv->conv == (GIConv)-1)
 	{
-		if (errno == EINVAL)
+		gint saved_errno = errno;
+		errno = 0;
+
+		if (saved_errno == EINVAL)
 		{
 			g_set_error (error,
 				     G_CONVERT_ERROR,
@@ -313,7 +314,7 @@ _tepl_encoding_converter_open (TeplEncodingConverter  *converter,
 				     _("Could not open converter from “%s” to “%s”: %s"),
 				     from_codeset,
 				     to_codeset,
-				     g_strerror (errno));
+				     g_strerror (saved_errno));
 		}
 
 		return FALSE;
@@ -352,17 +353,20 @@ read_inbuf (TeplEncodingConverter  *converter,
 
 		if (iconv_ret == (gsize)-1)
 		{
+			gint saved_errno = errno;
+			errno = 0;
+
 			/* outbuf full */
-			if (errno == E2BIG)
+			if (saved_errno == E2BIG)
 			{
 				flush_outbuf (converter);
 				continue;
 			}
-			else if (errno == EINVAL)
+			else if (saved_errno == EINVAL)
 			{
 				return RESULT_INCOMPLETE_INPUT;
 			}
-			else if (errno == EILSEQ)
+			else if (saved_errno == EILSEQ)
 			{
 				g_set_error_literal (error,
 						     G_CONVERT_ERROR,
@@ -377,7 +381,7 @@ read_inbuf (TeplEncodingConverter  *converter,
 					     G_IO_ERROR,
 					     G_IO_ERROR_FAILED,
 					     _("Error when converting data: %s"),
-					     g_strerror (errno));
+					     g_strerror (saved_errno));
 
 				return RESULT_ERROR;
 			}

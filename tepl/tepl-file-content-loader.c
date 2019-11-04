@@ -223,7 +223,11 @@ read_next_chunk_cb (GObject      *source_object,
 	if (error != NULL)
 	{
 		g_task_return_error (task, error);
-		g_clear_pointer (&chunk, (GDestroyNotify)g_bytes_unref);
+
+		if (chunk != NULL)
+		{
+			g_bytes_unref (chunk);
+		}
 		return;
 	}
 
@@ -243,7 +247,8 @@ read_next_chunk_cb (GObject      *source_object,
 	}
 
 	_tepl_file_content_add_chunk (loader->priv->content, chunk);
-	g_clear_pointer (&chunk, (GDestroyNotify)g_bytes_unref);
+	g_bytes_unref (chunk);
+	chunk = NULL;
 
 	task_data->total_bytes_read += chunk_size;
 

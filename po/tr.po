@@ -1,0 +1,373 @@
+# Turkish translation for tepl.
+# Copyright (C) 2019 tepl's COPYRIGHT HOLDER
+# This file is distributed under the same license as the tepl package.
+#
+# Serdar Sağlam <teknomobil@msn.com>, 2019.
+# Sabri Ünal <libreajans@gmail.com>, 2019.
+# Emin Tufan Çetin <etcetin@gmail.com>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tepl master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
+"POT-Creation-Date: 2019-11-04 10:16+0000\n"
+"PO-Revision-Date: 2019-11-05 12:41+0300\n"
+"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
+"Language-Team: Türkçe <gnome-turk@gnome.org>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.0.6\n"
+
+#. action, icon, label, accel, tooltip
+#. File menu
+#. Why "file" and not "document"? "Document" is not the best
+#. word because the action is not always to create a new
+#. document. For example a LaTeX document can be composed of
+#. several _files_. Or for source code we do not really create a
+#. new "document".
+#: tepl/tepl-application.c:92
+msgid "_New"
+msgstr "_Yeni"
+
+#: tepl/tepl-application.c:93
+msgid "New file"
+msgstr "Yeni dosya"
+
+#: tepl/tepl-application.c:95
+msgid "New _Window"
+msgstr "Yeni _Pencere"
+
+#: tepl/tepl-application.c:96
+msgid "Create a new window"
+msgstr "Yeni pencere oluştur"
+
+#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:178
+msgid "_Open"
+msgstr "_Aç"
+
+#: tepl/tepl-application.c:99
+msgid "Open a file"
+msgstr "Dosya aç"
+
+#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:144
+#: tepl/tepl-tab.c:752
+msgid "_Save"
+msgstr "_Kaydet"
+
+#: tepl/tepl-application.c:102
+msgid "Save the current file"
+msgstr "Geçerli dosyayı kaydet"
+
+#: tepl/tepl-application.c:104
+msgid "Save _As"
+msgstr "_Farklı Kaydet"
+
+#: tepl/tepl-application.c:105
+msgid "Save the current file to a different location"
+msgstr "Geçerli dosyayı farklı konuma kaydet"
+
+#. Edit menu
+#: tepl/tepl-application.c:109
+msgid "_Undo"
+msgstr "Geri _Al"
+
+#: tepl/tepl-application.c:110
+msgid "Undo the last action"
+msgstr "Son işlemi geri al"
+
+#: tepl/tepl-application.c:112
+msgid "_Redo"
+msgstr "_Yeniden Yap"
+
+#: tepl/tepl-application.c:113
+msgid "Redo the last undone action"
+msgstr "Geri alınmış işlemi yeniden yap"
+
+#: tepl/tepl-application.c:115
+msgid "Cu_t"
+msgstr "Ke_s"
+
+#: tepl/tepl-application.c:116
+msgid "Cut the selection"
+msgstr "Seçimi kes"
+
+#: tepl/tepl-application.c:118
+msgid "_Copy"
+msgstr "_Kopyala"
+
+#: tepl/tepl-application.c:119
+msgid "Copy the selection"
+msgstr "Seçimi kopyala"
+
+#: tepl/tepl-application.c:121
+msgid "_Paste"
+msgstr "_Yapıştır"
+
+#: tepl/tepl-application.c:122
+msgid "Paste the clipboard"
+msgstr "Panodan yapıştır"
+
+#: tepl/tepl-application.c:124
+msgid "_Delete"
+msgstr "_Sil"
+
+#: tepl/tepl-application.c:125
+msgid "Delete the selected text"
+msgstr "Seçili metni sil"
+
+#: tepl/tepl-application.c:127
+msgid "Select _All"
+msgstr "_Tümünü seç"
+
+#: tepl/tepl-application.c:128
+msgid "Select all the text"
+msgstr "Tüm metni seç"
+
+#: tepl/tepl-application.c:130
+msgid "_Indent"
+msgstr "_Girinti"
+
+#: tepl/tepl-application.c:131
+msgid "Indent the selected lines"
+msgstr "Seçili çizgileri girintile"
+
+#: tepl/tepl-application.c:133
+msgid "_Unindent"
+msgstr "_Çıkıntı"
+
+#: tepl/tepl-application.c:134
+msgid "Unindent the selected lines"
+msgstr "Seçili çizgileri geri al"
+
+#. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
+#. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
+#. * doesn't have the real path to the file, so it would screw up some
+#. * features for text editors:
+#. * - showing the directory in parentheses in the window title, or in the
+#. *   tab tooltip;
+#. * - opening a recent file.
+#. * Basically everywhere where the directory is shown.
+#.
+#: tepl/tepl-application-window.c:174
+msgid "Open File"
+msgstr "Dosyayı Aç"
+
+#: tepl/tepl-application-window.c:177
+#: tepl/tepl-close-confirm-dialog-single.c:138 tepl/tepl-tab.c:751
+msgid "_Cancel"
+msgstr "_İptal"
+
+#: tepl/tepl-application-window.c:708
+msgid "Read-Only"
+msgstr "Salt Okunur"
+
+#: tepl/tepl-close-confirm-dialog-single.c:133
+#, c-format
+msgid "Save changes to file “%s” before closing?"
+msgstr "Kapatmadan önce dosyadaki “%s” değişiklikleri kaydet?"
+
+#: tepl/tepl-close-confirm-dialog-single.c:137
+msgid "Close _without Saving"
+msgstr "_Kaydetmeden Kapat"
+
+#: tepl/tepl-close-confirm-dialog-single.c:150
+msgid "_Save As…"
+msgstr "_Farklı Kaydet…"
+
+#. UTF-8 first, so that it's the first encoding returned by
+#. * tepl_encoding_get_all().
+#.
+#: tepl/tepl-encoding.c:115 tepl/tepl-encoding.c:132 tepl/tepl-encoding.c:133
+#: tepl/tepl-encoding.c:134 tepl/tepl-encoding.c:135 tepl/tepl-encoding.c:136
+#: tepl/tepl-encoding.c:137 tepl/tepl-encoding.c:138
+msgid "Unicode"
+msgstr "Evrensel"
+
+#. FIXME GEOSTD8 ?
+#: tepl/tepl-encoding.c:117 tepl/tepl-encoding.c:129 tepl/tepl-encoding.c:157
+#: tepl/tepl-encoding.c:180
+msgid "Western"
+msgstr "Batı Amerika"
+
+#: tepl/tepl-encoding.c:118 tepl/tepl-encoding.c:158 tepl/tepl-encoding.c:178
+msgid "Central European"
+msgstr "Orta Avrupa"
+
+#: tepl/tepl-encoding.c:119
+msgid "South European"
+msgstr "Güney Avrupa"
+
+#: tepl/tepl-encoding.c:120 tepl/tepl-encoding.c:127 tepl/tepl-encoding.c:185
+msgid "Baltic"
+msgstr "Baltık"
+
+#: tepl/tepl-encoding.c:121 tepl/tepl-encoding.c:159 tepl/tepl-encoding.c:166
+#: tepl/tepl-encoding.c:168 tepl/tepl-encoding.c:169 tepl/tepl-encoding.c:179
+msgid "Cyrillic"
+msgstr "Kiril"
+
+#: tepl/tepl-encoding.c:122 tepl/tepl-encoding.c:162 tepl/tepl-encoding.c:184
+msgid "Arabic"
+msgstr "Arapça"
+
+#: tepl/tepl-encoding.c:123 tepl/tepl-encoding.c:181
+msgid "Greek"
+msgstr "Yunanca"
+
+#: tepl/tepl-encoding.c:124
+msgid "Hebrew Visual"
+msgstr "İbranice Görsel"
+
+#: tepl/tepl-encoding.c:125 tepl/tepl-encoding.c:160 tepl/tepl-encoding.c:182
+msgid "Turkish"
+msgstr "Türkçe"
+
+#: tepl/tepl-encoding.c:126
+msgid "Nordic"
+msgstr "İskandinav"
+
+#: tepl/tepl-encoding.c:128
+msgid "Celtic"
+msgstr "Keltçe"
+
+#: tepl/tepl-encoding.c:130
+msgid "Romanian"
+msgstr "Rumence"
+
+#: tepl/tepl-encoding.c:140
+msgid "Armenian"
+msgstr "Ermenice"
+
+#: tepl/tepl-encoding.c:141 tepl/tepl-encoding.c:142 tepl/tepl-encoding.c:150
+msgid "Chinese Traditional"
+msgstr "Çince Geleneksel"
+
+#: tepl/tepl-encoding.c:143
+msgid "Cyrillic/Russian"
+msgstr "Kiril/Rusça"
+
+#: tepl/tepl-encoding.c:145 tepl/tepl-encoding.c:146 tepl/tepl-encoding.c:147
+#: tepl/tepl-encoding.c:164 tepl/tepl-encoding.c:172
+msgid "Japanese"
+msgstr "Japonca"
+
+#: tepl/tepl-encoding.c:149 tepl/tepl-encoding.c:165 tepl/tepl-encoding.c:167
+#: tepl/tepl-encoding.c:175
+msgid "Korean"
+msgstr "Korece"
+
+#: tepl/tepl-encoding.c:152 tepl/tepl-encoding.c:153 tepl/tepl-encoding.c:154
+msgid "Chinese Simplified"
+msgstr "Çince Basitleştirilmiş"
+
+#: tepl/tepl-encoding.c:155
+msgid "Georgian"
+msgstr "Gürcüce"
+
+#: tepl/tepl-encoding.c:161 tepl/tepl-encoding.c:183
+msgid "Hebrew"
+msgstr "İbranice"
+
+#: tepl/tepl-encoding.c:170
+msgid "Cyrillic/Ukrainian"
+msgstr "Kiril/Ukraynaca"
+
+#: tepl/tepl-encoding.c:173 tepl/tepl-encoding.c:176 tepl/tepl-encoding.c:186
+msgid "Vietnamese"
+msgstr "Vietnamca"
+
+#: tepl/tepl-encoding.c:174
+msgid "Thai"
+msgstr "Tayca"
+
+#: tepl/tepl-encoding.c:370
+msgid "Unknown"
+msgstr "Bilinmeyen"
+
+#. Translators: This is the sorted list of encodings used by Tepl for
+#. * automatic detection of the file encoding. You may want to customize
+#. * it adding encodings that are common in your country, for instance the
+#. * GB18030 encoding for the Chinese translation. You may also want to
+#. * remove the ISO-8859-15 encoding (covering English and most Western
+#. * European languages) if you think people in your country will rarely
+#. * use it. 'CURRENT' is a magic value used by Tepl and it represents
+#. * the encoding for the current locale, so please don't translate the
+#. * 'CURRENT' term. Keep the same format: square brackets, single quotes,
+#. * commas.
+#.
+#: tepl/tepl-encoding.c:695
+msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
+msgstr "['UTF-8', 'CURRENT', 'ISO-8859-9', 'UTF-16']"
+
+#: tepl/tepl-encoding-converter.c:305
+#, c-format
+msgid "Conversion from character set “%s” to “%s” is not supported."
+msgstr "“%s” karakter kümesinden “%s” kümesine dönüşüm desteklenmiyor."
+
+#: tepl/tepl-encoding-converter.c:314
+#, c-format
+msgid "Could not open converter from “%s” to “%s”: %s"
+msgstr "“%s” - “%s” dönüştürücü açılamadı: %s"
+
+#: tepl/tepl-encoding-converter.c:374
+msgid "The input data contains an invalid sequence."
+msgstr "Giriş verisi geçersiz dizi içeriyor."
+
+#: tepl/tepl-encoding-converter.c:383
+#, c-format
+msgid "Error when converting data: %s"
+msgstr "Veri dönüştürürken hata oluştu: %s"
+
+#: tepl/tepl-encoding-converter.c:562
+msgid "The input data ends with an incomplete multi-byte sequence."
+msgstr "Giriş verisi tamamlanmamış çoklu bayt dizisiyle sona eriyor."
+
+#: tepl/tepl-encoding-converter.c:585
+msgid "The input content ends with incomplete data."
+msgstr "Giriş içeriği tamamlanmamış veriyle bitiyor."
+
+#: tepl/tepl-file.c:413
+#, c-format
+msgid "Untitled File %d"
+msgstr "Adsız Dosya %d"
+
+#: tepl/tepl-file-content-loader.c:336
+#, c-format
+msgid "The file is too big. Maximum %s can be loaded."
+msgstr "Dosya çok büyük. Azami %s yüklenebilir."
+
+#: tepl/tepl-file-loader.c:872
+msgid "It is not possible to detect the character encoding automatically."
+msgstr "Karakter kodlamasını kendiliğinden algılamak olanaksız."
+
+#: tepl/tepl-file-saver.c:784
+msgid "The file is externally modified."
+msgstr "Dosya dışarıdan değiştirildi."
+
+#: tepl/tepl-file-saver.c:1318
+msgid "The buffer contains invalid characters."
+msgstr "Arabellek geçersiz karakterler içeriyor."
+
+#: tepl/tepl-tab.c:534
+msgid "Error when loading the file."
+msgstr "Dosya yüklenirken hata oldu."
+
+#: tepl/tepl-tab.c:748
+msgid "Save File"
+msgstr "Dosyayı Kaydet"
+
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:273
+msgid "Location:"
+msgstr "Konum:"
+
+#: tepl/tepl-tab-label.c:342
+msgid "Close file"
+msgstr "Dosyayı kapat"
+
+#: tepl/tepl-tab-saving.c:64
+msgid "Error when saving the file."
+msgstr "Dosya kaydedilirken hata oldu."

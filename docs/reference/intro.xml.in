@@ -26,11 +26,6 @@
     pronounced like in “apple”.
   </para>
 
-  <!-- TODO Do not forget to update the paragraph in the future. -->
-  <para>
-    Note that the library is far from finished, it is under development.
-  </para>
-
   <para>
     The Tepl library follows a product line approach (see the book
     <ulink url="https://www.amazon.com/Feature-Oriented-Software-Product-Lines-Implementation/dp/3642375200/">Feature-Oriented

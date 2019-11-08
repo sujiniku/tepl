@@ -126,6 +126,24 @@
       The API breaks are well documented in
       <link linkend="api-breaks">this section</link>.
     </para>
+
+    <para>
+      We think that it is the best development model for a library like Tepl. We
+      have thought about other solutions: (a) providing an unstable API, forcing
+      all applications to be ported to the new APIs when a new version of Tepl
+      is released, and (b) have a much longer development cycle (5 years for
+      instance) to develop Tepl and port several applications to it – including
+      gedit. We prefer to follow an agile methodology, which implies to have
+      frequent releases, and to follow the GNOME release schedule with a new
+      stable version every six months. So we don't like the solution (b). As for
+      the solution (a), it should be self-evident that it would cause problems
+      for downstream distributors. There is another solution: (c) bundling,
+      applications statically link the Tepl library with the app binary. But we
+      know that some downstream distributors don't like bundling. If you think
+      of other solutions, comments are more than welcome. We prefer to release a
+      new stable version every six months, and we prefer to implement and design
+      the APIs iteratively.
+    </para>
   </refsect1>
 
   <refsect1>

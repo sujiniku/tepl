@@ -40,6 +40,28 @@ test_str_end_truncate (void)
 }
 
 static void
+test_str_replace (void)
+{
+	gchar *result;
+
+	result = tepl_utils_str_replace ("$filename", "$filename", "blah");
+	g_assert_cmpstr (result, ==, "blah");
+	g_free (result);
+
+	result = tepl_utils_str_replace ("$shortname.pdf", "$shortname", "blah");
+	g_assert_cmpstr (result, ==, "blah.pdf");
+	g_free (result);
+
+	result = tepl_utils_str_replace ("abcdabcd", "ab", "r");
+	g_assert_cmpstr (result, ==, "rcdrcd");
+	g_free (result);
+
+	result = tepl_utils_str_replace ("abcd", "ef", "r");
+	g_assert_cmpstr (result, ==, "abcd");
+	g_free (result);
+}
+
+static void
 test_get_file_extension (void)
 {
 	gchar *extension;
@@ -178,6 +200,7 @@ main (gint    argc,
 
 	g_test_add_func ("/utils/str-middle-truncate", test_str_middle_truncate);
 	g_test_add_func ("/utils/str-end-truncate", test_str_end_truncate);
+	g_test_add_func ("/utils/str-replace", test_str_replace);
 	g_test_add_func ("/utils/get-file-extension", test_get_file_extension);
 	g_test_add_func ("/utils/get-file-shortname", test_get_file_shortname);
 	g_test_add_func ("/utils/replace-home-dir-with-tilde", test_replace_home_dir_with_tilde);

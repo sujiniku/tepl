@@ -131,6 +131,43 @@ tepl_utils_str_end_truncate (const gchar *str,
 	return str_truncate (str, truncate_length, FALSE);
 }
 
+/**
+ * tepl_utils_str_replace:
+ * @string: a string
+ * @search: the search string
+ * @replacement: the replacement string
+ *
+ * Replaces all occurences of @search by @replacement.
+ *
+ * Returns: A newly allocated string with the replacements. Free with g_free().
+ * Since: 4.4
+ */
+gchar *
+tepl_utils_str_replace (const gchar *string,
+			const gchar *search,
+			const gchar *replacement)
+{
+	gchar **chunks;
+	gchar *ret;
+
+	g_return_val_if_fail (string != NULL, NULL);
+	g_return_val_if_fail (search != NULL, NULL);
+	g_return_val_if_fail (replacement != NULL, NULL);
+
+	chunks = g_strsplit (string, search, -1);
+	if (chunks != NULL && chunks[0] != NULL)
+	{
+		ret = g_strjoinv (replacement, chunks);
+	}
+	else
+	{
+		ret = g_strdup (string);
+	}
+
+	g_strfreev (chunks);
+	return ret;
+}
+
 static gint
 get_extension_position (const gchar *filename)
 {

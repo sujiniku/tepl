@@ -56,12 +56,17 @@ test_get_file_extension (void)
 	g_assert_cmpstr (extension, ==, ".gz");
 	g_free (extension);
 
-	extension = tepl_utils_get_file_extension ("path/to/file.pdf");
+	extension = tepl_utils_get_file_extension ("path" G_DIR_SEPARATOR_S "file.pdf");
 	g_assert_cmpstr (extension, ==, ".pdf");
 	g_free (extension);
 
 	extension = tepl_utils_get_file_extension ("file");
 	g_assert_cmpstr (extension, ==, "");
+	g_free (extension);
+
+	/* UTF-8 */
+	extension = tepl_utils_get_file_extension ("filé.éÉÈè");
+	g_assert_cmpstr (extension, ==, ".ééèè");
 	g_free (extension);
 }
 
@@ -82,8 +87,13 @@ test_get_file_shortname (void)
 	g_assert_cmpstr (shortname, ==, "file");
 	g_free (shortname);
 
-	shortname = tepl_utils_get_file_shortname ("dir.ext/blah");
-	g_assert_cmpstr (shortname, ==, "dir.ext/blah");
+	shortname = tepl_utils_get_file_shortname ("dir.ext" G_DIR_SEPARATOR_S "blah");
+	g_assert_cmpstr (shortname, ==, "dir.ext" G_DIR_SEPARATOR_S "blah");
+	g_free (shortname);
+
+	/* UTF-8 */
+	shortname = tepl_utils_get_file_shortname ("filé.éÉÈè");
+	g_assert_cmpstr (shortname, ==, "filé");
 	g_free (shortname);
 }
 

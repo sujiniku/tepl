@@ -150,7 +150,7 @@ get_extension_position (const gchar *filename)
 	{
 		pos = g_utf8_find_prev_char (filename, pos);
 
-		if (pos == NULL || pos[0] == '/')
+		if (pos == NULL || pos[0] == G_DIR_SEPARATOR)
 		{
 			break;
 		}
@@ -184,7 +184,7 @@ tepl_utils_get_file_extension (const gchar *filename)
 {
 	gint pos = get_extension_position (filename);
 
-	return g_ascii_strdown (filename + pos, -1);
+	return g_utf8_strdown (filename + pos, -1);
 }
 
 /**

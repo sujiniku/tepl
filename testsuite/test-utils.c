@@ -20,6 +20,26 @@
 #include <tepl/tepl.h>
 
 static void
+test_str_middle_truncate (void)
+{
+	gchar *truncated_str;
+
+	truncated_str = tepl_utils_str_middle_truncate ("1234567890", 5);
+	g_assert_cmpstr (truncated_str, ==, "12…90");
+	g_free (truncated_str);
+}
+
+static void
+test_str_end_truncate (void)
+{
+	gchar *truncated_str;
+
+	truncated_str = tepl_utils_str_end_truncate ("1234567890", 5);
+	g_assert_cmpstr (truncated_str, ==, "1234…");
+	g_free (truncated_str);
+}
+
+static void
 test_replace_home_dir_with_tilde (void)
 {
 	const gchar *homedir = g_get_home_dir ();
@@ -98,6 +118,8 @@ main (gint    argc,
 {
 	g_test_init (&argc, &argv, NULL);
 
+	g_test_add_func ("/utils/str-middle-truncate", test_str_middle_truncate);
+	g_test_add_func ("/utils/str-end-truncate", test_str_end_truncate);
 	g_test_add_func ("/utils/replace-home-dir-with-tilde", test_replace_home_dir_with_tilde);
 	g_test_add_func ("/utils/decode-uri", test_decode_uri);
 	g_test_add_func ("/utils/get-fallback-basename-for-display", test_get_fallback_basename_for_display);

@@ -45,7 +45,7 @@ str_truncate (const gchar *string,
 	guint num_left_chars;
 	guint right_offset;
 	guint delimiter_length;
-	const gchar *delimiter = "\342\200\246";
+	const gchar *delimiter = "\342\200\246"; /* The character: … */
 
 	g_return_val_if_fail (string != NULL, NULL);
 

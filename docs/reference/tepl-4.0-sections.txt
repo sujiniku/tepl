@@ -389,6 +389,8 @@ tepl_notebook_get_type
 <FILE>utils</FILE>
 tepl_utils_str_middle_truncate
 tepl_utils_str_end_truncate
+tepl_utils_get_file_extension
+tepl_utils_get_file_shortname
 </SECTION>
 
 <SECTION>

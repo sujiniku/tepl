@@ -40,6 +40,54 @@ test_str_end_truncate (void)
 }
 
 static void
+test_get_file_extension (void)
+{
+	gchar *extension;
+
+	extension = tepl_utils_get_file_extension ("file.pdf");
+	g_assert_cmpstr (extension, ==, ".pdf");
+	g_free (extension);
+
+	extension = tepl_utils_get_file_extension ("file.PDF");
+	g_assert_cmpstr (extension, ==, ".pdf");
+	g_free (extension);
+
+	extension = tepl_utils_get_file_extension ("file.tar.gz");
+	g_assert_cmpstr (extension, ==, ".gz");
+	g_free (extension);
+
+	extension = tepl_utils_get_file_extension ("path/to/file.pdf");
+	g_assert_cmpstr (extension, ==, ".pdf");
+	g_free (extension);
+
+	extension = tepl_utils_get_file_extension ("file");
+	g_assert_cmpstr (extension, ==, "");
+	g_free (extension);
+}
+
+static void
+test_get_file_shortname (void)
+{
+	gchar *shortname;
+
+	shortname = tepl_utils_get_file_shortname ("file.txt");
+	g_assert_cmpstr (shortname, ==, "file");
+	g_free (shortname);
+
+	shortname = tepl_utils_get_file_shortname ("file.tar.gz");
+	g_assert_cmpstr (shortname, ==, "file.tar");
+	g_free (shortname);
+
+	shortname = tepl_utils_get_file_shortname ("file");
+	g_assert_cmpstr (shortname, ==, "file");
+	g_free (shortname);
+
+	shortname = tepl_utils_get_file_shortname ("dir.ext/blah");
+	g_assert_cmpstr (shortname, ==, "dir.ext/blah");
+	g_free (shortname);
+}
+
+static void
 test_replace_home_dir_with_tilde (void)
 {
 	const gchar *homedir = g_get_home_dir ();
@@ -120,6 +168,8 @@ main (gint    argc,
 
 	g_test_add_func ("/utils/str-middle-truncate", test_str_middle_truncate);
 	g_test_add_func ("/utils/str-end-truncate", test_str_end_truncate);
+	g_test_add_func ("/utils/get-file-extension", test_get_file_extension);
+	g_test_add_func ("/utils/get-file-shortname", test_get_file_shortname);
 	g_test_add_func ("/utils/replace-home-dir-with-tilde", test_replace_home_dir_with_tilde);
 	g_test_add_func ("/utils/decode-uri", test_decode_uri);
 	g_test_add_func ("/utils/get-fallback-basename-for-display", test_get_fallback_basename_for_display);

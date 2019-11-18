@@ -131,6 +131,79 @@ tepl_utils_str_end_truncate (const gchar *str,
 	return str_truncate (str, truncate_length, FALSE);
 }
 
+static gint
+get_extension_position (const gchar *filename)
+{
+	const gchar *pos;
+	gint length;
+
+	if (filename == NULL)
+	{
+		return 0;
+	}
+
+	length = strlen (filename);
+	pos = filename + length;
+	g_assert (pos[0] == '\0');
+
+	while (TRUE)
+	{
+		pos = g_utf8_find_prev_char (filename, pos);
+
+		if (pos == NULL || pos[0] == '/')
+		{
+			break;
+		}
+
+		if (pos[0] == '.')
+		{
+			return pos - filename;
+		}
+	}
+
+	return length;
+}
+
+/**
+ * tepl_utils_get_file_extension:
+ * @filename: a filename.
+ *
+ * Examples:
+ * - "file.pdf" returns ".pdf".
+ * - "file.PDF" returns ".pdf".
+ * - "file.tar.gz" returns ".gz".
+ * - "path/to/file.pdf" returns ".pdf".
+ * - "file" (without an extension) returns "" (the empty string).
+ *
+ * Returns: the @filename's extension with the dot, in lowercase. Free with
+ * g_free().
+ * Since: 4.4
+ */
+gchar *
+tepl_utils_get_file_extension (const gchar *filename)
+{
+	gint pos = get_extension_position (filename);
+
+	return g_ascii_strdown (filename + pos, -1);
+}
+
+/**
+ * tepl_utils_get_file_shortname:
+ * @filename: a filename.
+ *
+ * Returns @filename without its extension. With the “extension” having the same
+ * definition as in tepl_utils_get_file_extension(); in other words it returns
+ * the other part of @filename.
+ *
+ * Returns: the @filename without its extension. Free with g_free().
+ * Since: 4.4
+ */
+gchar *
+tepl_utils_get_file_shortname (const gchar *filename)
+{
+	return g_strndup (filename, get_extension_position (filename));
+}
+
 /*
  * _tepl_utils_replace_home_dir_with_tilde:
  * @filename: the filename.

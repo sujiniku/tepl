@@ -105,16 +105,16 @@ test_replace_home_dir_with_tilde (void)
 	gchar *after;
 
 	before = g_build_filename (homedir, "blah", NULL);
-	after = _tepl_utils_replace_home_dir_with_tilde (before);
+	after = tepl_utils_replace_home_dir_with_tilde (before);
 	g_assert_cmpstr (after, ==, "~/blah");
 	g_free (before);
 	g_free (after);
 
-	after = _tepl_utils_replace_home_dir_with_tilde (homedir);
+	after = tepl_utils_replace_home_dir_with_tilde (homedir);
 	g_assert_cmpstr (after, ==, "~");
 	g_free (after);
 
-	after = _tepl_utils_replace_home_dir_with_tilde ("/blah");
+	after = tepl_utils_replace_home_dir_with_tilde ("/blah");
 	g_assert_cmpstr (after, ==, "/blah");
 	g_free (after);
 }

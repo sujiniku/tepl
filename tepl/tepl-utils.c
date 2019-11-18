@@ -204,18 +204,19 @@ tepl_utils_get_file_shortname (const gchar *filename)
 	return g_strndup (filename, get_extension_position (filename));
 }
 
-/*
- * _tepl_utils_replace_home_dir_with_tilde:
+/**
+ * tepl_utils_replace_home_dir_with_tilde:
  * @filename: the filename.
  *
  * Replaces the home directory with a tilde, if the home directory is present in
  * the @filename.
  *
  * Returns: the new filename. Free with g_free().
+ * Since: 4.4
  */
 /* This function comes from gedit. */
 gchar *
-_tepl_utils_replace_home_dir_with_tilde (const gchar *filename)
+tepl_utils_replace_home_dir_with_tilde (const gchar *filename)
 {
 	gchar *tmp;
 	gchar *home;

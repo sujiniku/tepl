@@ -540,7 +540,7 @@ tepl_buffer_get_full_title (TeplBuffer *buffer)
 
 		parent = g_file_get_parent (location);
 		directory = g_file_get_parse_name (parent);
-		directory_tilde = _tepl_utils_replace_home_dir_with_tilde (directory);
+		directory_tilde = tepl_utils_replace_home_dir_with_tilde (directory);
 
 		full_title = g_strdup_printf ("%s (%s)", short_title, directory_tilde);
 		g_free (short_title);

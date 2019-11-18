@@ -266,7 +266,7 @@ tepl_tab_label_get_tooltip_markup_default (TeplTabLabel *tab_label)
 	}
 
 	parse_name = g_file_get_parse_name (location);
-	parse_name_with_tilde = _tepl_utils_replace_home_dir_with_tilde (parse_name);
+	parse_name_with_tilde = tepl_utils_replace_home_dir_with_tilde (parse_name);
 
 	tooltip_markup = g_markup_printf_escaped ("<b>%s</b> %s",
 						  /* Translators: location of a file. */

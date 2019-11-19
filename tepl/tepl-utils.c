@@ -139,6 +139,12 @@ tepl_utils_str_end_truncate (const gchar *str,
  *
  * Replaces all occurences of @search by @replacement.
  *
+ * The function does only one pass, for example:
+ * |[
+ * tepl_utils_str_replace ("aaaa", "aa", "a");
+ * ]|
+ * returns "aa", not "a".
+ *
  * Returns: A newly allocated string with the replacements. Free with g_free().
  * Since: 4.4
  */

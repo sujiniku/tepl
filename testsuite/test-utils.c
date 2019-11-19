@@ -59,6 +59,11 @@ test_str_replace (void)
 	result = tepl_utils_str_replace ("abcd", "ef", "r");
 	g_assert_cmpstr (result, ==, "abcd");
 	g_free (result);
+
+	/* Only one pass. */
+	result = tepl_utils_str_replace ("aaaa", "aa", "a");
+	g_assert_cmpstr (result, ==, "aa"); /* Not: "a" */
+	g_free (result);
 }
 
 static void

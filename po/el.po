@@ -1,0 +1,386 @@
+# Greek translation for tepl.
+# Copyright (C) 2019 tepl's COPYRIGHT HOLDER
+# This file is distributed under the same license as the tepl package.
+# Efstathios Iosifidis <eiosifidis@gnome.org>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tepl tepl-4-0\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
+"POT-Creation-Date: 2019-08-23 11:40+0000\n"
+"PO-Revision-Date: 2019-11-19 02:30+0200\n"
+"Last-Translator: Efstathios Iosifidis <iosifidis@opensuse.org>\n"
+"Language-Team: Greek <gnome-el-list@gnome.org>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#. Translators: %s is a filename.
+#: amtk/amtk-application-window.c:374
+#, c-format
+msgid "Open “%s”"
+msgstr "Άνοιγμα «%s»"
+
+#: amtk/amtk-application-window.c:630
+msgid "Open _Recent"
+msgstr ""
+
+#. Translators: %s is the application name.
+#: amtk/amtk-application-window.c:633
+#, c-format
+msgid "Open a file recently used with %s"
+msgstr ""
+
+#. action, icon, label, accel, tooltip
+#. File menu
+#. Why "file" and not "document"? "Document" is not the best
+#. word because the action is not always to create a new
+#. document. For example a LaTeX document can be composed of
+#. several _files_. Or for source code we do not really create a
+#. new "document".
+#: tepl/tepl-application.c:92
+msgid "_New"
+msgstr "_Νέο"
+
+#: tepl/tepl-application.c:93
+msgid "New file"
+msgstr "Νέο αρχείο"
+
+#: tepl/tepl-application.c:95
+msgid "New _Window"
+msgstr "Νέο _παράθυρο"
+
+#: tepl/tepl-application.c:96
+msgid "Create a new window"
+msgstr "Δημιουργία νέου παραθύρου"
+
+#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:178
+msgid "_Open"
+msgstr "Ά_νοιγμα"
+
+#: tepl/tepl-application.c:99
+msgid "Open a file"
+msgstr "Άνοιγμα αρχείου"
+
+#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:144
+#: tepl/tepl-tab.c:752
+msgid "_Save"
+msgstr "_Αποθήκευση"
+
+#: tepl/tepl-application.c:102
+msgid "Save the current file"
+msgstr "Αποθήκευση του τρέχοντος αρχείου"
+
+#: tepl/tepl-application.c:104
+msgid "Save _As"
+msgstr "Αποθήκευση _ως"
+
+#: tepl/tepl-application.c:105
+msgid "Save the current file to a different location"
+msgstr "Αποθήκευση του τρέχοντος αρχείου σε διαφορετική τοποθεσία"
+
+#. Edit menu
+#: tepl/tepl-application.c:109
+msgid "_Undo"
+msgstr "_Αναίρεση"
+
+#: tepl/tepl-application.c:110
+msgid "Undo the last action"
+msgstr "Αναίρεση της τελευταίας ενέργειας"
+
+#: tepl/tepl-application.c:112
+msgid "_Redo"
+msgstr "_Επανάληψη"
+
+#: tepl/tepl-application.c:113
+msgid "Redo the last undone action"
+msgstr "Επανάληψη της τελευταίας ενέργειας που αναιρέθηκε"
+
+#: tepl/tepl-application.c:115
+msgid "Cu_t"
+msgstr "Απο_κοπή"
+
+#: tepl/tepl-application.c:116
+msgid "Cut the selection"
+msgstr "Αποκοπή επιλογής"
+
+#: tepl/tepl-application.c:118
+msgid "_Copy"
+msgstr "_Αντιγραφή"
+
+#: tepl/tepl-application.c:119
+msgid "Copy the selection"
+msgstr "Αντιγραφή επιλογής"
+
+#: tepl/tepl-application.c:121
+msgid "_Paste"
+msgstr "_Επικόλληση"
+
+#: tepl/tepl-application.c:122
+msgid "Paste the clipboard"
+msgstr "Επικόλληση του πρόχειρου"
+
+#: tepl/tepl-application.c:124
+msgid "_Delete"
+msgstr "_Διαγραφή"
+
+#: tepl/tepl-application.c:125
+msgid "Delete the selected text"
+msgstr "Διαγραφή επιλεγμένου κειμένου"
+
+#: tepl/tepl-application.c:127
+msgid "Select _All"
+msgstr "Επιλογή ό_λων"
+
+#: tepl/tepl-application.c:128
+msgid "Select all the text"
+msgstr "Επιλογή όλου του κειμένου"
+
+#: tepl/tepl-application.c:130
+msgid "_Indent"
+msgstr ""
+
+#: tepl/tepl-application.c:131
+msgid "Indent the selected lines"
+msgstr ""
+
+#: tepl/tepl-application.c:133
+msgid "_Unindent"
+msgstr ""
+
+#: tepl/tepl-application.c:134
+msgid "Unindent the selected lines"
+msgstr ""
+
+#. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
+#. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
+#. * doesn't have the real path to the file, so it would screw up some
+#. * features for text editors:
+#. * - showing the directory in parentheses in the window title, or in the
+#. *   tab tooltip;
+#. * - opening a recent file.
+#. * Basically everywhere where the directory is shown.
+#.
+#: tepl/tepl-application-window.c:174
+msgid "Open File"
+msgstr "Άνοιγμα αρχείου"
+
+#: tepl/tepl-application-window.c:177
+#: tepl/tepl-close-confirm-dialog-single.c:138 tepl/tepl-tab.c:751
+msgid "_Cancel"
+msgstr "_Ακύρωση"
+
+#: tepl/tepl-application-window.c:708
+msgid "Read-Only"
+msgstr "Μόνο για ανάγνωση"
+
+#: tepl/tepl-close-confirm-dialog-single.c:133
+#, c-format
+msgid "Save changes to file “%s” before closing?"
+msgstr ""
+
+#: tepl/tepl-close-confirm-dialog-single.c:137
+msgid "Close _without Saving"
+msgstr "Κλείσιμο _χωρίς αποθήκευση"
+
+#: tepl/tepl-close-confirm-dialog-single.c:150
+msgid "_Save As…"
+msgstr "_Αποθηκευση ως…"
+
+#. UTF-8 first, so that it's the first encoding returned by
+#. * tepl_encoding_get_all().
+#.
+#: tepl/tepl-encoding.c:115 tepl/tepl-encoding.c:132 tepl/tepl-encoding.c:133
+#: tepl/tepl-encoding.c:134 tepl/tepl-encoding.c:135 tepl/tepl-encoding.c:136
+#: tepl/tepl-encoding.c:137 tepl/tepl-encoding.c:138
+msgid "Unicode"
+msgstr "Unicode"
+
+#. FIXME GEOSTD8 ?
+#: tepl/tepl-encoding.c:117 tepl/tepl-encoding.c:129 tepl/tepl-encoding.c:157
+#: tepl/tepl-encoding.c:180
+msgid "Western"
+msgstr ""
+
+#: tepl/tepl-encoding.c:118 tepl/tepl-encoding.c:158 tepl/tepl-encoding.c:178
+msgid "Central European"
+msgstr ""
+
+#: tepl/tepl-encoding.c:119
+msgid "South European"
+msgstr ""
+
+#: tepl/tepl-encoding.c:120 tepl/tepl-encoding.c:127 tepl/tepl-encoding.c:185
+msgid "Baltic"
+msgstr ""
+
+#: tepl/tepl-encoding.c:121 tepl/tepl-encoding.c:159 tepl/tepl-encoding.c:166
+#: tepl/tepl-encoding.c:168 tepl/tepl-encoding.c:169 tepl/tepl-encoding.c:179
+msgid "Cyrillic"
+msgstr "Κυριλλικά"
+
+#: tepl/tepl-encoding.c:122 tepl/tepl-encoding.c:162 tepl/tepl-encoding.c:184
+msgid "Arabic"
+msgstr "Αραβικά"
+
+#: tepl/tepl-encoding.c:123 tepl/tepl-encoding.c:181
+msgid "Greek"
+msgstr "Ελληνικά"
+
+#: tepl/tepl-encoding.c:124
+msgid "Hebrew Visual"
+msgstr ""
+
+#: tepl/tepl-encoding.c:125 tepl/tepl-encoding.c:160 tepl/tepl-encoding.c:182
+msgid "Turkish"
+msgstr "Τούρκικα"
+
+#: tepl/tepl-encoding.c:126
+msgid "Nordic"
+msgstr ""
+
+#: tepl/tepl-encoding.c:128
+msgid "Celtic"
+msgstr "Κέλτικα"
+
+#: tepl/tepl-encoding.c:130
+msgid "Romanian"
+msgstr ""
+
+#: tepl/tepl-encoding.c:140
+msgid "Armenian"
+msgstr "Αρμένικα"
+
+#: tepl/tepl-encoding.c:141 tepl/tepl-encoding.c:142 tepl/tepl-encoding.c:150
+msgid "Chinese Traditional"
+msgstr "Κινέζικα Παραδοσιακά"
+
+#: tepl/tepl-encoding.c:143
+msgid "Cyrillic/Russian"
+msgstr ""
+
+#: tepl/tepl-encoding.c:145 tepl/tepl-encoding.c:146 tepl/tepl-encoding.c:147
+#: tepl/tepl-encoding.c:164 tepl/tepl-encoding.c:172
+msgid "Japanese"
+msgstr "Ιαπωνικά"
+
+#: tepl/tepl-encoding.c:149 tepl/tepl-encoding.c:165 tepl/tepl-encoding.c:167
+#: tepl/tepl-encoding.c:175
+msgid "Korean"
+msgstr "Κορεάτικα"
+
+#: tepl/tepl-encoding.c:152 tepl/tepl-encoding.c:153 tepl/tepl-encoding.c:154
+msgid "Chinese Simplified"
+msgstr ""
+
+#: tepl/tepl-encoding.c:155
+msgid "Georgian"
+msgstr ""
+
+#: tepl/tepl-encoding.c:161 tepl/tepl-encoding.c:183
+msgid "Hebrew"
+msgstr "Εβραϊκά"
+
+#: tepl/tepl-encoding.c:170
+msgid "Cyrillic/Ukrainian"
+msgstr ""
+
+#: tepl/tepl-encoding.c:173 tepl/tepl-encoding.c:176 tepl/tepl-encoding.c:186
+msgid "Vietnamese"
+msgstr "Βιετναμέζικα"
+
+#: tepl/tepl-encoding.c:174
+msgid "Thai"
+msgstr "Ταϋλανδέζικα"
+
+#: tepl/tepl-encoding.c:370
+msgid "Unknown"
+msgstr ""
+
+#. Translators: This is the sorted list of encodings used by Tepl for
+#. * automatic detection of the file encoding. You may want to customize
+#. * it adding encodings that are common in your country, for instance the
+#. * GB18030 encoding for the Chinese translation. You may also want to
+#. * remove the ISO-8859-15 encoding (covering English and most Western
+#. * European languages) if you think people in your country will rarely
+#. * use it. 'CURRENT' is a magic value used by Tepl and it represents
+#. * the encoding for the current locale, so please don't translate the
+#. * 'CURRENT' term. Keep the same format: square brackets, single quotes,
+#. * commas.
+#.
+#: tepl/tepl-encoding.c:695
+msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
+msgstr ""
+
+#: tepl/tepl-encoding-converter.c:302
+#, c-format
+msgid "Conversion from character set “%s” to “%s” is not supported."
+msgstr ""
+
+#: tepl/tepl-encoding-converter.c:311
+#, c-format
+msgid "Could not open converter from “%s” to “%s”: %s"
+msgstr ""
+
+#: tepl/tepl-encoding-converter.c:368
+msgid "The input data contains an invalid sequence."
+msgstr ""
+
+#: tepl/tepl-encoding-converter.c:377
+#, c-format
+msgid "Error when converting data: %s"
+msgstr "Σφάλμα κατά την μετατροπή δεδομένων: %s"
+
+#: tepl/tepl-encoding-converter.c:556
+msgid "The input data ends with an incomplete multi-byte sequence."
+msgstr ""
+
+#: tepl/tepl-encoding-converter.c:579
+msgid "The input content ends with incomplete data."
+msgstr ""
+
+#: tepl/tepl-file.c:413
+#, c-format
+msgid "Untitled File %d"
+msgstr "Αρχείο χωρίς τίτλο %d"
+
+#: tepl/tepl-file-content-loader.c:331
+#, c-format
+msgid "The file is too big. Maximum %s can be loaded."
+msgstr ""
+
+#: tepl/tepl-file-loader.c:872
+msgid "It is not possible to detect the character encoding automatically."
+msgstr ""
+
+#: tepl/tepl-file-saver.c:784
+msgid "The file is externally modified."
+msgstr "Το αρχείο έχει τροποποιηθεί εξωτερικά."
+
+#: tepl/tepl-file-saver.c:1318
+msgid "The buffer contains invalid characters."
+msgstr ""
+
+#: tepl/tepl-tab.c:534
+msgid "Error when loading the file."
+msgstr "Σφάλμα κατά την φόρτωση αρχείου."
+
+#: tepl/tepl-tab.c:748
+msgid "Save File"
+msgstr "Αποθήκευση αρχείου"
+
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:273
+msgid "Location:"
+msgstr "Τοποθεσία:"
+
+#: tepl/tepl-tab-label.c:342
+msgid "Close file"
+msgstr "Κλείσιμο αρχείου"
+
+#: tepl/tepl-tab-saving.c:64
+msgid "Error when saving the file."
+msgstr "Σφάλμα κατά την αποθήκευση αρχείου."

@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016, 2019 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2019 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -134,6 +134,7 @@ flush_outbuf (TeplEncodingConverter *converter)
 
 		converter->priv->callback (converter->priv->outbuf,
 					   length,
+					   TRUE,
 					   converter->priv->callback_user_data);
 	}
 
@@ -469,6 +470,13 @@ handle_remaining_inbuf (TeplEncodingConverter  *converter,
  * necessarily happen each time _tepl_encoding_converter_feed() is called, and
  * the callback can be called several times during a single feed.
  *
+ * In case of an invalid character in the input @chunk, the callback is called a
+ * first time with @is_valid set to %TRUE to empty the internal buffer that
+ * contains successfully converted characters, then the callback is called a
+ * second time with @is_valid set to %FALSE with the unconverted invalid
+ * character. Then it continues the processing of the input @chunk, calling the
+ * callback as appropriate.
+ *
  * Returns: %TRUE on success, %FALSE on error.
  */
 gboolean
@@ -540,9 +548,7 @@ _tepl_encoding_converter_feed (TeplEncodingConverter  *converter,
 	return TRUE;
 }
 
-/* This function can trigger the callback a last time. There can be an error if
- * the last chunk ended with an incomplete multi-byte char.
- */
+/* This function can trigger the callback one or several last times. */
 gboolean
 _tepl_encoding_converter_close (TeplEncodingConverter  *converter,
 				GError                **error)

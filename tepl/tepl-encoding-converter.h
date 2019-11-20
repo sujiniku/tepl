@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2019 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -51,18 +51,25 @@ struct _TeplEncodingConverterClass
  * TeplEncodingConversionCallback:
  * @str: nul-terminated converted contents.
  * @length: length of @str, without the terminating nul-byte.
+ * @is_valid: whether the characters in @str are valid and thus have been
+ *   successfully converted.
  * @user_data: user data set when the callback was connected.
  *
  * @str must not be freed, it is owned by the #TeplEncodingConverter. But to
  * avoid re-allocation, @str can be modified if needed, for example to set a
  * nul-byte at a different place; as long as you modify and access @str inside
  * its [0, @length] bounds.
- */
-/* TODO: when there is an invalid char, call a callback instead of returning an
- * error. By extending this callback, or by creating another callback function.
+ *
+ * If @is_valid is %TRUE, the characters in @str have been successfully
+ * converted and are thus encoded in the @to_codeset character encoding as
+ * provided in the _tepl_encoding_converter_open() function.
+ *
+ * If @is_valid is %FALSE, the characters in @str are invalid and correspond to
+ * the input characters for which the conversion failed.
  */
 typedef void (*TeplEncodingConversionCallback) (const gchar *str,
 						gsize        length,
+						gboolean     is_valid,
 						gpointer     user_data);
 
 G_GNUC_INTERNAL

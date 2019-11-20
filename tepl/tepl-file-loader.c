@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2019 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -738,6 +738,7 @@ insert_content (GtkTextBuffer *buffer,
 static void
 content_converted_cb (const gchar *str,
 		      gsize        length,
+		      gboolean     is_valid,
 		      gpointer     user_data)
 {
 	GTask *task = G_TASK (user_data);

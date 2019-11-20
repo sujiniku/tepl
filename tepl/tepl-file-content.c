@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2017-2019 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -162,8 +162,22 @@ determine_encoding_with_uchardet (TeplFileContent *content)
 	return encoding;
 }
 
+static void
+catch_invalid_chars_encoding_conversion_cb (const gchar *str,
+					    gsize        length,
+					    gboolean     is_valid,
+					    gpointer     user_data)
+{
+	gboolean *has_invalid_chars = user_data;
+
+	if (!is_valid)
+	{
+		*has_invalid_chars = TRUE;
+	}
+}
+
 /* Try the candidate encodings one by one, taking the first without conversion
- * error.
+ * error nor invalid characters.
  */
 TeplEncoding *
 _tepl_file_content_determine_encoding_with_fallback_mode (TeplFileContent *content,
@@ -177,8 +191,16 @@ _tepl_file_content_determine_encoding_with_fallback_mode (TeplFileContent *conte
 	for (l = candidate_encodings; l != NULL; l = l->next)
 	{
 		TeplEncoding *cur_encoding = l->data;
+		gboolean has_invalid_chars = FALSE;
+		gboolean ok;
 
-		if (_tepl_file_content_convert_to_utf8 (content, cur_encoding, NULL, NULL, NULL))
+		ok = _tepl_file_content_convert_to_utf8 (content,
+							 cur_encoding,
+							 catch_invalid_chars_encoding_conversion_cb,
+							 &has_invalid_chars,
+							 NULL);
+
+		if (ok && !has_invalid_chars)
 		{
 			encoding = tepl_encoding_copy (cur_encoding);
 			break;

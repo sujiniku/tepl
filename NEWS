@@ -1,3 +1,19 @@
+News in 4.2.1, 2019-11-21
+-------------------------
+
+Changes for packagers:
+* Documentation: GTK+ -> GTK. Please update the description of the package.
+
+Other changes:
+* Fix a few compilation warnings.
+* Better use of errno (save its value ASAP, then reset it to 0).
+* Build from Git:
+ - Allow building with gettext ≥ 0.20.
+ - Adapt for AX_CODE_COVERAGE API break in autoconf-archive version 2019.01.06.
+ (this didn't affect the build from the previous tarball, since the Autotools
+ are "bundled" with the tarball).
+* Translation updates.
+
 News in 4.2.0, 2018-07-16
 -------------------------
 * Nothing new.

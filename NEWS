@@ -1,3 +1,11 @@
+News in 4.3.1, 2019-11-22
+-------------------------
+* Utils functions: make some functions public, add more public functions, and
+  write more unit tests.
+* Documentation: introduction: more information about the chosen development
+  model.
+* Translation updates.
+
 News in 4.2.1, 2019-11-21
 -------------------------
 

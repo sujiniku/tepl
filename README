@@ -1,7 +1,7 @@
 Tepl - Text editor product line
 ===============================
 
-This is version 4.3.0 of Tepl.
+This is version 4.3.1 of Tepl.
 
 Tepl is a library that eases the development of GtkSourceView-based text
 editors and IDEs.

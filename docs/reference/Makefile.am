@@ -31,6 +31,7 @@ IGNORE_HFILES =					\
 	tepl-encoding-private.h			\
 	tepl-file-content.h			\
 	tepl-file-content-loader.h		\
+	tepl-iconv.h				\
 	tepl-io-error-info-bar.h		\
 	tepl-progress-info-bar.h		\
 	tepl-signal-group.h			\

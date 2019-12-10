@@ -71,6 +71,7 @@ tepl_private_headers =				\
 	tepl-encoding-private.h			\
 	tepl-file-content.h			\
 	tepl-file-content-loader.h		\
+	tepl-iconv.h				\
 	tepl-io-error-info-bar.h		\
 	tepl-progress-info-bar.h		\
 	tepl-signal-group.h			\
@@ -82,6 +83,7 @@ tepl_private_c_files =				\
 	tepl-encoding-converter.c		\
 	tepl-file-content.c			\
 	tepl-file-content-loader.c		\
+	tepl-iconv.c				\
 	tepl-io-error-info-bar.c		\
 	tepl-progress-info-bar.c		\
 	tepl-signal-group.c			\

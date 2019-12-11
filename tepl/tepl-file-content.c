@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2017-2019 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -27,9 +27,6 @@ struct _TeplFileContentPrivate
 	/* List of GBytes*. */
 	GQueue *chunks;
 };
-
-/* Take the default buffer-size of TeplEncodingConverter. */
-#define ENCODING_CONVERTER_BUFFER_SIZE (-1)
 
 G_DEFINE_TYPE_WITH_PRIVATE (TeplFileContent, _tepl_file_content, G_TYPE_OBJECT)
 
@@ -162,30 +159,13 @@ determine_encoding_with_uchardet (TeplFileContent *content)
 	return encoding;
 }
 
-/* Try the candidate encodings one by one, taking the first without conversion
- * error.
- */
 TeplEncoding *
 _tepl_file_content_determine_encoding_with_fallback_mode (TeplFileContent *content,
 							  GSList          *candidate_encodings)
 {
-	TeplEncoding *encoding = NULL;
-	GSList *l;
-
 	g_return_val_if_fail (TEPL_IS_FILE_CONTENT (content), NULL);
 
-	for (l = candidate_encodings; l != NULL; l = l->next)
-	{
-		TeplEncoding *cur_encoding = l->data;
-
-		if (_tepl_file_content_convert_to_utf8 (content, cur_encoding, NULL, NULL, NULL))
-		{
-			encoding = tepl_encoding_copy (cur_encoding);
-			break;
-		}
-	}
-
-	return encoding;
+	return NULL;
 }
 
 /* Returns: (transfer full) (nullable): the encoding, or %NULL if the encoding
@@ -217,71 +197,4 @@ _tepl_file_content_determine_encoding (TeplFileContent *content)
 	}
 
 	return encoding;
-}
-
-gboolean
-_tepl_file_content_convert_to_utf8 (TeplFileContent                 *content,
-				    TeplEncoding                    *from_encoding,
-				    TeplEncodingConversionCallback   callback,
-				    gpointer                         callback_user_data,
-				    GError                         **error)
-{
-	TeplEncodingConverter *converter;
-	GList *l;
-	gboolean success = FALSE;
-
-	g_return_val_if_fail (TEPL_IS_FILE_CONTENT (content), FALSE);
-	g_return_val_if_fail (from_encoding != NULL, FALSE);
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
-
-	converter = _tepl_encoding_converter_new (ENCODING_CONVERTER_BUFFER_SIZE);
-	_tepl_encoding_converter_set_callback (converter, callback, callback_user_data);
-
-	if (!_tepl_encoding_converter_open (converter,
-					    "UTF-8",
-					    tepl_encoding_get_charset (from_encoding),
-					    error))
-	{
-		goto out;
-	}
-
-	for (l = content->priv->chunks->head; l != NULL; l = l->next)
-	{
-		GBytes *chunk = l->data;
-
-		g_assert (chunk_is_valid (chunk));
-
-		if (!_tepl_encoding_converter_feed (converter,
-						    g_bytes_get_data (chunk, NULL),
-						    g_bytes_get_size (chunk),
-						    error))
-		{
-			goto out;
-		}
-	}
-
-	if (!_tepl_encoding_converter_close (converter, error))
-	{
-		goto out;
-	}
-
-	success = TRUE;
-
-out:
-	g_object_unref (converter);
-	return success;
-}
-
-/* For unit tests. */
-gint64
-_tepl_file_content_get_encoding_converter_buffer_size (void)
-{
-	TeplEncodingConverter *converter;
-	gint64 buffer_size;
-
-	converter = _tepl_encoding_converter_new (ENCODING_CONVERTER_BUFFER_SIZE);
-	buffer_size = _tepl_encoding_converter_get_buffer_size (converter);
-	g_object_unref (converter);
-
-	return buffer_size;
 }

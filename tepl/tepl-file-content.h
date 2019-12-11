@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2017-2019 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -22,7 +22,6 @@
 
 #include <glib-object.h>
 #include "tepl-types.h"
-#include "tepl-encoding-converter.h"
 
 G_BEGIN_DECLS
 
@@ -62,21 +61,11 @@ void			_tepl_file_content_add_chunk		(TeplFileContent *content,
 G_GNUC_INTERNAL
 TeplEncoding *		_tepl_file_content_determine_encoding	(TeplFileContent *content);
 
-G_GNUC_INTERNAL
-gboolean		_tepl_file_content_convert_to_utf8	(TeplFileContent                 *content,
-								 TeplEncoding                    *from_encoding,
-								 TeplEncodingConversionCallback   callback,
-								 gpointer                         callback_user_data,
-								 GError                         **error);
-
 /* For unit tests */
 
 G_GNUC_INTERNAL
 TeplEncoding *		_tepl_file_content_determine_encoding_with_fallback_mode	(TeplFileContent *content,
 											 GSList          *candidate_encodings);
-
-G_GNUC_INTERNAL
-gint64			_tepl_file_content_get_encoding_converter_buffer_size		(void);
 
 G_END_DECLS
 

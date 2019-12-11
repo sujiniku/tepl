@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2019 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -182,6 +182,7 @@ empty_buffer (TeplFileLoader *loader)
 	}
 }
 
+#if 0
 static void
 detect_newline_type (TeplFileLoader *loader)
 {
@@ -230,7 +231,9 @@ detect_newline_type (TeplFileLoader *loader)
 		priv->detected_newline_type = TEPL_NEWLINE_TYPE_DEFAULT;
 	}
 }
+#endif
 
+#if 0
 static void
 remove_trailing_newline_if_needed (TeplFileLoader *loader)
 {
@@ -268,6 +271,7 @@ remove_trailing_newline_if_needed (TeplFileLoader *loader)
 					&end);
 	}
 }
+#endif
 
 static void
 tepl_file_loader_get_property (GObject    *object,
@@ -719,6 +723,7 @@ tepl_file_loader_set_chunk_size (TeplFileLoader *loader,
 	g_object_notify_by_pspec (G_OBJECT (loader), properties[PROP_CHUNK_SIZE]);
 }
 
+#if 0
 static void
 insert_content (GtkTextBuffer *buffer,
 		const gchar   *str,
@@ -844,6 +849,7 @@ convert_and_insert_content (GTask *task)
 
 	g_task_return_boolean (task, TRUE);
 }
+#endif
 
 static void
 determine_encoding (GTask *task)
@@ -873,7 +879,9 @@ determine_encoding (GTask *task)
 		return;
 	}
 
+#if 0
 	convert_and_insert_content (task);
+#endif
 }
 
 static void

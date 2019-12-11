@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2019 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -329,6 +329,7 @@ test_newlines (void)
 	test_loader_newlines (FALSE, DEFAULT_CONTENTS "\r\n", DEFAULT_CONTENTS "\r\n", TEPL_NEWLINE_TYPE_CR_LF);
 }
 
+#if 0
 static void
 test_loader_split_cr_lf (const gchar *content,
 			 gint         expected_line_count)
@@ -424,6 +425,7 @@ test_split_cr_lf (void)
 	test_loader_split_cr_lf (content, expected_line_count);
 	g_free (content);
 }
+#endif
 
 static void
 test_loader_max_size (const gchar *contents,
@@ -674,7 +676,9 @@ main (int    argc,
 
 	g_test_add_func ("/file-loader/empty", test_empty);
 	g_test_add_func ("/file-loader/newlines", test_newlines);
+#if 0
 	g_test_add_func ("/file-loader/split-cr-lf", test_split_cr_lf);
+#endif
 	g_test_add_func ("/file-loader/max-size", test_max_size);
 	g_test_add_func ("/file-loader/encoding", test_encoding);
 

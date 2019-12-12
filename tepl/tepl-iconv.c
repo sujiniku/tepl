@@ -31,7 +31,8 @@
  * - _tepl_iconv_new();
  * - _tepl_iconv_open();
  * - _tepl_iconv_feed() in a loop;
- * - _tepl_iconv_feed_finish() (do not forget to call it);
+ * - _tepl_iconv_feed() with @inbuf and @inbytes_left set to %NULL (in a loop
+ *   too if the output buffer is full).
  * - _tepl_iconv_close_and_free().
  */
 
@@ -104,13 +105,13 @@ _tepl_iconv_open (TeplIconv    *conv,
 }
 
 /* @error is set only when TEPL_ICONV_RESULT_ERROR is returned. */
-static TeplIconvResult
-feed (TeplIconv  *conv,
-      gchar     **inbuf,
-      gsize      *inbytes_left,
-      gchar     **outbuf,
-      gsize      *outbytes_left,
-      GError    **error)
+TeplIconvResult
+_tepl_iconv_feed (TeplIconv  *conv,
+		  gchar     **inbuf,
+		  gsize      *inbytes_left,
+		  gchar     **outbuf,
+		  gsize      *outbytes_left,
+		  GError    **error)
 {
 	gsize iconv_ret;
 
@@ -167,35 +168,6 @@ feed (TeplIconv  *conv,
 	}
 
 	return TEPL_ICONV_RESULT_OK;
-}
-
-TeplIconvResult
-_tepl_iconv_feed (TeplIconv  *conv,
-		  gchar     **inbuf,
-		  gsize      *inbytes_left,
-		  gchar     **outbuf,
-		  gsize      *outbytes_left,
-		  GError    **error)
-{
-	g_return_val_if_fail (inbuf != NULL && *inbuf != NULL, FALSE);
-	g_return_val_if_fail (inbytes_left != NULL, FALSE);
-
-	return feed (conv,
-		     inbuf, inbytes_left,
-		     outbuf, outbytes_left,
-		     error);
-}
-
-TeplIconvResult
-_tepl_iconv_feed_finish (TeplIconv  *conv,
-			 gchar     **outbuf,
-			 gsize      *outbytes_left,
-			 GError    **error)
-{
-	return feed (conv,
-		     NULL, NULL,
-		     outbuf, outbytes_left,
-		     error);
 }
 
 /* Returns: %TRUE on success, %FALSE otherwise. */

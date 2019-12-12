@@ -59,11 +59,6 @@ TeplIconvResult	_tepl_iconv_feed		(TeplIconv  *conv,
 						 gsize      *outbytes_left,
 						 GError    **error);
 
-TeplIconvResult	_tepl_iconv_feed_finish		(TeplIconv  *conv,
-						 gchar     **outbuf,
-						 gsize      *outbytes_left,
-						 GError    **error);
-
 gboolean	_tepl_iconv_close_and_free	(TeplIconv  *conv,
 						 GError    **error);
 

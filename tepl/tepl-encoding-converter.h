@@ -42,7 +42,7 @@ struct _TeplEncodingConverterOutputChunk
 gboolean	_tepl_encoding_converter_convert		(GList         *input_chunks,
 								 TeplEncoding  *from_encoding,
 								 TeplEncoding  *to_encoding,
-								 gint64         output_buffer_size,
+								 gint64         max_output_chunk_size,
 								 GList        **output_chunks,
 								 GError       **error);
 

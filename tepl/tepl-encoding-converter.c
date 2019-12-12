@@ -23,24 +23,32 @@
 #include "tepl-encoding.h"
 #include "tepl-iconv.h"
 
-typedef struct _Data Data;
-
-struct _Data
+typedef struct _Buffer Buffer;
+struct _Buffer
 {
-	/* To avoid creating huge areas of memory, the output is assembled in
-	 * chunks.
+	/* Never NULL during normal use. */
+	gchar *data;
+
+	/* The total number of bytes allocated to @data. */
+	gsize total_size;
+
+	/* The number of bytes not yet written into @data. Those bytes are
+	 * always at the end of @data.
 	 */
-	gint64 max_output_chunk_size;
+	gsize n_remaining_bytes;
+};
+
+typedef struct _TaskData TaskData;
+struct _TaskData
+{
+	/* To avoid creating huge areas of contiguous memory, the output is
+	 * split in chunks.
+	 */
+	gsize max_output_chunk_size;
 
 	TeplIconv *converter;
 
-	/* If outbuf is not NULL:
-	 * - its allocated size is max_output_chunk_size.
-	 * - The following condition must be met:
-	 *   0 <= outbytes_left <= max_output_chunk_size
-	 */
-	gchar *outbuf;
-	gsize outbytes_left;
+	Buffer *output_buffer;
 
 	/* On incomplete input, store the remaining inbuf so that it can be used
 	 * with the next input chunk.
@@ -50,19 +58,17 @@ struct _Data
 	/* To collect consecutive invalid chars before creating a new output
 	 * chunk.
 	 */
-	GByteArray *invalid_chars;
+	Buffer *invalid_chars;
 
 	/* (element-type TeplEncodingConverterOutputChunk) */
 	GQueue *output_chunks;
-
-	guint discard_output : 1;
 };
 
 typedef enum
 {
 	RESULT_OK,
 	RESULT_ERROR,
-	RESULT_INCOMPLETE_INPUT,
+	RESULT_INCOMPLETE_INPUT
 } Result;
 
 /* 1 MiB */
@@ -73,168 +79,81 @@ typedef enum
  */
 #define MAX_OUTPUT_CHUNK_SIZE_MIN_VALUE (32)
 
-static void
-check_invariants (Data *data)
+/*****************************************************************************/
+/* Buffer mini-class. */
+
+static Buffer *
+buffer_new (gsize total_size)
 {
-	g_assert_cmpint (data->max_output_chunk_size, >=, MAX_OUTPUT_CHUNK_SIZE_MIN_VALUE);
-	g_assert_cmpint (data->outbytes_left, <=, data->max_output_chunk_size);
+	Buffer *buffer;
+
+	buffer = g_new0 (Buffer, 1);
+	buffer->data = malloc (total_size);
+	buffer->total_size = total_size;
+	buffer->n_remaining_bytes = total_size;
 }
 
 static void
-init_empty_outbuf (Data *data)
+buffer_free (Buffer *buffer)
 {
-	data->outbuf = NULL;
-	data->outbytes_left = 0;
+	g_free (buffer->data);
+	g_free (buffer);
 }
 
-/* This function is needed even when data->discard_output is TRUE, because
- * iconv() doesn't support a NULL outbuf for the main cases.
- */
 static void
-allocate_new_outbuf (Data *data)
+buffer_check_bounds (Buffer *buffer)
 {
-	data->outbuf = g_malloc (data->max_output_chunk_size);
-	data->outbytes_left = data->max_output_chunk_size;
-}
-
-static gboolean
-outbuf_is_empty (Data *data)
-{
-	check_invariants (data);
-
-	return (data->outbuf == NULL ||
-		((gint64) data->outbytes_left) == data->max_output_chunk_size);
+	g_assert (buffer->n_remaining_bytes <= buffer->total_size);
 }
 
 static gsize
-get_outbuf_used_length (Data *data)
+buffer_get_written_length (Buffer *buffer)
 {
-	check_invariants (data);
-
-	g_assert (data->outbuf != NULL);
-
-	return data->max_output_chunk_size - data->outbytes_left;
+	buffer_check_bounds (buffer);
+	return buffer->total_size - buffer->n_remaining_bytes;
 }
 
 static gboolean
-outbuf_is_near_to_full (Data *data)
+buffer_is_empty (Buffer *buffer)
 {
-	check_invariants (data);
-
-	if (data->outbuf == NULL)
-	{
-		return FALSE;
-	}
-
-	/* In a normal situation (without invalid chars), it's normal if the
-	 * outbuf is not completely full, because it can contain multi-byte
-	 * characters.
-	 */
-	return data->outbytes_left < MAX_OUTPUT_CHUNK_SIZE_MIN_VALUE;
+	return buffer_get_written_length (buffer) == 0;
 }
 
-static void
-append_output_chunk (Data     *data,
-		     GBytes   *bytes,
-		     gboolean  is_valid)
+static gboolean
+buffer_is_near_to_full (Buffer *buffer)
 {
-	TeplEncodingConverterOutputChunk *new_output_chunk;
-
-	new_output_chunk = g_new0 (TeplEncodingConverterOutputChunk, 1);
-	new_output_chunk->bytes = bytes;
-	new_output_chunk->is_valid = is_valid;
-
-	g_queue_push_tail (data->output_chunks, new_output_chunk);
+	/* Takes into account multi-byte chars (not yet written). */
+	return buffer->n_remaining_bytes < MAX_OUTPUT_CHUNK_SIZE_MIN_VALUE;
 }
 
-static void
-flush_invalid_chars (Data *data)
+static GBytes *
+buffer_flush (Buffer *buffer)
 {
 	GBytes *bytes;
 
-	if (data->invalid_chars == NULL)
+	if (buffer_is_empty (buffer))
 	{
-		return;
+		return NULL;
 	}
 
-	if (data->invalid_chars->len == 0)
-	{
-		g_byte_array_unref (data->invalid_chars);
-		data->invalid_chars = NULL;
-		return;
-	}
-
-	bytes = g_byte_array_free_to_bytes (data->invalid_chars);
-	data->invalid_chars = NULL;
-
-	append_output_chunk (data, bytes, FALSE);
-}
-
-static void
-flush_outbuf (Data *data)
-{
-	GBytes *bytes;
-
-	if (outbuf_is_empty (data))
-	{
-		return;
-	}
-
-	if (data->discard_output)
-	{
-		data->outbytes_left = data->max_output_chunk_size;
-		return;
-	}
-
-	flush_invalid_chars (data);
-
-	if (outbuf_is_near_to_full (data))
+	if (buffer_is_near_to_full (buffer))
 	{
 		/* Avoid a copy. */
-		bytes = g_bytes_new_take (data->outbuf, get_outbuf_used_length (data));
-		init_empty_outbuf (data);
+		bytes = g_bytes_new_take (buffer->data, buffer_get_written_length (buffer));
+
+		buffer->data = g_malloc (buffer->total_size);
+		buffer->n_remaining_bytes = buffer->total_size;
 	}
 	else
 	{
-		/* Copy only the needed bytes, so that the memory used by the
-		 * chunk is not unnecessarily large.
-		 * Imagine the extreme case in the input: one valid char, one
-		 * invalid char, one valid char, one invalid char, etc. If each
-		 * output chunk takes 1MiB of memory, it's not going to work.
-		 */
-		bytes = g_bytes_new (data->outbuf, get_outbuf_used_length (data));
-		data->outbytes_left = data->max_output_chunk_size;
+		bytes = g_bytes_new (buffer->data, buffer_get_written_length (buffer));
+		buffer->n_remaining_bytes = buffer->total_size;
 	}
 
-	append_output_chunk (data, bytes, TRUE);
+	return bytes;
 }
 
-static void
-append_invalid_chars (Data         *data,
-		      const guint8 *invalid_chars,
-		      guint         length)
-{
-	if (data->discard_output)
-	{
-		return;
-	}
-
-	if (data->invalid_chars == NULL)
-	{
-		flush_outbuf (data);
-		data->invalid_chars = g_byte_array_new ();
-	}
-
-	/* The GByteArray may exceed a little data->max_output_chunk_size, but
-	 * it's not a big problem because @length is always small normally.
-	 */
-	g_byte_array_append (data->invalid_chars, invalid_chars, length);
-
-	if (data->invalid_chars->len >= data->max_output_chunk_size)
-	{
-		flush_invalid_chars (data);
-	}
-}
+/*****************************************************************************/
 
 static gboolean
 input_chunk_is_valid (GBytes *input_chunk)
@@ -262,27 +181,32 @@ input_chunks_list_is_valid (GList *input_chunks)
 }
 
 static void
-data_init (Data     *data,
-	   gint64    max_output_chunk_size,
-	   gboolean  discard_output)
+append_output_chunk (GQueue   *output_chunks,
+		     GBytes   *bytes,
+		     gboolean  is_valid)
 {
-	g_return_if_fail (max_output_chunk_size == -1 ||
-			  max_output_chunk_size >= MAX_OUTPUT_CHUNK_SIZE_MIN_VALUE);
+	TeplEncodingConverterOutputChunk *new_output_chunk;
 
-	if (max_output_chunk_size == -1)
-	{
-		max_output_chunk_size = MAX_OUTPUT_CHUNK_SIZE_DEFAULT_VALUE;
-	}
+	new_output_chunk = g_new0 (TeplEncodingConverterOutputChunk, 1);
+	new_output_chunk->bytes = bytes;
+	new_output_chunk->is_valid = is_valid;
 
-	data->max_output_chunk_size = max_output_chunk_size;
-	data->converter = NULL;
+	g_queue_push_tail (output_chunks, new_output_chunk);
+}
 
-	init_empty_outbuf (data);
+/*****************************************************************************/
 
-	data->remaining_inbuf = NULL;
-	data->invalid_chars = NULL;
-	data->output_chunks = g_queue_new ();
-	data->discard_output = discard_output != FALSE;
+static TaskData *
+task_data_new (gsize max_output_chunk_size)
+{
+	TaskData *task_data;
+
+	task_data = g_new0 (TaskData, 1);
+	task_data->max_output_chunk_size = max_output_chunk_size;
+
+	task_data->output_chunks = g_queue_new ();
+
+	return task_data;
 }
 
 static void
@@ -572,10 +496,22 @@ gboolean
 _tepl_encoding_converter_convert (GList         *input_chunks,
 				  TeplEncoding  *from_encoding,
 				  TeplEncoding  *to_encoding,
-				  gint64         output_buffer_size,
+				  gint64         max_output_chunk_size,
 				  GList        **output_chunks,
 				  GError       **error)
 {
+	TaskData *task_data;
+
+	g_return_val_if_fail ((max_output_chunk_size == -1 ||
+			       max_output_chunk_size >= MAX_OUTPUT_CHUNK_SIZE_MIN_VALUE), FALSE);
+
+	if (max_output_chunk_size == -1)
+	{
+		max_output_chunk_size = MAX_OUTPUT_CHUNK_SIZE_DEFAULT_VALUE;
+	}
+
+	task_data = task_data_new (max_output_chunk_size);
+
 	return TRUE;
 }
 
@@ -585,55 +521,15 @@ _tepl_encoding_converter_test_conversion (GList        *input_chunks,
 					  TeplEncoding *to_encoding,
 					  gint         *n_invalid_input_chars)
 {
-	Data data = { 0 };
-	gboolean ok;
-	GList *l;
-
-	g_return_val_if_fail (input_chunks_list_is_valid (input_chunks), FALSE);
-	g_return_val_if_fail (from_encoding != NULL, FALSE);
-	g_return_val_if_fail (to_encoding != NULL, FALSE);
-	g_return_val_if_fail (n_invalid_input_chars != NULL, FALSE);
-
-	*n_invalid_input_chars = 0;
-
-	data_init (&data, -1, TRUE);
-
-	ok = open_converter (&data, from_encoding, to_encoding, NULL);
-	if (!ok)
-	{
-		goto out;
-	}
-
-	for (l = input_chunks; l != NULL; l = l->next)
-	{
-#if 0
-		GBytes *cur_input_chunk = l->data;
-		gchar *inbuf;
-		gsize inbytes_left;
-		TeplIconvResult result;
-
-		result = _tepl_iconv_feed (conv, /* TODO */);
-#endif
-	}
-
-out:
-	if (!close_converter (&data, NULL))
-	{
-		ok = FALSE;
-	}
-
-	data_finalize (&data);
-	return ok;
+	return TRUE;
 }
 
 void
 _tepl_encoding_converter_output_chunk_free (TeplEncodingConverterOutputChunk *output_chunk)
 {
-	if (output_chunk == NULL)
+	if (output_chunk != NULL)
 	{
-		return;
+		g_bytes_unref (output_chunk->bytes);
+		g_free (output_chunk);
 	}
-
-	g_bytes_unref (output_chunk->bytes);
-	g_free (output_chunk);
 }

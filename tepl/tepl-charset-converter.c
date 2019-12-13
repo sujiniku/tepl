@@ -20,6 +20,33 @@
 #include "tepl-charset-converter.h"
 #include "tepl-iconv.h"
 
+/**
+ * TeplCharsetConverter:
+ *
+ * # If @from_charset and @to_charset are the same
+ *
+ * If @from_charset and @to_charset are the same, and if you know that the input
+ * characters are all valid, you can still use #TeplCharsetConverter for the
+ * following conveniences:
+ * 1) To have a different size for the output chunks. For example a use-case in
+ *    Tepl is to have much bigger output chunks that are then inserted into a
+ *    #GtkTextBuffer; if lots of small chunks are inserted into a
+ *    #GtkTextBuffer, it's slower.
+ * 2) To nul-terminate the string.
+ * 3) The output chunks will not end in-between a multi-byte character, while a
+ *    passed-in chunk can.
+ *
+ * Note that if you are not interested by point 1) (and even if you are
+ * interested by point 1), to a lesser extent), it's possible to have a more
+ * efficient implementation than using #TeplCharsetConverter. For point 2) and
+ * 3), instead of copying the whole input chunks into a new buffer, an input
+ * chunk can be split in two (for point 2) by writing a '\0' at a different
+ * place in the input chunk), by copying only the second part, with that second
+ * part containing only *one* multi-byte character. That way only small new
+ * allocations are made, and only a few bytes need to be copied. To have a more
+ * efficient implementation for point 1), memcpy() can be used.
+ */
+
 typedef struct _Config Config;
 struct _Config
 {

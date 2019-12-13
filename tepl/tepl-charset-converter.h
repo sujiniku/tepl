@@ -24,6 +24,13 @@
 
 G_BEGIN_DECLS
 
+typedef struct _TeplCharsetConverter TeplCharsetConverter;
+
+TeplCharsetConverter *	_tepl_charset_converter_new		(gssize   buffer_size,
+								 gboolean discard_output);
+
+void			_tepl_charset_converter_free		(TeplCharsetConverter *charset_converter);
+
 G_END_DECLS
 
 #endif /* TEPL_CHARSET_CONVERTER_H */

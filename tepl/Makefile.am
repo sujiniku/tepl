@@ -67,6 +67,7 @@ tepl_public_c_files =				\
 tepl_private_headers =				\
 	tepl-buffer-input-stream.h		\
 	tepl-charset-converter.h		\
+	tepl-charset-converter-output-chunk.h	\
 	tepl-close-confirm-dialog-single.h	\
 	tepl-encoding-converter.h		\
 	tepl-encoding-private.h			\
@@ -81,6 +82,7 @@ tepl_private_headers =				\
 tepl_private_c_files =				\
 	tepl-buffer-input-stream.c		\
 	tepl-charset-converter.c		\
+	tepl-charset-converter-output-chunk.c	\
 	tepl-close-confirm-dialog-single.c	\
 	tepl-encoding-converter.c		\
 	tepl-file-content.c			\

@@ -6,6 +6,7 @@ tepl/tepl-application-window.c
 tepl/tepl-buffer.c
 tepl/tepl-buffer-input-stream.c
 tepl/tepl-charset-converter.c
+tepl/tepl-charset-converter-output-chunk.c
 tepl/tepl-close-confirm-dialog-single.c
 tepl/tepl-encoding.c
 tepl/tepl-encoding-converter.c

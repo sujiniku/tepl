@@ -18,6 +18,7 @@
  */
 
 #include "tepl-charset-converter.h"
+#include "tepl-iconv.h"
 
 typedef struct _Config Config;
 struct _Config
@@ -33,7 +34,13 @@ struct _Config
 
 struct _TeplCharsetConverter
 {
+	/* Never NULL. */
 	Config *config;
+
+	/* NULL if TeplCharsetConverter is closed.
+	 * Not NULL if TeplCharsetConverter is successfully opened.
+	 */
+	TeplIconv *iconv_converter;
 };
 
 /******************************************************************************/
@@ -85,6 +92,13 @@ config_free (Config *config)
 }
 
 /******************************************************************************/
+static gboolean
+is_opened (TeplCharsetConverter *charset_converter)
+{
+	return charset_converter->iconv_converter != NULL;
+}
+
+/******************************************************************************/
 /* Public functions */
 
 /**
@@ -109,6 +123,36 @@ _tepl_charset_converter_new (gssize   buffer_size,
 	return charset_converter;
 }
 
+gboolean
+_tepl_charset_converter_open (TeplCharsetConverter  *charset_converter,
+			      const gchar           *from_charset,
+			      const gchar           *to_charset,
+			      GError               **error)
+{
+	gboolean ok;
+
+	g_return_val_if_fail (charset_converter != NULL, FALSE);
+	g_return_val_if_fail (from_charset != NULL, FALSE);
+	g_return_val_if_fail (to_charset != NULL, FALSE);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	g_return_val_if_fail (!is_opened (charset_converter), FALSE);
+
+	charset_converter->iconv_converter = _tepl_iconv_new ();
+
+	ok = _tepl_iconv_open (charset_converter->iconv_converter,
+			       to_charset,
+			       from_charset,
+			       error);
+	if (!ok)
+	{
+		_tepl_iconv_close_and_free (charset_converter->iconv_converter, NULL);
+		charset_converter->iconv_converter = NULL;
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
 void
 _tepl_charset_converter_free (TeplCharsetConverter *charset_converter)
 {
@@ -116,6 +160,8 @@ _tepl_charset_converter_free (TeplCharsetConverter *charset_converter)
 	{
 		return;
 	}
+
+	g_return_if_fail (!is_opened (charset_converter));
 
 	config_free (charset_converter->config);
 	g_free (charset_converter);

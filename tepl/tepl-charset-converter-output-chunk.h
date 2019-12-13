@@ -24,6 +24,8 @@
 
 G_BEGIN_DECLS
 
+typedef struct _TeplCharsetConverterOutputChunk TeplCharsetConverterOutputChunk;
+
 G_END_DECLS
 
 #endif /* TEPL_CHARSET_CONVERTER_OUTPUT_CHUNK_H */

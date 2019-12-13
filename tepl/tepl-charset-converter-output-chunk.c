@@ -18,3 +18,8 @@
  */
 
 #include "tepl-charset-converter-output-chunk.h"
+
+struct _TeplCharsetConverterOutputChunk
+{
+	gint something;
+};

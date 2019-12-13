@@ -26,6 +26,7 @@ CFILE_GLOB = $(top_srcdir)/tepl/*.c
 IGNORE_HFILES =					\
 	tepl.h					\
 	tepl-buffer-input-stream.h		\
+	tepl-charset-converter.h		\
 	tepl-close-confirm-dialog-single.h	\
 	tepl-encoding-converter.h		\
 	tepl-encoding-private.h			\

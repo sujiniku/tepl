@@ -153,6 +153,26 @@ _tepl_charset_converter_open (TeplCharsetConverter  *charset_converter,
 	return TRUE;
 }
 
+gboolean
+_tepl_charset_converter_close (TeplCharsetConverter  *charset_converter,
+			       GError               **error)
+{
+	gboolean ok;
+
+	g_return_val_if_fail (charset_converter != NULL, FALSE);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	if (!is_opened (charset_converter))
+	{
+		return TRUE;
+	}
+
+	ok = _tepl_iconv_close_and_free (charset_converter->iconv_converter, error);
+	charset_converter->iconv_converter = NULL;
+
+	return ok;
+}
+
 void
 _tepl_charset_converter_free (TeplCharsetConverter *charset_converter)
 {

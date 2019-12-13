@@ -34,6 +34,9 @@ gboolean		_tepl_charset_converter_open		(TeplCharsetConverter  *charset_converte
 								 const gchar           *to_charset,
 								 GError               **error);
 
+gboolean		_tepl_charset_converter_close		(TeplCharsetConverter  *charset_converter,
+								 GError               **error);
+
 void			_tepl_charset_converter_free		(TeplCharsetConverter *charset_converter);
 
 G_END_DECLS

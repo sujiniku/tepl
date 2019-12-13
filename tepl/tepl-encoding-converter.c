@@ -23,9 +23,8 @@
 #include "tepl-encoding.h"
 #include "tepl-iconv.h"
 
-typedef struct _Data Data;
-
-struct _Data
+typedef struct _TaskData TaskData;
+struct _TaskData
 {
 	/* To avoid creating huge areas of memory, the output is assembled in
 	 * chunks.
@@ -62,7 +61,7 @@ typedef enum
 {
 	RESULT_OK,
 	RESULT_ERROR,
-	RESULT_INCOMPLETE_INPUT,
+	RESULT_INCOMPLETE_INPUT
 } Result;
 
 /* 1 MiB */
@@ -74,14 +73,14 @@ typedef enum
 #define MAX_OUTPUT_CHUNK_SIZE_MIN_VALUE (32)
 
 static void
-check_invariants (Data *data)
+check_invariants (TaskData *data)
 {
 	g_assert_cmpint (data->max_output_chunk_size, >=, MAX_OUTPUT_CHUNK_SIZE_MIN_VALUE);
 	g_assert_cmpint (data->outbytes_left, <=, data->max_output_chunk_size);
 }
 
 static void
-init_empty_outbuf (Data *data)
+init_empty_outbuf (TaskData *data)
 {
 	data->outbuf = NULL;
 	data->outbytes_left = 0;
@@ -91,14 +90,14 @@ init_empty_outbuf (Data *data)
  * iconv() doesn't support a NULL outbuf for the main cases.
  */
 static void
-allocate_new_outbuf (Data *data)
+allocate_new_outbuf (TaskData *data)
 {
 	data->outbuf = g_malloc (data->max_output_chunk_size);
 	data->outbytes_left = data->max_output_chunk_size;
 }
 
 static gboolean
-outbuf_is_empty (Data *data)
+outbuf_is_empty (TaskData *data)
 {
 	check_invariants (data);
 
@@ -107,7 +106,7 @@ outbuf_is_empty (Data *data)
 }
 
 static gsize
-get_outbuf_used_length (Data *data)
+get_outbuf_used_length (TaskData *data)
 {
 	check_invariants (data);
 
@@ -117,7 +116,7 @@ get_outbuf_used_length (Data *data)
 }
 
 static gboolean
-outbuf_is_near_to_full (Data *data)
+outbuf_is_near_to_full (TaskData *data)
 {
 	check_invariants (data);
 
@@ -134,7 +133,7 @@ outbuf_is_near_to_full (Data *data)
 }
 
 static void
-append_output_chunk (Data     *data,
+append_output_chunk (TaskData *data,
 		     GBytes   *bytes,
 		     gboolean  is_valid)
 {
@@ -148,7 +147,7 @@ append_output_chunk (Data     *data,
 }
 
 static void
-flush_invalid_chars (Data *data)
+flush_invalid_chars (TaskData *data)
 {
 	GBytes *bytes;
 
@@ -171,7 +170,7 @@ flush_invalid_chars (Data *data)
 }
 
 static void
-flush_outbuf (Data *data)
+flush_outbuf (TaskData *data)
 {
 	GBytes *bytes;
 
@@ -210,7 +209,7 @@ flush_outbuf (Data *data)
 }
 
 static void
-append_invalid_chars (Data         *data,
+append_invalid_chars (TaskData     *data,
 		      const guint8 *invalid_chars,
 		      guint         length)
 {
@@ -262,7 +261,7 @@ input_chunks_list_is_valid (GList *input_chunks)
 }
 
 static void
-data_init (Data     *data,
+data_init (TaskData *data,
 	   gint64    max_output_chunk_size,
 	   gboolean  discard_output)
 {
@@ -286,7 +285,7 @@ data_init (Data     *data,
 }
 
 static void
-data_finalize (Data *data)
+data_finalize (TaskData *data)
 {
 	/* close_converter() must be called first. */
 	g_assert (data->converter == NULL);
@@ -307,7 +306,7 @@ data_finalize (Data *data)
 }
 
 static gboolean
-open_converter (Data          *data,
+open_converter (TaskData      *data,
 		TeplEncoding  *from_encoding,
 		TeplEncoding  *to_encoding,
 		GError       **error)
@@ -322,10 +321,10 @@ open_converter (Data          *data,
 }
 
 static Result
-read_inbuf (Data    *data,
-	    gchar  **inbuf,
-	    gsize   *inbytes_left,
-	    GError **error)
+read_inbuf (TaskData  *data,
+	    gchar    **inbuf,
+	    gsize     *inbytes_left,
+	    GError   **error)
 {
 	g_assert ((inbuf != NULL && *inbuf != NULL && inbytes_left != NULL) ||
 		  (inbuf == NULL && inbytes_left == NULL));
@@ -387,10 +386,10 @@ read_inbuf (Data    *data,
  * until it succeeds. That way, it's just tiny allocations.
  */
 static Result
-handle_remaining_inbuf (Data    *data,
-			gchar  **inbuf,
-			gsize   *inbytes_left,
-			GError **error)
+handle_remaining_inbuf (TaskData  *data,
+			gchar    **inbuf,
+			gsize     *inbytes_left,
+			GError   **error)
 {
 	if (data->remaining_inbuf == NULL)
 	{
@@ -451,9 +450,9 @@ handle_remaining_inbuf (Data    *data,
 }
 
 static gboolean
-feed_input_chunk (Data    *data,
-		  GBytes  *input_bytes,
-		  GError **error)
+feed_input_chunk (TaskData  *data,
+		  GBytes    *input_bytes,
+		  GError   **error)
 {
 	gchar *inbuf;
 	gsize inbytes_left;
@@ -509,8 +508,8 @@ feed_input_chunk (Data    *data,
 }
 
 static gboolean
-close_converter (Data    *data,
-		 GError **error)
+close_converter (TaskData  *data,
+		 GError   **error)
 {
 	Result result;
 	gboolean ok = TRUE;
@@ -585,7 +584,7 @@ _tepl_encoding_converter_test_conversion (GList        *input_chunks,
 					  TeplEncoding *to_encoding,
 					  gint         *n_invalid_input_chars)
 {
-	Data data = { 0 };
+	TaskData data = { 0 };
 	gboolean ok;
 	GList *l;
 

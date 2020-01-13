@@ -321,7 +321,7 @@ msgstr "No es pot obrir el convertidor de «%s» a «%s»: %s"
 
 #: ../tepl/tepl-encoding-converter.c:374
 msgid "The input data contains an invalid sequence."
-msgstr "El contingut d'entrada conté una seqüencia no vàlida."
+msgstr "El contingut d'entrada conté una seqüència no vàlida."
 
 #: ../tepl/tepl-encoding-converter.c:383
 #, c-format
@@ -330,7 +330,7 @@ msgstr "S'ha produït un error convertint les dades: %s"
 
 #: ../tepl/tepl-encoding-converter.c:562
 msgid "The input data ends with an incomplete multi-byte sequence."
-msgstr "El contingut d'entrada acabada amb una seqüencia multi-byte incompleta."
+msgstr "El contingut d'entrada acabada amb una seqüència multi-byte incompleta."
 
 #: ../tepl/tepl-encoding-converter.c:585
 msgid "The input content ends with incomplete data."

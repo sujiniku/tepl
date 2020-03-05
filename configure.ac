@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.64)
 
 # Package version of the form 'major.minor.micro'.
-m4_define(tepl_package_version, 4.3.2)
+m4_define(tepl_package_version, 4.4.0)
 
 AC_INIT([tepl],
 	[tepl_package_version],
@@ -33,9 +33,9 @@ AX_IS_RELEASE([git-directory])
 #
 # When incrementing the API version (usually for a new major package version),
 # set CURRENT, REVISION and AGE to 0 since it's like a new library.
-TEPL_LT_CURRENT=0
+TEPL_LT_CURRENT=1
 TEPL_LT_REVISION=0
-TEPL_LT_AGE=0
+TEPL_LT_AGE=1
 TEPL_LT_VERSION="$TEPL_LT_CURRENT:$TEPL_LT_REVISION:$TEPL_LT_AGE"
 AC_SUBST([TEPL_LT_VERSION])
 

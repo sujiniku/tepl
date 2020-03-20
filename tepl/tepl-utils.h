@@ -68,6 +68,10 @@ G_GNUC_INTERNAL
 void		_tepl_utils_associate_secondary_window		(GtkWindow *secondary_window,
 								 GtkWidget *main_window_widget);
 
+void		tepl_utils_show_warning_dialog			(GtkWindow   *parent,
+								 const gchar *format,
+								 ...) G_GNUC_PRINTF(2, 3);
+
 G_END_DECLS
 
 #endif /* TEPL_UTILS_H */

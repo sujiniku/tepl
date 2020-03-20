@@ -575,3 +575,60 @@ _tepl_utils_associate_secondary_window (GtkWindow *secondary_window,
 		gtk_window_group_add_window (window_group, secondary_window);
 	}
 }
+
+/**
+ * tepl_utils_show_warning_dialog:
+ * @parent: (nullable): the #GtkWindow issuing the warning.
+ * @format: format string, as with printf().
+ * @...: parameters to insert into the format string.
+ *
+ * Shows a #GtkDialog with the provided warning message.
+ *
+ * Since: 4.6
+ */
+void
+tepl_utils_show_warning_dialog (GtkWindow   *parent,
+				const gchar *format,
+				...)
+{
+	va_list args;
+	gchar *str;
+	GtkWidget *dialog;
+	GtkWindowGroup *window_group = NULL;
+
+	g_return_if_fail (format != NULL);
+
+	if (parent != NULL)
+	{
+		window_group = gtk_window_get_group (parent);
+	}
+
+	va_start (args, format);
+	str = g_strdup_vprintf (format, args);
+	va_end (args);
+
+	dialog = gtk_message_dialog_new_with_markup (parent,
+						     GTK_DIALOG_MODAL |
+						     GTK_DIALOG_DESTROY_WITH_PARENT,
+						     GTK_MESSAGE_ERROR,
+						     GTK_BUTTONS_OK,
+						     "%s", str);
+
+	g_free (str);
+
+	if (window_group != NULL)
+	{
+		gtk_window_group_add_window (window_group, GTK_WINDOW (dialog));
+	}
+
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+
+	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+
+	g_signal_connect (dialog,
+			  "response",
+			  G_CALLBACK (gtk_widget_destroy),
+			  NULL);
+
+	gtk_widget_show (dialog);
+}

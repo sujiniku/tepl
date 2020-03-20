@@ -102,5 +102,9 @@
       <title>Index of new symbols in 4.4</title>
       <xi:include href="xml/api-index-4.4.xml"><xi:fallback /></xi:include>
     </index>
+    <index id="api-index-4-6" role="4.6">
+      <title>Index of new symbols in 4.6</title>
+      <xi:include href="xml/api-index-4.6.xml"><xi:fallback /></xi:include>
+    </index>
   </part>
 </book>

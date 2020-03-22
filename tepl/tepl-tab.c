@@ -20,7 +20,6 @@
 #include "config.h"
 #include "tepl-tab.h"
 #include <glib/gi18n-lib.h>
-#include "tepl-buffer.h"
 #include "tepl-close-confirm-dialog-single.h"
 #include "tepl-file-loader.h"
 #include "tepl-file-metadata.h"
@@ -29,7 +28,6 @@
 #include "tepl-tab-group.h"
 #include "tepl-tab-saving.h"
 #include "tepl-utils.h"
-#include "tepl-view.h"
 
 /**
  * SECTION:tab

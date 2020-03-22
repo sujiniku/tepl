@@ -25,7 +25,8 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <tepl/tepl-types.h>
+#include <tepl/tepl-file.h>
+#include <tepl/tepl-tab.h>
 
 G_BEGIN_DECLS
 
@@ -36,6 +37,7 @@ G_BEGIN_DECLS
 #define TEPL_IS_ABSTRACT_FACTORY_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), TEPL_TYPE_ABSTRACT_FACTORY))
 #define TEPL_ABSTRACT_FACTORY_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), TEPL_TYPE_ABSTRACT_FACTORY, TeplAbstractFactoryClass))
 
+typedef struct _TeplAbstractFactory      TeplAbstractFactory;
 typedef struct _TeplAbstractFactoryClass TeplAbstractFactoryClass;
 
 struct _TeplAbstractFactory

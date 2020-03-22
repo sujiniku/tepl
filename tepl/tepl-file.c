@@ -20,8 +20,6 @@
 #include "config.h"
 #include "tepl-file.h"
 #include <glib/gi18n-lib.h>
-#include "tepl-encoding.h"
-#include "tepl-file-metadata.h"
 #include "tepl-utils.h"
 #include "tepl-enum-types.h"
 

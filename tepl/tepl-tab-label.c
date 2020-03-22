@@ -20,7 +20,6 @@
 #include "config.h"
 #include "tepl-tab-label.h"
 #include <glib/gi18n-lib.h>
-#include "tepl-tab.h"
 #include "tepl-buffer.h"
 #include "tepl-file.h"
 #include "tepl-signal-group.h"

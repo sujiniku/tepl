@@ -21,7 +21,7 @@
 #define TEPL_CLOSE_CONFIRM_DIALOG_SINGLE_H
 
 #include <gtk/gtk.h>
-#include "tepl-types.h"
+#include "tepl-tab.h"
 
 G_BEGIN_DECLS
 

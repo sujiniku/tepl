@@ -19,7 +19,6 @@
 
 #include "tepl-file-content.h"
 #include <uchardet.h>
-#include "tepl-encoding.h"
 #include "tepl-encoding-private.h"
 
 struct _TeplFileContentPrivate

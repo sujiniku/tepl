@@ -18,8 +18,6 @@
  */
 
 #include "tepl-abstract-factory.h"
-#include "tepl-file.h"
-#include "tepl-tab.h"
 #include "tepl-tab-label.h"
 
 /**

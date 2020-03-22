@@ -25,7 +25,8 @@
 #endif
 
 #include <gio/gio.h>
-#include <tepl/tepl-types.h>
+#include <tepl/tepl-buffer.h>
+#include <tepl/tepl-encoding.h>
 #include <tepl/tepl-file.h>
 
 G_BEGIN_DECLS

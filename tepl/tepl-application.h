@@ -26,7 +26,6 @@
 
 #include <gtk/gtk.h>
 #include <amtk/amtk.h>
-#include <tepl/tepl-types.h>
 
 G_BEGIN_DECLS
 
@@ -37,6 +36,7 @@ G_BEGIN_DECLS
 #define TEPL_IS_APPLICATION_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), TEPL_TYPE_APPLICATION))
 #define TEPL_APPLICATION_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), TEPL_TYPE_APPLICATION, TeplApplicationClass))
 
+typedef struct _TeplApplication         TeplApplication;
 typedef struct _TeplApplicationClass    TeplApplicationClass;
 typedef struct _TeplApplicationPrivate  TeplApplicationPrivate;
 

@@ -18,9 +18,6 @@
  */
 
 #include "tepl-tab-group.h"
-#include "tepl-tab.h"
-#include "tepl-view.h"
-#include "tepl-buffer.h"
 
 /**
  * SECTION:tab-group

@@ -25,7 +25,6 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <tepl/tepl-types.h>
 #include <tepl/tepl-abstract-factory.h>
 
 G_BEGIN_DECLS
@@ -37,6 +36,7 @@ G_BEGIN_DECLS
 #define TEPL_IS_ABSTRACT_FACTORY_VALA_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), TEPL_TYPE_ABSTRACT_FACTORY_VALA))
 #define TEPL_ABSTRACT_FACTORY_VALA_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), TEPL_TYPE_ABSTRACT_FACTORY_VALA, TeplAbstractFactoryValaClass))
 
+typedef struct _TeplAbstractFactoryVala      TeplAbstractFactoryVala;
 typedef struct _TeplAbstractFactoryValaClass TeplAbstractFactoryValaClass;
 
 struct _TeplAbstractFactoryVala

@@ -22,7 +22,6 @@
 #include <glib/gi18n-lib.h>
 #include "tepl-buffer.h"
 #include "tepl-file.h"
-#include "tepl-tab.h"
 #include "tepl-utils.h"
 
 #define CAN_CLOSE (TRUE)

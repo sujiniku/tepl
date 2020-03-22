@@ -21,7 +21,7 @@
 #define TEPL_FILE_CONTENT_H
 
 #include <glib-object.h>
-#include "tepl-types.h"
+#include "tepl-encoding.h"
 #include "tepl-encoding-converter.h"
 
 G_BEGIN_DECLS

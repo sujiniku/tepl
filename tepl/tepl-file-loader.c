@@ -20,11 +20,8 @@
 #include "config.h"
 #include "tepl-file-loader.h"
 #include <glib/gi18n-lib.h>
-#include "tepl-buffer.h"
-#include "tepl-file.h"
 #include "tepl-file-content.h"
 #include "tepl-file-content-loader.h"
-#include "tepl-encoding.h"
 
 /**
  * SECTION:file-loader

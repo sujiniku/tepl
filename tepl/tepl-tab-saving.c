@@ -21,9 +21,7 @@
 #include "tepl-tab-saving.h"
 #include <glib/gi18n-lib.h>
 #include "tepl-file.h"
-#include "tepl-file-saver.h"
 #include "tepl-info-bar.h"
-#include "tepl-tab.h"
 
 /* The functions in this file permits to run a TeplFileSaver, shows
  * TeplInfoBar's, until the operation is successful or if there is an

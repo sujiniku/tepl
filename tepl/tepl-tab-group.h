@@ -25,7 +25,9 @@
 #endif
 
 #include <glib-object.h>
-#include <tepl/tepl-types.h>
+#include <tepl/tepl-buffer.h>
+#include <tepl/tepl-tab.h>
+#include <tepl/tepl-view.h>
 
 G_BEGIN_DECLS
 
@@ -34,6 +36,7 @@ G_BEGIN_DECLS
 #define TEPL_IS_TAB_GROUP(obj)            (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TEPL_TYPE_TAB_GROUP))
 #define TEPL_TAB_GROUP_GET_INTERFACE(obj) (G_TYPE_INSTANCE_GET_INTERFACE ((obj), TEPL_TYPE_TAB_GROUP, TeplTabGroupInterface))
 
+typedef struct _TeplTabGroup          TeplTabGroup;
 typedef struct _TeplTabGroupInterface TeplTabGroupInterface;
 
 /**

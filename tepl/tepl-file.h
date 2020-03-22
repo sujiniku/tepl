@@ -25,7 +25,8 @@
 #endif
 
 #include <gtksourceview/gtksource.h>
-#include <tepl/tepl-types.h>
+#include <tepl/tepl-encoding.h>
+#include <tepl/tepl-file-metadata.h>
 
 G_BEGIN_DECLS
 

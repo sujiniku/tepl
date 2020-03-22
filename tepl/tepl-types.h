@@ -28,24 +28,7 @@
 
 G_BEGIN_DECLS
 
-typedef struct _TeplAbstractFactory		TeplAbstractFactory;
-typedef struct _TeplAbstractFactoryVala		TeplAbstractFactoryVala;
-typedef struct _TeplApplication			TeplApplication;
-typedef struct _TeplApplicationWindow		TeplApplicationWindow;
-typedef struct _TeplBuffer			TeplBuffer;
-typedef struct _TeplEncoding			TeplEncoding;
-typedef struct _TeplFile			TeplFile;
-typedef struct _TeplFileLoader			TeplFileLoader;
-typedef struct _TeplFileMetadata		TeplFileMetadata;
-typedef struct _TeplFileSaver			TeplFileSaver;
-typedef struct _TeplFoldRegion			TeplFoldRegion;
-typedef struct _TeplGutterRendererFolds		TeplGutterRendererFolds;
-typedef struct _TeplInfoBar			TeplInfoBar;
-typedef struct _TeplNotebook			TeplNotebook;
-typedef struct _TeplTab				TeplTab;
-typedef struct _TeplTabGroup			TeplTabGroup;
-typedef struct _TeplTabLabel			TeplTabLabel;
-typedef struct _TeplView			TeplView;
+typedef struct _TeplFile	TeplFile;
 
 G_END_DECLS
 

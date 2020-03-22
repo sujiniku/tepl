@@ -25,7 +25,6 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <tepl/tepl-types.h>
 
 G_BEGIN_DECLS
 
@@ -36,6 +35,7 @@ G_BEGIN_DECLS
 #define TEPL_IS_NOTEBOOK_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), TEPL_TYPE_NOTEBOOK))
 #define TEPL_NOTEBOOK_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), TEPL_TYPE_NOTEBOOK, TeplNotebookClass))
 
+typedef struct _TeplNotebook         TeplNotebook;
 typedef struct _TeplNotebookClass    TeplNotebookClass;
 typedef struct _TeplNotebookPrivate  TeplNotebookPrivate;
 

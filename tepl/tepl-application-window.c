@@ -26,7 +26,6 @@
 #include "tepl-file.h"
 #include "tepl-signal-group.h"
 #include "tepl-tab.h"
-#include "tepl-tab-group.h"
 #include "tepl-view.h"
 
 /**

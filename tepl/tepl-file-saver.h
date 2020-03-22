@@ -28,7 +28,8 @@
 #endif
 
 #include <gtksourceview/gtksource.h>
-#include <tepl/tepl-types.h>
+#include <tepl/tepl-buffer.h>
+#include <tepl/tepl-encoding.h>
 #include <tepl/tepl-file.h>
 
 G_BEGIN_DECLS
@@ -40,6 +41,7 @@ G_BEGIN_DECLS
 #define TEPL_IS_FILE_SAVER_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE ((klass), TEPL_TYPE_FILE_SAVER))
 #define TEPL_FILE_SAVER_GET_CLASS(obj)    (G_TYPE_INSTANCE_GET_CLASS((obj), TEPL_TYPE_FILE_SAVER, TeplFileSaverClass))
 
+typedef struct _TeplFileSaver        TeplFileSaver;
 typedef struct _TeplFileSaverClass   TeplFileSaverClass;
 typedef struct _TeplFileSaverPrivate TeplFileSaverPrivate;
 

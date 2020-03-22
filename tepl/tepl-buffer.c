@@ -19,7 +19,6 @@
 
 #include "tepl-buffer.h"
 #include "tepl-abstract-factory.h"
-#include "tepl-file.h"
 #include "tepl-utils.h"
 
 /**

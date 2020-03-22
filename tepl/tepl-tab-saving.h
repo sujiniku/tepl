@@ -21,7 +21,8 @@
 #define TEPL_TAB_SAVING_H
 
 #include <gio/gio.h>
-#include "tepl-types.h"
+#include "tepl-tab.h"
+#include "tepl-file-saver.h"
 
 G_BEGIN_DECLS
 

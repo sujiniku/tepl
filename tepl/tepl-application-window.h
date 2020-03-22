@@ -25,7 +25,7 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <tepl/tepl-types.h>
+#include <tepl/tepl-tab-group.h>
 
 G_BEGIN_DECLS
 
@@ -36,6 +36,7 @@ G_BEGIN_DECLS
 #define TEPL_IS_APPLICATION_WINDOW_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), TEPL_TYPE_APPLICATION_WINDOW))
 #define TEPL_APPLICATION_WINDOW_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), TEPL_TYPE_APPLICATION_WINDOW, TeplApplicationWindowClass))
 
+typedef struct _TeplApplicationWindow         TeplApplicationWindow;
 typedef struct _TeplApplicationWindowClass    TeplApplicationWindowClass;
 typedef struct _TeplApplicationWindowPrivate  TeplApplicationWindowPrivate;
 

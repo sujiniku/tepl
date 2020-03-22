@@ -25,7 +25,8 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <tepl/tepl-types.h>
+#include <tepl/tepl-buffer.h>
+#include <tepl/tepl-view.h>
 
 G_BEGIN_DECLS
 
@@ -36,6 +37,7 @@ G_BEGIN_DECLS
 #define TEPL_IS_TAB_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), TEPL_TYPE_TAB))
 #define TEPL_TAB_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), TEPL_TYPE_TAB, TeplTabClass))
 
+typedef struct _TeplTab         TeplTab;
 typedef struct _TeplTabClass    TeplTabClass;
 typedef struct _TeplTabPrivate  TeplTabPrivate;
 

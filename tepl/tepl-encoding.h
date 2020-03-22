@@ -26,11 +26,12 @@
 #endif
 
 #include <glib-object.h>
-#include <tepl/tepl-types.h>
 
 G_BEGIN_DECLS
 
 #define TEPL_TYPE_ENCODING (tepl_encoding_get_type ())
+
+typedef struct _TeplEncoding TeplEncoding;
 
 GType			tepl_encoding_get_type			(void) G_GNUC_CONST;
 

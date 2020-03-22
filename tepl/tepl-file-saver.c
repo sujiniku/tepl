@@ -23,10 +23,7 @@
 #include "config.h"
 #include "tepl-file-saver.h"
 #include <glib/gi18n-lib.h>
-#include "tepl-file.h"
 #include "tepl-buffer-input-stream.h"
-#include "tepl-buffer.h"
-#include "tepl-encoding.h"
 #include "tepl-enum-types.h"
 
 /**

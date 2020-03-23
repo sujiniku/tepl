@@ -393,6 +393,7 @@ tepl_utils_str_replace
 tepl_utils_get_file_extension
 tepl_utils_get_file_shortname
 tepl_utils_replace_home_dir_with_tilde
+tepl_utils_decode_uri
 tepl_utils_show_warning_dialog
 </SECTION>
 

@@ -310,8 +310,8 @@ null_ptr (gchar **ptr)
 	}
 }
 
-/*
- * _tepl_utils_decode_uri:
+/**
+ * tepl_utils_decode_uri:
  * @uri: the uri to decode
  * @scheme: (out) (optional): return value pointer for the uri's
  *     scheme (e.g. http, sftp, ...), or %NULL
@@ -326,14 +326,15 @@ null_ptr (gchar **ptr)
  * all return value pointers should be freed using g_free().
  *
  * Returns: %TRUE if the uri could be properly decoded, %FALSE otherwise.
+ * Since: 4.6
  */
 gboolean
-_tepl_utils_decode_uri (const gchar  *uri,
-			gchar       **scheme,
-			gchar       **user,
-			gchar       **host,
-			gchar       **port,
-			gchar       **path)
+tepl_utils_decode_uri (const gchar  *uri,
+		       gchar       **scheme,
+		       gchar       **user,
+		       gchar       **host,
+		       gchar       **port,
+		       gchar       **path)
 {
 	/* Largely copied from glib/gio/gdummyfile.c: _g_decode_uri().
 	 * This functionality is currently not in GLib/GIO, so for now we

@@ -128,7 +128,7 @@ parse_error (const GError  *error,
 
 		if (uri != NULL)
 		{
-			_tepl_utils_decode_uri (uri, NULL, NULL, &host, NULL, NULL);
+			tepl_utils_decode_uri (uri, NULL, NULL, &host, NULL, NULL);
 		}
 
 		if (host != NULL)

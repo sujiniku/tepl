@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -24,8 +24,8 @@
  * @Short_description: Subclass of GtkInfoBar
  * @Title: TeplInfoBar
  *
- * #TeplInfoBar is a subclass of #GtkInfoBar with a vertical action area and
- * functions to ease the creation of info bars.
+ * #TeplInfoBar is a subclass of #GtkInfoBar with functions to ease the creation
+ * of info bars.
  */
 
 typedef struct _TeplInfoBarPrivate TeplInfoBarPrivate;
@@ -78,36 +78,12 @@ static void
 tepl_info_bar_init (TeplInfoBar *info_bar)
 {
 	TeplInfoBarPrivate *priv;
-	GtkWidget *action_area;
 	GtkWidget *content_area;
 
 	priv = tepl_info_bar_get_instance_private (info_bar);
 
 	_tepl_info_bar_set_size_request (GTK_INFO_BAR (info_bar));
-
-	/* Change the buttons orientation to be vertical.
-	 *
-	 * With a small window, if 3 or more buttons are shown horizontally,
-	 * there is a ridiculous amount of space for the text. And it can get
-	 * worse since the button labels are translatable, in other languages it
-	 * can take even more place. If the buttons are packed vertically, there
-	 * is no problem.
-	 *
-	 * The GtkInfoBar implementation comes originally from gedit, and the
-	 * action area was vertical. Then IIRC a GNOME designer decided that the
-	 * action area must be horizontal, making the gedit info bars look
-	 * weird... So, come back to the original design.
-	 */
-	action_area = gtk_info_bar_get_action_area (GTK_INFO_BAR (info_bar));
-	if (GTK_IS_ORIENTABLE (action_area))
-	{
-		gtk_orientable_set_orientation (GTK_ORIENTABLE (action_area),
-						GTK_ORIENTATION_VERTICAL);
-	}
-	else
-	{
-		g_warning ("Failed to set vertical orientation to the GtkInfoBar action area.");
-	}
+	tepl_info_bar_set_buttons_orientation (info_bar, GTK_ORIENTATION_VERTICAL);
 
 	/* hgrid */
 	priv->content_hgrid = GTK_GRID (gtk_grid_new ());
@@ -368,6 +344,44 @@ tepl_info_bar_add_close_button (TeplInfoBar *info_bar)
 	gtk_info_bar_set_show_close_button (GTK_INFO_BAR (info_bar), TRUE);
 
 	priv->close_button_added = TRUE;
+}
+
+/**
+ * tepl_info_bar_set_buttons_orientation:
+ * @info_bar: a #TeplInfoBar.
+ * @buttons_orientation: the desired orientation.
+ *
+ * Sets the desired orientation (horizontal or vertical) for the action area as
+ * returned by gtk_info_bar_get_action_area(). The action area is where the
+ * buttons are placed.
+ *
+ * The default value for a #TeplInfoBar is %GTK_ORIENTATION_VERTICAL. The reason
+ * is because with a small #GtkWindow, if 3 or more buttons are shown
+ * horizontally, there is not enough space for the text. And it can be worse
+ * when the button labels are translated to another language. When the buttons
+ * are packed vertically, there is usually no problem. A vertical action area
+ * also follows the original design of #GtkInfoBar.
+ *
+ * Since: 4.6
+ */
+void
+tepl_info_bar_set_buttons_orientation (TeplInfoBar    *info_bar,
+				       GtkOrientation  buttons_orientation)
+{
+	GtkWidget *action_area;
+
+	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
+
+	action_area = gtk_info_bar_get_action_area (GTK_INFO_BAR (info_bar));
+	if (GTK_IS_ORIENTABLE (action_area))
+	{
+		gtk_orientable_set_orientation (GTK_ORIENTABLE (action_area),
+						buttons_orientation);
+	}
+	else
+	{
+		g_warning ("Failed to set vertical orientation to the GtkInfoBar action area.");
+	}
 }
 
 /**

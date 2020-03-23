@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -58,6 +58,9 @@ void			tepl_info_bar_add_content_widget		(TeplInfoBar *info_bar,
 									 GtkWidget   *content);
 
 void			tepl_info_bar_add_close_button			(TeplInfoBar *info_bar);
+
+void			tepl_info_bar_set_buttons_orientation		(TeplInfoBar    *info_bar,
+									 GtkOrientation  buttons_orientation);
 
 GtkLabel *		tepl_info_bar_create_label			(void);
 

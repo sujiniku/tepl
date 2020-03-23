@@ -316,12 +316,12 @@ null_ptr (gchar **ptr)
  * @scheme: (out) (optional): return value pointer for the uri's
  *     scheme (e.g. http, sftp, ...), or %NULL
  * @user: (out) (optional): return value pointer for the uri user info, or %NULL
- * @port: (out) (optional): return value pointer for the uri port, or %NULL
  * @host: (out) (optional): return value pointer for the uri host, or %NULL
+ * @port: (out) (optional): return value pointer for the uri port, or %NULL
  * @path: (out) (optional): return value pointer for the uri path, or %NULL
  *
  * Parse and break an uri apart in its individual components like the uri
- * scheme, user info, port, host and path. The return value pointer can be
+ * scheme, user info, host, port and path. The return value pointer can be
  * %NULL to ignore certain parts of the uri. If the function returns %TRUE, then
  * all return value pointers should be freed using g_free().
  *

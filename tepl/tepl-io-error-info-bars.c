@@ -31,7 +31,7 @@
  */
 
 /**
- * tepl_io_error_info_bar_file_already_open_warning_new:
+ * tepl_io_error_info_bar_file_already_open:
  * @location: the #GFile already open in another window.
  *
  * Creates a warning about @location being already open in another window,
@@ -43,7 +43,7 @@
  * Since: 4.6
  */
 TeplInfoBar *
-tepl_io_error_info_bar_file_already_open_warning_new (GFile *location)
+tepl_io_error_info_bar_file_already_open (GFile *location)
 {
 	TeplInfoBar *info_bar;
 	gchar *uri;

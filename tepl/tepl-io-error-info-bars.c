@@ -134,3 +134,48 @@ tepl_io_error_info_bar_cant_create_backup (GFile        *location,
 
 	return info_bar;
 }
+
+/**
+ * tepl_io_error_info_bar_externally_modified:
+ * @location: the #GFile for which there has been an external modification.
+ * @document_modified: whether the document (e.g. the #GtkTextBuffer) has
+ *   unsaved modifications.
+ *
+ * Creates a warning about @location having changed on disk. The possible
+ * actions:
+ * - Depending on @document_modified, "Reload" or "Drop changes and reload":
+ *   %GTK_RESPONSE_OK.
+ * - A close button as added with gtk_info_bar_set_show_close_button().
+ *
+ * Returns: (transfer floating): the newly created #TeplInfoBar.
+ * Since: 4.6
+ */
+TeplInfoBar *
+tepl_io_error_info_bar_externally_modified (GFile    *location,
+					    gboolean  document_modified)
+{
+	TeplInfoBar *info_bar;
+	gchar *uri;
+	gchar *primary_msg;
+	const gchar *button_text;
+
+	g_return_val_if_fail (G_IS_FILE (location), NULL);
+
+	info_bar = tepl_info_bar_new ();
+
+	uri = g_file_get_parse_name (location);
+	primary_msg = g_strdup_printf (_("The file “%s” changed on disk."), uri);
+	tepl_info_bar_add_primary_message (info_bar, primary_msg);
+	g_free (uri);
+	g_free (primary_msg);
+
+	button_text = document_modified ? _("Drop Changes and _Reload") : _("_Reload");
+	gtk_info_bar_add_button (GTK_INFO_BAR (info_bar),
+				 button_text,
+				 GTK_RESPONSE_OK);
+
+	gtk_info_bar_set_show_close_button (GTK_INFO_BAR (info_bar), TRUE);
+	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), GTK_MESSAGE_WARNING);
+
+	return info_bar;
+}

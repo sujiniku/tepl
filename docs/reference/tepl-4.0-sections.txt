@@ -290,6 +290,11 @@ TeplInfoBarClass
 </SECTION>
 
 <SECTION>
+<FILE>io-error-info-bars</FILE>
+tepl_io_error_info_bar_file_already_open_warning_new
+</SECTION>
+
+<SECTION>
 <FILE>iter</FILE>
 tepl_iter_get_line_indentation
 </SECTION>

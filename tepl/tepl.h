@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -41,6 +41,7 @@
 #include <tepl/tepl-gutter-renderer-folds.h>
 #include <tepl/tepl-info-bar.h>
 #include <tepl/tepl-init.h>
+#include <tepl/tepl-io-error-info-bars.h>
 #include <tepl/tepl-iter.h>
 #include <tepl/tepl-menu-shell.h>
 #include <tepl/tepl-metadata-manager.h>

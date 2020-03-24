@@ -28,6 +28,7 @@ tepl_public_headers =				\
 	tepl-gutter-renderer-folds.h		\
 	tepl-info-bar.h				\
 	tepl-init.h				\
+	tepl-io-error-info-bars.h		\
 	tepl-iter.h				\
 	tepl-menu-shell.h			\
 	tepl-metadata-manager.h			\
@@ -54,6 +55,7 @@ tepl_public_c_files =				\
 	tepl-gutter-renderer-folds.c		\
 	tepl-info-bar.c				\
 	tepl-init.c				\
+	tepl-io-error-info-bars.c		\
 	tepl-iter.c				\
 	tepl-menu-shell.c			\
 	tepl-metadata-manager.c			\

@@ -27,6 +27,9 @@ G_BEGIN_DECLS
 
 TeplInfoBar *	tepl_io_error_info_bar_file_already_open_warning_new	(GFile *location);
 
+TeplInfoBar *	tepl_io_error_info_bar_cant_create_backup		(GFile        *location,
+									 const GError *error);
+
 G_END_DECLS
 
 #endif /* TEPL_IO_ERROR_INFO_BARS_H */

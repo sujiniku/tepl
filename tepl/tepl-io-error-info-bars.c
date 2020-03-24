@@ -179,3 +179,50 @@ tepl_io_error_info_bar_externally_modified (GFile    *location,
 
 	return info_bar;
 }
+
+/**
+ * tepl_io_error_info_bar_invalid_characters:
+ * @location: where to save the document.
+ *
+ * For file saving, creates a warning about invalid characters that can corrupt
+ * the file. Possible actions:
+ * - Save anyway: %GTK_RESPONSE_YES.
+ * - Don't save: %GTK_RESPONSE_CANCEL.
+ *
+ * Returns: (transfer floating): the newly created #TeplInfoBar.
+ * Since: 4.6
+ */
+TeplInfoBar *
+tepl_io_error_info_bar_invalid_characters (GFile *location)
+{
+	TeplInfoBar *info_bar;
+	gchar *uri;
+	gchar *primary_msg;
+	const gchar *secondary_msg;
+
+	g_return_val_if_fail (G_IS_FILE (location), NULL);
+
+	info_bar = tepl_info_bar_new ();
+
+	gtk_info_bar_add_button (GTK_INFO_BAR (info_bar),
+				 _("S_ave Anyway"),
+				 GTK_RESPONSE_YES);
+
+	gtk_info_bar_add_button (GTK_INFO_BAR (info_bar),
+				 _("_Don’t Save"),
+				 GTK_RESPONSE_CANCEL);
+
+	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), GTK_MESSAGE_WARNING);
+
+	uri = g_file_get_parse_name (location);
+	primary_msg = g_strdup_printf (_("Some invalid characters have been detected while saving “%s”."), uri);
+	tepl_info_bar_add_primary_message (info_bar, primary_msg);
+	g_free (uri);
+	g_free (primary_msg);
+
+	secondary_msg = _("If you continue saving this file you can corrupt the document. "
+			  "Save anyway?");
+	tepl_info_bar_add_secondary_message (info_bar, secondary_msg);
+
+	return info_bar;
+}

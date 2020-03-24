@@ -33,6 +33,8 @@ TeplInfoBar *	tepl_io_error_info_bar_cant_create_backup		(GFile        *location
 TeplInfoBar *	tepl_io_error_info_bar_externally_modified		(GFile    *location,
 									 gboolean  document_modified);
 
+TeplInfoBar *	tepl_io_error_info_bar_invalid_characters		(GFile *location);
+
 G_END_DECLS
 
 #endif /* TEPL_IO_ERROR_INFO_BARS_H */

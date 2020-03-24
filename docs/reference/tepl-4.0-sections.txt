@@ -294,6 +294,7 @@ TeplInfoBarClass
 tepl_io_error_info_bar_file_already_open
 tepl_io_error_info_bar_cant_create_backup
 tepl_io_error_info_bar_externally_modified
+tepl_io_error_info_bar_invalid_characters
 </SECTION>
 
 <SECTION>

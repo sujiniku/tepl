@@ -49,7 +49,7 @@ TEPL_API_VERSION=4
 AC_SUBST([TEPL_API_VERSION])
 
 # Dependencies
-glib_req=2.52
+glib_req=2.56
 gtk_req=3.22
 gtksourceview_req=4.0
 amtk_req=5.0

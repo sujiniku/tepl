@@ -314,6 +314,30 @@ tepl_metadata_manager_shutdown
 </SECTION>
 
 <SECTION>
+<FILE>metadata-store</FILE>
+TeplMetadataStore
+tepl_metadata_store_get_singleton
+tepl_metadata_store_set_store_file
+tepl_metadata_store_set_max_number_of_locations
+tepl_metadata_store_load_async
+tepl_metadata_store_load_finish
+tepl_metadata_store_is_loaded
+tepl_metadata_store_save
+tepl_metadata_store_get_metadata_for_location
+tepl_metadata_store_set_metadata_for_location
+<SUBSECTION Standard>
+TEPL_IS_METADATA_STORE
+TEPL_IS_METADATA_STORE_CLASS
+TEPL_METADATA_STORE
+TEPL_METADATA_STORE_CLASS
+TEPL_METADATA_STORE_GET_CLASS
+TEPL_TYPE_METADATA_STORE
+TeplMetadataStoreClass
+TeplMetadataStorePrivate
+tepl_metadata_store_get_type
+</SECTION>
+
+<SECTION>
 <FILE>tab</FILE>
 TeplTab
 TeplTabClass

@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2017-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -22,6 +22,7 @@
 #include <gtksourceview/gtksource.h>
 #include "tepl-abstract-factory.h"
 #include "tepl-metadata-manager.h"
+#include "tepl-metadata-store.h"
 
 /**
  * tepl_init:
@@ -79,6 +80,7 @@ tepl_finalize (void)
 	if (!done)
 	{
 		tepl_metadata_manager_shutdown ();
+		_tepl_metadata_store_unref_singleton ();
 		_tepl_abstract_factory_unref_singleton ();
 
 		/* Since Tepl depends on Amtk and GtkSourceView, it's better to

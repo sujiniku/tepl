@@ -56,6 +56,9 @@ test_fold_region_SOURCES = test-fold-region.c
 UNIT_TEST_PROGS += test-info-bar
 test_info_bar_SOURCES = test-info-bar.c
 
+UNIT_TEST_PROGS += test-metadata-store
+test_metadata_store_SOURCES = test-metadata-store.c
+
 UNIT_TEST_PROGS += test-notebook
 test_notebook_SOURCES = test-notebook.c
 

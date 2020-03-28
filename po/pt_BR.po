@@ -1,39 +1,23 @@
 # Brazilian Portuguese translation for tepl.
-# Copyright (C) 2017 tepl's COPYRIGHT HOLDER
+# Copyright (C) 2020 tepl's COPYRIGHT HOLDER
 # This file is distributed under the same license as the tepl package.
-# Rafael Fontenelle <rafaelff@gnome.org>, 2017.
+# Rafael Fontenelle <rafaelff@gnome.org>, 2017-2020.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=tepl&k"
-"eywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-12-01 09:23+0000\n"
-"PO-Revision-Date: 2017-12-12 06:28-0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
+"POT-Creation-Date: 2020-03-27 21:10+0000\n"
+"PO-Revision-Date: 2020-03-28 08:39-0300\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Virtaal 1.0.0-beta1\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"X-Generator: Gtranslator 3.36.0\n"
 "X-Project-Style: gnome\n"
-
-#. Translators: %s is a filename.
-#: amtk/amtk-application-window.c:374
-#, c-format
-msgid "Open “%s”"
-msgstr "Abrir “%s”"
-
-#: amtk/amtk-application-window.c:630
-msgid "Open _Recent"
-msgstr "Abrir _recente"
-
-#. Translators: %s is the application name.
-#: amtk/amtk-application-window.c:633
-#, c-format
-msgid "Open a file recently used with %s"
-msgstr "Abre um arquivo recentemente usado com %s"
 
 #. action, icon, label, accel, tooltip
 #. File menu
@@ -58,17 +42,16 @@ msgstr "Nova _janela"
 msgid "Create a new window"
 msgstr "Cria uma nova janela"
 
-#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:178
+#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:177
 msgid "_Open"
 msgstr "_Abrir"
 
 #: tepl/tepl-application.c:99
-#| msgid "New file"
 msgid "Open a file"
 msgstr "Abre um arquivo"
 
-#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:144
-#: tepl/tepl-tab.c:752
+#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:143
+#: tepl/tepl-tab.c:750
 msgid "_Save"
 msgstr "_Salvar"
 
@@ -90,7 +73,6 @@ msgid "_Undo"
 msgstr "_Desfazer"
 
 #: tepl/tepl-application.c:110
-#| msgid "Copy the selection"
 msgid "Undo the last action"
 msgstr "Desfaz a última ação"
 
@@ -147,7 +129,6 @@ msgid "_Indent"
 msgstr "_Recuar"
 
 #: tepl/tepl-application.c:131
-#| msgid "Delete the selected text"
 msgid "Indent the selected lines"
 msgstr "Recua as linhas selecionadas"
 
@@ -156,7 +137,6 @@ msgid "_Unindent"
 msgstr "Re_tirar recuo"
 
 #: tepl/tepl-application.c:134
-#| msgid "Delete the selected text"
 msgid "Unindent the selected lines"
 msgstr "Retira recuo das linhas selecionadas"
 
@@ -169,29 +149,29 @@ msgstr "Retira recuo das linhas selecionadas"
 #. * - opening a recent file.
 #. * Basically everywhere where the directory is shown.
 #.
-#: tepl/tepl-application-window.c:174
+#: tepl/tepl-application-window.c:173
 msgid "Open File"
 msgstr "Abrir arquivo"
 
-#: tepl/tepl-application-window.c:177
-#: tepl/tepl-close-confirm-dialog-single.c:138 tepl/tepl-tab.c:751
+#: tepl/tepl-application-window.c:176
+#: tepl/tepl-close-confirm-dialog-single.c:137 tepl/tepl-tab.c:749
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: tepl/tepl-application-window.c:708
+#: tepl/tepl-application-window.c:707
 msgid "Read-Only"
 msgstr "Apenas leitura"
 
-#: tepl/tepl-close-confirm-dialog-single.c:133
+#: tepl/tepl-close-confirm-dialog-single.c:132
 #, c-format
 msgid "Save changes to file “%s” before closing?"
 msgstr "Salvar alterações ao arquivo “%s” antes de fechar?"
 
-#: tepl/tepl-close-confirm-dialog-single.c:137
+#: tepl/tepl-close-confirm-dialog-single.c:136
 msgid "Close _without Saving"
 msgstr "_Fechar sem salvar"
 
-#: tepl/tepl-close-confirm-dialog-single.c:150
+#: tepl/tepl-close-confirm-dialog-single.c:149
 msgid "_Save As…"
 msgstr "_Salvar como…"
 
@@ -320,77 +300,192 @@ msgstr "Desconhecido"
 msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 
-#: tepl/tepl-encoding-converter.c:302
+#: tepl/tepl-encoding-converter.c:305
 #, c-format
 msgid "Conversion from character set “%s” to “%s” is not supported."
 msgstr "Não há suporte a conversão de conjunto de caracteres “%s” para “%s”."
 
-#: tepl/tepl-encoding-converter.c:311
+#: tepl/tepl-encoding-converter.c:314
 #, c-format
 msgid "Could not open converter from “%s” to “%s”: %s"
 msgstr "Não foi possível abrir o conversor de “%s” para “%s”: %s"
 
-#: tepl/tepl-encoding-converter.c:368
+#: tepl/tepl-encoding-converter.c:374
 msgid "The input data contains an invalid sequence."
 msgstr "Os dados de entrada contêm uma sequência inválida."
 
-#: tepl/tepl-encoding-converter.c:377
+#: tepl/tepl-encoding-converter.c:383
 #, c-format
 msgid "Error when converting data: %s"
 msgstr "Erro ao converter dados: %s"
 
-#: tepl/tepl-encoding-converter.c:556
+#: tepl/tepl-encoding-converter.c:562
 msgid "The input data ends with an incomplete multi-byte sequence."
 msgstr "Os dados de entrada terminam com uma sequência multibyte incompleta."
 
-#: tepl/tepl-encoding-converter.c:579
+#: tepl/tepl-encoding-converter.c:585
 msgid "The input content ends with incomplete data."
 msgstr "O conteúdo de entrada termina com dados incompletos."
 
-#: tepl/tepl-file.c:413
+#: tepl/tepl-file.c:411
 #, c-format
 msgid "Untitled File %d"
 msgstr "Arquivo sem título %d"
 
-#: tepl/tepl-file-content-loader.c:331
+#: tepl/tepl-file-content-loader.c:336
 #, c-format
 msgid "The file is too big. Maximum %s can be loaded."
 msgstr "O arquivo é grande demais. No máximo %s pode ser carregado."
 
-#: tepl/tepl-file-loader.c:872
+#: tepl/tepl-file-loader.c:869
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Não foi possível detectar a codificação de caracteres automaticamente."
 
-#: tepl/tepl-file-saver.c:784
+#: tepl/tepl-file-saver.c:781
 msgid "The file is externally modified."
 msgstr "O arquivo foi modificado externamente."
 
-#: tepl/tepl-file-saver.c:1318
+#: tepl/tepl-file-saver.c:1315
 msgid "The buffer contains invalid characters."
 msgstr "O buffer contém caracteres inválidos."
 
-#: tepl/tepl-tab.c:534
-#| msgid "Error when converting data: %s"
+#: tepl/tepl-io-error-info-bars.c:57
+#| msgid "Edit Any_way"
+msgid "_Edit Anyway"
+msgstr "_Editar mesmo assim"
+
+#: tepl/tepl-io-error-info-bars.c:61
+msgid "_Don’t Edit"
+msgstr "_Não editar"
+
+#: tepl/tepl-io-error-info-bars.c:67
+#, c-format
+msgid "This file “%s” is already open in another window."
+msgstr "Este arquivo “%s” já está aberto em outra janela."
+
+#: tepl/tepl-io-error-info-bars.c:72
+msgid "Do you want to edit it anyway?"
+msgstr "Deseja editá-lo mesmo assim?"
+
+#: tepl/tepl-io-error-info-bars.c:106 tepl/tepl-io-error-info-bars.c:208
+#| msgid "Save _As"
+msgid "S_ave Anyway"
+msgstr "S_alvar mesmo assim"
+
+#: tepl/tepl-io-error-info-bars.c:110 tepl/tepl-io-error-info-bars.c:212
+msgid "_Don’t Save"
+msgstr "_Não salvar"
+
+#: tepl/tepl-io-error-info-bars.c:116
+#, c-format
+#| msgid "Could not open the file “%s”."
+msgid "Could not create a backup file while saving “%s”"
+msgstr "Não foi possível criar um arquivo backup ao salvar “%s”"
+
+#: tepl/tepl-io-error-info-bars.c:121
+msgid ""
+"Could not back up the old copy of the file before saving the new one. You "
+"can ignore this warning and save the file anyway, but if an error occurs "
+"while saving, you could lose the old copy of the file. Save anyway?"
+msgstr ""
+"Não foi possível fazer backup da cópia antiga do arquivo antes de salvar o "
+"novo. Você pode ignorar esse aviso e salvar o arquivo de qualquer maneira, "
+"mas se ocorrer um erro ao salvar, poderá perder a cópia antiga do arquivo. "
+"Salvar mesmo assim?"
+
+#: tepl/tepl-io-error-info-bars.c:130
+#, c-format
+msgid "Error message: %s"
+msgstr "Mensagem de erro: %s"
+
+#: tepl/tepl-io-error-info-bars.c:167
+#, c-format
+msgid "The file “%s” changed on disk."
+msgstr "O arquivo “%s” foi alterado no disco."
+
+#: tepl/tepl-io-error-info-bars.c:172
+msgid "Drop Changes and _Reload"
+msgstr "Descartar alterações e _recarregar"
+
+#: tepl/tepl-io-error-info-bars.c:172
+msgid "_Reload"
+msgstr "_Recarregar"
+
+#: tepl/tepl-io-error-info-bars.c:218
+#, c-format
+msgid "Some invalid characters have been detected while saving “%s”."
+msgstr "Alguns caracteres inválidos foram detectados ao salvar “%s”."
+
+#: tepl/tepl-io-error-info-bars.c:223
+msgid ""
+"If you continue saving this file you can corrupt the document. Save anyway?"
+msgstr ""
+"Se você continuar salvando este arquivo, poderá corromper o documento. "
+"Salvar mesmo assim?"
+
+#. Translators: do not translate <metadata>.
+#: tepl/tepl-metadata-store.c:392
+#, c-format
+msgid "The XML file must start with a <metadata> element, not “%s”."
+msgstr "O arquivo XML deve começar com um elemento <metadata>, não “%s”."
+
+#. Translators: do not translate <document>.
+#: tepl/tepl-metadata-store.c:424
+#, c-format
+msgid "Expected a <document> element, got “%s” instead."
+msgstr "Esperava um elemento <document>, obtido “%s”."
+
+#. Translators: do not translate “atime”.
+#: tepl/tepl-metadata-store.c:450
+#, c-format
+msgid "Failed to parse the “atime” attribute value “%s”."
+msgstr "Falha ao analisar o valor do atributo “atime” “%s”."
+
+#. Translators: do not translate <document>, “uri” and “atime”.
+#: tepl/tepl-metadata-store.c:465
+msgid "The <document> element must contain the “uri” and “atime” attributes."
+msgstr "O elemento <document> deve conter os atributos “uri” e “atime”."
+
+#. Translators: do not translate <entry>.
+#: tepl/tepl-metadata-store.c:520
+#, c-format
+msgid "Expected an <entry> element, got “%s” instead."
+msgstr "Esperava um elemento <entry>, obtido “%s”."
+
+#. Translators: do not translate <entry>, “key” and “value”.
+#: tepl/tepl-metadata-store.c:546
+msgid "The <entry> element must contain the “key” and “value” attributes."
+msgstr "O elemento <entry> deve conter os atributos “key” e “value”."
+
+#: tepl/tepl-tab.c:532
 msgid "Error when loading the file."
 msgstr "Erro ao carregar o arquivo."
 
-#: tepl/tepl-tab.c:748
+#: tepl/tepl-tab.c:746
 msgid "Save File"
 msgstr "Salvar arquivo"
 
 #. Translators: location of a file.
-#: tepl/tepl-tab-label.c:273
+#: tepl/tepl-tab-label.c:272
 msgid "Location:"
 msgstr "Localização:"
 
-#: tepl/tepl-tab-label.c:342
+#: tepl/tepl-tab-label.c:341
 msgid "Close file"
 msgstr "Fecha o arquivo"
 
-#: tepl/tepl-tab-saving.c:64
-#| msgid "Error when converting data: %s"
+#: tepl/tepl-tab-saving.c:62
 msgid "Error when saving the file."
 msgstr "Erro ao salvar o arquivo."
+
+#~ msgid "Open “%s”"
+#~ msgstr "Abrir “%s”"
+
+#~ msgid "Open _Recent"
+#~ msgstr "Abrir _recente"
+
+#~ msgid "Open a file recently used with %s"
+#~ msgstr "Abre um arquivo recentemente usado com %s"
 
 #~ msgid "Could not find the file “%s”."
 #~ msgstr "Não foi possível localizar o arquivo “%s”."
@@ -438,9 +533,6 @@ msgstr "Erro ao salvar o arquivo."
 #~ msgid "_Retry"
 #~ msgstr "_Tentar novamente"
 
-#~ msgid "Edit Any_way"
-#~ msgstr "_Editar assim mesmo"
-
 #~ msgid ""
 #~ "The number of followed links is limited and the actual file could not be "
 #~ "found within this limit."
@@ -487,6 +579,3 @@ msgstr "Erro ao salvar o arquivo."
 #~ "binário.\n"
 #~ "Selecione uma codificação de caracteres diferente do menu e tente "
 #~ "novamente."
-
-#~ msgid "Could not open the file “%s”."
-#~ msgstr "Não foi possível abrir o arquivo “%s”."

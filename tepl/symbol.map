@@ -1,0 +1,6 @@
+{
+global:
+  tepl_*;
+local:
+  *;
+};

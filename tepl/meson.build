@@ -56,7 +56,7 @@ tepl_public_c_files = [
   'tepl-view.c'
 ]
 
-tepl_private_headers = [
+TEPL_PRIVATE_HEADERS = [
   'tepl-buffer-input-stream.h',
   'tepl-close-confirm-dialog-single.h',
   'tepl-encoding-converter.h',
@@ -122,6 +122,13 @@ tepl_shared_lib = shared_library(
   link_depends: symbol_map,
   version: TEPL_LT_VERSION,
   install: true
+)
+
+TEPL_SHARED_LIB_DEP = declare_dependency(
+  include_directories: ROOT_INCLUDE_DIR,
+  link_with: tepl_shared_lib,
+  sources: tepl_enum_types[1],
+  dependencies: TEPL_DEPS
 )
 
 PKG_CONFIG.generate(

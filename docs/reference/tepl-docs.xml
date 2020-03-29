@@ -8,8 +8,8 @@
 ]>
 <book id="index">
   <bookinfo>
-    <title>Tepl @TEPL_API_VERSION@ Reference Manual</title>
-    <releaseinfo>for Tepl &package_version;</releaseinfo>
+    <title>Tepl &package_api_version; Reference Manual</title>
+    <releaseinfo>for &package_string;</releaseinfo>
   </bookinfo>
 
   <xi:include href="intro.xml"/>

@@ -149,7 +149,7 @@
   <refsect1>
     <title>GTK and GtkSourceView dependencies</title>
     <para>
-      Tepl&nbsp;@TEPL_API_VERSION@ depends on GTK&nbsp;3 and
+      Tepl&nbsp;&package_api_version; depends on GTK&nbsp;3 and
       GtkSourceView&nbsp;4.
     </para>
   </refsect1>
@@ -157,15 +157,15 @@
   <refsect1>
     <title>pkg-config name</title>
     <para>
-      For Tepl&nbsp;@TEPL_API_VERSION@, the pkg-config name is:
-      <code>tepl-@TEPL_API_VERSION@</code>
+      For Tepl&nbsp;&package_api_version;, the pkg-config name is:
+      <code>tepl-&package_api_version;</code>
     </para>
     <para>
-      To compile a program that uses Tepl&nbsp;@TEPL_API_VERSION@, you can for
+      To compile a program that uses Tepl&nbsp;&package_api_version;, you can for
       example use the following command:
     </para>
     <para>
-      <code>$ gcc hello.c `pkg-config --cflags --libs tepl-@TEPL_API_VERSION@` -o hello</code>
+      <code>$ gcc hello.c `pkg-config --cflags --libs tepl-&package_api_version;` -o hello</code>
     </para>
   </refsect1>
 </part>

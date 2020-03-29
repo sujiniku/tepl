@@ -1,16 +1,15 @@
 # Polish translation for tepl.
-# Copyright © 2017 the tepl authors.
+# Copyright © 2017-2020 the tepl authors.
 # This file is distributed under the same license as the tepl package.
-# Piotr Drąg <piotrdrag@gmail.com>, 2017.
-# Aviary.pl <community-poland@mozilla.org>, 2017.
+# Piotr Drąg <piotrdrag@gmail.com>, 2017-2020.
+# Aviary.pl <community-poland@mozilla.org>, 2017-2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-12-01 09:23+0000\n"
-"PO-Revision-Date: 2017-12-03 18:37+0100\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
+"POT-Creation-Date: 2020-03-27 21:10+0000\n"
+"PO-Revision-Date: 2020-03-29 13:23+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -19,22 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-
-#. Translators: %s is a filename.
-#: amtk/amtk-application-window.c:374
-#, c-format
-msgid "Open “%s”"
-msgstr "Otwórz „%s”"
-
-#: amtk/amtk-application-window.c:630
-msgid "Open _Recent"
-msgstr "Ostatnio używane doku_menty"
-
-#. Translators: %s is the application name.
-#: amtk/amtk-application-window.c:633
-#, c-format
-msgid "Open a file recently used with %s"
-msgstr "Otwarcie pliku ostatnio używanego w programie %s"
 
 #. action, icon, label, accel, tooltip
 #. File menu
@@ -59,7 +42,7 @@ msgstr "No_we okno"
 msgid "Create a new window"
 msgstr "Otwiera nowe okno"
 
-#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:178
+#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:177
 msgid "_Open"
 msgstr "_Otwórz"
 
@@ -67,8 +50,8 @@ msgstr "_Otwórz"
 msgid "Open a file"
 msgstr "Otwiera plik"
 
-#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:144
-#: tepl/tepl-tab.c:752
+#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:143
+#: tepl/tepl-tab.c:750
 msgid "_Save"
 msgstr "_Zapisz"
 
@@ -166,29 +149,29 @@ msgstr "Usuwa wcięcie z zaznaczonych wierszy"
 #. * - opening a recent file.
 #. * Basically everywhere where the directory is shown.
 #.
-#: tepl/tepl-application-window.c:174
+#: tepl/tepl-application-window.c:173
 msgid "Open File"
 msgstr "Otwarcie pliku"
 
-#: tepl/tepl-application-window.c:177
-#: tepl/tepl-close-confirm-dialog-single.c:138 tepl/tepl-tab.c:751
+#: tepl/tepl-application-window.c:176
+#: tepl/tepl-close-confirm-dialog-single.c:137 tepl/tepl-tab.c:749
 msgid "_Cancel"
 msgstr "_Anuluj"
 
-#: tepl/tepl-application-window.c:708
+#: tepl/tepl-application-window.c:707
 msgid "Read-Only"
 msgstr "Tylko do odczytu"
 
-#: tepl/tepl-close-confirm-dialog-single.c:133
+#: tepl/tepl-close-confirm-dialog-single.c:132
 #, c-format
 msgid "Save changes to file “%s” before closing?"
 msgstr "Zapisać zmiany przed zamknięciem pliku „%s”?"
 
-#: tepl/tepl-close-confirm-dialog-single.c:137
+#: tepl/tepl-close-confirm-dialog-single.c:136
 msgid "Close _without Saving"
 msgstr "Zamknij _bez zapisywania"
 
-#: tepl/tepl-close-confirm-dialog-single.c:150
+#: tepl/tepl-close-confirm-dialog-single.c:149
 msgid "_Save As…"
 msgstr "Zapi_sz jako…"
 
@@ -317,165 +300,177 @@ msgstr "nieznane"
 msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 msgstr "['UTF-8', 'CURRENT', 'ISO-8859-2', 'WINDOWS-1250', 'UTF-16']"
 
-#: tepl/tepl-encoding-converter.c:302
+#: tepl/tepl-encoding-converter.c:305
 #, c-format
 msgid "Conversion from character set “%s” to “%s” is not supported."
 msgstr "Konwersja z zestawu znaków „%s” do „%s” jest nieobsługiwana."
 
-#: tepl/tepl-encoding-converter.c:311
+#: tepl/tepl-encoding-converter.c:314
 #, c-format
 msgid "Could not open converter from “%s” to “%s”: %s"
 msgstr "Nie można otworzyć konwertera z „%s” do „%s”: %s"
 
-#: tepl/tepl-encoding-converter.c:368
+#: tepl/tepl-encoding-converter.c:374
 msgid "The input data contains an invalid sequence."
 msgstr "Dane wejściowe zawierają nieprawidłową sekwencję."
 
-#: tepl/tepl-encoding-converter.c:377
+#: tepl/tepl-encoding-converter.c:383
 #, c-format
 msgid "Error when converting data: %s"
 msgstr "Błąd podczas konwersji danych: %s"
 
-#: tepl/tepl-encoding-converter.c:556
+#: tepl/tepl-encoding-converter.c:562
 msgid "The input data ends with an incomplete multi-byte sequence."
 msgstr "Dane wejściowe kończą się niepełną sekwencją wielobajtową."
 
-#: tepl/tepl-encoding-converter.c:579
+#: tepl/tepl-encoding-converter.c:585
 msgid "The input content ends with incomplete data."
 msgstr "Treść wejściowa kończą się niepełnymi danymi."
 
-#: tepl/tepl-file.c:413
+#: tepl/tepl-file.c:411
 #, c-format
 msgid "Untitled File %d"
-msgstr "%d. plik bez tytułu"
+msgstr "Plik bez tytułu %d"
 
-#: tepl/tepl-file-content-loader.c:331
+#: tepl/tepl-file-content-loader.c:336
 #, c-format
 msgid "The file is too big. Maximum %s can be loaded."
 msgstr "Plik jest za duży. Maksymalnie można wczytać %s."
 
-#: tepl/tepl-file-loader.c:872
+#: tepl/tepl-file-loader.c:869
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Nie można automatycznie wykryć kodowania znaków."
 
-#: tepl/tepl-file-saver.c:784
+#: tepl/tepl-file-saver.c:781
 msgid "The file is externally modified."
 msgstr "Plik został zmodyfikowany poza programem."
 
-#: tepl/tepl-file-saver.c:1318
+#: tepl/tepl-file-saver.c:1315
 msgid "The buffer contains invalid characters."
 msgstr "Bufor zawiera nieprawidłowe znaki."
 
-#: tepl/tepl-tab.c:534
+#: tepl/tepl-io-error-info-bars.c:57
+msgid "_Edit Anyway"
+msgstr "_Modyfikuj mimo to"
+
+#: tepl/tepl-io-error-info-bars.c:61
+msgid "_Don’t Edit"
+msgstr "_Nie modyfikuj"
+
+#: tepl/tepl-io-error-info-bars.c:67
+#, c-format
+msgid "This file “%s” is already open in another window."
+msgstr "Ten plik „%s” jest już otwarty w innym oknie."
+
+#: tepl/tepl-io-error-info-bars.c:72
+msgid "Do you want to edit it anyway?"
+msgstr "Modyfikować go mimo to?"
+
+#: tepl/tepl-io-error-info-bars.c:106 tepl/tepl-io-error-info-bars.c:208
+msgid "S_ave Anyway"
+msgstr "_Zapisz mimo to"
+
+#: tepl/tepl-io-error-info-bars.c:110 tepl/tepl-io-error-info-bars.c:212
+msgid "_Don’t Save"
+msgstr "_Nie zapisuj"
+
+#: tepl/tepl-io-error-info-bars.c:116
+#, c-format
+msgid "Could not create a backup file while saving “%s”"
+msgstr ""
+"Podczas zapisywania pliku „%s” nie było możliwe utworzenie kopii zapasowej"
+
+#: tepl/tepl-io-error-info-bars.c:121
+msgid ""
+"Could not back up the old copy of the file before saving the new one. You "
+"can ignore this warning and save the file anyway, but if an error occurs "
+"while saving, you could lose the old copy of the file. Save anyway?"
+msgstr ""
+"Nie można utworzyć kopii zapasowej pliku przed zapisaniem nowej wersji. "
+"Można zignorować to ostrzeżenie i kontynuować zapisywanie pliku, ale jeśli "
+"podczas zapisywania wystąpi błąd, możliwe jest, że poprzednia wersja pliku "
+"zostanie utracona. Zapisać mimo to?"
+
+#: tepl/tepl-io-error-info-bars.c:130
+#, c-format
+msgid "Error message: %s"
+msgstr "Komunikat o błędzie: %s"
+
+#: tepl/tepl-io-error-info-bars.c:167
+#, c-format
+msgid "The file “%s” changed on disk."
+msgstr "Plik „%s” został zmieniony przez inny program."
+
+#: tepl/tepl-io-error-info-bars.c:172
+msgid "Drop Changes and _Reload"
+msgstr "Porzuć zmiany i w_czytaj ponownie"
+
+#: tepl/tepl-io-error-info-bars.c:172
+msgid "_Reload"
+msgstr "_Wczytaj ponownie"
+
+#: tepl/tepl-io-error-info-bars.c:218
+#, c-format
+msgid "Some invalid characters have been detected while saving “%s”."
+msgstr "Wykryto nieprawidłowe znaki podczas zapisywania „%s”."
+
+#: tepl/tepl-io-error-info-bars.c:223
+msgid ""
+"If you continue saving this file you can corrupt the document. Save anyway?"
+msgstr ""
+"Kontynuacja zapisywania tego pliku może uszkodzić dokument. Zapisać mimo to?"
+
+#. Translators: do not translate <metadata>.
+#: tepl/tepl-metadata-store.c:392
+#, c-format
+msgid "The XML file must start with a <metadata> element, not “%s”."
+msgstr "Plik XML musi zaczynać się od elementu <metadata>, nie „%s”."
+
+#. Translators: do not translate <document>.
+#: tepl/tepl-metadata-store.c:424
+#, c-format
+msgid "Expected a <document> element, got “%s” instead."
+msgstr "Oczekiwano elementu <document>, otrzymano „%s” zamiast niego."
+
+#. Translators: do not translate “atime”.
+#: tepl/tepl-metadata-store.c:450
+#, c-format
+msgid "Failed to parse the “atime” attribute value “%s”."
+msgstr "Przetworzenie wartości „%s” atrybutu „atime” się nie powiodło."
+
+#. Translators: do not translate <document>, “uri” and “atime”.
+#: tepl/tepl-metadata-store.c:465
+msgid "The <document> element must contain the “uri” and “atime” attributes."
+msgstr "Element <document> musi zawierać atrybuty „uri” i „atime”."
+
+#. Translators: do not translate <entry>.
+#: tepl/tepl-metadata-store.c:520
+#, c-format
+msgid "Expected an <entry> element, got “%s” instead."
+msgstr "Oczekiwano elementu <entry>, otrzymano „%s” zamiast niego."
+
+#. Translators: do not translate <entry>, “key” and “value”.
+#: tepl/tepl-metadata-store.c:546
+msgid "The <entry> element must contain the “key” and “value” attributes."
+msgstr "Element <entry> musi zawierać atrybuty „key” i „value”."
+
+#: tepl/tepl-tab.c:532
 msgid "Error when loading the file."
 msgstr "Błąd podczas wczytywania pliku."
 
-#: tepl/tepl-tab.c:748
+#: tepl/tepl-tab.c:746
 msgid "Save File"
 msgstr "Zapis pliku"
 
 #. Translators: location of a file.
-#: tepl/tepl-tab-label.c:273
+#: tepl/tepl-tab-label.c:272
 msgid "Location:"
 msgstr "Położenie:"
 
-#: tepl/tepl-tab-label.c:342
+#: tepl/tepl-tab-label.c:341
 msgid "Close file"
 msgstr "Zamyka plik"
 
-#: tepl/tepl-tab-saving.c:64
+#: tepl/tepl-tab-saving.c:62
 msgid "Error when saving the file."
 msgstr "Błąd podczas zapisywania pliku."
-
-#~ msgid "Could not find the file “%s”."
-#~ msgstr "Nie można odnaleźć pliku „%s”."
-
-#~ msgid "Please check that you typed the location correctly and try again."
-#~ msgstr ""
-#~ "Proszę sprawdzić, czy wprowadzone zostało poprawne położenie i spróbować "
-#~ "ponownie."
-
-#~ msgid "Unable to handle “%s:” locations."
-#~ msgstr "Nie można obsłużyć położeń „%s:”."
-
-#~ msgid "The location of the file cannot be accessed."
-#~ msgstr "Nie można uzyskać dostępu do położenia pliku."
-
-#~ msgid "“%s” is a directory."
-#~ msgstr "„%s” jest katalogiem."
-
-#~ msgid "“%s” is not a valid location."
-#~ msgstr "„%s” nie jest prawidłowym położeniem."
-
-#~ msgid ""
-#~ "Host “%s” could not be found. Please check that your proxy settings are "
-#~ "correct and try again."
-#~ msgstr ""
-#~ "Nie można odnaleźć komputera „%s”. Proszę sprawdzić poprawność ustawień "
-#~ "pośrednika i spróbować ponownie."
-
-#~ msgid ""
-#~ "Hostname was invalid. Please check that you typed the location correctly "
-#~ "and try again."
-#~ msgstr ""
-#~ "Nazwa komputera jest nieprawidłowa. Proszę sprawdzić, czy wprowadzone "
-#~ "położenie jest poprawne i spróbować ponownie."
-
-#~ msgid "“%s” is not a regular file."
-#~ msgstr "„%s” nie jest zwykłym plikiem."
-
-#~ msgid "Connection timed out. Please try again."
-#~ msgstr "Przekroczono czas połączenia. Proszę spróbować ponownie."
-
-#~ msgid "Unexpected error: %s"
-#~ msgstr "Nieoczekiwany błąd: %s"
-
-#~ msgid "_Retry"
-#~ msgstr "P_onów"
-
-#~ msgid "Edit Any_way"
-#~ msgstr "_Modyfikuj mimo to"
-
-#~ msgid ""
-#~ "The number of followed links is limited and the actual file could not be "
-#~ "found within this limit."
-#~ msgstr ""
-#~ "Liczba dowiązań do podążenia jest ograniczona. Plik nie został "
-#~ "odnaleziony w zakresie tego ograniczenia."
-
-#~ msgid "You do not have the permissions necessary to open the file."
-#~ msgstr "Brak odpowiednich uprawnień do otwarcia tego pliku."
-
-#~ msgid ""
-#~ "Unable to detect the character encoding.\n"
-#~ "Please check that you are not trying to open a binary file.\n"
-#~ "Select a character encoding from the menu and try again."
-#~ msgstr ""
-#~ "Nie można wykryć kodowania znaków.\n"
-#~ "Proszę sprawdzić, czy otwierany plik nie jest binarny.\n"
-#~ "Można także wybrać kodowanie znaków w menu i spróbować ponownie."
-
-#~ msgid "There was a problem opening the file “%s”."
-#~ msgstr "Wystąpił problem podczas otwierania pliku „%s”."
-
-#~ msgid ""
-#~ "The file you opened has some invalid characters. If you continue editing "
-#~ "this file you could corrupt it.\n"
-#~ "You can also choose another character encoding and try again."
-#~ msgstr ""
-#~ "Otwarty plik zawiera nieprawidłowe znaki. Jeśli modyfikowanie tego pliku "
-#~ "zostanie kontynuowane, może on zostać uszkodzony.\n"
-#~ "Można także wybrać inne kodowanie znaków i spróbować ponownie."
-
-#~ msgid "Could not open the file “%s” using the “%s” character encoding."
-#~ msgstr "Nie można otworzyć pliku „%s” za pomocą kodowania znaków „%s”."
-
-#~ msgid ""
-#~ "Please check that you are not trying to open a binary file.\n"
-#~ "Select a different character encoding from the menu and try again."
-#~ msgstr ""
-#~ "Proszę sprawdzić, czy otwierany plik nie jest binarny.\n"
-#~ "Można także wybrać inne kodowanie znaków w menu i spróbować ponownie."
-
-#~ msgid "Could not open the file “%s”."
-#~ msgstr "Nie można otworzyć pliku „%s”."

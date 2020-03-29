@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2019-11-03 18:10+0000\n"
-"PO-Revision-Date: 2020-03-27 22:57+0200\n"
+"POT-Creation-Date: 2020-03-27 21:10+0000\n"
+"PO-Revision-Date: 2020-03-29 15:47+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -42,7 +42,7 @@ msgstr "Створити _вікно"
 msgid "Create a new window"
 msgstr "Створити нове вікно"
 
-#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:178
+#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:177
 msgid "_Open"
 msgstr "_Відкрити"
 
@@ -50,8 +50,8 @@ msgstr "_Відкрити"
 msgid "Open a file"
 msgstr "Відкрити файл"
 
-#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:144
-#: tepl/tepl-tab.c:752
+#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:143
+#: tepl/tepl-tab.c:750
 msgid "_Save"
 msgstr "З_берегти"
 
@@ -149,29 +149,29 @@ msgstr "Скасувати додавання відступу у вибрани
 #. * - opening a recent file.
 #. * Basically everywhere where the directory is shown.
 #.
-#: tepl/tepl-application-window.c:174
+#: tepl/tepl-application-window.c:173
 msgid "Open File"
 msgstr "Відкрити файл"
 
-#: tepl/tepl-application-window.c:177
-#: tepl/tepl-close-confirm-dialog-single.c:138 tepl/tepl-tab.c:751
+#: tepl/tepl-application-window.c:176
+#: tepl/tepl-close-confirm-dialog-single.c:137 tepl/tepl-tab.c:749
 msgid "_Cancel"
 msgstr "_Скасувати"
 
-#: tepl/tepl-application-window.c:708
+#: tepl/tepl-application-window.c:707
 msgid "Read-Only"
 msgstr "Лише читання"
 
-#: tepl/tepl-close-confirm-dialog-single.c:133
+#: tepl/tepl-close-confirm-dialog-single.c:132
 #, c-format
 msgid "Save changes to file “%s” before closing?"
 msgstr "Зберегти зміни до файла «%s» до закриття?"
 
-#: tepl/tepl-close-confirm-dialog-single.c:137
+#: tepl/tepl-close-confirm-dialog-single.c:136
 msgid "Close _without Saving"
 msgstr "_Не зберігати"
 
-#: tepl/tepl-close-confirm-dialog-single.c:150
+#: tepl/tepl-close-confirm-dialog-single.c:149
 msgid "_Save As…"
 msgstr "Зберегти _як…"
 
@@ -300,76 +300,178 @@ msgstr "Невідоме"
 msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 msgstr "['UTF-8', 'CURRENT', 'CP1251', 'KOI8U', 'UTF-16']"
 
-#: tepl/tepl-encoding-converter.c:304
+#: tepl/tepl-encoding-converter.c:305
 #, c-format
 msgid "Conversion from character set “%s” to “%s” is not supported."
 msgstr ""
 "Підтримки перетворення з кодування «%s» на кодування «%s» не передбачено."
 
-#: tepl/tepl-encoding-converter.c:313
+#: tepl/tepl-encoding-converter.c:314
 #, c-format
 msgid "Could not open converter from “%s” to “%s”: %s"
 msgstr "Не вдалося відкрити засіб перетворення з «%s» на «%s»: %s"
 
-#: tepl/tepl-encoding-converter.c:370
+#: tepl/tepl-encoding-converter.c:374
 msgid "The input data contains an invalid sequence."
 msgstr "У вхідних даних міститься некоректна послідовність символів."
 
-#: tepl/tepl-encoding-converter.c:379
+#: tepl/tepl-encoding-converter.c:383
 #, c-format
 msgid "Error when converting data: %s"
 msgstr "Помилка під час спроби перетворити дані: %s"
 
-#: tepl/tepl-encoding-converter.c:558
+#: tepl/tepl-encoding-converter.c:562
 msgid "The input data ends with an incomplete multi-byte sequence."
 msgstr "Вхідні дані закінчилися на незавершеній багатобайтовій послідовності."
 
-#: tepl/tepl-encoding-converter.c:581
+#: tepl/tepl-encoding-converter.c:585
 msgid "The input content ends with incomplete data."
 msgstr "Вхідні дані виявилися незавершеними."
 
-#: tepl/tepl-file.c:413
+#: tepl/tepl-file.c:411
 #, c-format
 msgid "Untitled File %d"
 msgstr "Файл без назви %d"
 
-#: tepl/tepl-file-content-loader.c:331
+#: tepl/tepl-file-content-loader.c:336
 #, c-format
 msgid "The file is too big. Maximum %s can be loaded."
 msgstr ""
 "Файл є надто великим. Можна завантажувати файли, розмір яких не перевищує %s."
 
-#: tepl/tepl-file-loader.c:872
+#: tepl/tepl-file-loader.c:869
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Неможливо визначити кодування символів у автоматичному режимі."
 
-#: tepl/tepl-file-saver.c:784
+#: tepl/tepl-file-saver.c:781
 msgid "The file is externally modified."
 msgstr "Файл змінено ззовні."
 
-#: tepl/tepl-file-saver.c:1318
+#: tepl/tepl-file-saver.c:1315
 msgid "The buffer contains invalid characters."
 msgstr "У буфері містяться некоректні символи."
 
-#: tepl/tepl-tab.c:534
-#| msgid "Error when converting data: %s"
+#: tepl/tepl-io-error-info-bars.c:57
+msgid "_Edit Anyway"
+msgstr "_Редагувати попри це"
+
+#: tepl/tepl-io-error-info-bars.c:61
+msgid "_Don’t Edit"
+msgstr "_Не редагувати"
+
+#: tepl/tepl-io-error-info-bars.c:67
+#, c-format
+msgid "This file “%s” is already open in another window."
+msgstr "Файл «%s» вже відкрито в іншому вікні."
+
+#: tepl/tepl-io-error-info-bars.c:72
+msgid "Do you want to edit it anyway?"
+msgstr "Однаково редагувати?"
+
+#: tepl/tepl-io-error-info-bars.c:106 tepl/tepl-io-error-info-bars.c:208
+#| msgid "Save _As"
+msgid "S_ave Anyway"
+msgstr "З_берегти попри все"
+
+#: tepl/tepl-io-error-info-bars.c:110 tepl/tepl-io-error-info-bars.c:212
+msgid "_Don’t Save"
+msgstr "_Не зберігати"
+
+#: tepl/tepl-io-error-info-bars.c:116
+#, c-format
+msgid "Could not create a backup file while saving “%s”"
+msgstr "Неможливо створити копію файла під час зберігання «%s»"
+
+#: tepl/tepl-io-error-info-bars.c:121
+msgid ""
+"Could not back up the old copy of the file before saving the new one. You "
+"can ignore this warning and save the file anyway, but if an error occurs "
+"while saving, you could lose the old copy of the file. Save anyway?"
+msgstr ""
+"Неможливо створити резервну копію старого файла до збереження нового. Ви "
+"можете проігнорувати це попередження та зберегти попри все, але якщо під час "
+"збереження виникне помилка, ви втратите стару копію файла. Однаково зберегти?"
+
+#: tepl/tepl-io-error-info-bars.c:130
+#, c-format
+msgid "Error message: %s"
+msgstr "Повідомлення про помилку: %s"
+
+#: tepl/tepl-io-error-info-bars.c:167
+#, c-format
+msgid "The file “%s” changed on disk."
+msgstr "Файл %s змінено на диску."
+
+#: tepl/tepl-io-error-info-bars.c:172
+msgid "Drop Changes and _Reload"
+msgstr "Відкинути зміни і _оновити"
+
+#: tepl/tepl-io-error-info-bars.c:172
+msgid "_Reload"
+msgstr "Перезаванта_жити"
+
+#: tepl/tepl-io-error-info-bars.c:218
+#, c-format
+msgid "Some invalid characters have been detected while saving “%s”."
+msgstr "Деякі неприпустимі символи виявлено під час збереження «%s»."
+
+#: tepl/tepl-io-error-info-bars.c:223
+msgid ""
+"If you continue saving this file you can corrupt the document. Save anyway?"
+msgstr ""
+"Ви зіпсуєте цей документ, якщо продовжите зберігання. Зберегти попри це?"
+
+#. Translators: do not translate <metadata>.
+#: tepl/tepl-metadata-store.c:392
+#, c-format
+msgid "The XML file must start with a <metadata> element, not “%s”."
+msgstr "Файл XML має починатися із елемента <metadata>, а не з «%s»."
+
+#. Translators: do not translate <document>.
+#: tepl/tepl-metadata-store.c:424
+#, c-format
+msgid "Expected a <document> element, got “%s” instead."
+msgstr "Мало бути використано елемент <document>, маємо ж «%s»."
+
+#. Translators: do not translate “atime”.
+#: tepl/tepl-metadata-store.c:450
+#, c-format
+msgid "Failed to parse the “atime” attribute value “%s”."
+msgstr "Не вдалося обробити значення атрибута «atime» «%s»."
+
+#. Translators: do not translate <document>, “uri” and “atime”.
+#: tepl/tepl-metadata-store.c:465
+msgid "The <document> element must contain the “uri” and “atime” attributes."
+msgstr "Елемент <document> має містити атрибути «uri» і «atime»."
+
+#. Translators: do not translate <entry>.
+#: tepl/tepl-metadata-store.c:520
+#, c-format
+msgid "Expected an <entry> element, got “%s” instead."
+msgstr "Мало бути використано елемент <entry>, маємо ж «%s»."
+
+#. Translators: do not translate <entry>, “key” and “value”.
+#: tepl/tepl-metadata-store.c:546
+msgid "The <entry> element must contain the “key” and “value” attributes."
+msgstr "Елемент <entry> має містити атрибути «key» і «value»."
+
+#: tepl/tepl-tab.c:532
 msgid "Error when loading the file."
 msgstr "Помилка під час завантаження файла."
 
-#: tepl/tepl-tab.c:748
+#: tepl/tepl-tab.c:746
 msgid "Save File"
 msgstr "Збереження файла"
 
 #. Translators: location of a file.
-#: tepl/tepl-tab-label.c:273
+#: tepl/tepl-tab-label.c:272
 msgid "Location:"
 msgstr "Розташування:"
 
-#: tepl/tepl-tab-label.c:342
+#: tepl/tepl-tab-label.c:341
 msgid "Close file"
 msgstr "Закрити файл"
 
-#: tepl/tepl-tab-saving.c:64
-#| msgid "Error when converting data: %s"
+#: tepl/tepl-tab-saving.c:62
 msgid "Error when saving the file."
 msgstr "Помилка під час збереження файла."

@@ -5,6 +5,8 @@
 <TITLE>Tepl Initialization and Finalization</TITLE>
 tepl_init
 tepl_finalize
+<SUBSECTION Standard>
+TEPL_H_INSIDE
 </SECTION>
 
 <SECTION>

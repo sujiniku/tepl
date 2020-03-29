@@ -108,10 +108,6 @@ AM_GNU_GETTEXT_REQUIRE_VERSION([0.19.6])
 AC_SUBST([GETTEXT_PACKAGE], [tepl-$TEPL_API_VERSION])
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [Define to the gettext package name.])
 
-# Documentation
-AX_REQUIRE_DEFINED([GTK_DOC_CHECK])
-GTK_DOC_CHECK([1.25], [--flavour=no-tmpl])
-
 # Installed Tests for gnome continuous integration
 AC_ARG_ENABLE(installed_tests,
 	      AS_HELP_STRING([--enable-installed-tests],
@@ -139,10 +135,6 @@ PKG_CHECK_VAR([GLIB_PREFIX], [glib-2.0], [prefix])
 AC_CONFIG_FILES([
 	tepl-${TEPL_API_VERSION}.pc:tepl.pc.in
 	Makefile
-	docs/Makefile
-	docs/reference/intro.xml
-	docs/reference/Makefile
-	docs/reference/tepl-docs.xml
 	tepl/Makefile
 	po/Makefile.in
 	tests/Makefile
@@ -160,7 +152,6 @@ Configuration:
 	Prefix:			${prefix}
 	Compiler:		${CC}
 	GVfs metadata:		${enable_gvfs_metadata}
-	Documentation:		${enable_gtk_doc}
 	GObject introspection:	${found_introspection}
 	Code coverage:		${enable_code_coverage}
 	Valgrind check:		${enable_valgrind}

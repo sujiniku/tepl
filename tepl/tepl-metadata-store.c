@@ -980,7 +980,6 @@ tepl_metadata_store_save (TeplMetadataStore  *store,
 			  GError            **error)
 {
 	GBytes *bytes;
-	GError *my_error = NULL;
 	gboolean ok;
 
 	g_return_val_if_fail (TEPL_IS_METADATA_STORE (store), FALSE);
@@ -993,17 +992,25 @@ tepl_metadata_store_save (TeplMetadataStore  *store,
 		return TRUE;
 	}
 
-	g_file_make_directory_with_parents (store->priv->xml_file,
-					    cancellable,
-					    &my_error);
-	if (g_error_matches (my_error, G_IO_ERROR, G_IO_ERROR_EXISTS))
+	if (g_file_has_parent (store->priv->xml_file, NULL))
 	{
-		g_clear_error (&my_error);
-	}
-	if (my_error != NULL)
-	{
-		g_propagate_error (error, my_error);
-		return FALSE;
+		GFile *parent_dir;
+		GError *my_error = NULL;
+
+		parent_dir = g_file_get_parent (store->priv->xml_file);
+		g_file_make_directory_with_parents (parent_dir, cancellable, &my_error);
+		g_object_unref (parent_dir);
+
+		if (g_error_matches (my_error, G_IO_ERROR, G_IO_ERROR_EXISTS))
+		{
+			g_clear_error (&my_error);
+		}
+		if (my_error != NULL)
+		{
+			g_propagate_error (error, my_error);
+			return FALSE;
+		}
+
 	}
 
 	resize_hash_table_according_to_max_number_of_locations (store);

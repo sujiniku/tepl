@@ -20,6 +20,7 @@
 #include "config.h"
 #include "tepl-metadata-store.h"
 #include <glib/gi18n-lib.h>
+#include "tepl-utils.h"
 
 /**
  * SECTION:metadata-store
@@ -992,25 +993,9 @@ tepl_metadata_store_save (TeplMetadataStore  *store,
 		return TRUE;
 	}
 
-	if (g_file_has_parent (store->priv->xml_file, NULL))
+	if (!tepl_utils_create_parent_directories (store->priv->xml_file, cancellable, error))
 	{
-		GFile *parent_dir;
-		GError *my_error = NULL;
-
-		parent_dir = g_file_get_parent (store->priv->xml_file);
-		g_file_make_directory_with_parents (parent_dir, cancellable, &my_error);
-		g_object_unref (parent_dir);
-
-		if (g_error_matches (my_error, G_IO_ERROR, G_IO_ERROR_EXISTS))
-		{
-			g_clear_error (&my_error);
-		}
-		if (my_error != NULL)
-		{
-			g_propagate_error (error, my_error);
-			return FALSE;
-		}
-
+		return FALSE;
 	}
 
 	resize_hash_table_according_to_max_number_of_locations (store);

@@ -6,7 +6,7 @@
  * Copyright 2000, 2002 - Chema Celorio, Paolo Maggi
  * Copyright 2003-2005 - Paolo Maggi
  *
- * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -507,6 +507,55 @@ _tepl_utils_get_fallback_basename_for_display (GFile *location)
 	 */
 
 	return basename;
+}
+
+/**
+ * tepl_utils_create_parent_directories:
+ * @file: a file
+ * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
+ * @error: (out) (optional): a location to a %NULL #GError, or %NULL.
+ *
+ * Synchronously creates parent directories of @file, so that @file can be
+ * saved.
+ *
+ * Returns: whether the directories are correctly created. %FALSE is returned on
+ * error.
+ * Since: 4.6
+ */
+gboolean
+tepl_utils_create_parent_directories (GFile         *file,
+				      GCancellable  *cancellable,
+				      GError       **error)
+{
+	GFile *parent;
+	GError *my_error = NULL;
+
+	g_return_val_if_fail (G_IS_FILE (file), FALSE);
+	g_return_val_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable), FALSE);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	parent = g_file_get_parent (file);
+
+	if (parent == NULL)
+	{
+		return TRUE;
+	}
+
+	g_file_make_directory_with_parents (parent, cancellable, &my_error);
+	g_clear_object (&parent);
+
+	if (g_error_matches (my_error, G_IO_ERROR, G_IO_ERROR_EXISTS))
+	{
+		g_error_free (my_error);
+		return TRUE;
+	}
+	if (my_error != NULL)
+	{
+		g_propagate_error (error, my_error);
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 GtkWidget *

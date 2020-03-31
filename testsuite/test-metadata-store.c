@@ -76,11 +76,9 @@ static void
 load_store_file (GFile   *store_file,
 		 GError **error)
 {
-	TeplMetadataStore *store;
+	TeplMetadataStore *store = tepl_metadata_store_get_singleton ();
 
-	store = tepl_metadata_store_get_singleton ();
 	tepl_metadata_store_set_store_file (store, store_file);
-
 	tepl_metadata_store_load_async (store,
 					G_PRIORITY_DEFAULT,
 					NULL,
@@ -116,11 +114,10 @@ save_store (GError **error)
 static void
 mark_metadata_store_as_modified (void)
 {
-	TeplMetadataStore *store;
+	TeplMetadataStore *store = tepl_metadata_store_get_singleton ();
 	GFile *location;
 	GFileInfo *metadata;
 
-	store = tepl_metadata_store_get_singleton ();
 	location = g_file_new_for_path ("foo");
 	metadata = g_file_info_new ();
 
@@ -130,6 +127,31 @@ mark_metadata_store_as_modified (void)
 
 	g_object_unref (location);
 	g_object_unref (metadata);
+}
+
+static void
+check_metadata_exists (const gchar *uri,
+		       const gchar *key,
+		       const gchar *expected_value)
+{
+	TeplMetadataStore *store = tepl_metadata_store_get_singleton ();
+	GFile *location;
+	GFileInfo *metadata;
+	gchar *complete_key;
+	const gchar *received_value;
+
+	location = g_file_new_for_uri (uri);
+	metadata = tepl_metadata_store_get_metadata_for_location (store, location);
+	g_assert_true (metadata != NULL);
+
+	complete_key = g_strconcat ("metadata::", key, NULL);
+	g_assert_true (g_file_info_get_attribute_type (metadata, complete_key) == G_FILE_ATTRIBUTE_TYPE_STRING);
+	received_value = g_file_info_get_attribute_string (metadata, complete_key);
+	g_assert_cmpstr (received_value, ==, expected_value);
+
+	g_object_unref (location);
+	g_object_unref (metadata);
+	g_free (complete_key);
 }
 
 static void
@@ -204,7 +226,83 @@ test_empty_store (void)
 	store_file = get_store_file_for_test_data_filename ("metadata-tag-only.xml", TRUE);
 	load_store_file (store_file, &error);
 	g_assert_no_error (error);
+	g_object_unref (store_file);
+
 	test_empty_store_impl ();
+}
+
+static void
+test_load_xml_from_old_metadata_manager (void)
+{
+	TeplMetadataStore *store = tepl_metadata_store_get_singleton ();
+	GFile *store_file;
+	GFile *tmp_file;
+	GFile *reference_saved_store_file;
+	GFile *location;
+	GError *error = NULL;
+
+	/* See the first line of the file, TeplMetadataStore doesn't print such
+	 * line.
+	 */
+	store_file = get_store_file_for_test_data_filename ("from-old-metadata-manager.xml", TRUE);
+	load_store_file (store_file, &error);
+	g_assert_no_error (error);
+
+	check_metadata_exists ("file:///home/seb/test-header.csv", "gcsvedit-title-line", "4");
+	check_metadata_exists ("file:///home/seb/test-header.csv", "gcsvedit-delimiter", ",");
+	check_metadata_exists ("file:///home/seb/test-tab.tsv", "gcsvedit-delimiter", "\t");
+
+	/* Start again from a not-modified state (the atime values have been
+	 * updated above).
+	 */
+	_tepl_metadata_store_unref_singleton ();
+	store = tepl_metadata_store_get_singleton ();
+	load_store_file (store_file, &error);
+	g_assert_no_error (error);
+	g_clear_object (&store_file);
+
+	/* Keep only one <document> with one <entry>, so when we save it, we are
+	 * sure that the XML file content will be the same (otherwise we are not
+	 * sure of the order of the <document> elements and the order of the
+	 * <entry> elements).
+	 * Do not modify the atime of the other <document>.
+	 */
+	location = g_file_new_for_uri ("file:///home/seb/test-header.csv");
+	tepl_metadata_store_set_metadata_for_location (store, location, NULL);
+	g_clear_object (&location);
+
+	tmp_file = save_store (&error);
+	g_assert_no_error (error);
+	reference_saved_store_file = get_store_file_for_test_data_filename ("gcsvedit-one-entry.xml", TRUE);
+	check_equal_file_content (reference_saved_store_file, tmp_file);
+	g_object_unref (tmp_file);
+	g_object_unref (reference_saved_store_file);
+
+	_tepl_metadata_store_unref_singleton ();
+}
+
+static void
+test_load_gcsvedit_one_entry (void)
+{
+	GFile *store_file;
+	GError *error = NULL;
+
+	store_file = get_store_file_for_test_data_filename ("gcsvedit-one-entry.xml", TRUE);
+	load_store_file (store_file, &error);
+	g_assert_no_error (error);
+
+#if 0
+	/* FIXME: GLib GMarkup bug? It's a tab character in the XML file, not a
+	 * space.
+	 * https://gitlab.gnome.org/GNOME/glib/-/issues/2080
+	 */
+	check_metadata_exists ("file:///home/seb/test-tab.tsv", "gcsvedit-delimiter", "\t");
+#else
+	check_metadata_exists ("file:///home/seb/test-tab.tsv", "gcsvedit-delimiter", " ");
+#endif
+
+	g_object_unref (store_file);
+	_tepl_metadata_store_unref_singleton ();
 }
 
 int
@@ -216,6 +314,8 @@ main (int    argc,
 	g_test_add_func ("/metadata_store/load_non_existing_store_file", test_load_non_existing_store_file);
 	g_test_add_func ("/metadata_store/load_empty_store_file", test_load_empty_store_file);
 	g_test_add_func ("/metadata_store/empty_store", test_empty_store);
+	g_test_add_func ("/metadata_store/load_xml_from_old_metadata_manager", test_load_xml_from_old_metadata_manager);
+	g_test_add_func ("/metadata_store/load_gcsvedit_one_entry", test_load_gcsvedit_one_entry);
 
 	return g_test_run ();
 }

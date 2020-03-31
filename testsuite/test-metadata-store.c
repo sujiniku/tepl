@@ -73,39 +73,66 @@ load_store_file_cb (GObject      *source_object,
 }
 
 static void
-load_store_file (GFile   *store_file,
-		 GError **error)
+load_store_file (GFile    *store_file,
+		 gboolean  expect_no_error)
 {
 	TeplMetadataStore *store = tepl_metadata_store_get_singleton ();
+	GError *error = NULL;
 
 	tepl_metadata_store_set_store_file (store, store_file);
 	tepl_metadata_store_load_async (store,
 					G_PRIORITY_DEFAULT,
 					NULL,
 					load_store_file_cb,
-					error);
+					&error);
 	gtk_main ();
+
+	if (expect_no_error)
+	{
+		g_assert_no_error (error);
+	}
+	else
+	{
+		g_assert_true (error != NULL && error->domain == G_MARKUP_ERROR);
+		g_clear_error (&error);
+	}
+}
+
+static void
+check_load_test_data_filename (const gchar *test_data_filename)
+{
+	GFile *store_file;
+	gboolean expect_no_error;
+
+	store_file = get_store_file_for_test_data_filename (test_data_filename, TRUE);
+	expect_no_error = !g_str_has_prefix (test_data_filename, "expected-to-fail");
+
+	load_store_file (store_file, expect_no_error);
+
+	g_object_unref (store_file);
+	_tepl_metadata_store_unref_singleton ();
 }
 
 static GFile *
-save_store (GError **error)
+save_store (void)
 {
 	TeplMetadataStore *store = tepl_metadata_store_get_singleton ();
 	GFile *tmp_file;
-	GError *my_error = NULL;
+	GError *error = NULL;
 
 	tmp_file = g_file_new_build_filename (g_get_tmp_dir (),
 					      "tepl-metadata-store-test.xml",
 					      NULL);
-	g_file_delete (tmp_file, NULL, &my_error);
-	if (g_error_matches (my_error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
+	g_file_delete (tmp_file, NULL, &error);
+	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
 	{
-		g_clear_error (&my_error);
+		g_clear_error (&error);
 	}
-	g_assert_no_error (my_error);
+	g_assert_no_error (error);
 
 	tepl_metadata_store_set_store_file (store, tmp_file);
-	tepl_metadata_store_save (store, NULL, error);
+	tepl_metadata_store_save (store, NULL, &error);
+	g_assert_no_error (error);
 
 	return tmp_file;
 }
@@ -155,29 +182,18 @@ check_metadata_exists (const gchar *uri,
 }
 
 static void
-test_load_non_existing_store_file (void)
+test_expected_to_fail (void)
 {
-	GFile *store_file;
-	GError *error = NULL;
-
-	store_file = get_store_file_for_test_data_filename ("does_not_exist.xml", FALSE);
-	load_store_file (store_file, &error);
-	g_assert_no_error (error);
-
-	g_object_unref (store_file);
-	_tepl_metadata_store_unref_singleton ();
+	check_load_test_data_filename ("expected-to-fail-00-empty.xml");
 }
 
 static void
-test_load_empty_store_file (void)
+test_load_non_existing_store_file (void)
 {
 	GFile *store_file;
-	GError *error = NULL;
 
-	store_file = get_store_file_for_test_data_filename ("empty.xml", TRUE);
-	load_store_file (store_file, &error);
-	g_assert_true (error != NULL && error->domain == G_MARKUP_ERROR);
-	g_clear_error (&error);
+	store_file = get_store_file_for_test_data_filename ("does_not_exist.xml", FALSE);
+	load_store_file (store_file, TRUE);
 
 	g_object_unref (store_file);
 	_tepl_metadata_store_unref_singleton ();
@@ -188,12 +204,10 @@ test_empty_store_impl (void)
 {
 	GFile *tmp_file;
 	GFile *store_file;
-	GError *error = NULL;
 
 	/* Empty store, and not modified. */
 
-	tmp_file = save_store (&error);
-	g_assert_no_error (error);
+	tmp_file = save_store ();
 	g_assert_true (!g_file_query_exists (tmp_file, NULL));
 	g_clear_object (&tmp_file);
 
@@ -201,8 +215,7 @@ test_empty_store_impl (void)
 
 	mark_metadata_store_as_modified ();
 
-	tmp_file = save_store (&error);
-	g_assert_no_error (error);
+	tmp_file = save_store ();
 	g_assert_true (g_file_query_exists (tmp_file, NULL));
 
 	store_file = get_store_file_for_test_data_filename ("metadata-tag-only.xml", TRUE);
@@ -217,15 +230,13 @@ static void
 test_empty_store (void)
 {
 	GFile *store_file;
-	GError *error = NULL;
 
 	/* Without loading */
 	test_empty_store_impl ();
 
 	/* With loading */
 	store_file = get_store_file_for_test_data_filename ("metadata-tag-only.xml", TRUE);
-	load_store_file (store_file, &error);
-	g_assert_no_error (error);
+	load_store_file (store_file, TRUE);
 	g_object_unref (store_file);
 
 	test_empty_store_impl ();
@@ -239,14 +250,12 @@ test_load_xml_from_old_metadata_manager (void)
 	GFile *tmp_file;
 	GFile *reference_saved_store_file;
 	GFile *location;
-	GError *error = NULL;
 
 	/* See the first line of the file, TeplMetadataStore doesn't print such
 	 * line.
 	 */
 	store_file = get_store_file_for_test_data_filename ("from-old-metadata-manager.xml", TRUE);
-	load_store_file (store_file, &error);
-	g_assert_no_error (error);
+	load_store_file (store_file, TRUE);
 
 	check_metadata_exists ("file:///home/seb/test-header.csv", "gcsvedit-title-line", "4");
 	check_metadata_exists ("file:///home/seb/test-header.csv", "gcsvedit-delimiter", ",");
@@ -257,8 +266,7 @@ test_load_xml_from_old_metadata_manager (void)
 	 */
 	_tepl_metadata_store_unref_singleton ();
 	store = tepl_metadata_store_get_singleton ();
-	load_store_file (store_file, &error);
-	g_assert_no_error (error);
+	load_store_file (store_file, TRUE);
 	g_clear_object (&store_file);
 
 	/* Keep only one <document> with one <entry>, so when we save it, we are
@@ -271,8 +279,7 @@ test_load_xml_from_old_metadata_manager (void)
 	tepl_metadata_store_set_metadata_for_location (store, location, NULL);
 	g_clear_object (&location);
 
-	tmp_file = save_store (&error);
-	g_assert_no_error (error);
+	tmp_file = save_store ();
 	reference_saved_store_file = get_store_file_for_test_data_filename ("gcsvedit-one-entry.xml", TRUE);
 	check_equal_file_content (reference_saved_store_file, tmp_file);
 	g_object_unref (tmp_file);
@@ -285,11 +292,9 @@ static void
 test_load_gcsvedit_one_entry (void)
 {
 	GFile *store_file;
-	GError *error = NULL;
 
 	store_file = get_store_file_for_test_data_filename ("gcsvedit-one-entry.xml", TRUE);
-	load_store_file (store_file, &error);
-	g_assert_no_error (error);
+	load_store_file (store_file, TRUE);
 
 #if 0
 	/* FIXME: GLib GMarkup bug? It's a tab character in the XML file, not a
@@ -305,17 +310,143 @@ test_load_gcsvedit_one_entry (void)
 	_tepl_metadata_store_unref_singleton ();
 }
 
+static void
+test_generate_new_store_file_simple (void)
+{
+	TeplMetadataStore *store = tepl_metadata_store_get_singleton ();
+	GFile *location;
+	GFileInfo *metadata;
+	GFile *tmp_file;
+	gchar *current_dir;
+	gchar *relatively_uri;
+
+	location = g_file_new_for_path ("/my_absolute_file_absolutely");
+	metadata = g_file_info_new ();
+	g_file_info_set_attribute_string (metadata, "metadata::my_key", "my_value");
+	tepl_metadata_store_set_metadata_for_location (store, location, metadata);
+	g_object_unref (location);
+	g_object_unref (metadata);
+
+	location = g_file_new_for_path ("a_relative_path_relatively");
+	metadata = g_file_info_new ();
+	g_file_info_set_attribute_string (metadata, "metadata::a_key", "a_value");
+	g_file_info_set_attribute_string (metadata, "metadata::another_key", "another_value");
+	tepl_metadata_store_set_metadata_for_location (store, location, metadata);
+	g_object_unref (location);
+	g_object_unref (metadata);
+
+	tmp_file = save_store ();
+
+	/* Reload the store file that we have just saved. */
+	_tepl_metadata_store_unref_singleton ();
+	store = tepl_metadata_store_get_singleton ();
+	load_store_file (tmp_file, TRUE);
+	g_object_unref (tmp_file);
+
+	current_dir = g_get_current_dir ();
+	relatively_uri = g_strconcat ("file://", current_dir, "/a_relative_path_relatively", NULL);
+
+	check_metadata_exists ("file:///my_absolute_file_absolutely", "my_key", "my_value");
+	check_metadata_exists (relatively_uri, "a_key", "a_value");
+	check_metadata_exists (relatively_uri, "another_key", "another_value");
+
+	g_free (current_dir);
+	g_free (relatively_uri);
+	_tepl_metadata_store_unref_singleton ();
+}
+
+static void
+test_generate_new_store_file (void)
+{
+	TeplMetadataStore *store = tepl_metadata_store_get_singleton ();
+	GFile *location;
+	GFileInfo *metadata;
+	GFile *tmp_file;
+
+	/* Test with non-ASCII chars and XML special character escape/unescape. */
+	location = g_file_new_for_path ("/home/seb/santé/pandémie-coronavirus-stats.csv");
+	metadata = g_file_info_new ();
+	g_file_info_set_attribute_string (metadata, "metadata::CLÉ", "Évolution \"<=>\"");
+	tepl_metadata_store_set_metadata_for_location (store, location, metadata);
+	g_object_unref (location);
+	g_object_unref (metadata);
+
+	tmp_file = save_store ();
+
+	/* Reload the store file that we have just saved. */
+	_tepl_metadata_store_unref_singleton ();
+	store = tepl_metadata_store_get_singleton ();
+	load_store_file (tmp_file, TRUE);
+	g_object_unref (tmp_file);
+
+	check_metadata_exists ("file:///home/seb/santé/pandémie-coronavirus-stats.csv", "CLÉ", "Évolution \"<=>\"");
+
+	_tepl_metadata_store_unref_singleton ();
+}
+
+static void
+test_markup_unescape_escape (void)
+{
+	GFile *store_file;
+	GFile *tmp_file;
+
+	store_file = get_store_file_for_test_data_filename ("one-entry-markup-escape.xml", TRUE);
+	load_store_file (store_file, TRUE);
+
+	check_metadata_exists ("file:///home/seb/santé/pandémie-coronavirus-stats.csv", "CLÉ", "Évolution \"<=>\"");
+
+	_tepl_metadata_store_unref_singleton ();
+	load_store_file (store_file, TRUE);
+
+	mark_metadata_store_as_modified ();
+	tmp_file = save_store ();
+	check_equal_file_content (tmp_file, store_file);
+
+	g_object_unref (store_file);
+	g_object_unref (tmp_file);
+	_tepl_metadata_store_unref_singleton ();
+}
+
+static void
+test_max_number_of_locations (void)
+{
+	TeplMetadataStore *store = tepl_metadata_store_get_singleton ();
+	GFile *before;
+	GFile *after;
+	GFile *tmp_file;
+
+	tepl_metadata_store_set_max_number_of_locations (store, 1);
+
+	before = get_store_file_for_test_data_filename ("max-num-locations-before.xml", TRUE);
+	after = get_store_file_for_test_data_filename ("max-num-locations-after.xml", TRUE);
+
+	load_store_file (before, TRUE);
+
+	mark_metadata_store_as_modified ();
+	tmp_file = save_store ();
+	check_equal_file_content (tmp_file, after);
+
+	g_object_unref (before);
+	g_object_unref (after);
+	g_object_unref (tmp_file);
+	_tepl_metadata_store_unref_singleton ();
+}
+
 int
 main (int    argc,
       char **argv)
 {
 	gtk_test_init (&argc, &argv);
 
+	g_test_add_func ("/metadata_store/expected_to_fail", test_expected_to_fail);
 	g_test_add_func ("/metadata_store/load_non_existing_store_file", test_load_non_existing_store_file);
-	g_test_add_func ("/metadata_store/load_empty_store_file", test_load_empty_store_file);
 	g_test_add_func ("/metadata_store/empty_store", test_empty_store);
 	g_test_add_func ("/metadata_store/load_xml_from_old_metadata_manager", test_load_xml_from_old_metadata_manager);
 	g_test_add_func ("/metadata_store/load_gcsvedit_one_entry", test_load_gcsvedit_one_entry);
+	g_test_add_func ("/metadata_store/generate_new_store_file_simple", test_generate_new_store_file_simple);
+	g_test_add_func ("/metadata_store/generate_new_store_file", test_generate_new_store_file);
+	g_test_add_func ("/metadata_store/markup_unescape_escape", test_markup_unescape_escape);
+	g_test_add_func ("/metadata_store/max_number_of_locations", test_max_number_of_locations);
 
 	return g_test_run ();
 }

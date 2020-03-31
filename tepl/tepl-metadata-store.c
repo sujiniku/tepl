@@ -545,6 +545,7 @@ parse_entry_element (GMarkupParseContext  *context,
 				     G_MARKUP_ERROR_MISSING_ATTRIBUTE,
 				     /* Translators: do not translate <entry>, “key” and “value”. */
 				     _("The <entry> element must contain the “key” and “value” attributes."));
+		return;
 	}
 
 	insert_entry_to_current_document (parsing_data, key, value);

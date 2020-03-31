@@ -185,6 +185,26 @@ static void
 test_expected_to_fail (void)
 {
 	check_load_test_data_filename ("expected-to-fail-00-empty.xml");
+	check_load_test_data_filename ("expected-to-fail-01.xml");
+	check_load_test_data_filename ("expected-to-fail-02.xml");
+	check_load_test_data_filename ("expected-to-fail-03.xml");
+	check_load_test_data_filename ("expected-to-fail-04.xml");
+	check_load_test_data_filename ("expected-to-fail-05.xml");
+	check_load_test_data_filename ("expected-to-fail-06.xml");
+}
+
+static void
+test_expected_to_succeed (void)
+{
+	check_load_test_data_filename ("document-with-no-entry.xml");
+	check_load_test_data_filename ("empty-key.xml");
+	check_load_test_data_filename ("from-old-metadata-manager.xml");
+	check_load_test_data_filename ("gcsvedit-one-entry.xml");
+	check_load_test_data_filename ("max-num-locations-after.xml");
+	check_load_test_data_filename ("max-num-locations-before.xml");
+	check_load_test_data_filename ("metadata-tag-only.xml");
+	check_load_test_data_filename ("new-format-version.xml");
+	check_load_test_data_filename ("one-entry-markup-escape.xml");
 }
 
 static void
@@ -439,6 +459,7 @@ main (int    argc,
 	gtk_test_init (&argc, &argv);
 
 	g_test_add_func ("/metadata_store/expected_to_fail", test_expected_to_fail);
+	g_test_add_func ("/metadata_store/expected_to_succeed", test_expected_to_succeed);
 	g_test_add_func ("/metadata_store/load_non_existing_store_file", test_load_non_existing_store_file);
 	g_test_add_func ("/metadata_store/empty_store", test_empty_store);
 	g_test_add_func ("/metadata_store/load_xml_from_old_metadata_manager", test_load_xml_from_old_metadata_manager);

@@ -1,0 +1,6 @@
+<!-- Add additional attributes, should be forward-compatible. -->
+<metadata version="2">
+  <document uri="file:///foo" atime="158567767704599999" space_craft="borg17">
+    <entry key="a_key" value="a_value" origin="earth" />
+  </document>
+</metadata>

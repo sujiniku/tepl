@@ -424,7 +424,7 @@ _tepl_buffer_input_stream_class_init (TeplBufferInputStreamClass *klass)
 					 g_param_spec_enum ("newline-type",
 							    "Newline type",
 							    "",
-							    GTK_SOURCE_TYPE_NEWLINE_TYPE,
+							    TEPL_TYPE_NEWLINE_TYPE,
 							    TEPL_NEWLINE_TYPE_LF,
 							    G_PARAM_READWRITE |
 							    G_PARAM_STATIC_STRINGS |

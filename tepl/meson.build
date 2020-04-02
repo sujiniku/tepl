@@ -23,7 +23,6 @@ tepl_public_headers = [
   'tepl-tab.h',
   'tepl-tab-group.h',
   'tepl-tab-label.h',
-  'tepl-types.h',
   'tepl-utils.h',
   'tepl-view.h'
 ]

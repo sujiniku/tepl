@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -25,7 +25,6 @@
 #endif
 
 #include <gio/gio.h>
-#include <tepl/tepl-types.h>
 
 G_BEGIN_DECLS
 
@@ -41,9 +40,7 @@ struct _TeplFileMetadataClass
 	gpointer padding[12];
 };
 
-TeplFileMetadata *	tepl_file_metadata_new				(TeplFile *file);
-
-TeplFile *		tepl_file_metadata_get_file			(TeplFileMetadata *metadata);
+TeplFileMetadata *	tepl_file_metadata_new				(void);
 
 gchar *			tepl_file_metadata_get				(TeplFileMetadata *metadata,
 									 const gchar      *key);
@@ -52,11 +49,8 @@ void			tepl_file_metadata_set				(TeplFileMetadata *metadata,
 									 const gchar      *key,
 									 const gchar      *value);
 
-gboolean		tepl_file_metadata_load				(TeplFileMetadata  *metadata,
-									 GCancellable      *cancellable,
-									 GError           **error);
-
 void			tepl_file_metadata_load_async			(TeplFileMetadata    *metadata,
+									 GFile               *location,
 									 gint                 io_priority,
 									 GCancellable        *cancellable,
 									 GAsyncReadyCallback  callback,
@@ -66,11 +60,8 @@ gboolean		tepl_file_metadata_load_finish			(TeplFileMetadata  *metadata,
 									 GAsyncResult      *result,
 									 GError           **error);
 
-gboolean		tepl_file_metadata_save				(TeplFileMetadata  *metadata,
-									 GCancellable      *cancellable,
-									 GError           **error);
-
 void			tepl_file_metadata_save_async			(TeplFileMetadata    *metadata,
+									 GFile               *location,
 									 gint                 io_priority,
 									 GCancellable        *cancellable,
 									 GAsyncReadyCallback  callback,
@@ -80,9 +71,11 @@ gboolean		tepl_file_metadata_save_finish			(TeplFileMetadata  *metadata,
 									 GAsyncResult      *result,
 									 GError           **error);
 
+#if 0
 G_GNUC_INTERNAL
 void			_tepl_file_metadata_set_use_gvfs_metadata	(TeplFileMetadata *metadata,
 									 gboolean          use_gvfs_metadata);
+#endif
 
 G_END_DECLS
 

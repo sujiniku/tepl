@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -27,7 +27,7 @@
  * SECTION:file
  * @Short_description: On-disk representation of a TeplBuffer
  * @Title: TeplFile
- * @See_also: #TeplFileLoader, #TeplFileSaver, #TeplFileMetadata
+ * @See_also: #TeplFileLoader, #TeplFileSaver
  *
  * A #TeplFile object is the on-disk representation of a #TeplBuffer.
  *
@@ -50,8 +50,6 @@ typedef struct _TeplFilePrivate TeplFilePrivate;
 
 struct _TeplFilePrivate
 {
-	TeplFileMetadata *metadata;
-
 	GFile *location;
 	TeplEncoding *encoding;
 	TeplNewlineType newline_type;
@@ -208,7 +206,6 @@ tepl_file_dispose (GObject *object)
 {
 	TeplFilePrivate *priv = tepl_file_get_instance_private (TEPL_FILE (object));
 
-	g_clear_object (&priv->metadata);
 	g_clear_object (&priv->location);
 
 	if (priv->mount_operation_notify != NULL)
@@ -449,8 +446,6 @@ tepl_file_init (TeplFile *file)
 {
 	TeplFilePrivate *priv = tepl_file_get_instance_private (file);
 
-	priv->metadata = tepl_file_metadata_new (file);
-
 	priv->encoding = NULL;
 	priv->newline_type = TEPL_NEWLINE_TYPE_LF;
 	priv->compression_type = TEPL_COMPRESSION_TYPE_NONE;
@@ -468,24 +463,6 @@ TeplFile *
 tepl_file_new (void)
 {
 	return g_object_new (TEPL_TYPE_FILE, NULL);
-}
-
-/**
- * tepl_file_get_file_metadata:
- * @file: a #TeplFile.
- *
- * Returns: (transfer none): the associated #TeplFileMetadata.
- * Since: 1.0
- */
-TeplFileMetadata *
-tepl_file_get_file_metadata (TeplFile *file)
-{
-	TeplFilePrivate *priv;
-
-	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
-
-	priv = tepl_file_get_instance_private (file);
-	return priv->metadata;
 }
 
 /**

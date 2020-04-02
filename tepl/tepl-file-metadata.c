@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -17,32 +17,24 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
 #include "tepl-file-metadata.h"
-#include <glib/gi18n-lib.h>
-#include "tepl-file.h"
-#include "tepl-metadata-manager.h"
 
 /**
  * SECTION:file-metadata
  * @Short_description: File metadata
  * @Title: TeplFileMetadata
  *
- * A #TeplFileMetadata object stores the metadata of a #TeplFile. You need to
- * call tepl_metadata_manager_init() and tepl_metadata_manager_shutdown() in
- * your application, in case GVfs metadata are not supported.
+ * A #TeplFileMetadata object stores the metadata of a #GFile.
+ *
+ * You need to load and save the #TeplMetadataStore in your application, it is
+ * used as a fallback in #TeplFileMetadata in the case where GVfs metadata is
+ * not supported. TODO: update.
  *
  * The tepl_file_metadata_get() and tepl_file_metadata_set() functions don't
- * load or save the metadata on disk. They only access the metadata stored in
+ * load or save the metadata on disk, they only access the metadata stored in
  * the #TeplFileMetadata object memory. To load the metadata from disk, call
- * tepl_file_metadata_load() or its async variant. Likewise, to save the
- * metadata on disk, call tepl_file_metadata_save() or its async variant. When
- * loading or saving metadata, the file at #TeplFile:location, if non-%NULL,
- * must exist on the filesystem, otherwise an error is returned.
- *
- * When the #TeplFile:location changes, the metadata are still kept in the
- * #TeplFileMetadata object memory. But the metadata are
- * <emphasis>not</emphasis> automatically saved for the new location.
+ * tepl_file_metadata_load_async(). Likewise, to save the
+ * metadata on disk, call tepl_file_metadata_save_async().
  */
 
 /* TODO Better test how it works with remote files, with various protocols.
@@ -51,31 +43,21 @@
  * automatically call the TeplFile mount operation factory method.
  *
  * On Linux, is the metadata supported for all GVfs backends? (the custom
- * metadata that we set). Does it fallback to the metadata manager even on
- * Linux?
+ * metadata that we set). Does it fallback to TeplMetadataStore even on Linux
+ * and even when GVfs is well installed?
  */
 
 typedef struct _TeplFileMetadataPrivate TeplFileMetadataPrivate;
 
 struct _TeplFileMetadataPrivate
 {
-	/* Weak ref */
-	TeplFile *file;
-
 	/* Never NULL */
 	GFileInfo *file_info;
 
+#if 0
 	guint use_gvfs_metadata : 1;
+#endif
 };
-
-enum
-{
-	PROP_0,
-	PROP_FILE,
-	N_PROPERTIES
-};
-
-static GParamSpec *properties[N_PROPERTIES];
 
 G_DEFINE_TYPE_WITH_PRIVATE (TeplFileMetadata, tepl_file_metadata, G_TYPE_OBJECT)
 
@@ -89,96 +71,12 @@ get_metadata_attribute_key (const gchar *key)
 }
 
 static void
-print_fallback_to_metadata_manager_warning (void)
+print_fallback_to_metadata_store_warning (void)
 {
-	static gboolean warning_printed = FALSE;
-
-	if (G_LIKELY (warning_printed))
-	{
-		return;
-	}
-
-	g_warning ("GVfs metadata is not supported. Fallback to TeplMetadataManager. "
-		   "Either GVfs is not correctly installed or GVfs metadata are "
-		   "not supported on this platform. In the latter case, you should "
-		   "configure Tepl with --disable-gvfs-metadata.");
-
-	warning_printed = TRUE;
-}
-
-static void
-set_file (TeplFileMetadata *metadata,
-	  TeplFile         *file)
-{
-	TeplFileMetadataPrivate *priv = tepl_file_metadata_get_instance_private (metadata);
-
-	g_return_if_fail (TEPL_IS_FILE (file));
-
-	g_assert (priv->file == NULL);
-	priv->file = file;
-
-	g_object_add_weak_pointer (G_OBJECT (priv->file),
-				   (gpointer *) &priv->file);
-
-	g_object_notify_by_pspec (G_OBJECT (metadata), properties[PROP_FILE]);
-}
-
-static void
-tepl_file_metadata_get_property (GObject    *object,
-				 guint       prop_id,
-				 GValue     *value,
-				 GParamSpec *pspec)
-{
-	TeplFileMetadata *metadata = TEPL_FILE_METADATA (object);
-
-	switch (prop_id)
-	{
-		case PROP_FILE:
-			g_value_set_object (value, tepl_file_metadata_get_file (metadata));
-			break;
-
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-			break;
-	}
-}
-
-static void
-tepl_file_metadata_set_property (GObject      *object,
-				 guint         prop_id,
-				 const GValue *value,
-				 GParamSpec   *pspec)
-{
-	TeplFileMetadata *metadata = TEPL_FILE_METADATA (object);
-
-	switch (prop_id)
-	{
-		case PROP_FILE:
-			set_file (metadata, g_value_get_object (value));
-			break;
-
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-			break;
-	}
-}
-
-static void
-tepl_file_metadata_dispose (GObject *object)
-{
-	TeplFileMetadataPrivate *priv;
-
-	priv = tepl_file_metadata_get_instance_private (TEPL_FILE_METADATA (object));
-
-	if (priv->file != NULL)
-	{
-		g_object_remove_weak_pointer (G_OBJECT (priv->file),
-					      (gpointer *) &priv->file);
-
-		priv->file = NULL;
-	}
-
-	G_OBJECT_CLASS (tepl_file_metadata_parent_class)->dispose (object);
+	g_warning_once ("GVfs metadata is not supported. Fallback to TeplMetadataStore. "
+			"Either GVfs is not correctly installed or GVfs metadata are "
+			"not supported on this platform. In the latter case, you should "
+			"configure Tepl with -Dgvfs_metadata=false.");
 }
 
 static void
@@ -198,28 +96,7 @@ tepl_file_metadata_class_init (TeplFileMetadataClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->get_property = tepl_file_metadata_get_property;
-	object_class->set_property = tepl_file_metadata_set_property;
-	object_class->dispose = tepl_file_metadata_dispose;
 	object_class->finalize = tepl_file_metadata_finalize;
-
-	/**
-	 * TeplFileMetadata:file:
-	 *
-	 * The #TeplFile that the metadata belong to.
-	 *
-	 * Since: 1.0
-	 */
-	properties[PROP_FILE] =
-		g_param_spec_object ("file",
-				     "File",
-				     "",
-				     TEPL_TYPE_FILE,
-				     G_PARAM_READWRITE |
-				     G_PARAM_CONSTRUCT_ONLY |
-				     G_PARAM_STATIC_STRINGS);
-
-	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
 }
 
 static void
@@ -229,46 +106,26 @@ tepl_file_metadata_init (TeplFileMetadata *metadata)
 
 	priv->file_info = g_file_info_new ();
 
+#if 0
+/* TODO change the #ifdef to an #if. */
 #ifdef ENABLE_GVFS_METADATA
 	priv->use_gvfs_metadata = TRUE;
 #else
 	priv->use_gvfs_metadata = FALSE;
 #endif
+#endif
 }
 
 /**
  * tepl_file_metadata_new:
- * @file: the #TeplFile that the metadata will belong to.
  *
  * Returns: a new #TeplFileMetadata object.
- * Since: 1.0
+ * Since: 5.0
  */
 TeplFileMetadata *
-tepl_file_metadata_new (TeplFile *file)
+tepl_file_metadata_new (void)
 {
-	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
-
-	return g_object_new (TEPL_TYPE_FILE_METADATA,
-			     "file", file,
-			     NULL);
-}
-
-/**
- * tepl_file_metadata_get_file:
- * @metadata: a #TeplFileMetadata object.
- *
- * Returns: (transfer none): the #TeplFile that the metadata belong to.
- * Since: 1.0
- */
-TeplFile *
-tepl_file_metadata_get_file (TeplFileMetadata *metadata)
-{
-	TeplFileMetadataPrivate *priv;
-
-	g_return_val_if_fail (TEPL_IS_FILE_METADATA (metadata), NULL);
-
-	priv = tepl_file_metadata_get_instance_private (metadata);
-	return priv->file;
+	return g_object_new (TEPL_TYPE_FILE_METADATA, NULL);
 }
 
 /**
@@ -314,7 +171,9 @@ tepl_file_metadata_get (TeplFileMetadata *metadata,
  * @value: (nullable): the value of the metadata, or %NULL to unset.
  *
  * Sets the value of a metadata. It's preferable that @key starts with a
- * namespace, to not get metadata conflicts between applications.
+ * namespace, to not get metadata conflicts between applications. For example a
+ * good @key name for the gedit application is
+ * `"gedit-spell-checking-language"`.
  *
  * This function just stores the new metadata value in the @metadata object
  * memory.
@@ -354,93 +213,6 @@ tepl_file_metadata_set (TeplFileMetadata *metadata,
 	g_free (attribute_key);
 }
 
-/**
- * tepl_file_metadata_load:
- * @metadata: a #TeplFileMetadata.
- * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
- * @error: location to a %NULL #GError, or %NULL.
- *
- * Loads synchronously the metadata from #TeplFile:location. The loaded
- * metadata values can then be accessed with tepl_file_metadata_get().
- *
- * If the metadata are loaded successfully, this function deletes all previous
- * metadata stored in the @metadata object memory.
- *
- * The file at #TeplFile:location, if non-%NULL, must exist on the
- * filesystem, otherwise an error is returned.
- *
- * If #TeplFile:location is %NULL, %FALSE is simply returned.
- *
- * Returns: whether the metadata was loaded successfully.
- * Since: 1.0
- */
-gboolean
-tepl_file_metadata_load (TeplFileMetadata  *metadata,
-			 GCancellable      *cancellable,
-			 GError           **error)
-{
-	TeplFileMetadataPrivate *priv;
-	GFile *location;
-	GFileInfo *file_info;
-
-	g_return_val_if_fail (TEPL_IS_FILE_METADATA (metadata), FALSE);
-	g_return_val_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable), FALSE);
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
-
-	priv = tepl_file_metadata_get_instance_private (metadata);
-
-	if (priv->file == NULL)
-	{
-		return FALSE;
-	}
-
-	location = tepl_file_get_location (priv->file);
-	if (location == NULL)
-	{
-		return FALSE;
-	}
-
-	if (priv->use_gvfs_metadata)
-	{
-		GError *my_error = NULL;
-
-		file_info = g_file_query_info (location,
-					       METADATA_QUERY_ATTRIBUTES,
-					       G_FILE_QUERY_INFO_NONE,
-					       cancellable,
-					       &my_error);
-
-		if (g_error_matches (my_error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
-		{
-			print_fallback_to_metadata_manager_warning ();
-			priv->use_gvfs_metadata = FALSE;
-
-			g_clear_error (&my_error);
-			g_clear_object (&file_info);
-		}
-		else if (my_error != NULL)
-		{
-			g_propagate_error (error, my_error);
-			my_error = NULL;
-		}
-	}
-
-	if (!priv->use_gvfs_metadata)
-	{
-		file_info = _tepl_metadata_manager_get_all_metadata_for_location (location);
-	}
-
-	if (file_info == NULL)
-	{
-		return FALSE;
-	}
-
-	g_object_unref (priv->file_info);
-	priv->file_info = file_info;
-
-	return TRUE;
-}
-
 static void
 load_metadata_async_cb (GObject      *source_object,
 			GAsyncResult *result,
@@ -460,13 +232,14 @@ load_metadata_async_cb (GObject      *source_object,
 
 	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
 	{
-		print_fallback_to_metadata_manager_warning ();
-		priv->use_gvfs_metadata = FALSE;
+		print_fallback_to_metadata_store_warning ();
+		//priv->use_gvfs_metadata = FALSE;
 
 		g_clear_error (&error);
-		g_clear_object (&metadata);
+		g_clear_object (&file_info);
 
-		file_info = _tepl_metadata_manager_get_all_metadata_for_location (location);
+		/* TODO: load from TeplMetadataStore. */
+		file_info = NULL;
 	}
 
 	if (error != NULL)
@@ -479,13 +252,13 @@ load_metadata_async_cb (GObject      *source_object,
 
 	if (file_info == NULL)
 	{
+		/* FIXME: return TRUE instead? */
 		g_task_return_boolean (task, FALSE);
 		g_object_unref (task);
 		return;
 	}
 
-	g_object_unref (priv->file_info);
-	priv->file_info = file_info;
+	g_set_object (&priv->file_info, file_info);
 
 	g_task_return_boolean (task, TRUE);
 	g_object_unref (task);
@@ -494,6 +267,7 @@ load_metadata_async_cb (GObject      *source_object,
 /**
  * tepl_file_metadata_load_async:
  * @metadata: a #TeplFileMetadata.
+ * @location: a #GFile.
  * @io_priority: the I/O priority of the request. E.g. %G_PRIORITY_LOW,
  *   %G_PRIORITY_DEFAULT or %G_PRIORITY_HIGH.
  * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
@@ -501,67 +275,41 @@ load_metadata_async_cb (GObject      *source_object,
  *   satisfied.
  * @user_data: user data to pass to @callback.
  *
- * The asynchronous version of tepl_file_metadata_load().
+ * Loads asynchronously the metadata for @location.
  *
- * If the metadata is loaded from the metadata manager (i.e. not with GVfs),
- * this function loads the metadata synchronously. A future version might fix
- * this.
+ * If the metadata are loaded successfully, this function deletes all previous
+ * metadata stored in the @metadata object memory.
+ *
+ * @location must exist on the filesystem, otherwise an error is returned.
  *
  * See the #GAsyncResult documentation to know how to use this function.
  *
- * Since: 1.0
+ * Since: 5.0
  */
 void
 tepl_file_metadata_load_async (TeplFileMetadata    *metadata,
+			       GFile               *location,
 			       gint                 io_priority,
 			       GCancellable        *cancellable,
 			       GAsyncReadyCallback  callback,
 			       gpointer             user_data)
 {
-	TeplFileMetadataPrivate *priv;
 	GTask *task;
-	GFile *location;
 
 	g_return_if_fail (TEPL_IS_FILE_METADATA (metadata));
+	g_return_if_fail (G_IS_FILE (location));
 	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
 
-	priv = tepl_file_metadata_get_instance_private (metadata);
-
 	task = g_task_new (metadata, cancellable, callback, user_data);
+	g_task_set_priority (task, io_priority);
 
-	if (priv->file == NULL)
-	{
-		g_task_return_boolean (task, FALSE);
-		g_object_unref (task);
-		return;
-	}
-
-	location = tepl_file_get_location (priv->file);
-	if (location == NULL)
-	{
-		g_task_return_boolean (task, FALSE);
-		g_object_unref (task);
-		return;
-	}
-
-	if (priv->use_gvfs_metadata)
-	{
-		g_file_query_info_async (location,
-					 METADATA_QUERY_ATTRIBUTES,
-					 G_FILE_QUERY_INFO_NONE,
-					 io_priority,
-					 cancellable,
-					 load_metadata_async_cb,
-					 task);
-	}
-	else
-	{
-		gboolean ok;
-
-		ok = tepl_file_metadata_load (metadata, cancellable, NULL);
-		g_task_return_boolean (task, ok);
-		g_object_unref (task);
-	}
+	g_file_query_info_async (location,
+				 METADATA_QUERY_ATTRIBUTES,
+				 G_FILE_QUERY_INFO_NONE,
+				 io_priority,
+				 cancellable,
+				 load_metadata_async_cb,
+				 task);
 }
 
 /**
@@ -587,83 +335,6 @@ tepl_file_metadata_load_finish (TeplFileMetadata  *metadata,
 	return g_task_propagate_boolean (G_TASK (result), error);
 }
 
-/**
- * tepl_file_metadata_save:
- * @metadata: a #TeplFileMetadata.
- * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
- * @error: location to a %NULL #GError, or %NULL.
- *
- * Saves synchronously the metadata for #TeplFile:location.
- *
- * The file at #TeplFile:location, if non-%NULL, must exist on the
- * filesystem, otherwise an error is returned.
- *
- * If #TeplFile:location is %NULL, %FALSE is simply returned.
- *
- * Returns: whether the metadata was saved successfully.
- * Since: 1.0
- */
-gboolean
-tepl_file_metadata_save (TeplFileMetadata  *metadata,
-			 GCancellable      *cancellable,
-			 GError           **error)
-{
-	TeplFileMetadataPrivate *priv;
-	GFile *location;
-
-	g_return_val_if_fail (TEPL_IS_FILE_METADATA (metadata), FALSE);
-	g_return_val_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable), FALSE);
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
-
-	priv = tepl_file_metadata_get_instance_private (metadata);
-
-	if (priv->file == NULL)
-	{
-		return FALSE;
-	}
-
-	location = tepl_file_get_location (priv->file);
-	if (location == NULL)
-	{
-		return FALSE;
-	}
-
-	if (priv->use_gvfs_metadata)
-	{
-		GError *my_error = NULL;
-		gboolean ok;
-
-		ok = g_file_set_attributes_from_info (location,
-						      priv->file_info,
-						      G_FILE_QUERY_INFO_NONE,
-						      cancellable,
-						      &my_error);
-
-		if (g_error_matches (my_error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
-		{
-			print_fallback_to_metadata_manager_warning ();
-			priv->use_gvfs_metadata = FALSE;
-
-			g_clear_error (&my_error);
-		}
-		else if (my_error != NULL)
-		{
-			g_propagate_error (error, my_error);
-			return ok;
-		}
-		else
-		{
-			return ok;
-		}
-	}
-
-	g_assert (!priv->use_gvfs_metadata);
-
-	_tepl_metadata_manager_set_metadata_for_location (location, priv->file_info);
-
-	return TRUE;
-}
-
 static void
 save_metadata_async_cb (GObject      *source_object,
 			GAsyncResult *result,
@@ -671,23 +342,14 @@ save_metadata_async_cb (GObject      *source_object,
 {
 	GFile *location = G_FILE (source_object);
 	GTask *task = G_TASK (user_data);
-	TeplFileMetadata *metadata;
-	TeplFileMetadataPrivate *priv;
 	GError *error = NULL;
-
-	metadata = g_task_get_source_object (task);
-	priv = tepl_file_metadata_get_instance_private (metadata);
 
 	g_file_set_attributes_finish (location, result, NULL, &error);
 
 	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
 	{
-		print_fallback_to_metadata_manager_warning ();
-		priv->use_gvfs_metadata = FALSE;
-
+		print_fallback_to_metadata_store_warning ();
 		g_clear_error (&error);
-
-		_tepl_metadata_manager_set_metadata_for_location (location, priv->file_info);
 	}
 
 	if (error != NULL)
@@ -704,6 +366,7 @@ save_metadata_async_cb (GObject      *source_object,
 /**
  * tepl_file_metadata_save_async:
  * @metadata: a #TeplFileMetadata.
+ * @location: a #GFile.
  * @io_priority: the I/O priority of the request. E.g. %G_PRIORITY_LOW,
  *   %G_PRIORITY_DEFAULT or %G_PRIORITY_HIGH.
  * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
@@ -711,17 +374,17 @@ save_metadata_async_cb (GObject      *source_object,
  *   satisfied.
  * @user_data: user data to pass to @callback.
  *
- * The asynchronous version of tepl_file_metadata_save().
+ * Saves asynchronously the metadata for @location.
  *
- * If the metadata is saved with the metadata manager (i.e. not with GVfs), this
- * function saves the metadata synchronously. A future version might fix this.
+ * @location must exist on the filesystem, otherwise an error is returned.
  *
  * See the #GAsyncResult documentation to know how to use this function.
  *
- * Since: 1.0
+ * Since: 5.0
  */
 void
 tepl_file_metadata_save_async (TeplFileMetadata    *metadata,
+			       GFile               *location,
 			       gint                 io_priority,
 			       GCancellable        *cancellable,
 			       GAsyncReadyCallback  callback,
@@ -729,46 +392,23 @@ tepl_file_metadata_save_async (TeplFileMetadata    *metadata,
 {
 	TeplFileMetadataPrivate *priv;
 	GTask *task;
-	GFile *location;
 
 	g_return_if_fail (TEPL_IS_FILE_METADATA (metadata));
+	g_return_if_fail (G_IS_FILE (location));
 	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
 
 	priv = tepl_file_metadata_get_instance_private (metadata);
 
 	task = g_task_new (metadata, cancellable, callback, user_data);
+	g_task_set_priority (task, io_priority);
 
-	if (priv->file == NULL)
-	{
-		g_task_return_boolean (task, FALSE);
-		g_object_unref (task);
-		return;
-	}
-
-	location = tepl_file_get_location (priv->file);
-	if (location == NULL)
-	{
-		g_task_return_boolean (task, FALSE);
-		g_object_unref (task);
-		return;
-	}
-
-	if (priv->use_gvfs_metadata)
-	{
-		g_file_set_attributes_async (location,
-					     priv->file_info,
-					     G_FILE_QUERY_INFO_NONE,
-					     io_priority,
-					     cancellable,
-					     save_metadata_async_cb,
-					     task);
-	}
-	else
-	{
-		_tepl_metadata_manager_set_metadata_for_location (location, priv->file_info);
-		g_task_return_boolean (task, TRUE);
-		g_object_unref (task);
-	}
+	g_file_set_attributes_async (location,
+				     priv->file_info,
+				     G_FILE_QUERY_INFO_NONE,
+				     io_priority,
+				     cancellable,
+				     save_metadata_async_cb,
+				     task);
 }
 
 /**
@@ -794,6 +434,7 @@ tepl_file_metadata_save_finish (TeplFileMetadata  *metadata,
 	return g_task_propagate_boolean (G_TASK (result), error);
 }
 
+#if 0
 /* For unit tests. */
 void
 _tepl_file_metadata_set_use_gvfs_metadata (TeplFileMetadata *metadata,
@@ -807,3 +448,4 @@ _tepl_file_metadata_set_use_gvfs_metadata (TeplFileMetadata *metadata,
 
 	priv->use_gvfs_metadata = use_gvfs_metadata != FALSE;
 }
+#endif

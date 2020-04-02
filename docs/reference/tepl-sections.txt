@@ -141,7 +141,6 @@ TeplCompressionType
 TeplMountOperationFactory
 <SUBSECTION>
 tepl_file_new
-tepl_file_get_file_metadata
 tepl_file_get_location
 tepl_file_set_location
 tepl_file_get_short_name
@@ -168,13 +167,10 @@ tepl_compression_type_get_type
 <FILE>file-metadata</FILE>
 TeplFileMetadata
 tepl_file_metadata_new
-tepl_file_metadata_get_file
 tepl_file_metadata_get
 tepl_file_metadata_set
-tepl_file_metadata_load
 tepl_file_metadata_load_async
 tepl_file_metadata_load_finish
-tepl_file_metadata_save
 tepl_file_metadata_save_async
 tepl_file_metadata_save_finish
 <SUBSECTION Standard>

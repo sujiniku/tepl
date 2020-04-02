@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -22,7 +22,6 @@
 #include <glib/gi18n-lib.h>
 #include "tepl-close-confirm-dialog-single.h"
 #include "tepl-file-loader.h"
-#include "tepl-file-metadata.h"
 #include "tepl-file-saver.h"
 #include "tepl-info-bar.h"
 #include "tepl-tab-group.h"
@@ -476,52 +475,22 @@ tepl_tab_add_info_bar (TeplTab    *tab,
 }
 
 static void
-load_metadata_cb (GObject      *source_object,
-		  GAsyncResult *result,
-		  gpointer      user_data)
-{
-	TeplFileMetadata *metadata = TEPL_FILE_METADATA (source_object);
-	TeplTab *tab = TEPL_TAB (user_data);
-	GError *error = NULL;
-
-	tepl_file_metadata_load_finish (metadata, result, &error);
-
-	if (error != NULL)
-	{
-		g_warning ("Error when loading metadata: %s", error->message);
-		g_clear_error (&error);
-	}
-
-	g_object_unref (tab);
-}
-
-static void
 load_file_content_cb (GObject      *source_object,
 		      GAsyncResult *result,
 		      gpointer      user_data)
 {
 	TeplFileLoader *loader = TEPL_FILE_LOADER (source_object);
 	TeplTab *tab = TEPL_TAB (user_data);
-	TeplBuffer *buffer;
 	GError *error = NULL;
-
-	buffer = tepl_tab_get_buffer (tab);
 
 	if (tepl_file_loader_load_finish (loader, result, &error))
 	{
+		TeplBuffer *buffer;
 		TeplFile *file;
-		TeplFileMetadata *metadata;
 
+		buffer = tepl_tab_get_buffer (tab);
 		file = tepl_buffer_get_file (buffer);
 		tepl_file_add_uri_to_recent_manager (file);
-
-		metadata = tepl_file_get_file_metadata (file);
-
-		tepl_file_metadata_load_async (metadata,
-					       G_PRIORITY_DEFAULT,
-					       NULL,
-					       load_metadata_cb,
-					       g_object_ref (tab));
 	}
 
 	if (error != NULL)

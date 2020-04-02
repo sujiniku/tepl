@@ -24,9 +24,8 @@
 #error "Only <tepl/tepl.h> can be included directly."
 #endif
 
-#include <gtksourceview/gtksource.h>
+#include <gio/gio.h>
 #include <tepl/tepl-encoding.h>
-#include <tepl/tepl-file-metadata.h>
 
 G_BEGIN_DECLS
 
@@ -98,8 +97,6 @@ typedef enum
 } TeplCompressionType;
 
 TeplFile *		tepl_file_new				(void);
-
-TeplFileMetadata *	tepl_file_get_file_metadata		(TeplFile *file);
 
 GFile *			tepl_file_get_location			(TeplFile *file);
 

@@ -187,6 +187,7 @@ test_load_all_test_files (void)
 {
 	gchar *path;
 	GDir *dir;
+	gint n_files_tested = 0;
 	GError *error = NULL;
 
 	path = g_build_filename (UNIT_TESTS_SOURCE_DIR, "test-metadata-store", NULL);
@@ -207,7 +208,11 @@ test_load_all_test_files (void)
 		}
 
 		check_load_test_data_filename (test_data_filename);
+		n_files_tested++;
 	}
+
+	/* Just to be sure that the files are actually tested. */
+	g_assert_cmpint (n_files_tested, ==, 17);
 
 	g_free (path);
 	g_dir_close (dir);

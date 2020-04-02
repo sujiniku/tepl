@@ -6,7 +6,7 @@
 project(
   'tepl', 'c',
   meson_version: '>= 0.53',
-  version: '4.5.0',
+  version: '4.99.0',
   default_options: ['warning_level=2']
 )
 
@@ -33,13 +33,13 @@ I18N = import('i18n')
 #
 # When incrementing the API version (usually for a new major package version),
 # set CURRENT, REVISION and AGE to 0 since it's like a new library.
-lt_current = 1
+lt_current = 0
 lt_revision = 0
-lt_age = 1
+lt_age = 0
 TEPL_LT_VERSION = '@0@.@1@.@2@'.format(lt_current, lt_revision, lt_age)
 
 # API version, used for parallel installability.
-TEPL_API_VERSION = '4'
+TEPL_API_VERSION = '5'
 
 TEPL_PUBLIC_DEPS = [
   dependency('gio-2.0', version: '>= 2.64'),

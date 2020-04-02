@@ -326,7 +326,7 @@ null_ptr (gchar **ptr)
  * all return value pointers should be freed using g_free().
  *
  * Returns: %TRUE if the uri could be properly decoded, %FALSE otherwise.
- * Since: 4.6
+ * Since: 5.0
  */
 gboolean
 tepl_utils_decode_uri (const gchar  *uri,
@@ -520,7 +520,7 @@ _tepl_utils_get_fallback_basename_for_display (GFile *location)
  *
  * Returns: whether the directories are correctly created. %FALSE is returned on
  * error.
- * Since: 4.6
+ * Since: 5.0
  */
 gboolean
 tepl_utils_create_parent_directories (GFile         *file,
@@ -634,7 +634,7 @@ _tepl_utils_associate_secondary_window (GtkWindow *secondary_window,
  *
  * Shows a #GtkDialog with the provided warning message.
  *
- * Since: 4.6
+ * Since: 5.0
  */
 void
 tepl_utils_show_warning_dialog (GtkWindow   *parent,

@@ -261,7 +261,7 @@ tepl_metadata_store_class_init (TeplMetadataStoreClass *klass)
 	 *
 	 * %FALSE otherwise.
 	 *
-	 * Since: 4.6
+	 * Since: 5.0
 	 */
 	properties[PROP_LOADED] =
 		g_param_spec_boolean ("loaded",
@@ -291,7 +291,7 @@ tepl_metadata_store_init (TeplMetadataStore *store)
  * tepl_metadata_store_get_singleton:
  *
  * Returns: (transfer none): the #TeplMetadataStore singleton instance.
- * Since: 4.6
+ * Since: 5.0
  */
 TeplMetadataStore *
 tepl_metadata_store_get_singleton (void)
@@ -333,7 +333,7 @@ _tepl_metadata_store_unref_singleton (void)
  * @store_file, call tepl_metadata_store_load_async(). To save the metadata,
  * call tepl_metadata_store_save().
  *
- * Since: 4.6
+ * Since: 5.0
  */
 void
 tepl_metadata_store_set_store_file (TeplMetadataStore *store,
@@ -364,7 +364,7 @@ tepl_metadata_store_set_store_file (TeplMetadataStore *store,
  * Upon saving, the #TeplMetadataStore discards the least recently accessed
  * metadata if needed.
  *
- * Since: 4.6
+ * Since: 5.0
  */
 void
 tepl_metadata_store_set_max_number_of_locations (TeplMetadataStore *store,
@@ -734,7 +734,7 @@ out:
  *
  * See the #GAsyncResult documentation to know how to use this function.
  *
- * Since: 4.6
+ * Since: 5.0
  */
 void
 tepl_metadata_store_load_async (TeplMetadataStore   *store,
@@ -774,7 +774,7 @@ tepl_metadata_store_load_async (TeplMetadataStore   *store,
  * function sets the #TeplMetadataStore:loaded property to %TRUE.
  *
  * Returns: whether the metadata was loaded successfully.
- * Since: 4.6
+ * Since: 5.0
  */
 gboolean
 tepl_metadata_store_load_finish (TeplMetadataStore  *store,
@@ -797,7 +797,7 @@ tepl_metadata_store_load_finish (TeplMetadataStore  *store,
  * @store: the #TeplMetadataStore.
  *
  * Returns: the value of the #TeplMetadataStore:loaded property.
- * Since: 4.6
+ * Since: 5.0
  */
 gboolean
 tepl_metadata_store_is_loaded (TeplMetadataStore *store)
@@ -974,7 +974,7 @@ resize_hash_table_according_to_max_number_of_locations (TeplMetadataStore *store
  * tepl_metadata_store_set_max_number_of_locations().
  *
  * Returns: whether the metadata was saved successfully.
- * Since: 4.6
+ * Since: 5.0
  */
 gboolean
 tepl_metadata_store_save (TeplMetadataStore  *store,
@@ -1023,7 +1023,7 @@ tepl_metadata_store_save (TeplMetadataStore  *store,
  * Returns: (transfer full) (nullable): a #GFileInfo containing the metadata,
  * under the "metadata" namespace. Or %NULL if there is no metadata for
  * @location.
- * Since: 4.6
+ * Since: 5.0
  */
 GFileInfo *
 tepl_metadata_store_get_metadata_for_location (TeplMetadataStore *store,
@@ -1054,7 +1054,7 @@ tepl_metadata_store_get_metadata_for_location (TeplMetadataStore *store,
  * @metadata: (nullable): a #GFileInfo containing the metadata, or %NULL to
  * remove the metadata for @location.
  *
- * Since: 4.6
+ * Since: 5.0
  */
 void
 tepl_metadata_store_set_metadata_for_location (TeplMetadataStore *store,

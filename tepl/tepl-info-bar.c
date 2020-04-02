@@ -362,7 +362,7 @@ tepl_info_bar_add_close_button (TeplInfoBar *info_bar)
  * are packed vertically, there is usually no problem. A vertical action area
  * also follows the original design of #GtkInfoBar.
  *
- * Since: 4.6
+ * Since: 5.0
  */
 void
 tepl_info_bar_set_buttons_orientation (TeplInfoBar    *info_bar,

@@ -40,7 +40,7 @@
  * - Don't edit: %GTK_RESPONSE_CANCEL.
  *
  * Returns: (transfer floating): the newly created #TeplInfoBar.
- * Since: 4.6
+ * Since: 5.0
  */
 TeplInfoBar *
 tepl_io_error_info_bar_file_already_open (GFile *location)
@@ -85,7 +85,7 @@ tepl_io_error_info_bar_file_already_open (GFile *location)
  * - Don't save: %GTK_RESPONSE_CANCEL.
  *
  * Returns: (transfer floating): the newly created #TeplInfoBar.
- * Since: 4.6
+ * Since: 5.0
  */
 /* TODO add another possible action: save as? */
 TeplInfoBar *
@@ -148,7 +148,7 @@ tepl_io_error_info_bar_cant_create_backup (GFile        *location,
  * - A close button as added with gtk_info_bar_set_show_close_button().
  *
  * Returns: (transfer floating): the newly created #TeplInfoBar.
- * Since: 4.6
+ * Since: 5.0
  */
 TeplInfoBar *
 tepl_io_error_info_bar_externally_modified (GFile    *location,
@@ -190,7 +190,7 @@ tepl_io_error_info_bar_externally_modified (GFile    *location,
  * - Don't save: %GTK_RESPONSE_CANCEL.
  *
  * Returns: (transfer floating): the newly created #TeplInfoBar.
- * Since: 4.6
+ * Since: 5.0
  */
 TeplInfoBar *
 tepl_io_error_info_bar_invalid_characters (GFile *location)

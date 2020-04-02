@@ -250,15 +250,10 @@ load_metadata_async_cb (GObject      *source_object,
 		return;
 	}
 
-	if (file_info == NULL)
+	if (file_info != NULL)
 	{
-		/* FIXME: return TRUE instead? */
-		g_task_return_boolean (task, FALSE);
-		g_object_unref (task);
-		return;
+		g_set_object (&priv->file_info, file_info);
 	}
-
-	g_set_object (&priv->file_info, file_info);
 
 	g_task_return_boolean (task, TRUE);
 	g_object_unref (task);

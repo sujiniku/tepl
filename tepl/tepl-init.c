@@ -21,7 +21,6 @@
 #include <amtk/amtk.h>
 #include <gtksourceview/gtksource.h>
 #include "tepl-abstract-factory.h"
-#include "tepl-metadata-manager.h"
 #include "tepl-metadata-store.h"
 
 /**
@@ -47,16 +46,13 @@ tepl_init (void)
  * tepl_finalize:
  *
  * Free the resources allocated by Tepl. For example it unrefs the singleton
- * objects. It also properly shutdowns the metadata manager by calling
- * tepl_metadata_manager_shutdown().
+ * objects.
  *
  * This function also calls amtk_finalize() and gtk_source_finalize().
  *
  * It is not mandatory to call this function, it's just to be friendlier to
- * memory debugging tools (but if you don't call this function and you use the
- * metadata manager, you should call tepl_metadata_manager_shutdown()). This
- * function is meant to be called at the end of main(). It can be called several
- * times.
+ * memory debugging tools. This function is meant to be called at the end of
+ * main(). It can be called several times.
  *
  * Since: 3.0
  */
@@ -79,7 +75,6 @@ tepl_finalize (void)
 
 	if (!done)
 	{
-		tepl_metadata_manager_shutdown ();
 		_tepl_metadata_store_unref_singleton ();
 		_tepl_abstract_factory_unref_singleton ();
 

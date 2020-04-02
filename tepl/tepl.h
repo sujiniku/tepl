@@ -43,7 +43,6 @@
 #include <tepl/tepl-io-error-info-bars.h>
 #include <tepl/tepl-iter.h>
 #include <tepl/tepl-menu-shell.h>
-#include <tepl/tepl-metadata-manager.h>
 #include <tepl/tepl-metadata-store.h>
 #include <tepl/tepl-notebook.h>
 #include <tepl/tepl-tab.h>

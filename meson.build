@@ -48,7 +48,6 @@ TEPL_PUBLIC_DEPS = [
   dependency('amtk-5', version: '>= 5.0')
 ]
 TEPL_PRIVATE_DEPS = [
-  dependency('libxml-2.0', version: '>= 2.5'),
   dependency('uchardet')
 ]
 TEPL_DEPS = [TEPL_PUBLIC_DEPS, TEPL_PRIVATE_DEPS]

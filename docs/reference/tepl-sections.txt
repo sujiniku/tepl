@@ -306,12 +306,6 @@ tepl_menu_shell_append_edit_actions
 </SECTION>
 
 <SECTION>
-<FILE>metadata-manager</FILE>
-tepl_metadata_manager_init
-tepl_metadata_manager_shutdown
-</SECTION>
-
-<SECTION>
 <FILE>metadata-store</FILE>
 TeplMetadataStore
 tepl_metadata_store_get_singleton

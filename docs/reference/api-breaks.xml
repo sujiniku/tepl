@@ -146,6 +146,13 @@
           implementation detail).
         </para>
       </listitem>
+      <listitem>
+        <para>
+          The <code>tepl_metadata_manager*()</code> functions have been removed,
+          they are superseded by
+          <link linkend="TeplMetadataStore">TeplMetadataStore</link>.
+        </para>
+      </listitem>
     </itemizedlist>
   </chapter>
 </part>

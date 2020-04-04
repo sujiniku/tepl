@@ -113,7 +113,7 @@ TEPL_STATIC_DEP = declare_dependency(
   dependencies: TEPL_DEPS
 )
 
-symbol_map = join_paths(meson.current_source_dir(), 'symbol.map')
+symbol_map = meson.current_source_dir() / 'symbol.map'
 
 tepl_shared_lib = shared_library(
   'tepl-@0@'.format(TEPL_API_VERSION),

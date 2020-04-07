@@ -95,6 +95,89 @@ load_sync (TeplFileMetadata  *metadata,
 }
 
 static void
+check_round_trip (const gchar *key,
+		  const gchar *value)
+{
+	TeplFileMetadata *metadata;
+	gchar *path;
+	GFile *location;
+	gchar *received_value;
+	GError *error = NULL;
+	gboolean ok;
+
+	metadata = tepl_file_metadata_new ();
+	tepl_file_metadata_set (metadata, key, value);
+
+	/* Save metadata */
+
+	path = g_build_filename (g_get_tmp_dir (), "tepl-file-metadata-test", NULL);
+	location = g_file_new_for_path (path);
+
+	g_file_set_contents (path, "blum", -1, &error);
+	g_assert_no_error (error);
+
+	ok = save_sync (metadata, location, &error);
+	g_assert_no_error (error);
+	g_assert_true (ok);
+
+	g_object_unref (metadata);
+
+	/* Load metadata */
+
+	metadata = tepl_file_metadata_new ();
+
+	ok = load_sync (metadata, location, &error);
+	g_assert_no_error (error);
+	g_assert_true (ok);
+
+	received_value = tepl_file_metadata_get (metadata, key);
+	g_assert_cmpstr (received_value, ==, value);
+	g_free (received_value);
+
+	/* Unset */
+
+	tepl_file_metadata_set (metadata, key, NULL);
+	ok = save_sync (metadata, location, &error);
+	g_assert_no_error (error);
+	g_assert_true (ok);
+
+	ok = load_sync (metadata, location, &error);
+	g_assert_no_error (error);
+	g_assert_true (ok);
+
+	received_value = tepl_file_metadata_get (metadata, key);
+	g_assert_true (received_value == NULL);
+
+	/* Clean-up */
+
+	g_file_delete (location, NULL, &error);
+	g_assert_no_error (error);
+
+	ok = load_sync (metadata, location, &error);
+	g_assert_true (error != NULL); /* No such file or directory */
+	g_clear_error (&error);
+	g_assert_true (!ok);
+
+	g_object_unref (metadata);
+	g_free (path);
+	g_object_unref (location);
+}
+
+static void
+check_round_trip_expect_failure (const gchar *key,
+				 const gchar *value)
+{
+	if (g_test_subprocess ())
+	{
+		check_round_trip (key, value);
+		return;
+	}
+
+	g_test_trap_subprocess (NULL, 0, 0);
+	g_test_trap_assert_failed ();
+}
+
+static void
 test_get_set_metadata (void)
 {
 	TeplFileMetadata *metadata;
@@ -131,8 +214,9 @@ test_get_set_metadata (void)
 	g_object_unref (metadata);
 }
 
+/* More complete version of check_round_trip(). */
 static void
-test_load_save_metadata (void)
+test_save_load_metadata (void)
 {
 	TeplFileMetadata *metadata;
 	gchar *path;
@@ -272,6 +356,56 @@ test_set_without_load (void)
 	g_object_unref (location);
 }
 
+static void
+test_arbitrary_keys_and_values_success (void)
+{
+	check_round_trip ("tepl-simple-key", "simple-value");
+	check_round_trip ("tepl-simple-key", " ");
+	check_round_trip ("tepl-simple-key", "\t");
+	check_round_trip ("tepl-simple-key", "\t\t  ");
+	check_round_trip ("tepl-simple-key", ",");
+	check_round_trip ("tepl-simple-key", ";");
+	check_round_trip ("tepl-simple-key", "*");
+	check_round_trip ("tepl-simple-key", "::");
+	check_round_trip ("tepl-simple-key", "Évolution-UTF-8");
+
+	check_round_trip ("gCSVedit_column_delimiter", "simple-value");
+	check_round_trip ("Fourty_Two-1337", "simple-value");
+	check_round_trip ("1337-beginning-with-digit", "simple-value");
+	check_round_trip ("a", "simple-value");
+	check_round_trip ("9", "simple-value");
+}
+
+static void
+test_arbitrary_keys_and_values_failure_01 (void)
+{
+	/* Non-UTF-8 value. */
+	g_assert_true (!g_utf8_validate ("\xFF", -1, NULL));
+	check_round_trip_expect_failure ("tepl-simple-key", "\xFF");
+}
+
+static void
+test_arbitrary_keys_and_values_failure_02 (void)
+{
+	/* Key containing ':'. */
+	check_round_trip_expect_failure ("metadata::gCSVedit-column-delimiter", "simple-value");
+}
+
+static void
+test_arbitrary_keys_and_values_failure_03 (void)
+{
+	/* UTF-8 key. */
+	check_round_trip_expect_failure ("Évolution-UTF-8", "simple-value");
+}
+
+static void
+test_arbitrary_keys_and_values_failure_04 (void)
+{
+	/* Non-UTF-8 key. */
+	g_assert_true (!g_utf8_validate ("\xFF", -1, NULL));
+	check_round_trip_expect_failure ("\xFF", "simple-value");
+}
+
 int
 main (int    argc,
       char **argv)
@@ -279,8 +413,13 @@ main (int    argc,
 	gtk_test_init (&argc, &argv);
 
 	g_test_add_func ("/file_metadata/get_set_metadata", test_get_set_metadata);
-	g_test_add_func ("/file_metadata/load_save_metadata", test_load_save_metadata);
+	g_test_add_func ("/file_metadata/save_load_metadata", test_save_load_metadata);
 	g_test_add_func ("/file_metadata/set_without_load", test_set_without_load);
+	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_success", test_arbitrary_keys_and_values_success);
+	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_01", test_arbitrary_keys_and_values_failure_01);
+	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_02", test_arbitrary_keys_and_values_failure_02);
+	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_03", test_arbitrary_keys_and_values_failure_03);
+	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_04", test_arbitrary_keys_and_values_failure_04);
 
 	return g_test_run ();
 }

@@ -40,6 +40,8 @@ gchar *		tepl_utils_str_replace				(const gchar *string,
 								 const gchar *search,
 								 const gchar *replacement);
 
+gboolean	tepl_utils_metadata_key_is_valid		(const gchar *metadata_key);
+
 /* File utilities */
 
 gchar *		tepl_utils_get_file_extension			(const gchar *filename);

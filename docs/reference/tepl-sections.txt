@@ -415,6 +415,7 @@ tepl_notebook_get_type
 tepl_utils_str_middle_truncate
 tepl_utils_str_end_truncate
 tepl_utils_str_replace
+tepl_utils_metadata_key_is_valid
 tepl_utils_get_file_extension
 tepl_utils_get_file_shortname
 tepl_utils_replace_home_dir_with_tilde

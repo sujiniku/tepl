@@ -67,6 +67,29 @@ test_str_replace (void)
 }
 
 static void
+test_metadata_key_is_valid (void)
+{
+	g_assert_true (tepl_utils_metadata_key_is_valid ("gedit-spell-checking-language"));
+	g_assert_true (tepl_utils_metadata_key_is_valid ("gCSVedit_column_delimiter"));
+	g_assert_true (tepl_utils_metadata_key_is_valid ("Fourty_Two-1337"));
+	g_assert_true (tepl_utils_metadata_key_is_valid ("1337-beginning-with-digit"));
+	g_assert_true (tepl_utils_metadata_key_is_valid ("a"));
+	g_assert_true (tepl_utils_metadata_key_is_valid ("9"));
+
+	g_assert_true (!tepl_utils_metadata_key_is_valid (NULL));
+	g_assert_true (!tepl_utils_metadata_key_is_valid (""));
+	g_assert_true (!tepl_utils_metadata_key_is_valid ("metadata::gedit-spell-checking-language"));
+	g_assert_true (!tepl_utils_metadata_key_is_valid ("foo:bar"));
+	g_assert_true (!tepl_utils_metadata_key_is_valid ("foo::bar"));
+	g_assert_true (!tepl_utils_metadata_key_is_valid ("Évolution-UTF-8"));
+	g_assert_true (!tepl_utils_metadata_key_is_valid ("a space"));
+	g_assert_true (!tepl_utils_metadata_key_is_valid ("\t"));
+
+	g_assert_true (!g_utf8_validate ("\xFF", -1, NULL));
+	g_assert_true (!tepl_utils_metadata_key_is_valid ("\xFF"));
+}
+
+static void
 test_get_file_extension (void)
 {
 	gchar *extension;
@@ -206,6 +229,7 @@ main (gint    argc,
 	g_test_add_func ("/utils/str-middle-truncate", test_str_middle_truncate);
 	g_test_add_func ("/utils/str-end-truncate", test_str_end_truncate);
 	g_test_add_func ("/utils/str-replace", test_str_replace);
+	g_test_add_func ("/utils/metadata-key-is-valid", test_metadata_key_is_valid);
 	g_test_add_func ("/utils/get-file-extension", test_get_file_extension);
 	g_test_add_func ("/utils/get-file-shortname", test_get_file_shortname);
 	g_test_add_func ("/utils/replace-home-dir-with-tilde", test_replace_home_dir_with_tilde);

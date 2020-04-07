@@ -18,13 +18,17 @@
  */
 
 #include "tepl-file-metadata.h"
+#include "tepl-utils.h"
 
 /**
  * SECTION:file-metadata
  * @Short_description: File metadata
  * @Title: TeplFileMetadata
  *
- * A #TeplFileMetadata object stores the metadata of a #GFile.
+ * A #TeplFileMetadata object stores the metadata of a #GFile, as key/value
+ * pairs. Key names must be valid according to
+ * tepl_utils_metadata_key_is_valid(); see also tepl_file_metadata_set(). Values
+ * must be nul-terminated UTF-8 strings.
  *
  * You need to load and save the #TeplMetadataStore in your application, it is
  * used as a fallback in #TeplFileMetadata in the case where GVfs metadata is
@@ -135,8 +139,10 @@ tepl_file_metadata_new (void)
  *
  * Gets the value of a metadata stored in the @metadata object memory.
  *
- * Returns: (nullable): the value of the metadata, or %NULL if the metadata
- *   doesn't exist. Free with g_free().
+ * @key must meet the requirements of tepl_utils_metadata_key_is_valid().
+ *
+ * Returns: (nullable): the value of the metadata as a UTF-8 string, or %NULL if
+ *   the metadata doesn't exist. Free with g_free().
  * Since: 1.0
  */
 gchar *
@@ -148,7 +154,7 @@ tepl_file_metadata_get (TeplFileMetadata *metadata,
 	gchar *value = NULL;
 
 	g_return_val_if_fail (TEPL_IS_FILE_METADATA (metadata), NULL);
-	g_return_val_if_fail (key != NULL && key[0] != '\0', NULL);
+	g_return_val_if_fail (tepl_utils_metadata_key_is_valid (key), NULL);
 
 	priv = tepl_file_metadata_get_instance_private (metadata);
 
@@ -161,6 +167,13 @@ tepl_file_metadata_get (TeplFileMetadata *metadata,
 	}
 
 	g_free (attribute_key);
+
+	if (value != NULL && !g_utf8_validate (value, -1, NULL))
+	{
+		g_clear_pointer (&value, g_free);
+		g_warn_if_reached ();
+	}
+
 	return value;
 }
 
@@ -168,15 +181,18 @@ tepl_file_metadata_get (TeplFileMetadata *metadata,
  * tepl_file_metadata_set:
  * @metadata: a #TeplFileMetadata.
  * @key: the name of the metadata.
- * @value: (nullable): the value of the metadata, or %NULL to unset.
+ * @value: (nullable): the value of the metadata as a UTF-8 string, or %NULL to
+ *   unset.
  *
- * Sets the value of a metadata. It's preferable that @key starts with a
- * namespace, to not get metadata conflicts between applications. For example a
- * good @key name for the gedit application is
- * `"gedit-spell-checking-language"`.
+ * Sets the value of a metadata. This function just stores the new metadata
+ * value in the @metadata object memory.
  *
- * This function just stores the new metadata value in the @metadata object
- * memory.
+ * @key must meet the requirements of tepl_utils_metadata_key_is_valid().
+ * Additionally, it's preferable that @key starts with a namespace, to not get
+ * metadata conflicts between applications. For example a good @key name for the
+ * gedit application is `"gedit-spell-checking-language"`.
+ *
+ * @value, if non-%NULL, must be a valid nul-terminated UTF-8 string.
  *
  * Since: 1.0
  */
@@ -189,7 +205,8 @@ tepl_file_metadata_set (TeplFileMetadata *metadata,
 	gchar *attribute_key;
 
 	g_return_if_fail (TEPL_IS_FILE_METADATA (metadata));
-	g_return_if_fail (key != NULL && key[0] != '\0');
+	g_return_if_fail (tepl_utils_metadata_key_is_valid (key));
+	g_return_if_fail (value == NULL || g_utf8_validate (value, -1, NULL));
 
 	priv = tepl_file_metadata_get_instance_private (metadata);
 

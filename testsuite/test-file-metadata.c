@@ -360,13 +360,31 @@ test_arbitrary_keys_and_values_failure_04 (void)
 }
 
 static void
-test_for_remote_file (void)
+test_for_remote_file_success (void)
 {
 	GFile *remote_location;
 
 	remote_location = g_file_new_for_uri ("https://www.google.com/");
 	check_round_trip_full (remote_location, TRUE, TEST_KEY, "tell me");
 	g_object_unref (remote_location);
+}
+
+static void
+test_for_remote_file_failure (void)
+{
+	if (g_test_subprocess ())
+	{
+		GFile *remote_location;
+
+		/* Doesn't exist. */
+		remote_location = g_file_new_for_uri ("https://www.ursietuteiedludiev.be/");
+		check_round_trip_full (remote_location, TRUE, TEST_KEY, "tell me");
+		g_object_unref (remote_location);
+		return;
+	}
+
+	g_test_trap_subprocess (NULL, 0, 0);
+	g_test_trap_assert_failed ();
 }
 
 int
@@ -382,7 +400,8 @@ main (int    argc,
 	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_02", test_arbitrary_keys_and_values_failure_02);
 	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_03", test_arbitrary_keys_and_values_failure_03);
 	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_04", test_arbitrary_keys_and_values_failure_04);
-	g_test_add_func ("/file_metadata/for_remote_file", test_for_remote_file);
+	g_test_add_func ("/file_metadata/for_remote_file_success", test_for_remote_file_success);
+	g_test_add_func ("/file_metadata/for_remote_file_failure", test_for_remote_file_failure);
 
 	return g_test_run ();
 }

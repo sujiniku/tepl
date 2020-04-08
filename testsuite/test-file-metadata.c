@@ -105,6 +105,9 @@ check_round_trip (const gchar *key,
 	GError *error = NULL;
 	gboolean ok;
 
+	// TEST_OTHER_KEY is used below.
+	g_assert_cmpstr (key, !=, TEST_OTHER_KEY);
+
 	metadata = tepl_file_metadata_new ();
 	tepl_file_metadata_set (metadata, key, value);
 
@@ -112,6 +115,11 @@ check_round_trip (const gchar *key,
 
 	path = g_build_filename (g_get_tmp_dir (), "tepl-file-metadata-test", NULL);
 	location = g_file_new_for_path (path);
+
+	ok = save_sync (metadata, location, &error);
+	g_assert_true (error != NULL); /* No such file or directory */
+	g_clear_error (&error);
+	g_assert_true (!ok);
 
 	g_file_set_contents (path, "blum", -1, &error);
 	g_assert_no_error (error);
@@ -125,10 +133,14 @@ check_round_trip (const gchar *key,
 	/* Load metadata */
 
 	metadata = tepl_file_metadata_new ();
+	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, "orange bill");
 
 	ok = load_sync (metadata, location, &error);
 	g_assert_no_error (error);
 	g_assert_true (ok);
+
+	received_value = tepl_file_metadata_get (metadata, TEST_OTHER_KEY);
+	g_assert_true (received_value == NULL);
 
 	received_value = tepl_file_metadata_get (metadata, key);
 	g_assert_cmpstr (received_value, ==, value);
@@ -212,84 +224,6 @@ test_get_set_metadata (void)
 	g_assert_true (value == NULL);
 
 	g_object_unref (metadata);
-}
-
-/* More complete version of check_round_trip(). */
-static void
-test_save_load_metadata (void)
-{
-	TeplFileMetadata *metadata;
-	gchar *path;
-	GFile *location;
-	gchar *value;
-	GError *error = NULL;
-	gboolean ok;
-
-	metadata = tepl_file_metadata_new ();
-	tepl_file_metadata_set (metadata, TEST_KEY, "epica");
-
-	/* Save metadata */
-
-	path = g_build_filename (g_get_tmp_dir (), "tepl-file-metadata-test", NULL);
-	location = g_file_new_for_path (path);
-
-	ok = save_sync (metadata, location, &error);
-	g_assert_true (error != NULL); /* No such file or directory */
-	g_clear_error (&error);
-	g_assert_true (!ok);
-
-	g_file_set_contents (path, "blum", -1, &error);
-	g_assert_no_error (error);
-
-	ok = save_sync (metadata, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
-
-	g_object_unref (metadata);
-
-	/* Load metadata */
-
-	metadata = tepl_file_metadata_new ();
-	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, "embrace");
-
-	ok = load_sync (metadata, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
-
-	value = tepl_file_metadata_get (metadata, TEST_OTHER_KEY);
-	g_assert_true (value == NULL);
-
-	value = tepl_file_metadata_get (metadata, TEST_KEY);
-	g_assert_cmpstr (value, ==, "epica");
-	g_free (value);
-
-	/* Unset */
-
-	tepl_file_metadata_set (metadata, TEST_KEY, NULL);
-	ok = save_sync (metadata, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
-
-	ok = load_sync (metadata, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
-
-	value = tepl_file_metadata_get (metadata, TEST_KEY);
-	g_assert_true (value == NULL);
-
-	/* Clean-up */
-
-	g_file_delete (location, NULL, &error);
-	g_assert_no_error (error);
-
-	ok = load_sync (metadata, location, &error);
-	g_assert_true (error != NULL); /* No such file or directory */
-	g_clear_error (&error);
-	g_assert_true (!ok);
-
-	g_object_unref (metadata);
-	g_free (path);
-	g_object_unref (location);
 }
 
 /* Setting and saving metadata should not erase previously set metadata if the
@@ -413,7 +347,6 @@ main (int    argc,
 	gtk_test_init (&argc, &argv);
 
 	g_test_add_func ("/file_metadata/get_set_metadata", test_get_set_metadata);
-	g_test_add_func ("/file_metadata/save_load_metadata", test_save_load_metadata);
 	g_test_add_func ("/file_metadata/set_without_load", test_set_without_load);
 	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_success", test_arbitrary_keys_and_values_success);
 	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_01", test_arbitrary_keys_and_values_failure_01);

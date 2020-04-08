@@ -41,6 +41,14 @@
  * metadata on disk, call tepl_file_metadata_save_async().
  */
 
+/* API design - additional notes:
+ *
+ * The values must be valid UTF-8 strings, not arbitrary byte string because
+ * G_FILE_ATTRIBUTE_TYPE_STRING is used. And also because it's convenient to
+ * have UTF-8 strings, in case they are displayed in the UI with GTK. Note that
+ * there is also G_FILE_ATTRIBUTE_TYPE_BYTE_STRING.
+ */
+
 /* TODO Better test how it works with remote files, with various protocols.
  * For example with an ftp://... location, there can be the error "The specified
  * location is not mounted". In that case we can either propagate the error or

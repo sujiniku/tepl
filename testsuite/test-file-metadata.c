@@ -95,12 +95,12 @@ load_sync (TeplFileMetadata  *metadata,
 }
 
 static void
-check_round_trip (const gchar *key,
-		  const gchar *value)
+check_round_trip_full (GFile       *location,
+		       gboolean     location_already_exists,
+		       const gchar *key,
+		       const gchar *value)
 {
 	TeplFileMetadata *metadata;
-	gchar *path;
-	GFile *location;
 	gchar *received_value;
 	GError *error = NULL;
 	gboolean ok;
@@ -113,16 +113,18 @@ check_round_trip (const gchar *key,
 
 	/* Save metadata */
 
-	path = g_build_filename (g_get_tmp_dir (), "tepl-file-metadata-test", NULL);
-	location = g_file_new_for_path (path);
+	if (!location_already_exists)
+	{
+		const gchar *path = g_file_peek_path (location);
 
-	ok = save_sync (metadata, location, &error);
-	g_assert_true (error != NULL); /* No such file or directory */
-	g_clear_error (&error);
-	g_assert_true (!ok);
+		ok = save_sync (metadata, location, &error);
+		g_assert_true (error != NULL); /* No such file or directory */
+		g_clear_error (&error);
+		g_assert_true (!ok);
 
-	g_file_set_contents (path, "blum", -1, &error);
-	g_assert_no_error (error);
+		g_file_set_contents (path, "blum", -1, &error);
+		g_assert_no_error (error);
+	}
 
 	ok = save_sync (metadata, location, &error);
 	g_assert_no_error (error);
@@ -162,15 +164,32 @@ check_round_trip (const gchar *key,
 
 	/* Clean-up */
 
-	g_file_delete (location, NULL, &error);
-	g_assert_no_error (error);
+	if (!location_already_exists)
+	{
+		g_file_delete (location, NULL, &error);
+		g_assert_no_error (error);
 
-	ok = load_sync (metadata, location, &error);
-	g_assert_true (error != NULL); /* No such file or directory */
-	g_clear_error (&error);
-	g_assert_true (!ok);
+		ok = load_sync (metadata, location, &error);
+		g_assert_true (error != NULL); /* No such file or directory */
+		g_clear_error (&error);
+		g_assert_true (!ok);
+	}
 
 	g_object_unref (metadata);
+}
+
+static void
+check_round_trip (const gchar *key,
+		  const gchar *value)
+{
+	gchar *path;
+	GFile *location;
+
+	path = g_build_filename (g_get_tmp_dir (), "tepl-file-metadata-test", NULL);
+	location = g_file_new_for_path (path);
+
+	check_round_trip_full (location, FALSE, key, value);
+
 	g_free (path);
 	g_object_unref (location);
 }
@@ -340,6 +359,16 @@ test_arbitrary_keys_and_values_failure_04 (void)
 	check_round_trip_expect_failure ("\xFF", "simple-value");
 }
 
+static void
+test_for_remote_file (void)
+{
+	GFile *remote_location;
+
+	remote_location = g_file_new_for_uri ("https://www.google.com/");
+	check_round_trip_full (remote_location, TRUE, TEST_KEY, "tell me");
+	g_object_unref (remote_location);
+}
+
 int
 main (int    argc,
       char **argv)
@@ -353,6 +382,7 @@ main (int    argc,
 	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_02", test_arbitrary_keys_and_values_failure_02);
 	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_03", test_arbitrary_keys_and_values_failure_03);
 	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_04", test_arbitrary_keys_and_values_failure_04);
+	g_test_add_func ("/file_metadata/for_remote_file", test_for_remote_file);
 
 	return g_test_run ();
 }

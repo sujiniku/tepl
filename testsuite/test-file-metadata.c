@@ -387,6 +387,97 @@ test_for_remote_file_failure (void)
 	g_test_trap_assert_failed ();
 }
 
+/* Simulate several apps writing both metadata for the same GFile.
+ * Or the same GFile being opened several times in the same app.
+ * App1: load() -> set() -> save()
+ * App2:   load() -> set() -> ...  save().
+ * [-----------------------------------------> time
+ * The save() done by App2 must not erase the metadata set by App1 if the
+ * metadata keys are different.
+ * S(t)imulating!
+ */
+static void
+test_simulate_several_apps (void)
+{
+	TeplFileMetadata *metadata1;
+	TeplFileMetadata *metadata2;
+	gchar *path;
+	GFile *location;
+	gchar *value;
+	GError *error = NULL;
+	gboolean ok;
+
+	metadata1 = tepl_file_metadata_new ();
+	metadata2 = tepl_file_metadata_new ();
+
+	path = g_build_filename (g_get_tmp_dir (), "tepl-file-metadata-stimulating-test", NULL);
+	location = g_file_new_for_path (path);
+	g_file_set_contents (path, "blum", -1, &error);
+	g_assert_no_error (error);
+
+	/* Set and save an initial metadata from App1. */
+
+	tepl_file_metadata_set (metadata1, "app1-key", "app1-value1");
+	ok = save_sync (metadata1, location, &error);
+	g_assert_no_error (error);
+	g_assert_true (ok); // OK indeed, so far so good.
+
+	/* Load (for App1 it's not needed). */
+
+	ok = load_sync (metadata2, location, &error);
+	g_assert_no_error (error);
+	g_assert_true (ok);
+
+	value = tepl_file_metadata_get (metadata2, "app1-key");
+	g_assert_cmpstr (value, ==, "app1-value1");
+	g_free (value);
+
+	/* Now set/change values */
+
+	tepl_file_metadata_set (metadata1, "app1-key", "app1-value2");
+	tepl_file_metadata_set (metadata2, "app2-key", "app2-value");
+
+	/* And save */
+
+	ok = save_sync (metadata1, location, &error);
+	g_assert_no_error (error);
+	g_assert_true (ok);
+
+	ok = save_sync (metadata2, location, &error);
+	g_assert_no_error (error);
+	g_assert_true (ok);
+
+	g_object_unref (metadata1);
+	g_object_unref (metadata2);
+
+	/* Now what's the value of "app1-key"? */
+
+	metadata1 = tepl_file_metadata_new ();
+	ok = load_sync (metadata1, location, &error);
+	g_assert_no_error (error);
+	g_assert_true (ok);
+
+	value = tepl_file_metadata_get (metadata1, "app1-key");
+	// It must be "app1-value2", because App2 didn't set the "app1-key".
+	g_assert_cmpstr (value, ==, "app1-value2");
+	g_free (value);
+
+	/* Clean-up */
+
+	tepl_file_metadata_set (metadata1, "app1-key", NULL);
+	tepl_file_metadata_set (metadata1, "app2-key", NULL);
+	ok = save_sync (metadata1, location, &error);
+	g_assert_no_error (error);
+	g_assert_true (ok);
+
+	g_file_delete (location, NULL, &error);
+	g_assert_no_error (error);
+
+	g_object_unref (metadata1);
+	g_free (path);
+	g_object_unref (location);
+}
+
 int
 main (int    argc,
       char **argv)
@@ -402,6 +493,7 @@ main (int    argc,
 	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_04", test_arbitrary_keys_and_values_failure_04);
 	g_test_add_func ("/file_metadata/for_remote_file_success", test_for_remote_file_success);
 	g_test_add_func ("/file_metadata/for_remote_file_failure", test_for_remote_file_failure);
+	g_test_add_func ("/file_metadata/simulate_several_apps", test_simulate_several_apps);
 
 	return g_test_run ();
 }

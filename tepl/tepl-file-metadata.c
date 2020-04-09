@@ -73,6 +73,8 @@ struct _TeplFileMetadataPrivate
 	 */
 	GFileInfo *file_info_modified;
 
+	guint is_saving : 1;
+
 #if 0
 	guint use_gvfs_metadata : 1;
 #endif
@@ -225,6 +227,7 @@ tepl_file_metadata_set (TeplFileMetadata *metadata,
 	g_return_if_fail (value == NULL || g_utf8_validate (value, -1, NULL));
 
 	priv = tepl_file_metadata_get_instance_private (metadata);
+	g_return_if_fail (!priv->is_saving);
 
 	if (priv->file_info_modified == NULL)
 	{
@@ -340,11 +343,15 @@ tepl_file_metadata_load_async (TeplFileMetadata    *metadata,
 			       GAsyncReadyCallback  callback,
 			       gpointer             user_data)
 {
+	TeplFileMetadataPrivate *priv;
 	GTask *task;
 
 	g_return_if_fail (TEPL_IS_FILE_METADATA (metadata));
 	g_return_if_fail (G_IS_FILE (location));
 	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
+
+	priv = tepl_file_metadata_get_instance_private (metadata);
+	g_return_if_fail (!priv->is_saving);
 
 	task = g_task_new (metadata, cancellable, callback, user_data);
 	g_task_set_priority (task, io_priority);
@@ -453,6 +460,9 @@ tepl_file_metadata_save_async (TeplFileMetadata    *metadata,
 	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
 
 	priv = tepl_file_metadata_get_instance_private (metadata);
+	g_return_if_fail (!priv->is_saving);
+
+	priv->is_saving = TRUE;
 
 	task = g_task_new (metadata, cancellable, callback, user_data);
 	g_task_set_priority (task, io_priority);
@@ -493,9 +503,14 @@ tepl_file_metadata_save_finish (TeplFileMetadata  *metadata,
 				GAsyncResult      *result,
 				GError           **error)
 {
+	TeplFileMetadataPrivate *priv;
+
 	g_return_val_if_fail (TEPL_IS_FILE_METADATA (metadata), FALSE);
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 	g_return_val_if_fail (g_task_is_valid (result, metadata), FALSE);
+
+	priv = tepl_file_metadata_get_instance_private (metadata);
+	priv->is_saving = FALSE;
 
 	return g_task_propagate_boolean (G_TASK (result), error);
 }

@@ -427,7 +427,9 @@ save_metadata_async_cb (GObject      *source_object,
  *   satisfied.
  * @user_data: user data to pass to @callback.
  *
- * Saves asynchronously the metadata for @location.
+ * Saves asynchronously the metadata for @location. Note that the metadata is
+ * not saved <emphasis>to</emphasis> @location, the metadata is saved elsewhere,
+ * <emphasis>for</emphasis> @location.
  *
  * @location must exist on the filesystem, otherwise an error is returned.
  *

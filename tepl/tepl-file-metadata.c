@@ -63,8 +63,15 @@ typedef struct _TeplFileMetadataPrivate TeplFileMetadataPrivate;
 
 struct _TeplFileMetadataPrivate
 {
-	/* Never NULL */
-	GFileInfo *file_info;
+	/* Never NULL. Contains all metadata that was loaded with
+	 * tepl_file_metadata_load_async() or set with tepl_file_metadata_set().
+	 */
+	GFileInfo *file_info_all;
+
+	/* Can be NULL. Contains the metadata that has been modified by calling
+	 * tepl_file_metadata_set(), but which has not yet been saved.
+	 */
+	GFileInfo *file_info_modified;
 
 #if 0
 	guint use_gvfs_metadata : 1;
@@ -85,7 +92,7 @@ get_metadata_attribute_key (const gchar *key)
 static void
 print_fallback_to_metadata_store_warning (void)
 {
-	g_warning_once ("GVfs metadata is not supported. Fallback to TeplMetadataStore. "
+	g_warning_once ("GVfs metadata are not supported. Fallback to TeplMetadataStore. "
 			"Either GVfs is not correctly installed or GVfs metadata are "
 			"not supported on this platform. In the latter case, you should "
 			"configure Tepl with -Dgvfs_metadata=false.");
@@ -98,7 +105,8 @@ tepl_file_metadata_finalize (GObject *object)
 
 	priv = tepl_file_metadata_get_instance_private (TEPL_FILE_METADATA (object));
 
-	g_object_unref (priv->file_info);
+	g_object_unref (priv->file_info_all);
+	g_clear_object (&priv->file_info_modified);
 
 	G_OBJECT_CLASS (tepl_file_metadata_parent_class)->finalize (object);
 }
@@ -116,7 +124,7 @@ tepl_file_metadata_init (TeplFileMetadata *metadata)
 {
 	TeplFileMetadataPrivate *priv = tepl_file_metadata_get_instance_private (metadata);
 
-	priv->file_info = g_file_info_new ();
+	priv->file_info_all = g_file_info_new ();
 
 #if 0
 /* TODO change the #ifdef to an #if. */
@@ -168,10 +176,10 @@ tepl_file_metadata_get (TeplFileMetadata *metadata,
 
 	attribute_key = get_metadata_attribute_key (key);
 
-	if (g_file_info_has_attribute (priv->file_info, attribute_key) &&
-	    g_file_info_get_attribute_type (priv->file_info, attribute_key) == G_FILE_ATTRIBUTE_TYPE_STRING)
+	if (g_file_info_has_attribute (priv->file_info_all, attribute_key) &&
+	    g_file_info_get_attribute_type (priv->file_info_all, attribute_key) == G_FILE_ATTRIBUTE_TYPE_STRING)
 	{
-		value = g_strdup (g_file_info_get_attribute_string (priv->file_info, attribute_key));
+		value = g_strdup (g_file_info_get_attribute_string (priv->file_info_all, attribute_key));
 	}
 
 	g_free (attribute_key);
@@ -218,18 +226,34 @@ tepl_file_metadata_set (TeplFileMetadata *metadata,
 
 	priv = tepl_file_metadata_get_instance_private (metadata);
 
+	if (priv->file_info_modified == NULL)
+	{
+		priv->file_info_modified = g_file_info_new ();
+	}
+
 	attribute_key = get_metadata_attribute_key (key);
 
 	if (value != NULL)
 	{
-		g_file_info_set_attribute_string (priv->file_info,
+		g_file_info_set_attribute_string (priv->file_info_all,
+						  attribute_key,
+						  value);
+
+		g_file_info_set_attribute_string (priv->file_info_modified,
 						  attribute_key,
 						  value);
 	}
 	else
 	{
-		/* Unset the key */
-		g_file_info_set_attribute (priv->file_info,
+		g_file_info_remove_attribute (priv->file_info_all, attribute_key);
+
+		/* Unset the key. If we call g_file_info_remove_attribute() on
+		 * priv->file_info_modified, then when calling
+		 * tepl_file_metadata_save_async(), the metadata attribute will
+		 * not get removed, it would just be ignored (since it would not
+		 * be there in the GFileInfo anymore).
+		 */
+		g_file_info_set_attribute (priv->file_info_modified,
 					   attribute_key,
 					   G_FILE_ATTRIBUTE_TYPE_INVALID,
 					   NULL);
@@ -247,37 +271,38 @@ load_metadata_async_cb (GObject      *source_object,
 	GTask *task = G_TASK (user_data);
 	TeplFileMetadata *metadata;
 	TeplFileMetadataPrivate *priv;
-	GFileInfo *file_info;
+	GFileInfo *loaded_file_info;
 	GError *error = NULL;
 
 	metadata = g_task_get_source_object (task);
 	priv = tepl_file_metadata_get_instance_private (metadata);
 
-	file_info = g_file_query_info_finish (location, result, &error);
+	loaded_file_info = g_file_query_info_finish (location, result, &error);
 
 	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
 	{
 		print_fallback_to_metadata_store_warning ();
-		//priv->use_gvfs_metadata = FALSE;
 
 		g_clear_error (&error);
-		g_clear_object (&file_info);
-
-		/* TODO: load from TeplMetadataStore. */
-		file_info = NULL;
+		g_clear_object (&loaded_file_info);
 	}
 
 	if (error != NULL)
 	{
 		g_task_return_error (task, error);
 		g_object_unref (task);
-		g_clear_object (&file_info);
+		g_clear_object (&loaded_file_info);
 		return;
 	}
 
-	if (file_info != NULL)
+	if (loaded_file_info != NULL)
 	{
-		g_set_object (&priv->file_info, file_info);
+		/* FIXME: is it the right thing to do? */
+
+		g_object_unref (priv->file_info_all);
+		priv->file_info_all = loaded_file_info;
+
+		g_clear_object (&priv->file_info_modified);
 	}
 
 	g_task_return_boolean (task, TRUE);
@@ -298,7 +323,8 @@ load_metadata_async_cb (GObject      *source_object,
  * Loads asynchronously the metadata for @location.
  *
  * If the metadata are loaded successfully, this function deletes all previous
- * metadata stored in the @metadata object memory.
+ * metadata stored in the @metadata object memory. FIXME: is it the right thing
+ * to do?
  *
  * @location must exist on the filesystem, otherwise an error is returned.
  *
@@ -362,7 +388,12 @@ save_metadata_async_cb (GObject      *source_object,
 {
 	GFile *location = G_FILE (source_object);
 	GTask *task = G_TASK (user_data);
+	TeplFileMetadata *metadata;
+	TeplFileMetadataPrivate *priv;
 	GError *error = NULL;
+
+	metadata = g_task_get_source_object (task);
+	priv = tepl_file_metadata_get_instance_private (metadata);
 
 	g_file_set_attributes_finish (location, result, NULL, &error);
 
@@ -378,6 +409,8 @@ save_metadata_async_cb (GObject      *source_object,
 		g_object_unref (task);
 		return;
 	}
+
+	g_clear_object (&priv->file_info_modified);
 
 	g_task_return_boolean (task, TRUE);
 	g_object_unref (task);
@@ -422,8 +455,15 @@ tepl_file_metadata_save_async (TeplFileMetadata    *metadata,
 	task = g_task_new (metadata, cancellable, callback, user_data);
 	g_task_set_priority (task, io_priority);
 
+	if (priv->file_info_modified == NULL)
+	{
+		g_task_return_boolean (task, TRUE);
+		g_object_unref (task);
+		return;
+	}
+
 	g_file_set_attributes_async (location,
-				     priv->file_info,
+				     priv->file_info_modified,
 				     G_FILE_QUERY_INFO_NONE,
 				     io_priority,
 				     cancellable,

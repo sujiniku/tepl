@@ -39,6 +39,135 @@
  * the #TeplFileMetadata object memory. To load the metadata from disk, call
  * tepl_file_metadata_load_async(). Likewise, to save the
  * metadata on disk, call tepl_file_metadata_save_async().
+ *
+ * # Application use-cases
+ *
+ * This section documents some use-cases that applications may want to support.
+ * Pointers are given to know how to integrate #TeplFileMetadata in your
+ * application to support the use-cases.
+ *
+ * ## Storing settings in memory for unsaved documents
+ *
+ * User story:
+ * 1. I create a new document in gedit. Note that the document is still unsaved,
+ *    so the #GFile is %NULL at this point in time.
+ * 2. I enable the spell-checking plugin and I configure the spell-checking
+ *    language for the new document.
+ * 3. Then I <emphasis>disable the spell-checking plugin</emphasis>. The feature
+ *    is completely disabled from the application.
+ * 4. Then I re-enable the spell-checking plugin.
+ * 5. ==> I want that the spell-checking language setting is restored for the new
+ *    document (the new document is still unsaved).
+ *
+ * #TeplFileMetadata supports well this user story: a #TeplFileMetadata object
+ * can be associated with the #GtkTextBuffer of the new document, then the
+ * spell-checking feature can set and retrieve the settings with
+ * tepl_file_metadata_set() and tepl_file_metadata_get().
+ *
+ * ## Saving a new document and re-opening the file
+ *
+ * User story:
+ * 1. I create a new document in gedit. Note that the document is still unsaved,
+ *    so the #GFile is %NULL at this point in time.
+ * 2. I configure the spell-checking language for the new document.
+ * 3. I disable the spell-checking plugin.
+ * 4. I save the document to a new file (the #GFile location never existed
+ *    before with my user account).
+ * 5. Then I close the document.
+ * 6. (Optional) I close the gedit application and re-launch it.
+ * 7. Then I re-open the document.
+ * 8. I re-enable the spell-checking plugin.
+ * 9. ==> I want that the spell-checking language setting is restored for the
+ *    document.
+ *
+ * At step 2, tepl_file_metadata_set() is called. Just after step 4,
+ * tepl_file_metadata_save_async() is called (it must be done after saving the
+ * document's content, because the #GFile needs to exist when saving metadata
+ * with GVfs). During step 7, tepl_file_metadata_load_async() is called. At step
+ * 8, tepl_file_metadata_get() is called by the spell-checking plugin.
+ *
+ * ## File revert/reload
+ *
+ * User story:
+ * 1. I open a file in a text editor. The metadata for that file is loaded.
+ * 2. I re-configure the character encoding and line ending type.
+ * 3. Then I change my mind, I made a mistake and I want to revert the changes.
+ *    So I click on the button to revert/reload the file.
+ * 4. ==> I want the old configuration back.
+ *
+ * At step 3, tepl_file_metadata_load_async() needs to be called, which deletes
+ * all previous metadata stored in the #TeplFileMetadata object memory. So at
+ * step 4 the old configuration is correctly restored.
+ *
+ * ## Save as
+ *
+ * For the 'Save as' feature of a text editor, to save a document to a new
+ * #GFile location, there are two cases:
+ * 1. The new #GFile location didn't exist, a new file is created.
+ * 2. The new #GFile location already existed and is replaced.
+ *
+ * But from the point of view of metadata handling, the two cases can be
+ * simplified to only case 2, because for case 1 the new #GFile location may
+ * have existed in the past and the metadata for it was not deleted.
+ *
+ * What we want in all cases is to first delete any metadata for the new #GFile
+ * location, then save <emphasis>all</emphasis> the metadata belonging to our
+ * document that we are saving.
+ *
+ * FIXME: currently not well supported by #TeplFileMetadata.
+ *
+ * ## Opening a second time the same file in the same application
+ *
+ * User story:
+ * 1. I open a file in gedit.
+ * 2. I configure the spell-checking language and character encoding.
+ * 3. I open a new gedit window and I open the same file again in it.
+ * 4. ==> I want the same spell-checking settings and character encoding.
+ * 5. Then I change the spell-checking language in the first opened document.
+ * 6. ==> I <emphasis>don't</emphasis> want the setting to be automatically
+ *    synchronized in the other document. Because I may want to spell-check
+ *    certain paragraphs in another language.
+ *
+ * To support this - and assuming that each document has a separate
+ * #GtkTextBuffer/#TeplFileMetadata pair - step 3 should proceed as follows:
+ * first save the metadata of the first document with
+ * tepl_file_metadata_save_async() and wait that the operation is finished, then
+ * load the metadata for the second document (which has the same #GFile
+ * location).
+ *
+ * For step 6, the two #TeplFileMetadata objects are not synchronized, the
+ * metadata are just saved when the respective document is saved.
+ *
+ * ## Opening the same file in another application - Shared metadata
+ *
+ * User story:
+ * 1. I open a file in Text Editor A.
+ * 2. I configure the character encoding and spell-checking language.
+ * 3. I open the same file in Text Editor B.
+ * 4. ==> When opening the file in Text Editor B, I want the same character
+ *    encoding as configured in step 2 from Text Editor A. The spell-checking is
+ *    specific to Text Editor A and the language should be saved only when
+ *    saving the document (see also the previous, related user story).
+ *
+ * So there is a desire to save only a subset of a #TeplFileMetadata. Namely at
+ * step 2, the character encoding - once correctly configured to view the file -
+ * should be saved <emphasis>directly</emphasis>, while for other kind of
+ * metadata it is better to save them when the document is saved.
+ *
+ * FIXME: currently not well supported by #TeplFileMetadata, need to add
+ * `save_subset_async/finish()` taking an array or list of keys to save.
+ *
+ * ## Separation of concerns
+ *
+ * To implement file metadata in an application, one strategy is to separate
+ * concerns:
+ * - Individual features or plugins call tepl_file_metadata_get() and
+ *   tepl_file_metadata_set().
+ * - The code that manages file loading and saving takes care of calling
+ *   tepl_file_metadata_load_async() and tepl_file_metadata_save_async() at
+ *   appropriate times (see the previous use-cases as inspiration), and
+ *   orchestrates or signals individual features or plugins to
+ *   activate/deactivate themselves also at appropriate times.
  */
 
 /* API design - additional notes:
@@ -300,8 +429,6 @@ load_metadata_async_cb (GObject      *source_object,
 
 	if (loaded_file_info != NULL)
 	{
-		/* FIXME: is it the right thing to do? */
-
 		g_object_unref (priv->file_info_all);
 		priv->file_info_all = loaded_file_info;
 
@@ -326,8 +453,7 @@ load_metadata_async_cb (GObject      *source_object,
  * Loads asynchronously the metadata for @location.
  *
  * If the metadata are loaded successfully, this function deletes all previous
- * metadata stored in the @metadata object memory. FIXME: is it the right thing
- * to do?
+ * metadata stored in the @metadata object memory.
  *
  * @location must exist on the filesystem, otherwise an error is returned.
  *

@@ -22,11 +22,26 @@
 #define TEST_KEY "tepl-test-key"
 #define TEST_OTHER_KEY "tepl-test-other-key"
 
-typedef struct
+#define EXPECT_SUCCESS (TRUE)
+#define EXPECT_FAILURE (FALSE)
+
+static void
+check_expect_success (gboolean  expect_success,
+		      gboolean  result_ok,
+		      GError   *result_error)
 {
-	GError **error;
-	gboolean ok;
-} Data;
+	if (expect_success)
+	{
+		g_assert_no_error (result_error);
+		g_assert_true (result_ok);
+	}
+	else
+	{
+		g_assert_true (result_error != NULL);
+		g_error_free (result_error);
+		g_assert_true (!result_ok);
+	}
+}
 
 static void
 save_sync_cb (GObject      *source_object,
@@ -34,31 +49,28 @@ save_sync_cb (GObject      *source_object,
 	      gpointer      user_data)
 {
 	TeplFileMetadata *metadata = TEPL_FILE_METADATA (source_object);
-	Data *data = user_data;
+	gboolean *expect_success = user_data;
+	gboolean ok;
+	GError *error = NULL;
 
-	data->ok = tepl_file_metadata_save_finish (metadata, result, data->error);
+	ok = tepl_file_metadata_save_finish (metadata, result, &error);
+	check_expect_success (*expect_success, ok, error);
 
 	gtk_main_quit ();
 }
 
-static gboolean
-save_sync (TeplFileMetadata  *metadata,
-	   GFile             *location,
-	   GError           **error)
+static void
+save_sync (TeplFileMetadata *metadata,
+	   GFile            *location,
+	   gboolean          expect_success)
 {
-	Data data;
-	data.error = error;
-	data.ok = FALSE;
-
 	tepl_file_metadata_save_async (metadata,
 				       location,
 				       G_PRIORITY_DEFAULT,
 				       NULL,
 				       save_sync_cb,
-				       &data);
+				       &expect_success);
 	gtk_main ();
-
-	return data.ok;
 }
 
 static void
@@ -67,31 +79,28 @@ load_sync_cb (GObject      *source_object,
 	      gpointer      user_data)
 {
 	TeplFileMetadata *metadata = TEPL_FILE_METADATA (source_object);
-	Data *data = user_data;
+	gboolean *expect_success = user_data;
+	gboolean ok;
+	GError *error = NULL;
 
-	data->ok = tepl_file_metadata_load_finish (metadata, result, data->error);
+	ok = tepl_file_metadata_load_finish (metadata, result, &error);
+	check_expect_success (*expect_success, ok, error);
 
 	gtk_main_quit ();
 }
 
-static gboolean
-load_sync (TeplFileMetadata  *metadata,
-	   GFile             *location,
-	   GError           **error)
+static void
+load_sync (TeplFileMetadata *metadata,
+	   GFile            *location,
+	   gboolean          expect_success)
 {
-	Data data;
-	data.error = error;
-	data.ok = FALSE;
-
 	tepl_file_metadata_load_async (metadata,
 				       location,
 				       G_PRIORITY_DEFAULT,
 				       NULL,
 				       load_sync_cb,
-				       &data);
+				       &expect_success);
 	gtk_main ();
-
-	return data.ok;
 }
 
 static void
@@ -103,7 +112,6 @@ check_round_trip_full (GFile       *location,
 	TeplFileMetadata *metadata;
 	gchar *received_value;
 	GError *error = NULL;
-	gboolean ok;
 
 	// TEST_OTHER_KEY is used below.
 	g_assert_cmpstr (key, !=, TEST_OTHER_KEY);
@@ -117,19 +125,13 @@ check_round_trip_full (GFile       *location,
 	{
 		const gchar *path = g_file_peek_path (location);
 
-		ok = save_sync (metadata, location, &error);
-		g_assert_true (error != NULL); /* No such file or directory */
-		g_clear_error (&error);
-		g_assert_true (!ok);
+		save_sync (metadata, location, EXPECT_FAILURE); /* No such file or directory */
 
 		g_file_set_contents (path, "blum", -1, &error);
 		g_assert_no_error (error);
 	}
 
-	ok = save_sync (metadata, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
-
+	save_sync (metadata, location, EXPECT_SUCCESS);
 	g_object_unref (metadata);
 
 	/* Load metadata */
@@ -137,9 +139,7 @@ check_round_trip_full (GFile       *location,
 	metadata = tepl_file_metadata_new ();
 	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, "orange bill");
 
-	ok = load_sync (metadata, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
+	load_sync (metadata, location, EXPECT_SUCCESS);
 
 	received_value = tepl_file_metadata_get (metadata, TEST_OTHER_KEY);
 	g_assert_true (received_value == NULL);
@@ -151,13 +151,9 @@ check_round_trip_full (GFile       *location,
 	/* Unset */
 
 	tepl_file_metadata_set (metadata, key, NULL);
-	ok = save_sync (metadata, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
+	save_sync (metadata, location, EXPECT_SUCCESS);
 
-	ok = load_sync (metadata, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
+	load_sync (metadata, location, EXPECT_SUCCESS);
 
 	received_value = tepl_file_metadata_get (metadata, key);
 	g_assert_true (received_value == NULL);
@@ -169,10 +165,7 @@ check_round_trip_full (GFile       *location,
 		g_file_delete (location, NULL, &error);
 		g_assert_no_error (error);
 
-		ok = load_sync (metadata, location, &error);
-		g_assert_true (error != NULL); /* No such file or directory */
-		g_clear_error (&error);
-		g_assert_true (!ok);
+		load_sync (metadata, location, EXPECT_FAILURE); /* No such file or directory */
 	}
 
 	g_object_unref (metadata);
@@ -256,7 +249,6 @@ test_set_without_load (void)
 	GFile *location;
 	gchar *value;
 	GError *error = NULL;
-	gboolean ok;
 
 	metadata = tepl_file_metadata_new ();
 	path = g_build_filename (g_get_tmp_dir (), "tepl-file-metadata-test-set-without-load", NULL);
@@ -267,23 +259,16 @@ test_set_without_load (void)
 
 	/* Set and save one metadata */
 	tepl_file_metadata_set (metadata, TEST_KEY, "dimmu");
-	ok = save_sync (metadata, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
-
+	save_sync (metadata, location, EXPECT_SUCCESS);
 	g_object_unref (metadata);
 
 	/* Set and save another metadata, independently */
 	metadata = tepl_file_metadata_new ();
 	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, "borgir");
-	ok = save_sync (metadata, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
+	save_sync (metadata, location, EXPECT_SUCCESS);
 
 	/* Load */
-	ok = load_sync (metadata, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
+	load_sync (metadata, location, EXPECT_SUCCESS);
 
 	/* Check that the two metadata are present */
 	value = tepl_file_metadata_get (metadata, TEST_KEY);
@@ -297,9 +282,7 @@ test_set_without_load (void)
 	/* Clean-up */
 	tepl_file_metadata_set (metadata, TEST_KEY, NULL);
 	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, NULL);
-	ok = save_sync (metadata, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
+	save_sync (metadata, location, EXPECT_SUCCESS);
 
 	g_file_delete (location, NULL, &error);
 	g_assert_no_error (error);
@@ -405,7 +388,6 @@ test_simulate_several_apps (void)
 	GFile *location;
 	gchar *value;
 	GError *error = NULL;
-	gboolean ok;
 
 	metadata1 = tepl_file_metadata_new ();
 	metadata2 = tepl_file_metadata_new ();
@@ -418,15 +400,11 @@ test_simulate_several_apps (void)
 	/* Set and save an initial metadata from App1. */
 
 	tepl_file_metadata_set (metadata1, "app1-key", "app1-value1");
-	ok = save_sync (metadata1, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok); // OK indeed, so far so good.
+	save_sync (metadata1, location, EXPECT_SUCCESS);
 
 	/* Load (for App1 it's not needed). */
 
-	ok = load_sync (metadata2, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
+	load_sync (metadata2, location, EXPECT_SUCCESS);
 
 	value = tepl_file_metadata_get (metadata2, "app1-key");
 	g_assert_cmpstr (value, ==, "app1-value1");
@@ -439,23 +417,15 @@ test_simulate_several_apps (void)
 
 	/* And save */
 
-	ok = save_sync (metadata1, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
-
-	ok = save_sync (metadata2, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
-
+	save_sync (metadata1, location, EXPECT_SUCCESS);
+	save_sync (metadata2, location, EXPECT_SUCCESS);
 	g_object_unref (metadata1);
 	g_object_unref (metadata2);
 
 	/* Now what's the value of "app1-key"? */
 
 	metadata1 = tepl_file_metadata_new ();
-	ok = load_sync (metadata1, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
+	load_sync (metadata1, location, EXPECT_SUCCESS);
 
 	value = tepl_file_metadata_get (metadata1, "app1-key");
 	// It must be "app1-value2", because App2 didn't set the "app1-key".
@@ -466,9 +436,7 @@ test_simulate_several_apps (void)
 
 	tepl_file_metadata_set (metadata1, "app1-key", NULL);
 	tepl_file_metadata_set (metadata1, "app2-key", NULL);
-	ok = save_sync (metadata1, location, &error);
-	g_assert_no_error (error);
-	g_assert_true (ok);
+	save_sync (metadata1, location, EXPECT_SUCCESS);
 
 	g_file_delete (location, NULL, &error);
 	g_assert_no_error (error);

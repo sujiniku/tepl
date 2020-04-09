@@ -464,6 +464,10 @@ tepl_file_metadata_save_async (TeplFileMetadata    *metadata,
 		return;
 	}
 
+	/* The g_file_set_attributes_async() implementation calls
+	 * g_file_info_dup(), so no need to take care about data races ourself
+	 * (save_async() -> set() -> save_finish()).
+	 */
 	g_file_set_attributes_async (location,
 				     priv->file_info_modified,
 				     G_FILE_QUERY_INFO_NONE,

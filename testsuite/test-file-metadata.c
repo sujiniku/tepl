@@ -179,15 +179,10 @@ static void
 check_round_trip (const gchar *key,
 		  const gchar *value)
 {
-	gchar *path;
 	GFile *location;
 
-	path = g_build_filename (g_get_tmp_dir (), "tepl-file-metadata-test", NULL);
-	location = g_file_new_for_path (path);
-
+	location = g_file_new_build_filename (g_get_tmp_dir (), "tepl-file-metadata-test", NULL);
 	check_round_trip_full (location, FALSE, key, value);
-
-	g_free (path);
 	g_object_unref (location);
 }
 

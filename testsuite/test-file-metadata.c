@@ -116,6 +116,33 @@ check_get_metadata (TeplFileMetadata *metadata,
 }
 
 static void
+file_set_contents (GFile *location)
+{
+	const gchar *path;
+	GError *error = NULL;
+
+	path = g_file_peek_path (location);
+	g_file_set_contents (path, "blum", -1, &error);
+	g_assert_no_error (error);
+}
+
+static GFile *
+create_location (const gchar *test_filename,
+		 gboolean     create_file)
+{
+	GFile *location;
+
+	location = g_file_new_build_filename (g_get_tmp_dir (), test_filename, NULL);
+
+	if (create_file)
+	{
+		file_set_contents (location);
+	}
+
+	return location;
+}
+
+static void
 check_round_trip_full (GFile       *location,
 		       gboolean     location_already_exists,
 		       const gchar *key,
@@ -134,12 +161,8 @@ check_round_trip_full (GFile       *location,
 
 	if (!location_already_exists)
 	{
-		const gchar *path = g_file_peek_path (location);
-
 		save_sync (metadata, location, EXPECT_FAILURE); /* No such file or directory */
-
-		g_file_set_contents (path, "blum", -1, &error);
-		g_assert_no_error (error);
+		file_set_contents (location);
 	}
 
 	save_sync (metadata, location, EXPECT_SUCCESS);
@@ -181,7 +204,7 @@ check_round_trip (const gchar *key,
 {
 	GFile *location;
 
-	location = g_file_new_build_filename (g_get_tmp_dir (), "tepl-file-metadata-test", NULL);
+	location = create_location ("tepl-file-metadata-test", FALSE);
 	check_round_trip_full (location, FALSE, key, value);
 	g_object_unref (location);
 }
@@ -233,16 +256,11 @@ static void
 test_set_without_load (void)
 {
 	TeplFileMetadata *metadata;
-	gchar *path;
 	GFile *location;
 	GError *error = NULL;
 
 	metadata = tepl_file_metadata_new ();
-	path = g_build_filename (g_get_tmp_dir (), "tepl-file-metadata-test-set-without-load", NULL);
-	location = g_file_new_for_path (path);
-
-	g_file_set_contents (path, "blom", -1, &error);
-	g_assert_no_error (error);
+	location = create_location ("tepl-file-metadata-test-set-without-load", TRUE);
 
 	/* Set and save one metadata */
 	tepl_file_metadata_set (metadata, TEST_KEY, "dimmu");
@@ -270,7 +288,6 @@ test_set_without_load (void)
 	g_assert_no_error (error);
 
 	g_object_unref (metadata);
-	g_free (path);
 	g_object_unref (location);
 }
 
@@ -366,17 +383,12 @@ test_simulate_several_apps (void)
 {
 	TeplFileMetadata *metadata1;
 	TeplFileMetadata *metadata2;
-	gchar *path;
 	GFile *location;
 	GError *error = NULL;
 
 	metadata1 = tepl_file_metadata_new ();
 	metadata2 = tepl_file_metadata_new ();
-
-	path = g_build_filename (g_get_tmp_dir (), "tepl-file-metadata-stimulating-test", NULL);
-	location = g_file_new_for_path (path);
-	g_file_set_contents (path, "blum", -1, &error);
-	g_assert_no_error (error);
+	location = create_location ("tepl-file-metadata-stimulating-test", TRUE);
 
 	/* Set and save an initial metadata from App1. */
 
@@ -418,7 +430,6 @@ test_simulate_several_apps (void)
 	g_assert_no_error (error);
 
 	g_object_unref (metadata1);
-	g_free (path);
 	g_object_unref (location);
 }
 

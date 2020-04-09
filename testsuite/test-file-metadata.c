@@ -104,13 +104,24 @@ load_sync (TeplFileMetadata *metadata,
 }
 
 static void
+check_get_metadata (TeplFileMetadata *metadata,
+		    const gchar      *key,
+		    const gchar      *expected_value)
+{
+	gchar *received_value;
+
+	received_value = tepl_file_metadata_get (metadata, key);
+	g_assert_cmpstr (received_value, ==, expected_value);
+	g_free (received_value);
+}
+
+static void
 check_round_trip_full (GFile       *location,
 		       gboolean     location_already_exists,
 		       const gchar *key,
 		       const gchar *value)
 {
 	TeplFileMetadata *metadata;
-	gchar *received_value;
 	GError *error = NULL;
 
 	// TEST_OTHER_KEY is used below.
@@ -141,22 +152,15 @@ check_round_trip_full (GFile       *location,
 
 	load_sync (metadata, location, EXPECT_SUCCESS);
 
-	received_value = tepl_file_metadata_get (metadata, TEST_OTHER_KEY);
-	g_assert_true (received_value == NULL);
-
-	received_value = tepl_file_metadata_get (metadata, key);
-	g_assert_cmpstr (received_value, ==, value);
-	g_free (received_value);
+	check_get_metadata (metadata, TEST_OTHER_KEY, NULL);
+	check_get_metadata (metadata, key, value);
 
 	/* Unset */
 
 	tepl_file_metadata_set (metadata, key, NULL);
 	save_sync (metadata, location, EXPECT_SUCCESS);
-
 	load_sync (metadata, location, EXPECT_SUCCESS);
-
-	received_value = tepl_file_metadata_get (metadata, key);
-	g_assert_true (received_value == NULL);
+	check_get_metadata (metadata, key, NULL);
 
 	/* Clean-up */
 
@@ -204,36 +208,25 @@ check_round_trip_expect_failure (const gchar *key,
 static void
 test_get_set_metadata (void)
 {
-	TeplFileMetadata *metadata;
-	gchar *value;
+	TeplFileMetadata *metadata = tepl_file_metadata_new ();
 
-	metadata = tepl_file_metadata_new ();
-
-	value = tepl_file_metadata_get (metadata, TEST_KEY);
-	g_assert_true (value == NULL);
+	check_get_metadata (metadata, TEST_KEY, NULL);
 
 	tepl_file_metadata_set (metadata, TEST_KEY, "zippy");
-	value = tepl_file_metadata_get (metadata, TEST_KEY);
-	g_assert_cmpstr (value, ==, "zippy");
-	g_free (value);
+	check_get_metadata (metadata, TEST_KEY, "zippy");
 
-	value = tepl_file_metadata_get (metadata, TEST_OTHER_KEY);
-	g_assert_true (value == NULL);
+	check_get_metadata (metadata, TEST_OTHER_KEY, NULL);
 
 	tepl_file_metadata_set (metadata, TEST_KEY, "zippiness");
-	value = tepl_file_metadata_get (metadata, TEST_KEY);
-	g_assert_cmpstr (value, ==, "zippiness");
-	g_free (value);
+	check_get_metadata (metadata, TEST_KEY, "zippiness");
 
 	/* Unset */
 	tepl_file_metadata_set (metadata, TEST_KEY, NULL);
-	value = tepl_file_metadata_get (metadata, TEST_KEY);
-	g_assert_true (value == NULL);
+	check_get_metadata (metadata, TEST_KEY, NULL);
 
 	/* Unset non-set metadata */
 	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, NULL);
-	value = tepl_file_metadata_get (metadata, TEST_OTHER_KEY);
-	g_assert_true (value == NULL);
+	check_get_metadata (metadata, TEST_OTHER_KEY, NULL);
 
 	g_object_unref (metadata);
 }
@@ -247,7 +240,6 @@ test_set_without_load (void)
 	TeplFileMetadata *metadata;
 	gchar *path;
 	GFile *location;
-	gchar *value;
 	GError *error = NULL;
 
 	metadata = tepl_file_metadata_new ();
@@ -271,13 +263,8 @@ test_set_without_load (void)
 	load_sync (metadata, location, EXPECT_SUCCESS);
 
 	/* Check that the two metadata are present */
-	value = tepl_file_metadata_get (metadata, TEST_KEY);
-	g_assert_cmpstr (value, ==, "dimmu");
-	g_free (value);
-
-	value = tepl_file_metadata_get (metadata, TEST_OTHER_KEY);
-	g_assert_cmpstr (value, ==, "borgir");
-	g_free (value);
+	check_get_metadata (metadata, TEST_KEY, "dimmu");
+	check_get_metadata (metadata, TEST_OTHER_KEY, "borgir");
 
 	/* Clean-up */
 	tepl_file_metadata_set (metadata, TEST_KEY, NULL);
@@ -386,7 +373,6 @@ test_simulate_several_apps (void)
 	TeplFileMetadata *metadata2;
 	gchar *path;
 	GFile *location;
-	gchar *value;
 	GError *error = NULL;
 
 	metadata1 = tepl_file_metadata_new ();
@@ -405,10 +391,7 @@ test_simulate_several_apps (void)
 	/* Load (for App1 it's not needed). */
 
 	load_sync (metadata2, location, EXPECT_SUCCESS);
-
-	value = tepl_file_metadata_get (metadata2, "app1-key");
-	g_assert_cmpstr (value, ==, "app1-value1");
-	g_free (value);
+	check_get_metadata (metadata2, "app1-key", "app1-value1");
 
 	/* Now set/change values */
 
@@ -427,10 +410,8 @@ test_simulate_several_apps (void)
 	metadata1 = tepl_file_metadata_new ();
 	load_sync (metadata1, location, EXPECT_SUCCESS);
 
-	value = tepl_file_metadata_get (metadata1, "app1-key");
-	// It must be "app1-value2", because App2 didn't set the "app1-key".
-	g_assert_cmpstr (value, ==, "app1-value2");
-	g_free (value);
+	// It must be "app1-value2" because App2 didn't set/modify "app1-key".
+	check_get_metadata (metadata1, "app1-key", "app1-value2");
 
 	/* Clean-up */
 

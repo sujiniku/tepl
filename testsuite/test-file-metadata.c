@@ -435,6 +435,107 @@ test_simulate_several_apps (void)
 	g_object_unref (location);
 }
 
+static void
+test_save_as_new_document (void)
+{
+	GFile *location;
+	TeplFileMetadata *metadata;
+	GError *error = NULL;
+
+	location = create_location ("tepl-test-file-metadata-save-as-A", TRUE);
+
+	metadata = tepl_file_metadata_new ();
+	tepl_file_metadata_set (metadata, TEST_KEY, "value");
+	save_sync (metadata, location, FALSE, EXPECT_SUCCESS);
+	g_object_unref (metadata);
+
+	/* Create a new document, save it and overwrite an existing file (or a
+	 * file that existed in the past and for which metadata was not
+	 * removed).
+	 */
+	metadata = tepl_file_metadata_new ();
+	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, "other-value");
+	save_sync (metadata, location, TRUE, EXPECT_SUCCESS);
+	load_sync (metadata, location, EXPECT_SUCCESS);
+	check_get_metadata (metadata, TEST_KEY, NULL); /* Has been erased. */
+	check_get_metadata (metadata, TEST_OTHER_KEY, "other-value");
+
+	/* Clean-up */
+
+	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, NULL);
+	save_sync (metadata, location, FALSE, EXPECT_SUCCESS);
+	g_object_unref (metadata);
+
+	g_file_delete (location, NULL, &error);
+	g_assert_no_error (error);
+	g_object_unref (location);
+}
+
+static void
+test_open_existing_document_and_save_as (void)
+{
+	GFile *location_origin;
+	GFile *location_target;
+	TeplFileMetadata *metadata;
+	GError *error = NULL;
+
+	location_origin = create_location ("tepl-test-file-metadata-save-as-origin", TRUE);
+	location_target = create_location ("tepl-test-file-metadata-save-as-target", TRUE);
+
+	/* Create existing document. */
+	metadata = tepl_file_metadata_new ();
+	tepl_file_metadata_set (metadata, "from-origin", "value");
+	save_sync (metadata, location_origin, FALSE, EXPECT_SUCCESS);
+	g_object_unref (metadata);
+
+	/* Create file with metadata for the new GFile location. */
+	metadata = tepl_file_metadata_new ();
+	tepl_file_metadata_set (metadata, "from-target-before-save-as", "other-value");
+	save_sync (metadata, location_target, FALSE, EXPECT_SUCCESS);
+	g_object_unref (metadata);
+
+	/* Save as to the new location. */
+	metadata = tepl_file_metadata_new ();
+	load_sync (metadata, location_origin, EXPECT_SUCCESS);
+	check_get_metadata (metadata, "from-origin", "value");
+	tepl_file_metadata_set (metadata, "new-key", "new-value");
+	save_sync (metadata, location_target, TRUE, EXPECT_SUCCESS);
+	load_sync (metadata, location_target, EXPECT_SUCCESS);
+	check_get_metadata (metadata, "from-origin", "value");
+	check_get_metadata (metadata, "new-key", "new-value");
+	check_get_metadata (metadata, "from-target-before-save-as", NULL); /* Has been erased. */
+	g_object_unref (metadata);
+
+	/* Clean-up.
+	 * Take advantage of the 'save as' feature, and do additional checks
+	 * ('save as' with no metadata).
+	 */
+
+	metadata = tepl_file_metadata_new ();
+	save_sync (metadata, location_origin, TRUE, EXPECT_SUCCESS);
+	load_sync (metadata, location_origin, EXPECT_SUCCESS);
+	check_get_metadata (metadata, "from-origin", NULL);
+	check_get_metadata (metadata, "from-target-before-save-as", NULL);
+	check_get_metadata (metadata, "new-key", NULL);
+	g_object_unref (metadata);
+
+	metadata = tepl_file_metadata_new ();
+	save_sync (metadata, location_target, TRUE, EXPECT_SUCCESS);
+	load_sync (metadata, location_target, EXPECT_SUCCESS);
+	check_get_metadata (metadata, "from-origin", NULL);
+	check_get_metadata (metadata, "from-target-before-save-as", NULL);
+	check_get_metadata (metadata, "new-key", NULL);
+	g_object_unref (metadata);
+
+	g_file_delete (location_origin, NULL, &error);
+	g_assert_no_error (error);
+	g_object_unref (location_origin);
+
+	g_file_delete (location_target, NULL, &error);
+	g_assert_no_error (error);
+	g_object_unref (location_target);
+}
+
 int
 main (int    argc,
       char **argv)
@@ -451,6 +552,8 @@ main (int    argc,
 	g_test_add_func ("/file_metadata/for_remote_file_success", test_for_remote_file_success);
 	g_test_add_func ("/file_metadata/for_remote_file_failure", test_for_remote_file_failure);
 	g_test_add_func ("/file_metadata/simulate_several_apps", test_simulate_several_apps);
+	g_test_add_func ("/file_metadata/save_as_new_document", test_save_as_new_document);
+	g_test_add_func ("/file_metadata/open_existing_document_and_save_as", test_open_existing_document_and_save_as);
 
 	return g_test_run ();
 }

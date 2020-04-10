@@ -487,9 +487,9 @@ tepl_file_metadata_load_finish (TeplFileMetadata  *metadata,
 }
 
 static void
-save_as__set_attributes_cb (GObject      *source_object,
-			    GAsyncResult *result,
-			    gpointer      user_data)
+set_attributes_cb (GObject      *source_object,
+		   GAsyncResult *result,
+		   gpointer      user_data)
 {
 	GFile *location = G_FILE (source_object);
 	GTask *task = G_TASK (user_data);
@@ -599,7 +599,7 @@ save_as__query_all_previous_metadata_cb (GObject      *source_object,
 				     G_FILE_QUERY_INFO_NONE,
 				     g_task_get_priority (task),
 				     g_task_get_cancellable (task),
-				     save_as__set_attributes_cb,
+				     set_attributes_cb, /* Common callback with normal save. */
 				     task);
 	g_object_unref (file_info);
 }
@@ -616,37 +616,6 @@ start_to_save_as (GTask *task)
 				 g_task_get_cancellable (task),
 				 save_as__query_all_previous_metadata_cb,
 				 task);
-}
-
-static void
-save_modified_metadata_cb (GObject      *source_object,
-			   GAsyncResult *result,
-			   gpointer      user_data)
-{
-	GFile *location = G_FILE (source_object);
-	GTask *task = G_TASK (user_data);
-	TeplFileMetadata *metadata = g_task_get_source_object (task);
-	TeplFileMetadataPrivate *priv = tepl_file_metadata_get_instance_private (metadata);
-	GError *error = NULL;
-
-	g_file_set_attributes_finish (location, result, NULL, &error);
-
-	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
-	{
-		print_gvfs_metadata_not_supported_warning ();
-	}
-
-	if (error != NULL)
-	{
-		g_task_return_error (task, error);
-		g_object_unref (task);
-		return;
-	}
-
-	g_clear_object (&priv->file_info_modified);
-
-	g_task_return_boolean (task, TRUE);
-	g_object_unref (task);
 }
 
 static void
@@ -672,7 +641,7 @@ start_to_save_modified_metadata (GTask *task)
 				     G_FILE_QUERY_INFO_NONE,
 				     g_task_get_priority (task),
 				     g_task_get_cancellable (task),
-				     save_modified_metadata_cb,
+				     set_attributes_cb, /* Common callback with save_as. */
 				     task);
 }
 

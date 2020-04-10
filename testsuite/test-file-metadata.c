@@ -62,11 +62,12 @@ save_sync_cb (GObject      *source_object,
 static void
 save_sync (TeplFileMetadata *metadata,
 	   GFile            *location,
+	   gboolean          save_as,
 	   gboolean          expect_success)
 {
 	tepl_file_metadata_save_async (metadata,
 				       location,
-				       FALSE,
+				       save_as,
 				       G_PRIORITY_DEFAULT,
 				       NULL,
 				       save_sync_cb,
@@ -162,11 +163,11 @@ check_round_trip_full (GFile       *location,
 
 	if (!location_already_exists)
 	{
-		save_sync (metadata, location, EXPECT_FAILURE); /* No such file or directory */
+		save_sync (metadata, location, FALSE, EXPECT_FAILURE); /* No such file or directory */
 		file_set_contents (location);
 	}
 
-	save_sync (metadata, location, EXPECT_SUCCESS);
+	save_sync (metadata, location, FALSE, EXPECT_SUCCESS);
 	g_object_unref (metadata);
 
 	/* Load metadata */
@@ -182,7 +183,7 @@ check_round_trip_full (GFile       *location,
 	/* Unset */
 
 	tepl_file_metadata_set (metadata, key, NULL);
-	save_sync (metadata, location, EXPECT_SUCCESS);
+	save_sync (metadata, location, FALSE, EXPECT_SUCCESS);
 	load_sync (metadata, location, EXPECT_SUCCESS);
 	check_get_metadata (metadata, key, NULL);
 
@@ -265,13 +266,13 @@ test_set_without_load (void)
 
 	/* Set and save one metadata */
 	tepl_file_metadata_set (metadata, TEST_KEY, "dimmu");
-	save_sync (metadata, location, EXPECT_SUCCESS);
+	save_sync (metadata, location, FALSE, EXPECT_SUCCESS);
 	g_object_unref (metadata);
 
 	/* Set and save another metadata, independently */
 	metadata = tepl_file_metadata_new ();
 	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, "borgir");
-	save_sync (metadata, location, EXPECT_SUCCESS);
+	save_sync (metadata, location, FALSE, EXPECT_SUCCESS);
 
 	/* Load */
 	load_sync (metadata, location, EXPECT_SUCCESS);
@@ -283,7 +284,7 @@ test_set_without_load (void)
 	/* Clean-up */
 	tepl_file_metadata_set (metadata, TEST_KEY, NULL);
 	tepl_file_metadata_set (metadata, TEST_OTHER_KEY, NULL);
-	save_sync (metadata, location, EXPECT_SUCCESS);
+	save_sync (metadata, location, FALSE, EXPECT_SUCCESS);
 
 	g_file_delete (location, NULL, &error);
 	g_assert_no_error (error);
@@ -394,7 +395,7 @@ test_simulate_several_apps (void)
 	/* Set and save an initial metadata from App1. */
 
 	tepl_file_metadata_set (metadata1, "app1-key", "app1-value1");
-	save_sync (metadata1, location, EXPECT_SUCCESS);
+	save_sync (metadata1, location, FALSE, EXPECT_SUCCESS);
 
 	/* Load (for App1 it's not needed). */
 
@@ -408,8 +409,8 @@ test_simulate_several_apps (void)
 
 	/* And save */
 
-	save_sync (metadata1, location, EXPECT_SUCCESS);
-	save_sync (metadata2, location, EXPECT_SUCCESS);
+	save_sync (metadata1, location, FALSE, EXPECT_SUCCESS);
+	save_sync (metadata2, location, FALSE, EXPECT_SUCCESS);
 	g_object_unref (metadata1);
 	g_object_unref (metadata2);
 
@@ -425,7 +426,7 @@ test_simulate_several_apps (void)
 
 	tepl_file_metadata_set (metadata1, "app1-key", NULL);
 	tepl_file_metadata_set (metadata1, "app2-key", NULL);
-	save_sync (metadata1, location, EXPECT_SUCCESS);
+	save_sync (metadata1, location, FALSE, EXPECT_SUCCESS);
 
 	g_file_delete (location, NULL, &error);
 	g_assert_no_error (error);

@@ -179,16 +179,6 @@
  * there is also G_FILE_ATTRIBUTE_TYPE_BYTE_STRING.
  */
 
-/* TODO Better test how it works with remote files, with various protocols.
- * For example with an ftp://... location, there can be the error "The specified
- * location is not mounted". In that case we can either propagate the error or
- * automatically call the TeplFile mount operation factory method.
- *
- * On Linux, is the metadata supported for all GVfs backends? (the custom
- * metadata that we set). Does it fallback to TeplMetadataStore even on Linux
- * and even when GVfs is well installed?
- */
-
 typedef struct _TeplFileMetadataPrivate TeplFileMetadataPrivate;
 
 struct _TeplFileMetadataPrivate

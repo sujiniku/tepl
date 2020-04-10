@@ -72,12 +72,6 @@ gboolean		tepl_file_metadata_save_finish			(TeplFileMetadata  *metadata,
 									 GAsyncResult      *result,
 									 GError           **error);
 
-#if 0
-G_GNUC_INTERNAL
-void			_tepl_file_metadata_set_use_gvfs_metadata	(TeplFileMetadata *metadata,
-									 gboolean          use_gvfs_metadata);
-#endif
-
 G_END_DECLS
 
 #endif /* TEPL_FILE_METADATA_H */

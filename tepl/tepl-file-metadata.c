@@ -194,10 +194,6 @@ struct _TeplFileMetadataPrivate
 	GFileInfo *file_info_modified;
 
 	guint is_saving : 1;
-
-#if 0
-	guint use_gvfs_metadata : 1;
-#endif
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (TeplFileMetadata, tepl_file_metadata, G_TYPE_OBJECT)
@@ -212,12 +208,12 @@ get_metadata_attribute_key (const gchar *key)
 }
 
 static void
-print_fallback_to_metadata_store_warning (void)
+print_gvfs_metadata_not_supported_warning (void)
 {
-	g_warning_once ("GVfs metadata are not supported. Fallback to TeplMetadataStore. "
-			"Either GVfs is not correctly installed or GVfs metadata are "
-			"not supported on this platform. In the latter case, you should "
-			"configure Tepl with -Dgvfs_metadata=false.");
+	g_warning_once ("GVfs metadata is not supported. Either GVfs is not correctly "
+			"installed or GVfs metadata is not supported on this platform. "
+			"In the latter case, you should configure the Tepl library with "
+			"-Dgvfs_metadata=false.");
 }
 
 static void
@@ -247,15 +243,6 @@ tepl_file_metadata_init (TeplFileMetadata *metadata)
 	TeplFileMetadataPrivate *priv = tepl_file_metadata_get_instance_private (metadata);
 
 	priv->file_info_all = g_file_info_new ();
-
-#if 0
-/* TODO change the #ifdef to an #if. */
-#ifdef ENABLE_GVFS_METADATA
-	priv->use_gvfs_metadata = TRUE;
-#else
-	priv->use_gvfs_metadata = FALSE;
-#endif
-#endif
 }
 
 /**
@@ -289,7 +276,7 @@ tepl_file_metadata_get (TeplFileMetadata *metadata,
 {
 	TeplFileMetadataPrivate *priv;
 	gchar *attribute_key;
-	gchar *value = NULL;
+	const gchar *value = NULL;
 
 	g_return_val_if_fail (TEPL_IS_FILE_METADATA (metadata), NULL);
 	g_return_val_if_fail (tepl_utils_metadata_key_is_valid (key), NULL);
@@ -301,18 +288,18 @@ tepl_file_metadata_get (TeplFileMetadata *metadata,
 	if (g_file_info_has_attribute (priv->file_info_all, attribute_key) &&
 	    g_file_info_get_attribute_type (priv->file_info_all, attribute_key) == G_FILE_ATTRIBUTE_TYPE_STRING)
 	{
-		value = g_strdup (g_file_info_get_attribute_string (priv->file_info_all, attribute_key));
+		value = g_file_info_get_attribute_string (priv->file_info_all, attribute_key);
 	}
 
 	g_free (attribute_key);
 
 	if (value != NULL && !g_utf8_validate (value, -1, NULL))
 	{
-		g_clear_pointer (&value, g_free);
+		value = NULL;
 		g_warn_if_reached ();
 	}
 
-	return value;
+	return g_strdup (value);
 }
 
 /**
@@ -372,9 +359,9 @@ tepl_file_metadata_set (TeplFileMetadata *metadata,
 
 		/* Unset the key. If we call g_file_info_remove_attribute() on
 		 * priv->file_info_modified, then when calling
-		 * tepl_file_metadata_save_async(), the metadata attribute will
-		 * not get removed, it would just be ignored (since it would not
-		 * be there in the GFileInfo anymore).
+		 * tepl_file_metadata_save_async(save_as=false), the metadata
+		 * attribute will not get removed, it would just be ignored
+		 * (since it would not be there in the GFileInfo anymore).
 		 */
 		g_file_info_set_attribute (priv->file_info_modified,
 					   attribute_key,
@@ -392,22 +379,16 @@ load_metadata_async_cb (GObject      *source_object,
 {
 	GFile *location = G_FILE (source_object);
 	GTask *task = G_TASK (user_data);
-	TeplFileMetadata *metadata;
-	TeplFileMetadataPrivate *priv;
+	TeplFileMetadata *metadata = g_task_get_source_object (task);
+	TeplFileMetadataPrivate *priv = tepl_file_metadata_get_instance_private (metadata);
 	GFileInfo *loaded_file_info;
 	GError *error = NULL;
-
-	metadata = g_task_get_source_object (task);
-	priv = tepl_file_metadata_get_instance_private (metadata);
 
 	loaded_file_info = g_file_query_info_finish (location, result, &error);
 
 	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
 	{
-		print_fallback_to_metadata_store_warning ();
-
-		g_clear_error (&error);
-		g_clear_object (&loaded_file_info);
+		print_gvfs_metadata_not_supported_warning ();
 	}
 
 	if (error != NULL)
@@ -520,8 +501,7 @@ save_as__set_attributes_cb (GObject      *source_object,
 
 	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
 	{
-		print_fallback_to_metadata_store_warning ();
-		g_clear_error (&error);
+		print_gvfs_metadata_not_supported_warning ();
 	}
 
 	if (error != NULL)
@@ -555,10 +535,7 @@ save_as__query_all_previous_metadata_cb (GObject      *source_object,
 
 	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
 	{
-		print_fallback_to_metadata_store_warning ();
-
-		g_clear_error (&error);
-		g_clear_object (&file_info);
+		print_gvfs_metadata_not_supported_warning ();
 	}
 
 	if (error != NULL)
@@ -567,7 +544,7 @@ save_as__query_all_previous_metadata_cb (GObject      *source_object,
 		 * metadata. If we get an error here we are unable to unset the
 		 * metadata, so just do nothing about it.
 		 * If we get again an error in save_as__set_attributes_cb(), the
-		 * error will be reported there.
+		 * error will be returned there.
 		 */
 		g_clear_error (&error);
 		g_clear_object (&file_info);
@@ -656,8 +633,7 @@ save_modified_metadata_cb (GObject      *source_object,
 
 	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
 	{
-		print_fallback_to_metadata_store_warning ();
-		g_clear_error (&error);
+		print_gvfs_metadata_not_supported_warning ();
 	}
 
 	if (error != NULL)
@@ -803,19 +779,3 @@ tepl_file_metadata_save_finish (TeplFileMetadata  *metadata,
 
 	return g_task_propagate_boolean (G_TASK (result), error);
 }
-
-#if 0
-/* For unit tests. */
-void
-_tepl_file_metadata_set_use_gvfs_metadata (TeplFileMetadata *metadata,
-					   gboolean          use_gvfs_metadata)
-{
-	TeplFileMetadataPrivate *priv;
-
-	g_return_if_fail (TEPL_IS_FILE_METADATA (metadata));
-
-	priv = tepl_file_metadata_get_instance_private (metadata);
-
-	priv->use_gvfs_metadata = use_gvfs_metadata != FALSE;
-}
-#endif

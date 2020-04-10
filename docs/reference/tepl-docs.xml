@@ -46,9 +46,13 @@
       <xi:include href="xml/file.xml"/>
       <xi:include href="xml/file-loader.xml"/>
       <xi:include href="xml/file-saver.xml"/>
+      <xi:include href="xml/io-error-info-bars.xml"/>
+    </chapter>
+
+    <chapter id="file-metadata">
+      <title>File Metadata</title>
       <xi:include href="xml/file-metadata.xml"/>
       <xi:include href="xml/metadata-store.xml"/>
-      <xi:include href="xml/io-error-info-bars.xml"/>
     </chapter>
 
     <chapter id="code-folding">

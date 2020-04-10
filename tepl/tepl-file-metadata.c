@@ -666,8 +666,8 @@ start_to_save_modified_metadata (GTask *task)
  * If @save_as is %FALSE, only the <emphasis>modified</emphasis> metadata is
  * saved. A call to tepl_file_metadata_set() marks that metadata as modified. A
  * successful call to tepl_file_metadata_load_async() deletes all previous
- * metadata stored in the #TeplFileMetada object, including modified metadata. A
- * successful call to tepl_file_metadata_save_async() marks the modified
+ * metadata stored in the #TeplFileMetadata object, including modified metadata.
+ * A successful call to tepl_file_metadata_save_async() marks the modified
  * metadata as saved, so those metadata will no longer be marked as modified
  * (but will still be part of #TeplFileMetadata).
  *

@@ -66,6 +66,7 @@ save_sync (TeplFileMetadata *metadata,
 {
 	tepl_file_metadata_save_async (metadata,
 				       location,
+				       FALSE,
 				       G_PRIORITY_DEFAULT,
 				       NULL,
 				       save_sync_cb,

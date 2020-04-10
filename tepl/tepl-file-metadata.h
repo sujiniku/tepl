@@ -62,6 +62,7 @@ gboolean		tepl_file_metadata_load_finish			(TeplFileMetadata  *metadata,
 
 void			tepl_file_metadata_save_async			(TeplFileMetadata    *metadata,
 									 GFile               *location,
+									 gboolean             save_as,
 									 gint                 io_priority,
 									 GCancellable        *cancellable,
 									 GAsyncReadyCallback  callback,

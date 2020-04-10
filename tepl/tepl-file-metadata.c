@@ -114,7 +114,8 @@
  * location, then save <emphasis>all</emphasis> the metadata belonging to our
  * document that we are saving.
  *
- * FIXME: currently not well supported by #TeplFileMetadata.
+ * This is supported by tepl_file_metadata_save_async() with the @save_as
+ * parameter.
  *
  * ## Opening a second time the same file in the same application
  *
@@ -515,18 +516,15 @@ tepl_file_metadata_load_finish (TeplFileMetadata  *metadata,
 }
 
 static void
-save_metadata_async_cb (GObject      *source_object,
-			GAsyncResult *result,
-			gpointer      user_data)
+save_as__set_attributes_cb (GObject      *source_object,
+			    GAsyncResult *result,
+			    gpointer      user_data)
 {
 	GFile *location = G_FILE (source_object);
 	GTask *task = G_TASK (user_data);
-	TeplFileMetadata *metadata;
-	TeplFileMetadataPrivate *priv;
+	TeplFileMetadata *metadata = g_task_get_source_object (task);
+	TeplFileMetadataPrivate *priv = tepl_file_metadata_get_instance_private (metadata);
 	GError *error = NULL;
-
-	metadata = g_task_get_source_object (task);
-	priv = tepl_file_metadata_get_instance_private (metadata);
 
 	g_file_set_attributes_finish (location, result, NULL, &error);
 
@@ -549,10 +547,174 @@ save_metadata_async_cb (GObject      *source_object,
 	g_object_unref (task);
 }
 
+static void
+save_as__query_all_previous_metadata_cb (GObject      *source_object,
+					 GAsyncResult *result,
+					 gpointer      user_data)
+{
+	GFile *location = G_FILE (source_object);
+	GTask *task = G_TASK (user_data);
+	TeplFileMetadata *metadata = g_task_get_source_object (task);
+	TeplFileMetadataPrivate *priv = tepl_file_metadata_get_instance_private (metadata);
+	GFileInfo *file_info;
+	GError *error = NULL;
+	gchar **attributes;
+	gint attr_num;
+
+	file_info = g_file_query_info_finish (location, result, &error);
+
+	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
+	{
+		print_fallback_to_metadata_store_warning ();
+
+		g_clear_error (&error);
+		g_clear_object (&file_info);
+	}
+
+	if (error != NULL)
+	{
+		/* Ignore error because the purpose is to unset the previous
+		 * metadata. If we get an error here we are unable to unset the
+		 * metadata, so just do nothing about it.
+		 * If we get again an error in save_as__set_attributes_cb(), the
+		 * error will be reported there.
+		 */
+		g_clear_error (&error);
+		g_clear_object (&file_info);
+	}
+
+	if (file_info == NULL)
+	{
+		file_info = g_file_info_new ();
+		/* After that, take the same code path, so that that code path
+		 * is better tested and is written in a general way.
+		 * Even though since file_info is empty, it would be possible to
+		 * directly call g_file_set_attributes_async() with
+		 * priv->file_info_all.
+		 */
+	}
+
+	attributes = g_file_info_list_attributes (file_info, "metadata");
+	for (attr_num = 0; attributes != NULL && attributes[attr_num] != NULL; attr_num++)
+	{
+		const gchar *cur_attribute = attributes[attr_num];
+
+		/* Unset. */
+		g_file_info_set_attribute (file_info,
+					   cur_attribute,
+					   G_FILE_ATTRIBUTE_TYPE_INVALID,
+					   NULL);
+	}
+	g_strfreev (attributes);
+
+	attributes = g_file_info_list_attributes (priv->file_info_all, "metadata");
+	for (attr_num = 0; attributes != NULL && attributes[attr_num] != NULL; attr_num++)
+	{
+		const gchar *cur_attribute = attributes[attr_num];
+		GFileAttributeType attribute_type = G_FILE_ATTRIBUTE_TYPE_INVALID;
+		gpointer attribute_value = NULL;
+
+		g_file_info_get_attribute_data (priv->file_info_all,
+						cur_attribute,
+						&attribute_type,
+						&attribute_value,
+						NULL);
+
+		g_file_info_set_attribute (file_info,
+					   cur_attribute,
+					   attribute_type,
+					   attribute_value);
+	}
+	g_strfreev (attributes);
+
+	g_file_set_attributes_async (location,
+				     file_info,
+				     G_FILE_QUERY_INFO_NONE,
+				     g_task_get_priority (task),
+				     g_task_get_cancellable (task),
+				     save_as__set_attributes_cb,
+				     task);
+	g_object_unref (file_info);
+}
+
+static void
+start_to_save_as (GTask *task)
+{
+	GFile *location = g_task_get_task_data (task);
+
+	g_file_query_info_async (location,
+				 METADATA_QUERY_ATTRIBUTES,
+				 G_FILE_QUERY_INFO_NONE,
+				 g_task_get_priority (task),
+				 g_task_get_cancellable (task),
+				 save_as__query_all_previous_metadata_cb,
+				 task);
+}
+
+static void
+save_modified_metadata_cb (GObject      *source_object,
+			   GAsyncResult *result,
+			   gpointer      user_data)
+{
+	GFile *location = G_FILE (source_object);
+	GTask *task = G_TASK (user_data);
+	TeplFileMetadata *metadata = g_task_get_source_object (task);
+	TeplFileMetadataPrivate *priv = tepl_file_metadata_get_instance_private (metadata);
+	GError *error = NULL;
+
+	g_file_set_attributes_finish (location, result, NULL, &error);
+
+	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
+	{
+		print_fallback_to_metadata_store_warning ();
+		g_clear_error (&error);
+	}
+
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		g_object_unref (task);
+		return;
+	}
+
+	g_clear_object (&priv->file_info_modified);
+
+	g_task_return_boolean (task, TRUE);
+	g_object_unref (task);
+}
+
+static void
+start_to_save_modified_metadata (GTask *task)
+{
+	TeplFileMetadata *metadata = g_task_get_source_object (task);
+	TeplFileMetadataPrivate *priv = tepl_file_metadata_get_instance_private (metadata);
+	GFile *location = g_task_get_task_data (task);
+
+	if (priv->file_info_modified == NULL)
+	{
+		g_task_return_boolean (task, TRUE);
+		g_object_unref (task);
+		return;
+	}
+
+	/* The g_file_set_attributes_async() implementation calls
+	 * g_file_info_dup(), so no need to take care about data races ourself
+	 * (save_async() -> set() -> save_finish()).
+	 */
+	g_file_set_attributes_async (location,
+				     priv->file_info_modified,
+				     G_FILE_QUERY_INFO_NONE,
+				     g_task_get_priority (task),
+				     g_task_get_cancellable (task),
+				     save_modified_metadata_cb,
+				     task);
+}
+
 /**
  * tepl_file_metadata_save_async:
  * @metadata: a #TeplFileMetadata.
  * @location: a #GFile.
+ * @save_as: whether it's for a 'save as' operation.
  * @io_priority: the I/O priority of the request. E.g. %G_PRIORITY_LOW,
  *   %G_PRIORITY_DEFAULT or %G_PRIORITY_HIGH.
  * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
@@ -566,6 +728,25 @@ save_metadata_async_cb (GObject      *source_object,
  *
  * @location must exist on the filesystem, otherwise an error is returned.
  *
+ * If @save_as is %FALSE, only the <emphasis>modified</emphasis> metadata is
+ * saved. A call to tepl_file_metadata_set() marks that metadata as modified. A
+ * successful call to tepl_file_metadata_load_async() deletes all previous
+ * metadata stored in the #TeplFileMetada object, including modified metadata. A
+ * successful call to tepl_file_metadata_save_async() marks the modified
+ * metadata as saved, so those metadata will no longer be marked as modified
+ * (but will still be part of #TeplFileMetadata).
+ *
+ * If @save_as is %TRUE, this function:
+ * 1. Erases all previously stored metadata for @location.
+ * 2. Then saves <emphasis>all</emphasis> the metadata of @metadata for
+ *    @location.
+ *
+ * @save_as can be set to %TRUE in two different situations: (1) save a new
+ * document for the first time; (2) open a file, possibly modify it, then save
+ * it to another location. In both cases, a #GFile needs to be chosen by the
+ * user, and if it replaces an existing file, the user needs to confirm to
+ * overwrite it.
+ *
  * See the #GAsyncResult documentation to know how to use this function.
  *
  * Since: 5.0
@@ -573,6 +754,7 @@ save_metadata_async_cb (GObject      *source_object,
 void
 tepl_file_metadata_save_async (TeplFileMetadata    *metadata,
 			       GFile               *location,
+			       gboolean             save_as,
 			       gint                 io_priority,
 			       GCancellable        *cancellable,
 			       GAsyncReadyCallback  callback,
@@ -592,25 +774,16 @@ tepl_file_metadata_save_async (TeplFileMetadata    *metadata,
 
 	task = g_task_new (metadata, cancellable, callback, user_data);
 	g_task_set_priority (task, io_priority);
+	g_task_set_task_data (task, g_object_ref (location), g_object_unref);
 
-	if (priv->file_info_modified == NULL)
+	if (save_as)
 	{
-		g_task_return_boolean (task, TRUE);
-		g_object_unref (task);
-		return;
+		start_to_save_as (task);
 	}
-
-	/* The g_file_set_attributes_async() implementation calls
-	 * g_file_info_dup(), so no need to take care about data races ourself
-	 * (save_async() -> set() -> save_finish()).
-	 */
-	g_file_set_attributes_async (location,
-				     priv->file_info_modified,
-				     G_FILE_QUERY_INFO_NONE,
-				     io_priority,
-				     cancellable,
-				     save_metadata_async_cb,
-				     task);
+	else
+	{
+		start_to_save_modified_metadata (task);
+	}
 }
 
 /**

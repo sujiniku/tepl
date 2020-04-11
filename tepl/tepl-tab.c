@@ -448,6 +448,11 @@ tepl_tab_get_buffer (TeplTab *tab)
 {
 	g_return_val_if_fail (TEPL_IS_TAB (tab), NULL);
 
+	if (tab->priv->view == NULL)
+	{
+		return NULL;
+	}
+
 	return TEPL_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (tab->priv->view)));
 }
 

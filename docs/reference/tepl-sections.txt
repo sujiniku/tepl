@@ -428,6 +428,7 @@ tepl_utils_show_warning_dialog
 <FILE>view</FILE>
 TeplView
 tepl_view_new
+tepl_view_new_with_buffer
 tepl_view_cut_clipboard
 tepl_view_copy_clipboard
 tepl_view_paste_clipboard

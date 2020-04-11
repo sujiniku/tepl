@@ -6,7 +6,7 @@
  * Copyright 2000, 2002 - Chema Celorio, Paolo Maggi
  * Copyright 2003-2005 - Paolo Maggi
  *
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -60,6 +60,15 @@ tepl_view_init (TeplView *view)
 /**
  * tepl_view_new:
  *
+ * Creates a new #TeplView.
+ *
+ * By default, an empty #TeplBuffer will be lazily created and can be retrieved
+ * with gtk_text_view_get_buffer().
+ *
+ * If you want to specify your own buffer, either override the
+ * #GtkTextViewClass create_buffer factory method, or use
+ * tepl_view_new_with_buffer().
+ *
  * Returns: a new #TeplView.
  * Since: 1.0
  */
@@ -67,6 +76,25 @@ GtkWidget *
 tepl_view_new (void)
 {
 	return g_object_new (TEPL_TYPE_VIEW, NULL);
+}
+
+/**
+ * tepl_view_new_with_buffer:
+ * @buffer: a #GtkSourceBuffer or a subclass of it.
+ *
+ * Creates a new #TeplView widget displaying the buffer @buffer.
+ *
+ * Returns: a new #TeplView.
+ * Since: 5.0
+ */
+GtkWidget *
+tepl_view_new_with_buffer (GtkSourceBuffer *buffer)
+{
+	g_return_val_if_fail (GTK_SOURCE_IS_BUFFER (buffer), NULL);
+
+	return g_object_new (TEPL_TYPE_VIEW,
+			     "buffer", buffer,
+			     NULL);
 }
 
 /**

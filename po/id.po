@@ -2,37 +2,20 @@
 # Copyright (C) 2017 tepl's COPYRIGHT HOLDER
 # This file is distributed under the same license as the tepl package.
 # Andika Triwidada <atriwidada@gnome.org>, 2017.
-#
+# Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-12-01 09:23+0000\n"
-"PO-Revision-Date: 2017-12-05 14:52+0700\n"
-"Last-Translator: Kukuh Syafaat <syafaatkukuh@gmail.com>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
+"POT-Creation-Date: 2020-03-27 21:10+0000\n"
+"PO-Revision-Date: 2020-04-10 16:40+0700\n"
+"Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.4\n"
-
-#. Translators: %s is a filename.
-#: amtk/amtk-application-window.c:374
-#, c-format
-msgid "Open “%s”"
-msgstr "Membuka \"%s\""
-
-#: amtk/amtk-application-window.c:630
-msgid "Open _Recent"
-msgstr "Buka Te_rkini"
-
-#. Translators: %s is the application name.
-#: amtk/amtk-application-window.c:633
-#, c-format
-msgid "Open a file recently used with %s"
-msgstr "Membuka dokumen yang baru-baru ini dipakai dengan %s"
+"X-Generator: Poedit 2.3\n"
 
 #. action, icon, label, accel, tooltip
 #. File menu
@@ -57,7 +40,7 @@ msgstr "_Jendela Baru"
 msgid "Create a new window"
 msgstr "Membuat jendela baru"
 
-#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:178
+#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:177
 msgid "_Open"
 msgstr "_Buka"
 
@@ -65,8 +48,8 @@ msgstr "_Buka"
 msgid "Open a file"
 msgstr "Buka suatu berkas"
 
-#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:144
-#: tepl/tepl-tab.c:752
+#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:143
+#: tepl/tepl-tab.c:750
 msgid "_Save"
 msgstr "_Simpan"
 
@@ -164,29 +147,29 @@ msgstr "Hapus indentasi baris yang dipilih"
 #. * - opening a recent file.
 #. * Basically everywhere where the directory is shown.
 #.
-#: tepl/tepl-application-window.c:174
+#: tepl/tepl-application-window.c:173
 msgid "Open File"
 msgstr "Buka Berkas"
 
-#: tepl/tepl-application-window.c:177
-#: tepl/tepl-close-confirm-dialog-single.c:138 tepl/tepl-tab.c:751
+#: tepl/tepl-application-window.c:176
+#: tepl/tepl-close-confirm-dialog-single.c:137 tepl/tepl-tab.c:749
 msgid "_Cancel"
 msgstr "Ba_tal"
 
-#: tepl/tepl-application-window.c:708
+#: tepl/tepl-application-window.c:707
 msgid "Read-Only"
 msgstr "Hanya-Baca"
 
-#: tepl/tepl-close-confirm-dialog-single.c:133
+#: tepl/tepl-close-confirm-dialog-single.c:132
 #, c-format
 msgid "Save changes to file “%s” before closing?"
 msgstr "Simpan perubahan ke berkas \"%s\" sebelum ditutup?"
 
-#: tepl/tepl-close-confirm-dialog-single.c:137
+#: tepl/tepl-close-confirm-dialog-single.c:136
 msgid "Close _without Saving"
 msgstr "Tutup _tanpa Menyimpan"
 
-#: tepl/tepl-close-confirm-dialog-single.c:150
+#: tepl/tepl-close-confirm-dialog-single.c:149
 msgid "_Save As…"
 msgstr "_Simpan Sebagai…"
 
@@ -315,75 +298,189 @@ msgstr "Tidak Dikenal"
 msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 
-#: tepl/tepl-encoding-converter.c:302
+#: tepl/tepl-encoding-converter.c:305
 #, c-format
 msgid "Conversion from character set “%s” to “%s” is not supported."
 msgstr "Konversi dari gugus karakter \"%s\" ke \"%s\" tak didukung."
 
-#: tepl/tepl-encoding-converter.c:311
+#: tepl/tepl-encoding-converter.c:314
 #, c-format
 msgid "Could not open converter from “%s” to “%s”: %s"
 msgstr "Tidak dapat membuka pengubah dari \"%s\" menjadi \"%s\": %s"
 
-#: tepl/tepl-encoding-converter.c:368
+#: tepl/tepl-encoding-converter.c:374
 msgid "The input data contains an invalid sequence."
 msgstr "Data masukan memuat suatu urutan yang tidak valid."
 
-#: tepl/tepl-encoding-converter.c:377
+#: tepl/tepl-encoding-converter.c:383
 #, c-format
 msgid "Error when converting data: %s"
 msgstr "Galat saat mengonversi data: %s"
 
-#: tepl/tepl-encoding-converter.c:556
+#: tepl/tepl-encoding-converter.c:562
 msgid "The input data ends with an incomplete multi-byte sequence."
 msgstr "Data masukan diakhiri dengan urutan multi-byte yang tidak lengkap."
 
-#: tepl/tepl-encoding-converter.c:579
+#: tepl/tepl-encoding-converter.c:585
 msgid "The input content ends with incomplete data."
 msgstr "Isi masukan berakhir dengan data yang tidak lengkap."
 
-#: tepl/tepl-file.c:413
+#: tepl/tepl-file.c:411
 #, c-format
 msgid "Untitled File %d"
 msgstr "Berkas Tanpa Nama %d"
 
-#: tepl/tepl-file-content-loader.c:331
+#: tepl/tepl-file-content-loader.c:336
 #, c-format
 msgid "The file is too big. Maximum %s can be loaded."
 msgstr "Berkas telalu besar. Maksimum %s dapat dimuat."
 
-#: tepl/tepl-file-loader.c:872
+#: tepl/tepl-file-loader.c:869
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Tak mungkin mendeteksi pengkodean karakter secara otomatis."
 
-#: tepl/tepl-file-saver.c:784
+#: tepl/tepl-file-saver.c:781
 msgid "The file is externally modified."
 msgstr "Berkas telah diubah secara eksternal."
 
-#: tepl/tepl-file-saver.c:1318
+#: tepl/tepl-file-saver.c:1315
 msgid "The buffer contains invalid characters."
 msgstr "Penyangga mengandung karakter tak valid."
 
-#: tepl/tepl-tab.c:534
+#: tepl/tepl-io-error-info-bars.c:57
+msgid "_Edit Anyway"
+msgstr "Sunt_ing Saja"
+
+#: tepl/tepl-io-error-info-bars.c:61
+msgid "_Don’t Edit"
+msgstr "_Jangan Sunting"
+
+#: tepl/tepl-io-error-info-bars.c:67
+#, c-format
+msgid "This file “%s” is already open in another window."
+msgstr "Berkas \"%s\" sudah dibuka pada jendela lain."
+
+#: tepl/tepl-io-error-info-bars.c:72
+msgid "Do you want to edit it anyway?"
+msgstr "Apakah Anda ingin tetap menyuntingnya?"
+
+#: tepl/tepl-io-error-info-bars.c:106 tepl/tepl-io-error-info-bars.c:208
+msgid "S_ave Anyway"
+msgstr "Simp_an Saja"
+
+#: tepl/tepl-io-error-info-bars.c:110 tepl/tepl-io-error-info-bars.c:212
+msgid "_Don’t Save"
+msgstr "_Jangan Simpan"
+
+#: tepl/tepl-io-error-info-bars.c:116
+#, c-format
+msgid "Could not create a backup file while saving “%s”"
+msgstr "Tidak bisa membuat berkas cadangan ketika menyimpan \"%s\"."
+
+#: tepl/tepl-io-error-info-bars.c:121
+msgid ""
+"Could not back up the old copy of the file before saving the new one. You "
+"can ignore this warning and save the file anyway, but if an error occurs "
+"while saving, you could lose the old copy of the file. Save anyway?"
+msgstr ""
+"Tidak dapat mencadangkan salinan berkas lama sebelum menyimpan yang baru. "
+"Anda bisa mengabaikan peringatan ini dan tetap menyimpan berkas, tetapi "
+"jika terjadi kesalahan saat menyimpan, Anda bisa kehilangan salinan berkas "
+"yang lama. Tetap simpan?"
+
+#: tepl/tepl-io-error-info-bars.c:130
+#, c-format
+msgid "Error message: %s"
+msgstr "Pesan galat: %s"
+
+#: tepl/tepl-io-error-info-bars.c:167
+#, c-format
+msgid "The file “%s” changed on disk."
+msgstr "Berkas \"%s\" berubah pada diska."
+
+#: tepl/tepl-io-error-info-bars.c:172
+msgid "Drop Changes and _Reload"
+msgstr "Buang Pe_rubahan dan Muat Ulang"
+
+#: tepl/tepl-io-error-info-bars.c:172
+msgid "_Reload"
+msgstr "_Muat Ulang"
+
+#: tepl/tepl-io-error-info-bars.c:218
+#, c-format
+msgid "Some invalid characters have been detected while saving “%s”."
+msgstr "Beberapa karakter yang tidak valid terdeteksi saat menyimpan \"%s\"."
+
+#: tepl/tepl-io-error-info-bars.c:223
+msgid ""
+"If you continue saving this file you can corrupt the document. Save anyway?"
+msgstr ""
+"Jika Anda terus menyimpan berkas ini, Anda dapat merusak dokumen. Tetap "
+"simpan?"
+
+#. Translators: do not translate <metadata>.
+#: tepl/tepl-metadata-store.c:392
+#, c-format
+msgid "The XML file must start with a <metadata> element, not “%s”."
+msgstr "Berkas XML harus dimulai dengan elemen <metadata>, bukan \"%s\"."
+
+#. Translators: do not translate <document>.
+#: tepl/tepl-metadata-store.c:424
+#, c-format
+msgid "Expected a <document> element, got “%s” instead."
+msgstr "Yang diharapkan elemen <document>, malah mendapat \"%s\"."
+
+#. Translators: do not translate “atime”.
+#: tepl/tepl-metadata-store.c:450
+#, c-format
+msgid "Failed to parse the “atime” attribute value “%s”."
+msgstr "Gagal menguraikan nilai atribut \"atime\" \"%s\"."
+
+#. Translators: do not translate <document>, “uri” and “atime”.
+#: tepl/tepl-metadata-store.c:465
+msgid "The <document> element must contain the “uri” and “atime” attributes."
+msgstr "Elemen <document> harus mengandung atribut \"uri\" dan \"atime\"."
+
+#. Translators: do not translate <entry>.
+#: tepl/tepl-metadata-store.c:520
+#, c-format
+msgid "Expected an <entry> element, got “%s” instead."
+msgstr "Yang diharapkan elemen <entry>, malah mendapatkan \"%s\"."
+
+#. Translators: do not translate <entry>, “key” and “value”.
+#: tepl/tepl-metadata-store.c:546
+msgid "The <entry> element must contain the “key” and “value” attributes."
+msgstr "Elemen <entry> harus mengandung atribut \"key\" dan \"value\"."
+
+#: tepl/tepl-tab.c:532
 msgid "Error when loading the file."
 msgstr "Galat saat memuat berkas."
 
-#: tepl/tepl-tab.c:748
+#: tepl/tepl-tab.c:746
 msgid "Save File"
 msgstr "Simpan Berkas"
 
 #. Translators: location of a file.
-#: tepl/tepl-tab-label.c:273
+#: tepl/tepl-tab-label.c:272
 msgid "Location:"
 msgstr "Lokasi:"
 
-#: tepl/tepl-tab-label.c:342
+#: tepl/tepl-tab-label.c:341
 msgid "Close file"
 msgstr "Tutup berkas"
 
-#: tepl/tepl-tab-saving.c:64
+#: tepl/tepl-tab-saving.c:62
 msgid "Error when saving the file."
 msgstr "Galat saat menyimpan berkas."
+
+#~ msgid "Open “%s”"
+#~ msgstr "Membuka \"%s\""
+
+#~ msgid "Open _Recent"
+#~ msgstr "Buka Te_rkini"
+
+#~ msgid "Open a file recently used with %s"
+#~ msgstr "Membuka dokumen yang baru-baru ini dipakai dengan %s"
 
 #~ msgid "Could not find the file “%s”."
 #~ msgstr "Tak bisa temukan berkas \"%s\"."
@@ -429,9 +526,6 @@ msgstr "Galat saat menyimpan berkas."
 #~ msgid "_Retry"
 #~ msgstr "_Ulangi"
 
-#~ msgid "Edit Any_way"
-#~ msgstr "Sunt_ing Saja"
-
 #~ msgid ""
 #~ "The number of followed links is limited and the actual file could not be "
 #~ "found within this limit."
@@ -473,6 +567,3 @@ msgstr "Galat saat menyimpan berkas."
 #~ msgstr ""
 #~ "Harap periksa bahwa Anda tidak mencoba membuka suatu berkas biner.\n"
 #~ "Pilih suatu pengkodean karakter lain dari menu dan cobalah lagi."
-
-#~ msgid "Could not open the file “%s”."
-#~ msgstr "Tidak bisa membuka berkas \"%s\"."

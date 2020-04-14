@@ -48,3 +48,41 @@ Continue high-level file loading and saving implementation
 - Status: **todo**
 
 All the errors would be handled by Tepl, showing TeplInfoBars etc.
+
+Side/bottom panel container
+---------------------------
+
+- Status: **todo**
+
+File browser widget
+-------------------
+
+- Status: **todo**
+
+To be integrated in a side panel.
+
+Goto line UI
+------------
+
+- Status: **todo**
+
+Search and replace UI
+---------------------
+
+- Status: **todo**
+
+The goto line is similar and much easier to do than the search and replace, so
+goto line can be done as a first step.
+
+File printing UI
+----------------
+
+- Status: **todo**
+
+High-level spell-checking API
+-----------------------------
+
+- Status: **todo**
+
+Integrating [gspell](https://wiki.gnome.org/Projects/gspell) with the Tepl
+framework.

@@ -20,7 +20,7 @@ GNOME.gtkdoc(
   gtkdoc_module_name,
   main_xml: 'tepl-docs.xml',
   src_dir: include_directories('../../tepl/'),
-  dependencies: TEPL_SHARED_LIB_DEP,
+  dependencies: TEPL_LIB_DEP,
   scan_args: ['--rebuild-types'],
   gobject_typesfile: 'tepl-@0@.types'.format(TEPL_API_VERSION),
   fixxref_args: [

@@ -122,7 +122,7 @@ TEPL_STATIC_DEP = declare_dependency(
 
 symbol_map = meson.current_source_dir() / 'symbol.map'
 
-tepl_shared_lib = shared_library(
+tepl_lib = library(
   'tepl-@0@'.format(TEPL_API_VERSION),
   link_whole: tepl_static_lib,
   link_args: '-Wl,--version-script,' + symbol_map,
@@ -131,9 +131,9 @@ tepl_shared_lib = shared_library(
   install: true
 )
 
-TEPL_SHARED_LIB_DEP = declare_dependency(
+TEPL_LIB_DEP = declare_dependency(
   include_directories: ROOT_INCLUDE_DIR,
-  link_with: tepl_shared_lib,
+  link_with: tepl_lib,
   sources: tepl_enum_types[1],
   dependencies: TEPL_DEPS
 )
@@ -142,14 +142,14 @@ PKG_CONFIG.generate(
   filebase: 'tepl-@0@'.format(TEPL_API_VERSION),
   name: 'Tepl',
   description: 'Text editor product line',
-  libraries: tepl_shared_lib,
+  libraries: tepl_lib,
   subdirs: 'tepl-@0@'.format(TEPL_API_VERSION),
   requires: TEPL_PUBLIC_DEPS,
   requires_private: TEPL_PRIVATE_DEPS
 )
 
 GNOME.generate_gir(
-  tepl_shared_lib,
+  tepl_lib,
   export_packages: 'tepl-@0@'.format(TEPL_API_VERSION),
   header: 'tepl/tepl.h',
   identifier_prefix: 'Tepl',

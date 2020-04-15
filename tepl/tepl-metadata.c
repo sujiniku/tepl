@@ -19,6 +19,7 @@
 
 #include "config.h"
 #include "tepl-metadata.h"
+#include "tepl-metadata-store.h"
 
 /* Almost a drop-in replacement for, or a wrapping of, the
  * GFile-metadata-related API (just what we need) to either:
@@ -56,6 +57,9 @@ _tepl_metadata_query_info_async (GFile               *location,
 				 GAsyncReadyCallback  callback,
 				 gpointer             user_data)
 {
+	GTask *task;
+	TeplMetadataStore *store;
+
 	if (use_gvfs_metadata ())
 	{
 		g_file_query_info_async (location,
@@ -65,6 +69,32 @@ _tepl_metadata_query_info_async (GFile               *location,
 					 cancellable,
 					 callback,
 					 user_data);
+		return;
+	}
+
+	task = g_task_new (location, cancellable, callback, user_data);
+	g_task_set_priority (task, io_priority);
+
+	store = tepl_metadata_store_get_singleton ();
+
+	/* TODO: check if TeplMetadataStore is activated. */
+
+	if (_tepl_metadata_store_is_loaded (store))
+	{
+		GFileInfo *file_info;
+		GFileInfo *file_info_dup = NULL;
+
+		/* TODO: call g_file_info_dup() in _tepl_metadata_store_get_metadata_for_location()? */
+		file_info = _tepl_metadata_store_get_metadata_for_location (store, location);
+		if (file_info != NULL)
+		{
+			file_info_dup = g_file_info_dup (file_info);
+			g_object_unref (file_info);
+		}
+
+		g_task_return_pointer (task, file_info_dup, g_object_unref);
+		g_object_unref (task);
+		return;
 	}
 }
 
@@ -78,7 +108,11 @@ _tepl_metadata_query_info_finish (GFile         *location,
 		return g_file_query_info_finish (location, result, error);
 	}
 
-	return NULL;
+	g_return_val_if_fail (G_IS_FILE (location), NULL);
+	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
+	g_return_val_if_fail (g_task_is_valid (result, location), NULL);
+
+	return g_task_propagate_pointer (G_TASK (result), error);
 }
 
 void

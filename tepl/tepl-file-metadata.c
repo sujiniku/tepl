@@ -41,6 +41,18 @@
  * save the metadata on disk or to the #TeplMetadataStore, call
  * tepl_file_metadata_save_async().
  *
+ * # Separation of concerns
+ *
+ * To implement file metadata in an application, one strategy is to separate
+ * concerns:
+ * - Individual features or plugins call tepl_file_metadata_get() and
+ *   tepl_file_metadata_set().
+ * - The code that manages file loading and saving takes care of calling
+ *   tepl_file_metadata_load_async() and tepl_file_metadata_save_async() at
+ *   appropriate times (see the following use-cases as inspiration), and
+ *   orchestrates or signals individual features or plugins to
+ *   activate/deactivate themselves also at appropriate times.
+ *
  * # Application use-cases
  *
  * This section documents some use-cases that applications may want to support.
@@ -158,18 +170,6 @@
  *
  * FIXME: currently not well supported by #TeplFileMetadata, need to add
  * `save_subset_async/finish()` taking an array or list of keys to save.
- *
- * ## Separation of concerns
- *
- * To implement file metadata in an application, one strategy is to separate
- * concerns:
- * - Individual features or plugins call tepl_file_metadata_get() and
- *   tepl_file_metadata_set().
- * - The code that manages file loading and saving takes care of calling
- *   tepl_file_metadata_load_async() and tepl_file_metadata_save_async() at
- *   appropriate times (see the previous use-cases as inspiration), and
- *   orchestrates or signals individual features or plugins to
- *   activate/deactivate themselves also at appropriate times.
  */
 
 /* API design - additional notes:

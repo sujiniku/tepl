@@ -86,6 +86,9 @@ gboolean		_tepl_metadata_store_load_finish		(TeplMetadataStore  *store,
 									 GError            **error);
 
 G_GNUC_INTERNAL
+gboolean		_tepl_metadata_store_is_loading			(TeplMetadataStore *store);
+
+G_GNUC_INTERNAL
 gboolean		_tepl_metadata_store_is_loaded			(TeplMetadataStore *store);
 
 G_GNUC_INTERNAL

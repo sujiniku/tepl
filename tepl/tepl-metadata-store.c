@@ -93,6 +93,7 @@ struct _TeplMetadataStorePrivate
 	guint max_number_of_locations;
 
 	guint is_loaded : 1;
+	guint is_loading : 1;
 	guint modified : 1;
 };
 
@@ -741,8 +742,11 @@ _tepl_metadata_store_load_async (TeplMetadataStore   *store,
 
 	g_return_if_fail (TEPL_IS_METADATA_STORE (store));
 	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
+	g_return_if_fail (!_tepl_metadata_store_is_loading (store));
 	g_return_if_fail (!_tepl_metadata_store_is_loaded (store));
 	g_return_if_fail (store->priv->xml_file != NULL);
+
+	store->priv->is_loading = TRUE;
 
 	task = g_task_new (store, cancellable, callback, user_data);
 	g_task_set_priority (task, io_priority);
@@ -777,12 +781,22 @@ _tepl_metadata_store_load_finish (TeplMetadataStore  *store,
 	g_return_val_if_fail (TEPL_IS_METADATA_STORE (store), FALSE);
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 	g_return_val_if_fail (g_task_is_valid (result, store), FALSE);
+	g_return_val_if_fail (_tepl_metadata_store_is_loading (store), FALSE);
 	g_return_val_if_fail (!_tepl_metadata_store_is_loaded (store), FALSE);
 
+	store->priv->is_loading = FALSE;
 	store->priv->is_loaded = TRUE;
 	g_object_notify_by_pspec (G_OBJECT (store), properties[PROP_LOADED]);
 
 	return g_task_propagate_boolean (G_TASK (result), error);
+}
+
+gboolean
+_tepl_metadata_store_is_loading (TeplMetadataStore *store)
+{
+	g_return_val_if_fail (TEPL_IS_METADATA_STORE (store), FALSE);
+
+	return store->priv->is_loading;
 }
 
 /*

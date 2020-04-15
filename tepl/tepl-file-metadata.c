@@ -18,6 +18,7 @@
  */
 
 #include "tepl-file-metadata.h"
+#include "tepl-metadata.h"
 #include "tepl-utils.h"
 
 /**
@@ -199,13 +200,10 @@ struct _TeplFileMetadataPrivate
 
 G_DEFINE_TYPE_WITH_PRIVATE (TeplFileMetadata, tepl_file_metadata, G_TYPE_OBJECT)
 
-#define METADATA_PREFIX "metadata::"
-#define METADATA_QUERY_ATTRIBUTES "metadata::*"
-
 static gchar *
 get_metadata_attribute_key (const gchar *key)
 {
-	return g_strconcat (METADATA_PREFIX, key, NULL);
+	return g_strconcat ("metadata::", key, NULL);
 }
 
 static void
@@ -385,7 +383,7 @@ load_metadata_async_cb (GObject      *source_object,
 	GFileInfo *loaded_file_info;
 	GError *error = NULL;
 
-	loaded_file_info = g_file_query_info_finish (location, result, &error);
+	loaded_file_info = _tepl_metadata_query_info_finish (location, result, &error);
 
 	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
 	{
@@ -455,13 +453,11 @@ tepl_file_metadata_load_async (TeplFileMetadata    *metadata,
 	task = g_task_new (metadata, cancellable, callback, user_data);
 	g_task_set_priority (task, io_priority);
 
-	g_file_query_info_async (location,
-				 METADATA_QUERY_ATTRIBUTES,
-				 G_FILE_QUERY_INFO_NONE,
-				 io_priority,
-				 cancellable,
-				 load_metadata_async_cb,
-				 task);
+	_tepl_metadata_query_info_async (location,
+					 io_priority,
+					 cancellable,
+					 load_metadata_async_cb,
+					 task);
 }
 
 /**
@@ -498,7 +494,7 @@ set_attributes_cb (GObject      *source_object,
 	TeplFileMetadataPrivate *priv = tepl_file_metadata_get_instance_private (metadata);
 	GError *error = NULL;
 
-	g_file_set_attributes_finish (location, result, NULL, &error);
+	_tepl_metadata_set_attributes_finish (location, result, &error);
 
 	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
 	{
@@ -532,7 +528,7 @@ save_as__query_all_previous_metadata_cb (GObject      *source_object,
 	gchar **attributes;
 	gint attr_num;
 
-	file_info = g_file_query_info_finish (location, result, &error);
+	file_info = _tepl_metadata_query_info_finish (location, result, &error);
 
 	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
 	{
@@ -557,7 +553,7 @@ save_as__query_all_previous_metadata_cb (GObject      *source_object,
 		/* After that, take the same code path, so that that code path
 		 * is better tested and is written in a general way.
 		 * Even though since file_info is empty, it would be possible to
-		 * directly call g_file_set_attributes_async() with
+		 * directly call _tepl_metadata_set_attributes_async() with
 		 * priv->file_info_all.
 		 */
 	}
@@ -595,13 +591,12 @@ save_as__query_all_previous_metadata_cb (GObject      *source_object,
 	}
 	g_strfreev (attributes);
 
-	g_file_set_attributes_async (location,
-				     file_info,
-				     G_FILE_QUERY_INFO_NONE,
-				     g_task_get_priority (task),
-				     g_task_get_cancellable (task),
-				     set_attributes_cb, /* Common callback with normal save. */
-				     task);
+	_tepl_metadata_set_attributes_async (location,
+					     file_info,
+					     g_task_get_priority (task),
+					     g_task_get_cancellable (task),
+					     set_attributes_cb, /* Common callback with normal save. */
+					     task);
 	g_object_unref (file_info);
 }
 
@@ -610,13 +605,11 @@ start_to_save_as (GTask *task)
 {
 	GFile *location = g_task_get_task_data (task);
 
-	g_file_query_info_async (location,
-				 METADATA_QUERY_ATTRIBUTES,
-				 G_FILE_QUERY_INFO_NONE,
-				 g_task_get_priority (task),
-				 g_task_get_cancellable (task),
-				 save_as__query_all_previous_metadata_cb,
-				 task);
+	_tepl_metadata_query_info_async (location,
+					 g_task_get_priority (task),
+					 g_task_get_cancellable (task),
+					 save_as__query_all_previous_metadata_cb,
+					 task);
 }
 
 static void
@@ -633,17 +626,12 @@ start_to_save_modified_metadata (GTask *task)
 		return;
 	}
 
-	/* The g_file_set_attributes_async() implementation calls
-	 * g_file_info_dup(), so no need to take care about data races ourself
-	 * (save_async() -> set() -> save_finish()).
-	 */
-	g_file_set_attributes_async (location,
-				     priv->file_info_modified,
-				     G_FILE_QUERY_INFO_NONE,
-				     g_task_get_priority (task),
-				     g_task_get_cancellable (task),
-				     set_attributes_cb, /* Common callback with save_as. */
-				     task);
+	_tepl_metadata_set_attributes_async (location,
+					     priv->file_info_modified,
+					     g_task_get_priority (task),
+					     g_task_get_cancellable (task),
+					     set_attributes_cb, /* Common callback with save_as. */
+					     task);
 }
 
 /**

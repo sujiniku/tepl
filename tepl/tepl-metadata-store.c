@@ -219,7 +219,7 @@ tepl_metadata_store_get_property (GObject    *object,
 	switch (prop_id)
 	{
 		case PROP_LOADED:
-			g_value_set_boolean (value, tepl_metadata_store_is_loaded (store));
+			g_value_set_boolean (value, _tepl_metadata_store_is_loaded (store));
 			break;
 
 		default:
@@ -255,13 +255,14 @@ tepl_metadata_store_class_init (TeplMetadataStoreClass *klass)
 	/**
 	 * TeplMetadataStore:loaded:
 	 *
+	 * Warning: this property is intended to be used only privately by Tepl,
+	 * don't use it in application code.
+	 *
 	 * %TRUE when the metadata has been loaded, or when there has been at
 	 * least an attempt to load it (i.e. when
-	 * tepl_metadata_store_load_finish() has been called).
+	 * _tepl_metadata_store_load_finish() has been called).
 	 *
 	 * %FALSE otherwise.
-	 *
-	 * Since: 5.0
 	 */
 	properties[PROP_LOADED] =
 		g_param_spec_boolean ("loaded",
@@ -329,9 +330,10 @@ _tepl_metadata_store_unref_singleton (void)
  * A good place to store the metadata is in a sub-directory of the user data
  * directory. See g_get_user_data_dir().
  *
- * Note that this function does no I/O. To load the metadata from the
- * @store_file, call tepl_metadata_store_load_async(). To save the metadata,
- * call tepl_metadata_store_save().
+ * Note that this function does no I/O. The metadata will be loaded
+ * asynchronously and lazily by using the #TeplFileMetadata API; as a result
+ * this function needs to be called before using any of the #TeplFileMetadata
+ * API. To save the metadata, call tepl_metadata_store_save().
  *
  * Since: 5.0
  */
@@ -357,12 +359,8 @@ tepl_metadata_store_set_store_file (TeplMetadataStore *store,
  * tepl_metadata_store_set_store_file()) to grow indefinitely.
  *
  * @max_number_of_locations is the maximum number of #GFile locations for which
- * metadata are written to the store file. See
- * tepl_metadata_store_set_metadata_for_location() (this sets the metadata for
- * _one_ location).
- *
- * Upon saving, the #TeplMetadataStore discards the least recently accessed
- * metadata if needed.
+ * metadata are written to the store file. Upon saving, the #TeplMetadataStore
+ * discards the least recently accessed metadata if needed.
  *
  * Since: 5.0
  */
@@ -714,8 +712,8 @@ out:
 	g_bytes_unref (xml_file_bytes);
 }
 
-/**
- * tepl_metadata_store_load_async:
+/*
+ * _tepl_metadata_store_load_async:
  * @store: the #TeplMetadataStore.
  * @io_priority: the I/O priority of the request. E.g. %G_PRIORITY_LOW,
  *   %G_PRIORITY_DEFAULT or %G_PRIORITY_HIGH.
@@ -728,25 +726,22 @@ out:
  * tepl_metadata_store_set_store_file() before.
  *
  * You can call this function only once. Once the #TeplMetadataStore is loaded
- * it cannot be loaded a second time. A good moment to call this function is on
- * application startup, see the #GApplication::startup signal.
+ * it cannot be loaded a second time.
  *
  * See the #GAsyncResult documentation to know how to use this function.
- *
- * Since: 5.0
  */
 void
-tepl_metadata_store_load_async (TeplMetadataStore   *store,
-				gint                 io_priority,
-				GCancellable        *cancellable,
-				GAsyncReadyCallback  callback,
-				gpointer             user_data)
+_tepl_metadata_store_load_async (TeplMetadataStore   *store,
+				 gint                 io_priority,
+				 GCancellable        *cancellable,
+				 GAsyncReadyCallback  callback,
+				 gpointer             user_data)
 {
 	GTask *task;
 
 	g_return_if_fail (TEPL_IS_METADATA_STORE (store));
 	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
-	g_return_if_fail (!tepl_metadata_store_is_loaded (store));
+	g_return_if_fail (!_tepl_metadata_store_is_loaded (store));
 	g_return_if_fail (store->priv->xml_file != NULL);
 
 	task = g_task_new (store, cancellable, callback, user_data);
@@ -761,29 +756,28 @@ tepl_metadata_store_load_async (TeplMetadataStore   *store,
 				 task);
 }
 
-/**
- * tepl_metadata_store_load_finish:
+/*
+ * _tepl_metadata_store_load_finish:
  * @store: the #TeplMetadataStore.
  * @result: a #GAsyncResult.
  * @error: location to a %NULL #GError, or %NULL.
  *
- * Finishes the metadata loading started with tepl_metadata_store_load_async().
+ * Finishes the metadata loading started with _tepl_metadata_store_load_async().
  *
  * Regardless of whether the operation was successful or not, calling this
  * function sets the #TeplMetadataStore:loaded property to %TRUE.
  *
  * Returns: whether the metadata was loaded successfully.
- * Since: 5.0
  */
 gboolean
-tepl_metadata_store_load_finish (TeplMetadataStore  *store,
-				 GAsyncResult       *result,
-				 GError            **error)
+_tepl_metadata_store_load_finish (TeplMetadataStore  *store,
+				  GAsyncResult       *result,
+				  GError            **error)
 {
 	g_return_val_if_fail (TEPL_IS_METADATA_STORE (store), FALSE);
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 	g_return_val_if_fail (g_task_is_valid (result, store), FALSE);
-	g_return_val_if_fail (!tepl_metadata_store_is_loaded (store), FALSE);
+	g_return_val_if_fail (!_tepl_metadata_store_is_loaded (store), FALSE);
 
 	store->priv->is_loaded = TRUE;
 	g_object_notify_by_pspec (G_OBJECT (store), properties[PROP_LOADED]);
@@ -791,15 +785,14 @@ tepl_metadata_store_load_finish (TeplMetadataStore  *store,
 	return g_task_propagate_boolean (G_TASK (result), error);
 }
 
-/**
- * tepl_metadata_store_is_loaded:
+/*
+ * _tepl_metadata_store_is_loaded:
  * @store: the #TeplMetadataStore.
  *
  * Returns: the value of the #TeplMetadataStore:loaded property.
- * Since: 5.0
  */
 gboolean
-tepl_metadata_store_is_loaded (TeplMetadataStore *store)
+_tepl_metadata_store_is_loaded (TeplMetadataStore *store)
 {
 	g_return_val_if_fail (TEPL_IS_METADATA_STORE (store), FALSE);
 
@@ -1013,19 +1006,18 @@ tepl_metadata_store_save (TeplMetadataStore  *store,
 	return ok;
 }
 
-/**
- * tepl_metadata_store_get_metadata_for_location:
+/*
+ * _tepl_metadata_store_get_metadata_for_location:
  * @store: the #TeplMetadataStore.
  * @location: a #GFile.
  *
  * Returns: (transfer full) (nullable): a #GFileInfo containing the metadata,
  * under the "metadata" namespace. Or %NULL if there is no metadata for
  * @location.
- * Since: 5.0
  */
 GFileInfo *
-tepl_metadata_store_get_metadata_for_location (TeplMetadataStore *store,
-					       GFile             *location)
+_tepl_metadata_store_get_metadata_for_location (TeplMetadataStore *store,
+						GFile             *location)
 {
 	DocumentMetadata *document_metadata;
 
@@ -1045,19 +1037,17 @@ tepl_metadata_store_get_metadata_for_location (TeplMetadataStore *store,
 	return g_object_ref (document_metadata->entries);
 }
 
-/**
- * tepl_metadata_store_set_metadata_for_location:
+/*
+ * _tepl_metadata_store_set_metadata_for_location:
  * @store: the #TeplMetadataStore.
  * @location: a #GFile.
  * @metadata: (nullable): a #GFileInfo containing the metadata, or %NULL to
- * remove the metadata for @location.
- *
- * Since: 5.0
+ *   remove the metadata for @location.
  */
 void
-tepl_metadata_store_set_metadata_for_location (TeplMetadataStore *store,
-					       GFile             *location,
-					       GFileInfo         *metadata)
+_tepl_metadata_store_set_metadata_for_location (TeplMetadataStore *store,
+						GFile             *location,
+						GFileInfo         *metadata)
 {
 	g_return_if_fail (TEPL_IS_METADATA_STORE (store));
 	g_return_if_fail (G_IS_FILE (location));

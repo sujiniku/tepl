@@ -69,7 +69,7 @@ load_store_file_cb (GObject      *source_object,
 	TeplMetadataStore *store = TEPL_METADATA_STORE (source_object);
 	GError **error = user_data;
 
-	tepl_metadata_store_load_finish (store, result, error);
+	_tepl_metadata_store_load_finish (store, result, error);
 	gtk_main_quit ();
 }
 
@@ -81,11 +81,11 @@ load_store_file (GFile    *store_file,
 	GError *error = NULL;
 
 	tepl_metadata_store_set_store_file (store, store_file);
-	tepl_metadata_store_load_async (store,
-					G_PRIORITY_DEFAULT,
-					NULL,
-					load_store_file_cb,
-					&error);
+	_tepl_metadata_store_load_async (store,
+					 G_PRIORITY_DEFAULT,
+					 NULL,
+					 load_store_file_cb,
+					 &error);
 	gtk_main ();
 
 	if (expect_no_error)
@@ -149,9 +149,9 @@ mark_metadata_store_as_modified (void)
 	location = g_file_new_for_path ("foo");
 	metadata = g_file_info_new ();
 
-	g_assert_true (tepl_metadata_store_get_metadata_for_location (store, location) == NULL);
-	tepl_metadata_store_set_metadata_for_location (store, location, metadata);
-	tepl_metadata_store_set_metadata_for_location (store, location, NULL);
+	g_assert_true (_tepl_metadata_store_get_metadata_for_location (store, location) == NULL);
+	_tepl_metadata_store_set_metadata_for_location (store, location, metadata);
+	_tepl_metadata_store_set_metadata_for_location (store, location, NULL);
 
 	g_object_unref (location);
 	g_object_unref (metadata);
@@ -169,7 +169,7 @@ check_metadata_exists (const gchar *uri,
 	const gchar *received_value;
 
 	location = g_file_new_for_uri (uri);
-	metadata = tepl_metadata_store_get_metadata_for_location (store, location);
+	metadata = _tepl_metadata_store_get_metadata_for_location (store, location);
 	g_assert_true (metadata != NULL);
 
 	complete_key = g_strconcat ("metadata::", key, NULL);
@@ -307,7 +307,7 @@ test_load_xml_from_old_metadata_manager (void)
 	 * Do not modify the atime of the other <document>.
 	 */
 	location = g_file_new_for_uri ("file:///home/seb/test-header.csv");
-	tepl_metadata_store_set_metadata_for_location (store, location, NULL);
+	_tepl_metadata_store_set_metadata_for_location (store, location, NULL);
 	g_clear_object (&location);
 
 	tmp_file = save_store ();
@@ -354,7 +354,7 @@ test_generate_new_store_file_simple (void)
 	location = g_file_new_for_path ("/my_absolute_file_absolutely");
 	metadata = g_file_info_new ();
 	g_file_info_set_attribute_string (metadata, "metadata::my_key", "my_value");
-	tepl_metadata_store_set_metadata_for_location (store, location, metadata);
+	_tepl_metadata_store_set_metadata_for_location (store, location, metadata);
 	g_object_unref (location);
 	g_object_unref (metadata);
 
@@ -362,7 +362,7 @@ test_generate_new_store_file_simple (void)
 	metadata = g_file_info_new ();
 	g_file_info_set_attribute_string (metadata, "metadata::a_key", "a_value");
 	g_file_info_set_attribute_string (metadata, "metadata::another_key", "another_value");
-	tepl_metadata_store_set_metadata_for_location (store, location, metadata);
+	_tepl_metadata_store_set_metadata_for_location (store, location, metadata);
 	g_object_unref (location);
 	g_object_unref (metadata);
 
@@ -398,7 +398,7 @@ test_generate_new_store_file (void)
 	location = g_file_new_for_path ("/home/seb/santé/pandémie-coronavirus-stats.csv");
 	metadata = g_file_info_new ();
 	g_file_info_set_attribute_string (metadata, "metadata::CLÉ", "Évolution \"<=>\"");
-	tepl_metadata_store_set_metadata_for_location (store, location, metadata);
+	_tepl_metadata_store_set_metadata_for_location (store, location, metadata);
 	g_object_unref (location);
 	g_object_unref (metadata);
 

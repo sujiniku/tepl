@@ -53,35 +53,40 @@ GType			tepl_metadata_store_get_type			(void);
 
 TeplMetadataStore *	tepl_metadata_store_get_singleton		(void);
 
-G_GNUC_INTERNAL
-void			_tepl_metadata_store_unref_singleton		(void);
-
 void			tepl_metadata_store_set_store_file		(TeplMetadataStore *store,
 									 GFile             *store_file);
 
 void			tepl_metadata_store_set_max_number_of_locations	(TeplMetadataStore *store,
 									 guint              max_number_of_locations);
 
-void			tepl_metadata_store_load_async			(TeplMetadataStore   *store,
+gboolean		tepl_metadata_store_save			(TeplMetadataStore  *store,
+									 GCancellable       *cancellable,
+									 GError            **error);
+
+G_GNUC_INTERNAL
+void			_tepl_metadata_store_unref_singleton		(void);
+
+G_GNUC_INTERNAL
+void			_tepl_metadata_store_load_async			(TeplMetadataStore   *store,
 									 gint                 io_priority,
 									 GCancellable        *cancellable,
 									 GAsyncReadyCallback  callback,
 									 gpointer             user_data);
 
-gboolean		tepl_metadata_store_load_finish			(TeplMetadataStore  *store,
+G_GNUC_INTERNAL
+gboolean		_tepl_metadata_store_load_finish		(TeplMetadataStore  *store,
 									 GAsyncResult       *result,
 									 GError            **error);
 
-gboolean		tepl_metadata_store_is_loaded			(TeplMetadataStore *store);
+G_GNUC_INTERNAL
+gboolean		_tepl_metadata_store_is_loaded			(TeplMetadataStore *store);
 
-gboolean		tepl_metadata_store_save			(TeplMetadataStore  *store,
-									 GCancellable       *cancellable,
-									 GError            **error);
-
-GFileInfo *		tepl_metadata_store_get_metadata_for_location	(TeplMetadataStore *store,
+G_GNUC_INTERNAL
+GFileInfo *		_tepl_metadata_store_get_metadata_for_location	(TeplMetadataStore *store,
 									 GFile             *location);
 
-void			tepl_metadata_store_set_metadata_for_location	(TeplMetadataStore *store,
+G_GNUC_INTERNAL
+void			_tepl_metadata_store_set_metadata_for_location	(TeplMetadataStore *store,
 									 GFile             *location,
 									 GFileInfo         *metadata);
 

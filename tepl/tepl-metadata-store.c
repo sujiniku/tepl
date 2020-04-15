@@ -729,8 +729,7 @@ out:
  *
  * You can call this function only once. Once the #TeplMetadataStore is loaded
  * it cannot be loaded a second time. A good moment to call this function is on
- * application startup. TODO "application startup": refer to #GApplication API,
- * the exact startup phase.
+ * application startup, see the #GApplication::startup signal.
  *
  * See the #GAsyncResult documentation to know how to use this function.
  *

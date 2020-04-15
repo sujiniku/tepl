@@ -77,7 +77,12 @@ _tepl_metadata_query_info_async (GFile               *location,
 
 	store = tepl_metadata_store_get_singleton ();
 
-	/* TODO: check if TeplMetadataStore is activated. */
+	if (!_tepl_metadata_store_is_activated (store))
+	{
+		g_task_return_pointer (task, NULL, NULL);
+		g_object_unref (task);
+		return;
+	}
 
 	if (_tepl_metadata_store_is_loaded (store))
 	{
@@ -89,6 +94,11 @@ _tepl_metadata_query_info_async (GFile               *location,
 		g_object_unref (task);
 		return;
 	}
+
+	/* TODO check if it is load*ing*, if not, load(), if yes, connect to the
+	 * notify::loaded signal.
+	 * Or find an easier way to handle all of this.
+	 */
 }
 
 GFileInfo *

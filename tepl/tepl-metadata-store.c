@@ -1072,3 +1072,11 @@ _tepl_metadata_store_set_metadata_for_location (TeplMetadataStore *store,
 
 	store->priv->modified = TRUE;
 }
+
+gboolean
+_tepl_metadata_store_is_activated (TeplMetadataStore *store)
+{
+	g_return_val_if_fail (TEPL_IS_METADATA_STORE (store), FALSE);
+
+	return store->priv->xml_file != NULL;
+}

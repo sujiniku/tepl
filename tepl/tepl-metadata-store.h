@@ -71,6 +71,9 @@ G_GNUC_INTERNAL
 void			_tepl_metadata_store_unref_singleton		(void);
 
 G_GNUC_INTERNAL
+gboolean		_tepl_metadata_store_is_activated		(TeplMetadataStore *store);
+
+G_GNUC_INTERNAL
 void			_tepl_metadata_store_load_async			(TeplMetadataStore   *store,
 									 gint                 io_priority,
 									 GCancellable        *cancellable,

@@ -36,9 +36,10 @@
  *
  * The tepl_file_metadata_get() and tepl_file_metadata_set() functions don't
  * load or save the metadata on disk, they only access the metadata stored in
- * the #TeplFileMetadata object memory. To load the metadata from disk, call
- * tepl_file_metadata_load_async(). Likewise, to save the
- * metadata on disk, call tepl_file_metadata_save_async().
+ * the #TeplFileMetadata object memory. To load the metadata from disk or from
+ * the #TeplMetadataStore, call tepl_file_metadata_load_async(). Likewise, to
+ * save the metadata on disk or to the #TeplMetadataStore, call
+ * tepl_file_metadata_save_async().
  *
  * # Application use-cases
  *

@@ -20,6 +20,10 @@
 #ifndef TEPL_METADATA_STORE_H
 #define TEPL_METADATA_STORE_H
 
+#if !defined (TEPL_H_INSIDE) && !defined (TEPL_COMPILATION)
+#error "Only <tepl/tepl.h> can be included directly."
+#endif
+
 #include <gio/gio.h>
 
 G_BEGIN_DECLS

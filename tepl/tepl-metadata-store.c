@@ -257,8 +257,8 @@ tepl_metadata_store_class_init (TeplMetadataStoreClass *klass)
 	 *
 	 * Warning: this property is intended to be used only privately by Tepl,
 	 * don't use it in application code.
-	 *
-	 * %TRUE when the metadata has been loaded, or when there has been at
+	 */
+	/* %TRUE when the metadata has been loaded, or when there has been at
 	 * least an attempt to load it (i.e. when
 	 * _tepl_metadata_store_load_finish() has been called).
 	 *

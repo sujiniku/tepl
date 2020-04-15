@@ -49,6 +49,10 @@ gboolean	_tepl_metadata_set_attributes_finish	(GFile         *location,
 							 GAsyncResult  *result,
 							 GError       **error);
 
+/* For unit tests. */
+G_GNUC_INTERNAL
+void		_tepl_metadata_set_force_using_metadata_store (gboolean value);
+
 G_END_DECLS
 
 #endif /* TEPL_METADATA_H */

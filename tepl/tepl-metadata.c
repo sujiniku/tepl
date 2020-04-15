@@ -17,6 +17,7 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "tepl-metadata.h"
 
 /* Almost a drop-in replacement for, or a wrapping of, the
@@ -25,6 +26,29 @@
  * - Use the TeplMetadataStore otherwise. TODO: do it.
  */
 
+static gboolean force_using_metadata_store;
+
+void
+_tepl_metadata_set_force_using_metadata_store (gboolean value)
+{
+	force_using_metadata_store = value != FALSE;
+}
+
+static gboolean
+use_gvfs_metadata (void)
+{
+	if (force_using_metadata_store)
+	{
+		return FALSE;
+	}
+
+#if ENABLE_GVFS_METADATA
+	return TRUE;
+#else
+	return FALSE;
+#endif
+}
+
 void
 _tepl_metadata_query_info_async (GFile               *location,
 				 gint                 io_priority,
@@ -32,13 +56,16 @@ _tepl_metadata_query_info_async (GFile               *location,
 				 GAsyncReadyCallback  callback,
 				 gpointer             user_data)
 {
-	g_file_query_info_async (location,
-				 "metadata::*",
-				 G_FILE_QUERY_INFO_NONE,
-				 io_priority,
-				 cancellable,
-				 callback,
-				 user_data);
+	if (use_gvfs_metadata ())
+	{
+		g_file_query_info_async (location,
+					 "metadata::*",
+					 G_FILE_QUERY_INFO_NONE,
+					 io_priority,
+					 cancellable,
+					 callback,
+					 user_data);
+	}
 }
 
 GFileInfo *
@@ -46,7 +73,12 @@ _tepl_metadata_query_info_finish (GFile         *location,
 				  GAsyncResult  *result,
 				  GError       **error)
 {
-	return g_file_query_info_finish (location, result, error);
+	if (use_gvfs_metadata ())
+	{
+		return g_file_query_info_finish (location, result, error);
+	}
+
+	return NULL;
 }
 
 void
@@ -57,13 +89,16 @@ _tepl_metadata_set_attributes_async (GFile               *location,
 				     GAsyncReadyCallback  callback,
 				     gpointer             user_data)
 {
-	g_file_set_attributes_async (location,
-				     info,
-				     G_FILE_QUERY_INFO_NONE,
-				     io_priority,
-				     cancellable,
-				     callback,
-				     user_data);
+	if (use_gvfs_metadata ())
+	{
+		g_file_set_attributes_async (location,
+					     info,
+					     G_FILE_QUERY_INFO_NONE,
+					     io_priority,
+					     cancellable,
+					     callback,
+					     user_data);
+	}
 }
 
 gboolean
@@ -71,5 +106,10 @@ _tepl_metadata_set_attributes_finish (GFile         *location,
 				      GAsyncResult  *result,
 				      GError       **error)
 {
-	return g_file_set_attributes_finish (location, result, NULL, error);
+	if (use_gvfs_metadata ())
+	{
+		return g_file_set_attributes_finish (location, result, NULL, error);
+	}
+
+	return FALSE;
 }

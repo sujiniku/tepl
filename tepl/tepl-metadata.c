@@ -50,6 +50,52 @@ use_gvfs_metadata (void)
 #endif
 }
 
+static void
+do_query_info (GTask *task)
+{
+	TeplMetadataStore *store = tepl_metadata_store_get_singleton ();
+	GFile *location = g_task_get_source_object (task);
+	GFileInfo *file_info;
+
+	file_info = _tepl_metadata_store_get_metadata_for_location (store, location);
+	if (file_info == NULL)
+	{
+		/* See the Returns of g_file_query_info_finish(). */
+		file_info = g_file_info_new ();
+	}
+
+	g_task_return_pointer (task, file_info, g_object_unref);
+	g_object_unref (task);
+}
+
+static void
+store_notify_loaded_cb (TeplMetadataStore *store,
+			GParamSpec        *pspec,
+			GTask             *task)
+{
+	do_query_info (task);
+}
+
+static void
+store_load_cb (GObject      *source_object,
+	       GAsyncResult *result,
+	       gpointer      user_data)
+{
+	TeplMetadataStore *store = TEPL_METADATA_STORE (source_object);
+	GTask *task = G_TASK (user_data);
+	GError *error = NULL;
+
+	_tepl_metadata_store_load_finish (store, result, &error);
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		g_object_unref (task);
+		return;
+	}
+
+	do_query_info (task);
+}
+
 void
 _tepl_metadata_query_info_async (GFile               *location,
 				 gint                 io_priority,
@@ -86,19 +132,24 @@ _tepl_metadata_query_info_async (GFile               *location,
 
 	if (_tepl_metadata_store_is_loaded (store))
 	{
-		GFileInfo *file_info;
-
-		file_info = _tepl_metadata_store_get_metadata_for_location (store, location);
-
-		g_task_return_pointer (task, file_info, g_object_unref);
-		g_object_unref (task);
+		do_query_info (task);
 		return;
 	}
 
-	/* TODO check if it is load*ing*, if not, load(), if yes, connect to the
-	 * notify::loaded signal.
-	 * Or find an easier way to handle all of this.
-	 */
+	if (_tepl_metadata_store_is_loading (store))
+	{
+		g_signal_connect (store,
+				  "notify::loaded",
+				  G_CALLBACK (store_notify_loaded_cb),
+				  task);
+		return;
+	}
+
+	_tepl_metadata_store_load_async (store,
+					 io_priority,
+					 cancellable,
+					 store_load_cb,
+					 task);
 }
 
 GFileInfo *

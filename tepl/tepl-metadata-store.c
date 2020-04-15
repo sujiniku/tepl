@@ -966,8 +966,7 @@ resize_hash_table_according_to_max_number_of_locations (TeplMetadataStore *store
  * tepl_metadata_store_set_store_file() before.
  *
  * An asynchronous version doesn't exist because this function is meant to be
- * called on application shutdown. TODO: refer to #GApplication API, the exact
- * shutdown phase.
+ * called on application shutdown. See the #GApplication::shutdown signal.
  *
  * This function respects the configuration as set with
  * tepl_metadata_store_set_max_number_of_locations().

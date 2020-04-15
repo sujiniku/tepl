@@ -82,17 +82,10 @@ _tepl_metadata_query_info_async (GFile               *location,
 	if (_tepl_metadata_store_is_loaded (store))
 	{
 		GFileInfo *file_info;
-		GFileInfo *file_info_dup = NULL;
 
-		/* TODO: call g_file_info_dup() in _tepl_metadata_store_get_metadata_for_location()? */
 		file_info = _tepl_metadata_store_get_metadata_for_location (store, location);
-		if (file_info != NULL)
-		{
-			file_info_dup = g_file_info_dup (file_info);
-			g_object_unref (file_info);
-		}
 
-		g_task_return_pointer (task, file_info_dup, g_object_unref);
+		g_task_return_pointer (task, file_info, g_object_unref);
 		g_object_unref (task);
 		return;
 	}

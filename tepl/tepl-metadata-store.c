@@ -1034,7 +1034,7 @@ _tepl_metadata_store_get_metadata_for_location (TeplMetadataStore *store,
 	document_metadata_set_current_atime (document_metadata);
 	store->priv->modified = TRUE;
 
-	return g_object_ref (document_metadata->entries);
+	return g_file_info_dup (document_metadata->entries);
 }
 
 /*

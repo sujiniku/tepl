@@ -120,39 +120,4 @@
       </listitem>
     </itemizedlist>
   </chapter>
-
-  <chapter id="api-breaks-4-to-5-tepl">
-    <title>Tepl 4 -> Tepl 5</title>
-
-    <itemizedlist>
-      <listitem>
-        <para>
-          The <link linkend="TeplFileMetadata">TeplFileMetadata</link> API has
-          been re-worked to no longer depend on
-          <link linkend="TeplFile">TeplFile</link>, and to no longer do
-          synchronous I/O, only the async API has been kept.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          The <code>tepl_file_get_file_metadata()</code> function has been
-          removed.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          The <link linkend="tepl-tab-load-file">tepl_tab_load_file()</link>
-          function no longer loads the file metadata (but it was anyway an
-          implementation detail).
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          The <code>tepl_metadata_manager*()</code> functions have been removed,
-          they are superseded by
-          <link linkend="TeplMetadataStore">TeplMetadataStore</link>.
-        </para>
-      </listitem>
-    </itemizedlist>
-  </chapter>
 </part>

@@ -5,11 +5,9 @@ unit_tests = [
   'test-file',
   'test-file-content',
   'test-file-loader',
-  'test-file-metadata',
   'test-file-saver',
   'test-fold-region',
   'test-info-bar',
-  'test-metadata-store',
   'test-notebook',
   'test-utils'
 ]

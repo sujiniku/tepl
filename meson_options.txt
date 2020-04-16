@@ -3,11 +3,3 @@ option(
   type: 'boolean', value: false,
   description: 'Build API reference (requires gtk-doc)'
 )
-
-# Using GVfs to store metadata is recommended on platforms that support it.
-# Otherwise there is a fallback implementation, but it's less optimal.
-option(
-  'gvfs_metadata',
-  type: 'boolean', value: true,
-  description: 'Use GVfs to store additional file metadata'
-)

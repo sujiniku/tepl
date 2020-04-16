@@ -12,15 +12,12 @@ tepl/tepl-file.c
 tepl/tepl-file-content.c
 tepl/tepl-file-content-loader.c
 tepl/tepl-file-loader.c
-tepl/tepl-file-metadata.c
 tepl/tepl-file-saver.c
 tepl/tepl-info-bar.c
 tepl/tepl-init.c
 tepl/tepl-io-error-info-bars.c
 tepl/tepl-iter.c
 tepl/tepl-menu-shell.c
-tepl/tepl-metadata.c
-tepl/tepl-metadata-store.c
 tepl/tepl-notebook.c
 tepl/tepl-signal-group.c
 tepl/tepl-tab.c

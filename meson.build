@@ -57,7 +57,6 @@ TEPL_DEPS = [TEPL_PUBLIC_DEPS, TEPL_PRIVATE_DEPS]
 config_data = configuration_data()
 GETTEXT_PACKAGE_NAME = 'tepl-' + TEPL_API_VERSION
 config_data.set_quoted('GETTEXT_PACKAGE', GETTEXT_PACKAGE_NAME)
-config_data.set10('ENABLE_GVFS_METADATA', get_option('gvfs_metadata'))
 configure_file(
   output: 'config.h',
   configuration: config_data
@@ -138,5 +137,4 @@ endif
 
 summary('API version', TEPL_API_VERSION)
 summary('Prefix', get_option('prefix'))
-summary('GVfs metadata', get_option('gvfs_metadata'))
 summary('API documentation', get_option('gtk_doc'))

@@ -24,7 +24,7 @@
 /* Almost a drop-in replacement for, or a wrapping of, the
  * GFile-metadata-related API (just what we need) to either:
  * - Call the GFile API in case GVfs metadata is used.
- * - Use the TeplMetadataStore otherwise. TODO: do it.
+ * - Use the TeplMetadataStore otherwise.
  */
 
 static gboolean force_using_metadata_store;
@@ -51,9 +51,89 @@ use_gvfs_metadata (void)
 }
 
 static void
-do_query_info (GTask *task)
+load_metadata_store__notify_loaded_cb (TeplMetadataStore *store,
+				       GParamSpec        *pspec,
+				       GTask             *task)
 {
-	TeplMetadataStore *store = tepl_metadata_store_get_singleton ();
+	g_task_return_boolean (task, TRUE);
+	g_object_unref (task);
+}
+
+static void
+load_metadata_store__load_cb (GObject      *source_object,
+			      GAsyncResult *result,
+			      gpointer      user_data)
+{
+	TeplMetadataStore *store = TEPL_METADATA_STORE (source_object);
+	GTask *task = G_TASK (user_data);
+	GError *error = NULL;
+	gboolean ok;
+
+	ok = _tepl_metadata_store_load_finish (store, result, &error);
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		g_object_unref (task);
+		return;
+	}
+
+	g_task_return_boolean (task, ok);
+	g_object_unref (task);
+}
+
+static void
+load_metadata_store_async (TeplMetadataStore   *store,
+			   gint                 io_priority,
+			   GCancellable        *cancellable,
+			   GAsyncReadyCallback  callback,
+			   gpointer             user_data)
+{
+	GTask *task;
+
+	g_return_if_fail (TEPL_IS_METADATA_STORE (store));
+	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
+
+	task = g_task_new (store, cancellable, callback, user_data);
+	g_task_set_priority (task, io_priority);
+
+	if (_tepl_metadata_store_is_loaded (store))
+	{
+		g_task_return_boolean (task, TRUE);
+		g_object_unref (task);
+	}
+	else if (_tepl_metadata_store_is_loading (store))
+	{
+		g_signal_connect (store,
+				  "notify::loaded",
+				  G_CALLBACK (load_metadata_store__notify_loaded_cb),
+				  task);
+	}
+	else
+	{
+		_tepl_metadata_store_load_async (store,
+						 io_priority,
+						 cancellable,
+						 load_metadata_store__load_cb,
+						 task);
+	}
+}
+
+static gboolean
+load_metadata_store_finish (TeplMetadataStore  *store,
+			    GAsyncResult       *result,
+			    GError            **error)
+{
+	g_return_val_if_fail (TEPL_IS_METADATA_STORE (store), FALSE);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	g_return_val_if_fail (g_task_is_valid (result, store), FALSE);
+
+	return g_task_propagate_boolean (G_TASK (result), error);
+}
+
+static void
+do_query_info (TeplMetadataStore *store,
+	       GTask             *task)
+{
 	GFile *location = g_task_get_source_object (task);
 	GFileInfo *file_info;
 
@@ -69,23 +149,15 @@ do_query_info (GTask *task)
 }
 
 static void
-store_notify_loaded_cb (TeplMetadataStore *store,
-			GParamSpec        *pspec,
-			GTask             *task)
-{
-	do_query_info (task);
-}
-
-static void
-store_load_cb (GObject      *source_object,
-	       GAsyncResult *result,
-	       gpointer      user_data)
+query_info__load_metadata_store_cb (GObject      *source_object,
+				    GAsyncResult *result,
+				    gpointer      user_data)
 {
 	TeplMetadataStore *store = TEPL_METADATA_STORE (source_object);
 	GTask *task = G_TASK (user_data);
 	GError *error = NULL;
 
-	_tepl_metadata_store_load_finish (store, result, &error);
+	load_metadata_store_finish (store, result, &error);
 	if (error != NULL)
 	{
 		g_task_return_error (task, error);
@@ -93,7 +165,7 @@ store_load_cb (GObject      *source_object,
 		return;
 	}
 
-	do_query_info (task);
+	do_query_info (store, task);
 }
 
 void
@@ -118,6 +190,9 @@ _tepl_metadata_query_info_async (GFile               *location,
 		return;
 	}
 
+	g_return_if_fail (G_IS_FILE (location));
+	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
+
 	task = g_task_new (location, cancellable, callback, user_data);
 	g_task_set_priority (task, io_priority);
 
@@ -130,26 +205,11 @@ _tepl_metadata_query_info_async (GFile               *location,
 		return;
 	}
 
-	if (_tepl_metadata_store_is_loaded (store))
-	{
-		do_query_info (task);
-		return;
-	}
-
-	if (_tepl_metadata_store_is_loading (store))
-	{
-		g_signal_connect (store,
-				  "notify::loaded",
-				  G_CALLBACK (store_notify_loaded_cb),
-				  task);
-		return;
-	}
-
-	_tepl_metadata_store_load_async (store,
-					 io_priority,
-					 cancellable,
-					 store_load_cb,
-					 task);
+	load_metadata_store_async (store,
+				   io_priority,
+				   cancellable,
+				   query_info__load_metadata_store_cb,
+				   task);
 }
 
 GFileInfo *
@@ -169,24 +229,117 @@ _tepl_metadata_query_info_finish (GFile         *location,
 	return g_task_propagate_pointer (G_TASK (result), error);
 }
 
+static void
+do_set_attributes (TeplMetadataStore *store,
+		   GTask             *task)
+{
+	GFile *location = g_task_get_source_object (task);
+	GFileInfo *file_info_to_merge = g_task_get_task_data (task);
+	GFileInfo *full_file_info;
+	gchar **attributes;
+	gint attr_num;
+
+	full_file_info = _tepl_metadata_store_get_metadata_for_location (store, location);
+
+	attributes = g_file_info_list_attributes (file_info_to_merge, "metadata");
+	for (attr_num = 0; attributes != NULL && attributes[attr_num] != NULL; attr_num++)
+	{
+		const gchar *cur_attribute = attributes[attr_num];
+		GFileAttributeType attribute_type = G_FILE_ATTRIBUTE_TYPE_INVALID;
+		gpointer attribute_value = NULL;
+
+		g_file_info_get_attribute_data (file_info_to_merge,
+						cur_attribute,
+						&attribute_type,
+						&attribute_value,
+						NULL);
+
+		if (attribute_type == G_FILE_ATTRIBUTE_TYPE_INVALID &&
+		    full_file_info != NULL)
+		{
+			g_file_info_remove_attribute (full_file_info, cur_attribute);
+		}
+		if (attribute_type == G_FILE_ATTRIBUTE_TYPE_STRING)
+		{
+			if (full_file_info == NULL)
+			{
+				full_file_info = g_file_info_new ();
+			}
+
+			g_file_info_set_attribute_string (full_file_info,
+							  cur_attribute,
+							  attribute_value);
+		}
+	}
+
+	_tepl_metadata_store_set_metadata_for_location (store, location, full_file_info);
+	g_clear_object (&full_file_info);
+
+	g_task_return_boolean (task, TRUE);
+	g_object_unref (task);
+}
+
+static void
+set_attributes__load_metadata_store_cb (GObject      *source_object,
+					GAsyncResult *result,
+					gpointer      user_data)
+{
+	TeplMetadataStore *store = TEPL_METADATA_STORE (source_object);
+	GTask *task = G_TASK (user_data);
+	GError *error = NULL;
+
+	load_metadata_store_finish (store, result, &error);
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		g_object_unref (task);
+		return;
+	}
+
+	do_set_attributes (store, task);
+}
+
 void
 _tepl_metadata_set_attributes_async (GFile               *location,
-				     GFileInfo           *info,
+				     GFileInfo           *file_info,
 				     gint                 io_priority,
 				     GCancellable        *cancellable,
 				     GAsyncReadyCallback  callback,
 				     gpointer             user_data)
 {
+	GTask *task;
+	TeplMetadataStore *store;
+
 	if (use_gvfs_metadata ())
 	{
 		g_file_set_attributes_async (location,
-					     info,
+					     file_info,
 					     G_FILE_QUERY_INFO_NONE,
 					     io_priority,
 					     cancellable,
 					     callback,
 					     user_data);
+		return;
 	}
+
+	task = g_task_new (location, cancellable, callback, user_data);
+	g_task_set_priority (task, io_priority);
+	g_task_set_task_data (task, g_file_info_dup (file_info), g_object_unref);
+
+	store = tepl_metadata_store_get_singleton ();
+
+	if (!_tepl_metadata_store_is_activated (store))
+	{
+		g_task_return_boolean (task, FALSE);
+		g_object_unref (task);
+		return;
+	}
+
+	load_metadata_store_async (store,
+				   io_priority,
+				   cancellable,
+				   set_attributes__load_metadata_store_cb,
+				   task);
 }
 
 gboolean
@@ -199,5 +352,9 @@ _tepl_metadata_set_attributes_finish (GFile         *location,
 		return g_file_set_attributes_finish (location, result, NULL, error);
 	}
 
-	return FALSE;
+	g_return_val_if_fail (G_IS_FILE (location), FALSE);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	g_return_val_if_fail (g_task_is_valid (result, location), FALSE);
+
+	return g_task_propagate_boolean (G_TASK (result), error);
 }

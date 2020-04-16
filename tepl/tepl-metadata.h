@@ -38,7 +38,7 @@ GFileInfo *	_tepl_metadata_query_info_finish	(GFile         *location,
 
 G_GNUC_INTERNAL
 void		_tepl_metadata_set_attributes_async	(GFile               *location,
-							 GFileInfo           *info,
+							 GFileInfo           *file_info,
 							 gint                 io_priority,
 							 GCancellable        *cancellable,
 							 GAsyncReadyCallback  callback,

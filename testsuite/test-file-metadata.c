@@ -281,7 +281,8 @@ test_get_set_metadata (gpointer      fixture,
  * metadata were not loaded beforehand.
  */
 static void
-test_set_without_load (void)
+test_set_without_load (gpointer      fixture,
+		       gconstpointer user_data)
 {
 	TeplFileMetadata *metadata;
 	GFile *location;
@@ -340,7 +341,8 @@ test_arbitrary_keys_and_values_success (void)
 }
 
 static void
-test_arbitrary_keys_and_values_failure_01 (void)
+test_arbitrary_keys_and_values_failure_01 (gpointer      fixture,
+					   gconstpointer user_data)
 {
 	/* Non-UTF-8 value. */
 	g_assert_true (!g_utf8_validate ("\xFF", -1, NULL));
@@ -348,21 +350,24 @@ test_arbitrary_keys_and_values_failure_01 (void)
 }
 
 static void
-test_arbitrary_keys_and_values_failure_02 (void)
+test_arbitrary_keys_and_values_failure_02 (gpointer      fixture,
+					   gconstpointer user_data)
 {
 	/* Key containing ':'. */
 	check_round_trip_expect_failure ("metadata::gCSVedit-column-delimiter", "simple-value");
 }
 
 static void
-test_arbitrary_keys_and_values_failure_03 (void)
+test_arbitrary_keys_and_values_failure_03 (gpointer      fixture,
+					   gconstpointer user_data)
 {
 	/* UTF-8 key. */
 	check_round_trip_expect_failure ("Évolution-UTF-8", "simple-value");
 }
 
 static void
-test_arbitrary_keys_and_values_failure_04 (void)
+test_arbitrary_keys_and_values_failure_04 (gpointer      fixture,
+					   gconstpointer user_data)
 {
 	/* Non-UTF-8 key. */
 	g_assert_true (!g_utf8_validate ("\xFF", -1, NULL));
@@ -370,7 +375,8 @@ test_arbitrary_keys_and_values_failure_04 (void)
 }
 
 static void
-test_for_remote_file_success (void)
+test_for_remote_file_success (gpointer      fixture,
+			      gconstpointer user_data)
 {
 	GFile *remote_location;
 
@@ -407,7 +413,8 @@ test_for_remote_file_failure (void)
  * S(t)imulating!
  */
 static void
-test_simulate_several_apps (void)
+test_simulate_several_apps (gpointer      fixture,
+			    gconstpointer user_data)
 {
 	TeplFileMetadata *metadata1;
 	TeplFileMetadata *metadata2;
@@ -462,7 +469,8 @@ test_simulate_several_apps (void)
 }
 
 static void
-test_save_as_new_document (void)
+test_save_as_new_document (gpointer      fixture,
+			   gconstpointer user_data)
 {
 	GFile *location;
 	TeplFileMetadata *metadata;
@@ -498,7 +506,8 @@ test_save_as_new_document (void)
 }
 
 static void
-test_open_existing_document_and_save_as (void)
+test_open_existing_document_and_save_as (gpointer      fixture,
+					 gconstpointer user_data)
 {
 	GFile *location_origin;
 	GFile *location_target;
@@ -589,17 +598,17 @@ main (int    argc,
 	gtk_test_init (&argc, &argv);
 
 	add_test ("get_set_metadata", test_get_set_metadata);
-	g_test_add_func ("/file_metadata/set_without_load", test_set_without_load);
+	add_test ("set_without_load", test_set_without_load);
 	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_success", test_arbitrary_keys_and_values_success);
-	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_01", test_arbitrary_keys_and_values_failure_01);
-	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_02", test_arbitrary_keys_and_values_failure_02);
-	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_03", test_arbitrary_keys_and_values_failure_03);
-	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_04", test_arbitrary_keys_and_values_failure_04);
-	g_test_add_func ("/file_metadata/for_remote_file_success", test_for_remote_file_success);
+	add_test ("arbitrary_keys_and_values_failure_01", test_arbitrary_keys_and_values_failure_01);
+	add_test ("arbitrary_keys_and_values_failure_02", test_arbitrary_keys_and_values_failure_02);
+	add_test ("arbitrary_keys_and_values_failure_03", test_arbitrary_keys_and_values_failure_03);
+	add_test ("arbitrary_keys_and_values_failure_04", test_arbitrary_keys_and_values_failure_04);
+	add_test ("for_remote_file_success", test_for_remote_file_success);
 	g_test_add_func ("/file_metadata/for_remote_file_failure", test_for_remote_file_failure);
-	g_test_add_func ("/file_metadata/simulate_several_apps", test_simulate_several_apps);
-	g_test_add_func ("/file_metadata/save_as_new_document", test_save_as_new_document);
-	g_test_add_func ("/file_metadata/open_existing_document_and_save_as", test_open_existing_document_and_save_as);
+	add_test ("simulate_several_apps", test_simulate_several_apps);
+	add_test ("save_as_new_document", test_save_as_new_document);
+	add_test ("open_existing_document_and_save_as", test_open_existing_document_and_save_as);
 
 	return g_test_run ();
 }

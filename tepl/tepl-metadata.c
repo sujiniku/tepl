@@ -27,6 +27,9 @@
  * - Use the TeplMetadataStore otherwise.
  */
 
+/******************************************************************************/
+/* Utils */
+
 static gboolean force_using_metadata_store;
 
 void
@@ -49,6 +52,9 @@ use_gvfs_metadata (void)
 	return FALSE;
 #endif
 }
+
+/******************************************************************************/
+/* Simplify TeplMetadataStore is_loaded/is_loading/load */
 
 static void
 load_metadata_store__notify_loaded_cb (TeplMetadataStore *store,
@@ -129,6 +135,9 @@ load_metadata_store_finish (TeplMetadataStore  *store,
 
 	return g_task_propagate_boolean (G_TASK (result), error);
 }
+
+/******************************************************************************/
+/* Query info */
 
 static void
 do_query_info (TeplMetadataStore *store,
@@ -228,6 +237,9 @@ _tepl_metadata_query_info_finish (GFile         *location,
 
 	return g_task_propagate_pointer (G_TASK (result), error);
 }
+
+/******************************************************************************/
+/* Set attributes */
 
 static void
 do_set_attributes (TeplMetadataStore *store,

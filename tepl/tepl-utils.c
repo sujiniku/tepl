@@ -194,7 +194,7 @@ metadata_key_char_is_valid (gchar ch)
  * @metadata_key: (nullable): a string, or %NULL.
  *
  * Returns whether @metadata_key is a valid string that can be used as a
- * metadata key when using the #TeplFileMetadata API.
+ * metadata key when using the Tepl metadata API. TODO: update
  *
  * It returns %TRUE only if @metadata_key is a non-empty string containing only
  * ASCII alphanumeric characters (see g_ascii_isalnum()), `"-"` (dash) or `"_"`

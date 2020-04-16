@@ -129,6 +129,9 @@ static TeplMetadataStore *singleton = NULL;
 
 G_DEFINE_TYPE_WITH_PRIVATE (TeplMetadataStore, tepl_metadata_store, G_TYPE_OBJECT)
 
+/******************************************************************************/
+/* DocumentMetadata struct */
+
 static DocumentMetadata *
 document_metadata_new (void)
 {
@@ -162,6 +165,9 @@ document_metadata_free (DocumentMetadata *document_metadata)
 		g_free (document_metadata);
 	}
 }
+
+/******************************************************************************/
+/* ParsingData struct */
 
 static ParsingData *
 parsing_data_new (TeplMetadataStore *store)
@@ -208,6 +214,9 @@ parsing_data_free (ParsingData *parsing_data)
 		g_free (parsing_data);
 	}
 }
+
+/******************************************************************************/
+/* overridden vfuncs, class_init, init */
 
 static void
 tepl_metadata_store_get_property (GObject    *object,
@@ -288,6 +297,9 @@ tepl_metadata_store_init (TeplMetadataStore *store)
 
 	store->priv->max_number_of_locations = DEFAULT_MAX_NUMBER_OF_LOCATIONS;
 }
+
+/******************************************************************************/
+/* Simple public functions */
 
 /**
  * tepl_metadata_store_get_singleton:
@@ -373,6 +385,9 @@ tepl_metadata_store_set_max_number_of_locations (TeplMetadataStore *store,
 
 	store->priv->max_number_of_locations = max_number_of_locations;
 }
+
+/******************************************************************************/
+/* XML parsing, store_file loading */
 
 /* <metadata> */
 static void
@@ -813,6 +828,9 @@ _tepl_metadata_store_is_loaded (TeplMetadataStore *store)
 	return store->priv->is_loaded;
 }
 
+/******************************************************************************/
+/* store_file saving */
+
 static void
 entries_to_string (DocumentMetadata *document_metadata,
 		   GString          *string)
@@ -1019,6 +1037,9 @@ tepl_metadata_store_save (TeplMetadataStore  *store,
 	g_bytes_unref (bytes);
 	return ok;
 }
+
+/******************************************************************************/
+/* Remaining private API */
 
 /*
  * _tepl_metadata_store_get_metadata_for_location:

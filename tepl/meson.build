@@ -17,6 +17,7 @@ tepl_public_headers = [
   'tepl-io-error-info-bars.h',
   'tepl-iter.h',
   'tepl-menu-shell.h',
+  'tepl-metadata-store.h',
   'tepl-notebook.h',
   'tepl-tab.h',
   'tepl-tab-group.h',
@@ -43,6 +44,7 @@ tepl_public_c_files = [
   'tepl-io-error-info-bars.c',
   'tepl-iter.c',
   'tepl-menu-shell.c',
+  'tepl-metadata-store.c',
   'tepl-notebook.c',
   'tepl-tab.c',
   'tepl-tab-group.c',
@@ -59,6 +61,7 @@ TEPL_PRIVATE_HEADERS = [
   'tepl-file-content.h',
   'tepl-file-content-loader.h',
   'tepl-io-error-info-bar.h',
+  'tepl-metadata-store-loader.h',
   'tepl-progress-info-bar.h',
   'tepl-signal-group.h',
   'tepl-tab-saving.h'
@@ -71,6 +74,7 @@ tepl_private_c_files = [
   'tepl-file-content.c',
   'tepl-file-content-loader.c',
   'tepl-io-error-info-bar.c',
+  'tepl-metadata-store-loader.c',
   'tepl-progress-info-bar.c',
   'tepl-signal-group.c',
   'tepl-tab-saving.c'

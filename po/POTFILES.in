@@ -19,6 +19,8 @@ tepl/tepl-init.c
 tepl/tepl-io-error-info-bars.c
 tepl/tepl-iter.c
 tepl/tepl-menu-shell.c
+tepl/tepl-metadata-store.c
+tepl/tepl-metadata-store-loader.c
 tepl/tepl-notebook.c
 tepl/tepl-signal-group.c
 tepl/tepl-tab.c

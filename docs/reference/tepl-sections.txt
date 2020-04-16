@@ -291,6 +291,22 @@ tepl_menu_shell_append_edit_actions
 </SECTION>
 
 <SECTION>
+<FILE>metadata-store</FILE>
+TeplMetadataStore
+tepl_metadata_store_get_singleton
+<SUBSECTION Standard>
+TEPL_IS_METADATA_STORE
+TEPL_IS_METADATA_STORE_CLASS
+TEPL_METADATA_STORE
+TEPL_METADATA_STORE_CLASS
+TEPL_METADATA_STORE_GET_CLASS
+TEPL_TYPE_METADATA_STORE
+TeplMetadataStoreClass
+TeplMetadataStorePrivate
+tepl_metadata_store_get_type
+</SECTION>
+
+<SECTION>
 <FILE>tab</FILE>
 TeplTab
 TeplTabClass

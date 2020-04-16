@@ -1073,7 +1073,7 @@ _tepl_metadata_store_set_metadata_for_location (TeplMetadataStore *store,
 
 		document_metadata = document_metadata_new ();
 		document_metadata_set_current_atime (document_metadata);
-		document_metadata->entries = g_object_ref (metadata);
+		document_metadata->entries = g_file_info_dup (metadata);
 
 		g_hash_table_replace (store->priv->hash_table,
 				      g_object_ref (location),

@@ -321,7 +321,8 @@ test_set_without_load (gpointer      fixture,
 }
 
 static void
-test_arbitrary_keys_and_values_success (void)
+test_arbitrary_keys_and_values_success (gpointer      fixture,
+					gconstpointer user_data)
 {
 	check_round_trip ("tepl-simple-key", "simple-value");
 	check_round_trip ("tepl-simple-key", " ");
@@ -386,7 +387,8 @@ test_for_remote_file_success (gpointer      fixture,
 }
 
 static void
-test_for_remote_file_failure (void)
+test_for_remote_file_failure (gpointer      fixture,
+			      gconstpointer user_data)
 {
 	if (g_test_subprocess ())
 	{
@@ -599,13 +601,13 @@ main (int    argc,
 
 	add_test ("get_set_metadata", test_get_set_metadata);
 	add_test ("set_without_load", test_set_without_load);
-	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_success", test_arbitrary_keys_and_values_success);
+	add_test ("arbitrary_keys_and_values_success", test_arbitrary_keys_and_values_success);
 	add_test ("arbitrary_keys_and_values_failure_01", test_arbitrary_keys_and_values_failure_01);
 	add_test ("arbitrary_keys_and_values_failure_02", test_arbitrary_keys_and_values_failure_02);
 	add_test ("arbitrary_keys_and_values_failure_03", test_arbitrary_keys_and_values_failure_03);
 	add_test ("arbitrary_keys_and_values_failure_04", test_arbitrary_keys_and_values_failure_04);
 	add_test ("for_remote_file_success", test_for_remote_file_success);
-	g_test_add_func ("/file_metadata/for_remote_file_failure", test_for_remote_file_failure);
+	add_test ("for_remote_file_failure", test_for_remote_file_failure);
 	add_test ("simulate_several_apps", test_simulate_several_apps);
 	add_test ("save_as_new_document", test_save_as_new_document);
 	add_test ("open_existing_document_and_save_as", test_open_existing_document_and_save_as);

@@ -54,7 +54,7 @@ use_gvfs_metadata (void)
 }
 
 /******************************************************************************/
-/* Simplify TeplMetadataStore is_loaded/is_loading/load */
+/* Simplify TeplMetadataStore is_activated/is_loaded/is_loading/load */
 
 static void
 load_metadata_store__notify_loaded_cb (TeplMetadataStore *store,
@@ -102,7 +102,16 @@ load_metadata_store_async (TeplMetadataStore   *store,
 	task = g_task_new (store, cancellable, callback, user_data);
 	g_task_set_priority (task, io_priority);
 
-	if (_tepl_metadata_store_is_loaded (store))
+	if (!_tepl_metadata_store_is_activated (store))
+	{
+		g_task_return_new_error (task,
+					 G_IO_ERROR,
+					 G_IO_ERROR_FAILED,
+					 "Failed to use the TeplMetadataStore because "
+					 "tepl_metadata_store_set_store_file() has not been called.");
+		g_object_unref (task);
+	}
+	else if (_tepl_metadata_store_is_loaded (store))
 	{
 		g_task_return_boolean (task, TRUE);
 		g_object_unref (task);
@@ -206,13 +215,6 @@ _tepl_metadata_query_info_async (GFile               *location,
 	g_task_set_priority (task, io_priority);
 
 	store = tepl_metadata_store_get_singleton ();
-
-	if (!_tepl_metadata_store_is_activated (store))
-	{
-		g_task_return_pointer (task, NULL, NULL);
-		g_object_unref (task);
-		return;
-	}
 
 	load_metadata_store_async (store,
 				   io_priority,
@@ -339,13 +341,6 @@ _tepl_metadata_set_attributes_async (GFile               *location,
 	g_task_set_task_data (task, g_file_info_dup (file_info), g_object_unref);
 
 	store = tepl_metadata_store_get_singleton ();
-
-	if (!_tepl_metadata_store_is_activated (store))
-	{
-		g_task_return_boolean (task, FALSE);
-		g_object_unref (task);
-		return;
-	}
 
 	load_metadata_store_async (store,
 				   io_priority,

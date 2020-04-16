@@ -64,6 +64,14 @@ gboolean	tepl_utils_create_parent_directories		(GFile         *file,
 								 GCancellable  *cancellable,
 								 GError       **error);
 
+void		tepl_utils_file_query_exists_async		(GFile               *file,
+								 GCancellable        *cancellable,
+								 GAsyncReadyCallback  callback,
+								 gpointer             user_data);
+
+gboolean	tepl_utils_file_query_exists_finish		(GFile        *file,
+								 GAsyncResult *result);
+
 /* Widget utilities */
 
 G_GNUC_INTERNAL

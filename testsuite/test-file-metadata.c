@@ -18,6 +18,7 @@
  */
 
 #include <tepl/tepl.h>
+#include "tepl/tepl-metadata.h"
 
 #define TEST_KEY "tepl-test-key"
 #define TEST_OTHER_KEY "tepl-test-other-key"
@@ -226,7 +227,32 @@ check_round_trip_expect_failure (const gchar *key,
 }
 
 static void
-test_get_set_metadata (void)
+setup_unit_test (gpointer      fixture,
+		 gconstpointer user_data)
+{
+	gboolean force_using_metadata_store = GPOINTER_TO_INT (user_data);
+	TeplMetadataStore *store;
+	GFile *store_file;
+
+	store = tepl_metadata_store_get_singleton ();
+	store_file = g_file_new_build_filename (g_get_tmp_dir (), "tepl-test-metadata-store.xml", NULL);
+	tepl_metadata_store_set_store_file (store, store_file);
+	g_object_unref (store_file);
+
+	_tepl_metadata_set_force_using_metadata_store (force_using_metadata_store);
+}
+
+static void
+teardown_unit_test (gpointer      fixture,
+		    gconstpointer user_data)
+{
+	_tepl_metadata_set_force_using_metadata_store (FALSE);
+	_tepl_metadata_store_unref_singleton ();
+}
+
+static void
+test_get_set_metadata (gpointer      fixture,
+		       gconstpointer user_data)
 {
 	TeplFileMetadata *metadata = tepl_file_metadata_new ();
 
@@ -536,13 +562,33 @@ test_open_existing_document_and_save_as (void)
 	g_object_unref (location_target);
 }
 
+static void
+add_test (const gchar      *suite_name,
+	  GTestFixtureFunc  test_func)
+{
+	GTestSuite *test_suite;
+	GTestCase *test_case;
+
+	test_suite = g_test_create_suite (suite_name);
+
+	test_case = g_test_create_case ("do_not_force_using_metadata_store", 0, GINT_TO_POINTER (FALSE),
+					setup_unit_test, test_func, teardown_unit_test);
+	g_test_suite_add (test_suite, test_case);
+
+	test_case = g_test_create_case ("force_using_metadata_store", 0, GINT_TO_POINTER (TRUE),
+					setup_unit_test, test_func, teardown_unit_test);
+	g_test_suite_add (test_suite, test_case);
+
+	g_test_suite_add_suite (g_test_get_root (), test_suite);
+}
+
 int
 main (int    argc,
       char **argv)
 {
 	gtk_test_init (&argc, &argv);
 
-	g_test_add_func ("/file_metadata/get_set_metadata", test_get_set_metadata);
+	add_test ("get_set_metadata", test_get_set_metadata);
 	g_test_add_func ("/file_metadata/set_without_load", test_set_without_load);
 	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_success", test_arbitrary_keys_and_values_success);
 	g_test_add_func ("/file_metadata/arbitrary_keys_and_values_failure_01", test_arbitrary_keys_and_values_failure_01);

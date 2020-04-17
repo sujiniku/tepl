@@ -174,62 +174,6 @@ tepl_utils_str_replace (const gchar *string,
 	return ret;
 }
 
-static gboolean
-metadata_key_char_is_valid (gchar ch)
-{
-	/* At the time of writing this, the GIO API doesn't document the
-	 * requirements for valid attribute names. See the docs of
-	 * g_file_query_info() for example. Clearly '*' and ',' must not be used
-	 * because they serve to query several attributes. ':' is used in "::"
-	 * to separate the namespace from the attribute name, I'm not sure that
-	 * there can be several nested namespaces like in
-	 * "metadata::gCSVedit::delimiter"; in case of doubt it's better not to
-	 * support it by not allowing ':'.
-	 */
-	return (g_ascii_isalnum (ch) || ch == '-' || ch == '_');
-}
-
-/**
- * tepl_utils_metadata_key_is_valid:
- * @metadata_key: (nullable): a string, or %NULL.
- *
- * Returns whether @metadata_key is a valid string that can be used as a
- * metadata key when using the Tepl metadata API. TODO: update
- *
- * It returns %TRUE only if @metadata_key is a non-empty string containing only
- * ASCII alphanumeric characters (see g_ascii_isalnum()), `"-"` (dash) or `"_"`
- * (underscore).
- *
- * Examples of valid metadata keys:
- * - `"gedit-spell-checking-language"`
- * - `"gCSVedit_column_delimiter"`
- *
- * Returns: whether @metadata_key is valid.
- * Since: 5.0
- */
-gboolean
-tepl_utils_metadata_key_is_valid (const gchar *metadata_key)
-{
-	const gchar *p;
-
-	if (metadata_key == NULL || metadata_key[0] == '\0')
-	{
-		return FALSE;
-	}
-
-	for (p = metadata_key; *p != '\0'; p++)
-	{
-		gchar cur_char = *p;
-
-		if (!metadata_key_char_is_valid (cur_char))
-		{
-			return FALSE;
-		}
-	}
-
-	return TRUE;
-}
-
 static gint
 get_extension_position (const gchar *filename)
 {

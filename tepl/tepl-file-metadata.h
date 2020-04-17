@@ -86,6 +86,9 @@ void			_tepl_file_metadata_append_xml_to_string	(TeplFileMetadata *metadata,
 									 GFile            *location,
 									 GString          *string);
 
+G_GNUC_INTERNAL
+gboolean		_tepl_file_metadata_key_is_valid		(const gchar *key);
+
 G_END_DECLS
 
 #endif /* TEPL_FILE_METADATA_H */

@@ -37,11 +37,13 @@ struct _TeplFileMetadataPrivate
 
 G_DEFINE_TYPE_WITH_PRIVATE (TeplFileMetadata, tepl_file_metadata, G_TYPE_OBJECT)
 
+#if 0
 static void
 set_current_atime (TeplFileMetadata *metadata)
 {
 	metadata->priv->atime = g_get_real_time () / 1000;
 }
+#endif
 
 static void
 tepl_file_metadata_finalize (GObject *object)
@@ -85,8 +87,6 @@ tepl_file_metadata_get (TeplFileMetadata *metadata,
 	g_return_val_if_fail (TEPL_IS_FILE_METADATA (metadata), NULL);
 	g_return_val_if_fail (_tepl_file_metadata_key_is_valid (key), NULL);
 
-	set_current_atime (metadata);
-
 	return g_strdup (g_hash_table_lookup (metadata->priv->hash_table, key));
 }
 
@@ -99,10 +99,9 @@ tepl_file_metadata_set (TeplFileMetadata *metadata,
 	g_return_if_fail (_tepl_file_metadata_key_is_valid (key));
 	g_return_if_fail (value == NULL || g_utf8_validate (value, -1, NULL));
 
-	set_current_atime (metadata);
-
 	if (value == NULL)
 	{
+		/* FIXME: unset instead of remove. */
 		g_hash_table_remove (metadata->priv->hash_table, key);
 	}
 	else

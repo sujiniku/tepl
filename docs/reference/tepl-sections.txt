@@ -190,6 +190,24 @@ tepl_file_loader_error_quark
 </SECTION>
 
 <SECTION>
+<FILE>file-metadata</FILE>
+TeplFileMetadata
+tepl_file_metadata_new
+tepl_file_metadata_get
+tepl_file_metadata_set
+<SUBSECTION Standard>
+TEPL_FILE_METADATA
+TEPL_FILE_METADATA_CLASS
+TEPL_FILE_METADATA_GET_CLASS
+TEPL_IS_FILE_METADATA
+TEPL_IS_FILE_METADATA_CLASS
+TEPL_TYPE_FILE_METADATA
+TeplFileMetadataClass
+TeplFileMetadataPrivate
+tepl_file_metadata_get_type
+</SECTION>
+
+<SECTION>
 <FILE>file-saver</FILE>
 TeplFileSaver
 TEPL_FILE_SAVER_ERROR
@@ -294,6 +312,11 @@ tepl_menu_shell_append_edit_actions
 <FILE>metadata-store</FILE>
 TeplMetadataStore
 tepl_metadata_store_get_singleton
+tepl_metadata_store_trim
+tepl_metadata_store_load
+tepl_metadata_store_save
+tepl_metadata_store_load_file_metadata
+tepl_metadata_store_save_file_metadata
 <SUBSECTION Standard>
 TEPL_IS_METADATA_STORE
 TEPL_IS_METADATA_STORE_CLASS

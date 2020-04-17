@@ -25,6 +25,10 @@
  * SECTION:metadata-store
  * @Title: TeplMetadataStore
  * @Short_description: To store file metadata on disk
+ *
+ * #TeplMetadataStore permits to store file metadata on disk. It serves both as
+ * an easier replacement for GVfs metadata, and to have metadata support on
+ * platforms that don't support GVfs metadata.
  */
 
 /* This code is inspired by TeplMetadataManager, which was itself a modified
@@ -124,6 +128,23 @@ _tepl_metadata_store_unref_singleton (void)
 	 */
 }
 
+/**
+ * tepl_metadata_store_trim:
+ * @store: the #TeplMetadataStore.
+ * @max_number_of_locations: the maximum size, or -1 for the default value.
+ *
+ * The purpose of having a maximum size is to avoid that the store file grows
+ * indefinitely.
+ *
+ * @max_number_of_locations is the maximum number of #GFile locations for which
+ * metadata are kept. This function discards the least recently accessed
+ * metadata if needed.
+ *
+ * If @max_number_of_locations is -1, a default internal value is used that
+ * should fit most applications' needs.
+ *
+ * Since: 5.0
+ */
 void
 tepl_metadata_store_trim (TeplMetadataStore *store,
 			  gint               max_number_of_locations)
@@ -169,6 +190,20 @@ tepl_metadata_store_trim (TeplMetadataStore *store,
 	}
 }
 
+/**
+ * tepl_metadata_store_load:
+ * @store: the #TeplMetadataStore.
+ * @from_file: the store file.
+ * @error: location to a %NULL #GError, or %NULL.
+ *
+ * Loads synchronously the metadata from @from_file into @store.
+ *
+ * A good moment to call this function is on application startup, see the
+ * #GApplication::startup signal.
+ *
+ * Returns: whether the operation was successful.
+ * Since: 5.0
+ */
 gboolean
 tepl_metadata_store_load (TeplMetadataStore  *store,
 			  GFile              *from_file,
@@ -208,6 +243,22 @@ to_string (TeplMetadataStore *store)
 	return g_string_free_to_bytes (string);
 }
 
+/**
+ * tepl_metadata_store_save:
+ * @store: the #TeplMetadataStore.
+ * @to_file: the store file.
+ * @trim: if %TRUE, tepl_metadata_store_trim() is called with -1.
+ * @error: location to a %NULL #GError, or %NULL.
+ *
+ * Saves synchronously the metadata from @store to @to_file. The parent
+ * directories of @to_file are created if needed.
+ *
+ * A good moment to call this function is on application shutdown, see the
+ * #GApplication::shutdown signal.
+ *
+ * Returns: whether the operation was successful.
+ * Since: 5.0
+ */
 gboolean
 tepl_metadata_store_save (TeplMetadataStore  *store,
 			  GFile              *to_file,
@@ -257,6 +308,16 @@ tepl_metadata_store_save (TeplMetadataStore  *store,
 	return ok;
 }
 
+/**
+ * tepl_metadata_store_load_file_metadata:
+ * @store: the #TeplMetadataStore.
+ * @location: a #GFile.
+ * @file_metadata: a #TeplFileMetadata.
+ *
+ * Copies the metadata stored in @store for @location into @file_metadata.
+ *
+ * Since: 5.0
+ */
 void
 tepl_metadata_store_load_file_metadata (TeplMetadataStore *store,
 					GFile             *location,
@@ -276,6 +337,16 @@ tepl_metadata_store_load_file_metadata (TeplMetadataStore *store,
 	}
 }
 
+/**
+ * tepl_metadata_store_save_file_metadata:
+ * @store: the #TeplMetadataStore.
+ * @location: a #GFile.
+ * @file_metadata: a #TeplFileMetadata.
+ *
+ * Copies the metadata from @file_metadata into @store for @location.
+ *
+ * Since: 5.0
+ */
 void
 tepl_metadata_store_save_file_metadata (TeplMetadataStore *store,
 					GFile             *location,

@@ -12,6 +12,7 @@ tepl/tepl-file.c
 tepl/tepl-file-content.c
 tepl/tepl-file-content-loader.c
 tepl/tepl-file-loader.c
+tepl/tepl-file-metadata.c
 tepl/tepl-file-saver.c
 tepl/tepl-info-bar.c
 tepl/tepl-init.c

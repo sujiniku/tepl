@@ -19,6 +19,40 @@
 
 #include "tepl-metadata.h"
 
+/**
+ * SECTION:metadata
+ * @Title: TeplMetadata
+ * @Short_description: File metadata
+ *
+ * A #TeplMetadata object contains a set of file metadata as key/value pairs.
+ *
+ * The tepl_metadata_get() and tepl_metadata_set() functions don't load or save
+ * the metadata on disk, they only access the metadata stored in the
+ * #TeplMetadata object memory.
+ *
+ * #TeplMetadata is intended to be used alongside #TeplMetadataManager to load
+ * and store the metadata on disk.
+ *
+ * # Values requirements
+ *
+ * Values must be nul-terminated UTF-8 strings.
+ *
+ * # Keys requirements # {#tepl-metadata-keys-requirements}
+ *
+ * Keys must be non-empty strings containing only:
+ * - ASCII alphanumeric characters (see g_ascii_isalnum());
+ * - `'-'` characters (dashes);
+ * - or `'_'` characters (underscores).
+ *
+ * Additionally, it's preferable that keys start with a namespace, to not get
+ * metadata conflicts between the application and libraries.
+ *
+ * Examples of valid metadata keys:
+ * - `"gedit-spell-checking-language"`
+ * - `"gCSVedit_column_delimiter"`
+ * - `"tepl-character-encoding"`
+ */
+
 struct _TeplMetadataPrivate
 {
 	/* Keys: not nullable gchar *
@@ -59,12 +93,32 @@ tepl_metadata_init (TeplMetadata *metadata)
 							    g_free);
 }
 
+/**
+ * tepl_metadata_new:
+ *
+ * Returns: a new, empty #TeplMetadata object.
+ * Since: 5.0
+ */
 TeplMetadata *
 tepl_metadata_new (void)
 {
 	return g_object_new (TEPL_TYPE_METADATA, NULL);
 }
 
+/**
+ * tepl_metadata_get:
+ * @metadata: a #TeplMetadata.
+ * @key: a key.
+ *
+ * Gets the value of a metadata stored in the @metadata object memory.
+ *
+ * @key must follow [the requirements explained in the class
+ * description][tepl-metadata-keys-requirements].
+ *
+ * Returns: (transfer full) (nullable): the associated value (a UTF-8 string),
+ * or %NULL. Free with g_free() when no longer needed.
+ * Since: 5.0
+ */
 gchar *
 tepl_metadata_get (TeplMetadata *metadata,
 		   const gchar  *key)
@@ -75,6 +129,20 @@ tepl_metadata_get (TeplMetadata *metadata,
 	return g_strdup (g_hash_table_lookup (metadata->priv->hash_table, key));
 }
 
+/**
+ * tepl_metadata_set:
+ * @metadata: a #TeplMetadata.
+ * @key: a key.
+ * @value: (nullable): a nul-terminated UTF-8 string, or %NULL to unset the key.
+ *
+ * Sets or unsets @key. This function just stores the new metadata value in the
+ * @metadata object memory.
+ *
+ * @key must follow [the requirements explained in the class
+ * description][tepl-metadata-keys-requirements].
+ *
+ * Since: 5.0
+ */
 void
 tepl_metadata_set (TeplMetadata *metadata,
 		   const gchar  *key,
@@ -102,7 +170,9 @@ _tepl_metadata_foreach (TeplMetadata *metadata,
 static gboolean
 key_char_is_valid (gchar ch)
 {
-	/* TODO update comment.
+	/* The original intention was to use the "metadata" namespace of the
+	 * GFileInfo API (to use GVfs metadata).
+	 *
 	 * At the time of writing this, the GIO API doesn't document the
 	 * requirements for valid attribute names. See the docs of
 	 * g_file_query_info() for example. Clearly '*' and ',' must not be used
@@ -111,27 +181,13 @@ key_char_is_valid (gchar ch)
 	 * there can be several nested namespaces like in
 	 * "metadata::gCSVedit::delimiter"; in case of doubt it's better not to
 	 * support it by not allowing ':'.
+	 *
+	 * All in all, the following code seems like good requirements even
+	 * though GVfs metadata is not used.
 	 */
 	return (g_ascii_isalnum (ch) || ch == '-' || ch == '_');
 }
 
-/*
- * _tepl_metadata_key_is_valid:
- * @metadata_key: (nullable): a string, or %NULL.
- *
- * Returns whether @metadata_key is a valid string that can be used as a
- * metadata key when using the Tepl metadata API.
- *
- * It returns %TRUE only if @metadata_key is a non-empty string containing only
- * ASCII alphanumeric characters (see g_ascii_isalnum()), `"-"` (dash) or `"_"`
- * (underscore).
- *
- * Examples of valid metadata keys:
- * - `"gedit-spell-checking-language"`
- * - `"gCSVedit_column_delimiter"`
- *
- * Returns: whether @metadata_key is valid.
- */
 gboolean
 _tepl_metadata_key_is_valid (const gchar *key)
 {

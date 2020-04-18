@@ -21,7 +21,7 @@ tepl/tepl-iter.c
 tepl/tepl-menu-shell.c
 tepl/tepl-metadata.c
 tepl/tepl-metadata-parser.c
-tepl/tepl-metadata-store.c
+tepl/tepl-metadata-manager.c
 tepl/tepl-notebook.c
 tepl/tepl-signal-group.c
 tepl/tepl-tab.c

@@ -21,7 +21,7 @@
 #include <amtk/amtk.h>
 #include <gtksourceview/gtksource.h>
 #include "tepl-abstract-factory.h"
-#include "tepl-metadata-store.h"
+#include "tepl-metadata-manager.h"
 
 /**
  * tepl_init:
@@ -75,7 +75,7 @@ tepl_finalize (void)
 
 	if (!done)
 	{
-		_tepl_metadata_store_unref_singleton ();
+		_tepl_metadata_manager_unref_singleton ();
 		_tepl_abstract_factory_unref_singleton ();
 
 		/* Since Tepl depends on Amtk and GtkSourceView, it's better to

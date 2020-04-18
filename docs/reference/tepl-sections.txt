@@ -300,24 +300,15 @@ tepl_metadata_set
 </SECTION>
 
 <SECTION>
-<FILE>metadata-store</FILE>
-TeplMetadataStore
-tepl_metadata_store_get_singleton
-tepl_metadata_store_trim
-tepl_metadata_store_load
-tepl_metadata_store_save
-tepl_metadata_store_load_file_metadata
-tepl_metadata_store_save_file_metadata
+<FILE>metadata-manager</FILE>
+TeplMetadataManager
+tepl_metadata_manager_get_singleton
+tepl_metadata_manager_trim
+tepl_metadata_manager_load
+tepl_metadata_manager_save
+tepl_metadata_manager_load_file_metadata
+tepl_metadata_manager_save_file_metadata
 <SUBSECTION Standard>
-TEPL_IS_METADATA_STORE
-TEPL_IS_METADATA_STORE_CLASS
-TEPL_METADATA_STORE
-TEPL_METADATA_STORE_CLASS
-TEPL_METADATA_STORE_GET_CLASS
-TEPL_TYPE_METADATA_STORE
-TeplMetadataStoreClass
-TeplMetadataStorePrivate
-tepl_metadata_store_get_type
 </SECTION>
 
 <SECTION>

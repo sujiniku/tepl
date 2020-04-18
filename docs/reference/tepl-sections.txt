@@ -297,6 +297,15 @@ tepl_metadata_new
 tepl_metadata_get
 tepl_metadata_set
 <SUBSECTION Standard>
+TEPL_IS_METADATA
+TEPL_IS_METADATA_CLASS
+TEPL_METADATA
+TEPL_METADATA_CLASS
+TEPL_METADATA_GET_CLASS
+TEPL_TYPE_METADATA
+TeplMetadataClass
+TeplMetadataPrivate
+tepl_metadata_get_type
 </SECTION>
 
 <SECTION>
@@ -304,11 +313,20 @@ tepl_metadata_set
 TeplMetadataManager
 tepl_metadata_manager_get_singleton
 tepl_metadata_manager_trim
-tepl_metadata_manager_load
-tepl_metadata_manager_save
-tepl_metadata_manager_load_file_metadata
-tepl_metadata_manager_save_file_metadata
+tepl_metadata_manager_load_from_disk
+tepl_metadata_manager_save_to_disk
+tepl_metadata_manager_copy_from
+tepl_metadata_manager_merge_into
 <SUBSECTION Standard>
+TEPL_IS_METADATA_MANAGER
+TEPL_IS_METADATA_MANAGER_CLASS
+TEPL_METADATA_MANAGER
+TEPL_METADATA_MANAGER_CLASS
+TEPL_METADATA_MANAGER_GET_CLASS
+TEPL_TYPE_METADATA_MANAGER
+TeplMetadataManagerClass
+TeplMetadataManagerPrivate
+tepl_metadata_manager_get_type
 </SECTION>
 
 <SECTION>

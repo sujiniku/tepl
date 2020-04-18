@@ -120,7 +120,7 @@ _tepl_metadata_attic_insert_entry (TeplMetadataAttic *metadata,
 {
 	g_return_if_fail (TEPL_IS_METADATA_ATTIC (metadata));
 	g_return_if_fail (_tepl_metadata_key_is_valid (key));
-	g_return_if_fail (g_utf8_validate (value, -1, NULL));
+	g_return_if_fail (_tepl_metadata_value_is_valid (value));
 
 	g_hash_table_replace (metadata->priv->hash_table,
 			      g_strdup (key),

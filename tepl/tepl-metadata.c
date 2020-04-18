@@ -150,7 +150,7 @@ tepl_metadata_set (TeplMetadata *metadata,
 {
 	g_return_if_fail (TEPL_IS_METADATA (metadata));
 	g_return_if_fail (_tepl_metadata_key_is_valid (key));
-	g_return_if_fail (value == NULL || g_utf8_validate (value, -1, NULL));
+	g_return_if_fail (value == NULL || _tepl_metadata_value_is_valid (value));
 
 	g_hash_table_replace (metadata->priv->hash_table,
 			      g_strdup (key),
@@ -209,4 +209,15 @@ _tepl_metadata_key_is_valid (const gchar *key)
 	}
 
 	return TRUE;
+}
+
+gboolean
+_tepl_metadata_value_is_valid (const gchar *value)
+{
+	if (value == NULL)
+	{
+		return FALSE;
+	}
+
+	return g_utf8_validate (value, -1, NULL);
 }

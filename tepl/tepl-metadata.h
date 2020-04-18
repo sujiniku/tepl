@@ -72,6 +72,9 @@ void		_tepl_metadata_foreach		(TeplMetadata *metadata,
 G_GNUC_INTERNAL
 gboolean	_tepl_metadata_key_is_valid	(const gchar *key);
 
+G_GNUC_INTERNAL
+gboolean	_tepl_metadata_value_is_valid	(const gchar *value);
+
 G_END_DECLS
 
 #endif /* TEPL_METADATA_H */

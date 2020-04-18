@@ -23,7 +23,6 @@ Dependencies
 - GLib >= 2.52
 - GTK >= 3.22
 - GtkSourceView >= 4.0
-- libxml2 >= 2.5
 - Amtk >= 5.0 - https://wiki.gnome.org/Projects/Amtk
 - uchardet - https://www.freedesktop.org/wiki/Software/uchardet/
 

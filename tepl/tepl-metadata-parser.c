@@ -18,10 +18,9 @@
  */
 
 #include "config.h"
-#include "tepl-metadata-store-loader.h"
+#include "tepl-metadata-parser.h"
 #include <glib/gi18n-lib.h>
 #include "tepl-file-metadata.h"
-#include "tepl-utils.h"
 
 typedef struct _ParsingData ParsingData;
 struct _ParsingData
@@ -337,9 +336,9 @@ parse_xml_file_content (GBytes      *xml_file_bytes,
 }
 
 gboolean
-_tepl_metadata_store_loader (GFile       *from_file,
-			     GHashTable  *hash_table,
-			     GError     **error)
+_tepl_metadata_parser_read_file (GFile       *from_file,
+				 GHashTable  *hash_table,
+				 GError     **error)
 {
 	GBytes *bytes;
 	GError *my_error = NULL;

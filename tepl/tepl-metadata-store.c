@@ -18,7 +18,7 @@
  */
 
 #include "tepl-metadata-store.h"
-#include "tepl-metadata-store-loader.h"
+#include "tepl-metadata-parser.h"
 #include "tepl-utils.h"
 
 /**
@@ -213,9 +213,9 @@ tepl_metadata_store_load (TeplMetadataStore  *store,
 	g_return_val_if_fail (G_IS_FILE (from_file), FALSE);
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
-	return _tepl_metadata_store_loader (from_file,
-					    store->priv->hash_table,
-					    error);
+	return _tepl_metadata_parser_read_file (from_file,
+						store->priv->hash_table,
+						error);
 }
 
 static GBytes *

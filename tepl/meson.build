@@ -61,7 +61,7 @@ TEPL_PRIVATE_HEADERS = [
   'tepl-file-content.h',
   'tepl-file-content-loader.h',
   'tepl-io-error-info-bar.h',
-  'tepl-metadata-store-loader.h',
+  'tepl-metadata-parser.h',
   'tepl-progress-info-bar.h',
   'tepl-signal-group.h',
   'tepl-tab-saving.h'
@@ -74,7 +74,7 @@ tepl_private_c_files = [
   'tepl-file-content.c',
   'tepl-file-content-loader.c',
   'tepl-io-error-info-bar.c',
-  'tepl-metadata-store-loader.c',
+  'tepl-metadata-parser.c',
   'tepl-progress-info-bar.c',
   'tepl-signal-group.c',
   'tepl-tab-saving.c'

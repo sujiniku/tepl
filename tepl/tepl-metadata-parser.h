@@ -17,18 +17,18 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TEPL_METADATA_STORE_LOADER_H
-#define TEPL_METADATA_STORE_LOADER_H
+#ifndef TEPL_METADATA_PARSER_H
+#define TEPL_METADATA_PARSER_H
 
 #include <gio/gio.h>
 
 G_BEGIN_DECLS
 
 G_GNUC_INTERNAL
-gboolean	_tepl_metadata_store_loader	(GFile       *from_file,
-						 GHashTable  *hash_table,
-						 GError     **error);
+gboolean	_tepl_metadata_parser_read_file		(GFile       *from_file,
+							 GHashTable  *hash_table,
+							 GError     **error);
 
 G_END_DECLS
 
-#endif /* TEPL_METADATA_STORE_LOADER_H */
+#endif /* TEPL_METADATA_PARSER_H */

@@ -190,24 +190,6 @@ tepl_file_loader_error_quark
 </SECTION>
 
 <SECTION>
-<FILE>file-metadata</FILE>
-TeplFileMetadata
-tepl_file_metadata_new
-tepl_file_metadata_get
-tepl_file_metadata_set
-<SUBSECTION Standard>
-TEPL_FILE_METADATA
-TEPL_FILE_METADATA_CLASS
-TEPL_FILE_METADATA_GET_CLASS
-TEPL_IS_FILE_METADATA
-TEPL_IS_FILE_METADATA_CLASS
-TEPL_TYPE_FILE_METADATA
-TeplFileMetadataClass
-TeplFileMetadataPrivate
-tepl_file_metadata_get_type
-</SECTION>
-
-<SECTION>
 <FILE>file-saver</FILE>
 TeplFileSaver
 TEPL_FILE_SAVER_ERROR
@@ -306,6 +288,15 @@ tepl_iter_get_line_indentation
 <SECTION>
 <FILE>menu-shell</FILE>
 tepl_menu_shell_append_edit_actions
+</SECTION>
+
+<SECTION>
+<FILE>metadata</FILE>
+TeplMetadata
+tepl_metadata_new
+tepl_metadata_get
+tepl_metadata_set
+<SUBSECTION Standard>
 </SECTION>
 
 <SECTION>

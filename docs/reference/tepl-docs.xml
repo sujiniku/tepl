@@ -51,7 +51,7 @@
 
     <chapter id="file-metadata">
       <title>File Metadata</title>
-      <xi:include href="xml/file-metadata.xml"/>
+      <xi:include href="xml/metadata.xml"/>
       <xi:include href="xml/metadata-store.xml"/>
     </chapter>
 

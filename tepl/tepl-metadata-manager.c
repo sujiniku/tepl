@@ -334,7 +334,7 @@ tepl_metadata_manager_copy_from (TeplMetadataManager *from_manager,
 
 	if (from_metadata_attic != NULL)
 	{
-		_tepl_metadata_attic_copy_into (from_metadata_attic, to_metadata);
+		_tepl_metadata_attic_copy_from (from_metadata_attic, to_metadata);
 	}
 }
 

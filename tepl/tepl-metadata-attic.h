@@ -73,7 +73,7 @@ void			_tepl_metadata_attic_append_xml_to_string	(TeplMetadataAttic *metadata,
 									 GString           *string);
 
 G_GNUC_INTERNAL
-void			_tepl_metadata_attic_copy_into			(TeplMetadataAttic *from_metadata_attic,
+void			_tepl_metadata_attic_copy_from			(TeplMetadataAttic *from_metadata_attic,
 									 TeplMetadata      *to_metadata);
 
 G_GNUC_INTERNAL

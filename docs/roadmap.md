@@ -9,18 +9,19 @@ See the [NEWS file](../NEWS) for a detailed history.
 Rework file metadata
 --------------------
 
-- Status: **in progress**
+- Status: **mostly done**
 - Target release: Tepl 5 (GNOME 3.38)
 
 Tasks:
-- Make TeplFileMetadata independent of TeplFile, to better isolate toolkit
-  features.
-- Replace the metadata manager with TeplMetadataStore, to get rid of the libxml2
-  dependency (at least in Tepl, the libxml2 is still used by GtkSourceView).
-- If possible, limit synchronous I/O to application shutdown only, do
-  asynchronous I/O the rest of the time (during application startup and normal
-  execution).
-- Write more unit tests.
+- Make the metadata API independent of TeplFile, to better isolate toolkit
+  features (separation of concerns).
+- No longer use GVfs metadata, it complicates everything. With GVfs metadata
+  there is the need to have async APIs, and the need to anyway have another
+  backend for platforms that don't support GVfs metadata.
+  See commit 2f21d526271a433466e4e546af9a358f80ee1f94 , the implementation and
+  API was too complicated.
+- Keep only the TeplMetadataManager for storing metadata on disk, and
+  re-implement it to no longer depend on the libxml2.
 
 Rework file loading and saving toolkit
 --------------------------------------

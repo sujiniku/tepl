@@ -191,12 +191,12 @@ tepl_metadata_manager_trim (TeplMetadataManager *manager,
 }
 
 /**
- * tepl_metadata_manager_load:
+ * tepl_metadata_manager_load_from_disk:
  * @manager: the #TeplMetadataManager.
  * @from_file: the #GFile to load metadata from.
  * @error: location to a %NULL #GError, or %NULL.
  *
- * Loads synchronously the metadata from @from_file into @manager.
+ * Loads synchronously all the metadata from @from_file into @manager.
  *
  * A good moment to call this function is on application startup, see the
  * #GApplication::startup signal.
@@ -205,9 +205,9 @@ tepl_metadata_manager_trim (TeplMetadataManager *manager,
  * Since: 5.0
  */
 gboolean
-tepl_metadata_manager_load (TeplMetadataManager  *manager,
-			    GFile                *from_file,
-			    GError              **error)
+tepl_metadata_manager_load_from_disk (TeplMetadataManager  *manager,
+				      GFile                *from_file,
+				      GError              **error)
 {
 	g_return_val_if_fail (TEPL_IS_METADATA_MANAGER (manager), FALSE);
 	g_return_val_if_fail (G_IS_FILE (from_file), FALSE);
@@ -244,13 +244,13 @@ to_string (TeplMetadataManager *manager)
 }
 
 /**
- * tepl_metadata_manager_save:
+ * tepl_metadata_manager_save_to_disk:
  * @manager: the #TeplMetadataManager.
  * @to_file: the #GFile to save metadata to.
  * @trim: if %TRUE, tepl_metadata_manager_trim() is called with -1.
  * @error: location to a %NULL #GError, or %NULL.
  *
- * Saves synchronously the metadata from @manager to @to_file. The parent
+ * Saves synchronously all the metadata from @manager to @to_file. The parent
  * directories of @to_file are created if needed.
  *
  * A good moment to call this function is on application shutdown, see the
@@ -260,10 +260,10 @@ to_string (TeplMetadataManager *manager)
  * Since: 5.0
  */
 gboolean
-tepl_metadata_manager_save (TeplMetadataManager  *manager,
-			    GFile                *to_file,
-			    gboolean              trim,
-			    GError              **error)
+tepl_metadata_manager_save_to_disk (TeplMetadataManager  *manager,
+				    GFile                *to_file,
+				    gboolean              trim,
+				    GError              **error)
 {
 	GBytes *bytes;
 	gboolean ok;
@@ -309,27 +309,28 @@ tepl_metadata_manager_save (TeplMetadataManager  *manager,
 }
 
 /**
- * tepl_metadata_manager_load_metadata:
- * @manager: the #TeplMetadataManager.
- * @location: a #GFile.
- * @metadata: a #TeplMetadata.
+ * tepl_metadata_manager_copy_from:
+ * @from_manager: the #TeplMetadataManager.
+ * @for_location: a #GFile.
+ * @to_metadata: a #TeplMetadata.
  *
- * Copies the metadata stored in @manager for @location into @metadata.
+ * Copies the metadata stored in @from_manager for @for_location into
+ * @to_metadata.
  *
  * Since: 5.0
  */
 void
-tepl_metadata_manager_load_metadata (TeplMetadataManager *manager,
-				     GFile               *location,
-				     TeplMetadata        *metadata)
+tepl_metadata_manager_copy_from (TeplMetadataManager *from_manager,
+				 GFile               *for_location,
+				 TeplMetadata        *to_metadata)
 {
 	TeplMetadataAttic *metadata_attic;
 
-	g_return_if_fail (TEPL_IS_METADATA_MANAGER (manager));
-	g_return_if_fail (G_IS_FILE (location));
-	g_return_if_fail (TEPL_IS_METADATA (metadata));
+	g_return_if_fail (TEPL_IS_METADATA_MANAGER (from_manager));
+	g_return_if_fail (G_IS_FILE (for_location));
+	g_return_if_fail (TEPL_IS_METADATA (to_metadata));
 
-	metadata_attic = g_hash_table_lookup (manager->priv->hash_table, location);
+	metadata_attic = g_hash_table_lookup (from_manager->priv->hash_table, for_location);
 
 	if (metadata_attic != NULL)
 	{
@@ -338,29 +339,29 @@ tepl_metadata_manager_load_metadata (TeplMetadataManager *manager,
 }
 
 /**
- * tepl_metadata_manager_save_metadata:
- * @manager: the #TeplMetadataManager.
- * @location: a #GFile.
- * @metadata: a #TeplMetadata.
+ * tepl_metadata_manager_merge_into:
+ * @into_manager: the #TeplMetadataManager.
+ * @for_location: a #GFile.
+ * @from_metadata: a #TeplMetadata.
  *
- * Copies the metadata from @metadata into @manager for @location.
+ * Merges the metadata from @from_metadata into @into_manager for @for_location.
  *
  * Since: 5.0
  */
 void
-tepl_metadata_manager_save_metadata (TeplMetadataManager *manager,
-				     GFile               *location,
-				     TeplMetadata        *metadata)
+tepl_metadata_manager_merge_into (TeplMetadataManager *into_manager,
+				  GFile               *for_location,
+				  TeplMetadata        *from_metadata)
 {
 	TeplMetadataAttic *metadata_attic;
 
-	g_return_if_fail (TEPL_IS_METADATA_MANAGER (manager));
-	g_return_if_fail (G_IS_FILE (location));
-	g_return_if_fail (TEPL_IS_METADATA (metadata));
+	g_return_if_fail (TEPL_IS_METADATA_MANAGER (into_manager));
+	g_return_if_fail (G_IS_FILE (for_location));
+	g_return_if_fail (TEPL_IS_METADATA (from_metadata));
 
-	metadata_attic = g_hash_table_lookup (manager->priv->hash_table, location);
+	metadata_attic = g_hash_table_lookup (into_manager->priv->hash_table, for_location);
 
 	/* TODO */
 
-	manager->priv->modified = TRUE;
+	into_manager->priv->modified = TRUE;
 }

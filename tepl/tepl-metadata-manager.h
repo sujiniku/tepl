@@ -25,7 +25,7 @@
 #endif
 
 #include <gio/gio.h>
-#include <tepl/tepl-file-metadata.h>
+#include <tepl/tepl-metadata.h>
 
 G_BEGIN_DECLS
 
@@ -73,13 +73,13 @@ gboolean		tepl_metadata_manager_save		(TeplMetadataManager  *manager,
 								 gboolean              trim,
 								 GError              **error);
 
-void			tepl_metadata_manager_load_file_metadata (TeplMetadataManager *manager,
-								  GFile               *location,
-								  TeplFileMetadata    *file_metadata);
+void			tepl_metadata_manager_load_metadata	(TeplMetadataManager *manager,
+								 GFile               *location,
+								 TeplMetadata        *metadata);
 
-void			tepl_metadata_manager_save_file_metadata (TeplMetadataManager *manager,
-								  GFile               *location,
-								  TeplFileMetadata    *file_metadata);
+void			tepl_metadata_manager_save_metadata	(TeplMetadataManager *manager,
+								 GFile               *location,
+								 TeplMetadata        *metadata);
 
 G_END_DECLS
 

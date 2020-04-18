@@ -18,6 +18,7 @@
  */
 
 #include "tepl-metadata-manager.h"
+#include "tepl-metadata-attic.h"
 #include "tepl-metadata-parser.h"
 #include "tepl-utils.h"
 
@@ -47,7 +48,7 @@
 struct _TeplMetadataManagerPrivate
 {
 	/* Keys: GFile *
-	 * Values: TeplFileMetadata *
+	 * Values: TeplMetadataAttic *
 	 * Never NULL.
 	 */
 	GHashTable *hash_table;
@@ -168,19 +169,19 @@ tepl_metadata_manager_trim (TeplMetadataManager *manager,
 		gpointer key;
 		gpointer value;
 		GFile *oldest_location = NULL;
-		TeplFileMetadata *oldest_file_metadata = NULL;
+		TeplMetadataAttic *oldest_metadata_attic = NULL;
 
 		g_hash_table_iter_init (&iter, manager->priv->hash_table);
 		while (g_hash_table_iter_next (&iter, &key, &value))
 		{
 			GFile *location = key;
-			TeplFileMetadata *file_metadata = value;
+			TeplMetadataAttic *metadata_attic = value;
 
 			if (oldest_location == NULL ||
-			    _tepl_file_metadata_compare_atime (file_metadata, oldest_file_metadata) < 0)
+			    _tepl_metadata_attic_compare_atime (metadata_attic, oldest_metadata_attic) < 0)
 			{
 				oldest_location = location;
-				oldest_file_metadata = file_metadata;
+				oldest_metadata_attic = metadata_attic;
 			}
 		}
 
@@ -232,9 +233,9 @@ to_string (TeplMetadataManager *manager)
 	while (g_hash_table_iter_next (&iter, &key, &value))
 	{
 		GFile *location = key;
-		TeplFileMetadata *file_metadata = value;
+		TeplMetadataAttic *metadata_attic = value;
 
-		_tepl_file_metadata_append_xml_to_string (file_metadata, location, string);
+		_tepl_metadata_attic_append_xml_to_string (metadata_attic, location, string);
 	}
 
 	g_string_append (string, "</metadata>\n");
@@ -308,67 +309,58 @@ tepl_metadata_manager_save (TeplMetadataManager  *manager,
 }
 
 /**
- * tepl_metadata_manager_load_file_metadata:
+ * tepl_metadata_manager_load_metadata:
  * @manager: the #TeplMetadataManager.
  * @location: a #GFile.
- * @file_metadata: a #TeplFileMetadata.
+ * @metadata: a #TeplMetadata.
  *
- * Copies the metadata stored in @manager for @location into @file_metadata.
+ * Copies the metadata stored in @manager for @location into @metadata.
  *
  * Since: 5.0
  */
 void
-tepl_metadata_manager_load_file_metadata (TeplMetadataManager *manager,
-					  GFile               *location,
-					  TeplFileMetadata    *file_metadata)
+tepl_metadata_manager_load_metadata (TeplMetadataManager *manager,
+				     GFile               *location,
+				     TeplMetadata        *metadata)
 {
-	TeplFileMetadata *file_metadata_from_manager;
+	TeplMetadataAttic *metadata_attic;
 
 	g_return_if_fail (TEPL_IS_METADATA_MANAGER (manager));
 	g_return_if_fail (G_IS_FILE (location));
-	g_return_if_fail (TEPL_IS_FILE_METADATA (file_metadata));
+	g_return_if_fail (TEPL_IS_METADATA (metadata));
 
-	file_metadata_from_manager = g_hash_table_lookup (manager->priv->hash_table, location);
+	metadata_attic = g_hash_table_lookup (manager->priv->hash_table, location);
 
-	if (file_metadata_from_manager != NULL)
+	if (metadata_attic != NULL)
 	{
-		_tepl_file_metadata_copy_into (file_metadata_from_manager, file_metadata);
+		/* TODO */
 	}
 }
 
 /**
- * tepl_metadata_manager_save_file_metadata:
+ * tepl_metadata_manager_save_metadata:
  * @manager: the #TeplMetadataManager.
  * @location: a #GFile.
- * @file_metadata: a #TeplFileMetadata.
+ * @metadata: a #TeplMetadata.
  *
- * Copies the metadata from @file_metadata into @manager for @location.
+ * Copies the metadata from @metadata into @manager for @location.
  *
  * Since: 5.0
  */
 void
-tepl_metadata_manager_save_file_metadata (TeplMetadataManager *manager,
-					  GFile               *location,
-					  TeplFileMetadata    *file_metadata)
+tepl_metadata_manager_save_metadata (TeplMetadataManager *manager,
+				     GFile               *location,
+				     TeplMetadata        *metadata)
 {
-	TeplFileMetadata *file_metadata_from_manager;
+	TeplMetadataAttic *metadata_attic;
 
 	g_return_if_fail (TEPL_IS_METADATA_MANAGER (manager));
 	g_return_if_fail (G_IS_FILE (location));
-	g_return_if_fail (TEPL_IS_FILE_METADATA (file_metadata));
+	g_return_if_fail (TEPL_IS_METADATA (metadata));
 
-	file_metadata_from_manager = g_hash_table_lookup (manager->priv->hash_table, location);
+	metadata_attic = g_hash_table_lookup (manager->priv->hash_table, location);
 
-	if (file_metadata_from_manager == NULL)
-	{
-		file_metadata_from_manager = tepl_file_metadata_new ();
-
-		g_hash_table_replace (manager->priv->hash_table,
-				      g_object_ref (location),
-				      file_metadata_from_manager);
-	}
-
-	_tepl_file_metadata_copy_into (file_metadata, file_metadata_from_manager);
+	/* TODO */
 
 	manager->priv->modified = TRUE;
 }

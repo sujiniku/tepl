@@ -20,7 +20,7 @@
 #include "config.h"
 #include "tepl-metadata-parser.h"
 #include <glib/gi18n-lib.h>
-#include "tepl-file-metadata.h"
+#include "tepl-metadata-attic.h"
 
 typedef struct _ParsingData ParsingData;
 struct _ParsingData
@@ -28,7 +28,7 @@ struct _ParsingData
 	GHashTable *hash_table;
 
 	gchar *cur_document_uri;
-	TeplFileMetadata *cur_file_metadata;
+	TeplMetadataAttic *cur_metadata_attic;
 
 	guint metadata_element_open : 1;
 	guint document_element_open : 1;
@@ -52,19 +52,19 @@ parsing_data_check_invariants (ParsingData *parsing_data)
 	{
 		g_assert (!parsing_data->document_element_open);
 		g_assert (parsing_data->cur_document_uri == NULL);
-		g_assert (parsing_data->cur_file_metadata == NULL);
+		g_assert (parsing_data->cur_metadata_attic == NULL);
 		return;
 	}
 
 	if (!parsing_data->document_element_open)
 	{
 		g_assert (parsing_data->cur_document_uri == NULL);
-		g_assert (parsing_data->cur_file_metadata == NULL);
+		g_assert (parsing_data->cur_metadata_attic == NULL);
 		return;
 	}
 
 	g_assert (parsing_data->cur_document_uri != NULL);
-	g_assert (parsing_data->cur_file_metadata != NULL);
+	g_assert (parsing_data->cur_metadata_attic != NULL);
 }
 
 static void
@@ -74,7 +74,7 @@ parsing_data_free (ParsingData *parsing_data)
 	{
 		g_hash_table_unref (parsing_data->hash_table);
 		g_free (parsing_data->cur_document_uri);
-		g_clear_object (&parsing_data->cur_file_metadata);
+		g_clear_object (&parsing_data->cur_metadata_attic);
 
 		g_free (parsing_data);
 	}
@@ -119,7 +119,7 @@ parse_document_element (GMarkupParseContext  *context,
 	g_assert (parsing_data->metadata_element_open);
 	g_assert (!parsing_data->document_element_open);
 	g_assert (parsing_data->cur_document_uri == NULL);
-	g_assert (parsing_data->cur_file_metadata == NULL);
+	g_assert (parsing_data->cur_metadata_attic == NULL);
 
 	if (!g_str_equal (element_name, "document"))
 	{
@@ -132,7 +132,7 @@ parse_document_element (GMarkupParseContext  *context,
 		return;
 	}
 
-	parsing_data->cur_file_metadata = tepl_file_metadata_new ();
+	parsing_data->cur_metadata_attic = _tepl_metadata_attic_new ();
 
 	for (attr_num = 0; attribute_names[attr_num] != NULL; attr_num++)
 	{
@@ -146,8 +146,8 @@ parse_document_element (GMarkupParseContext  *context,
 		}
 		else if (!got_atime && g_str_equal (cur_attr_name, "atime"))
 		{
-			if (!_tepl_file_metadata_set_atime_str (parsing_data->cur_file_metadata,
-								cur_attr_value))
+			if (!_tepl_metadata_attic_set_atime_str (parsing_data->cur_metadata_attic,
+								 cur_attr_value))
 			{
 				g_set_error (error,
 					     G_MARKUP_ERROR,
@@ -189,7 +189,7 @@ parse_entry_element (GMarkupParseContext  *context,
 
 	g_assert (parsing_data->metadata_element_open);
 	g_assert (parsing_data->document_element_open);
-	g_assert (parsing_data->cur_file_metadata != NULL);
+	g_assert (parsing_data->cur_metadata_attic != NULL);
 
 	if (!g_str_equal (element_name, "entry"))
 	{
@@ -227,7 +227,7 @@ parse_entry_element (GMarkupParseContext  *context,
 		return;
 	}
 
-	_tepl_file_metadata_insert_entry (parsing_data->cur_file_metadata, key, value);
+	_tepl_metadata_attic_insert_entry (parsing_data->cur_metadata_attic, key, value);
 }
 
 static void
@@ -283,11 +283,11 @@ insert_document_to_hash_table (ParsingData *parsing_data)
 
 	g_hash_table_replace (parsing_data->hash_table,
 			      g_file_new_for_uri (parsing_data->cur_document_uri),
-			      parsing_data->cur_file_metadata);
+			      parsing_data->cur_metadata_attic);
 
 	g_free (parsing_data->cur_document_uri);
 	parsing_data->cur_document_uri = NULL;
-	parsing_data->cur_file_metadata = NULL;
+	parsing_data->cur_metadata_attic = NULL;
 
 	parsing_data->document_element_open = FALSE;
 }

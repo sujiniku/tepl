@@ -34,7 +34,6 @@
 #include <tepl/tepl-encoding.h>
 #include <tepl/tepl-file.h>
 #include <tepl/tepl-file-loader.h>
-#include <tepl/tepl-file-metadata.h>
 #include <tepl/tepl-file-saver.h>
 #include <tepl/tepl-fold-region.h>
 #include <tepl/tepl-gutter-renderer-folds.h>

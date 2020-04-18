@@ -21,7 +21,7 @@
 
 struct _TeplMetadataPrivate
 {
-	/* Keys: gchar *
+	/* Keys: not nullable gchar *
 	 * Values: nullable gchar *
 	 * hash_table never NULL.
 	 */

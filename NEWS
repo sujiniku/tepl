@@ -1,10 +1,13 @@
 News in x.y.z, 2020-xx-yy (not yet released)
 -------------------------
 * Build system: port to Meson, remove Autotools.
-* Add TeplMetadataStore class, it will replace the metadata manager.
+* A complete overhaul of the metadata API and implementation. The libxml2 is no
+  longer required, and GVfs metadata is no longer used.
 * Utils functions: add more functions.
 * TeplInfoBar: add tepl_info_bar_set_buttons_orientation().
 * File loading and saving: add some IO error info bars.
+* Add tepl_view_new_with_buffer().
+* Write a new roadmap in docs/.
 * Translation updates.
 
 News in 4.4.0, 2020-03-05

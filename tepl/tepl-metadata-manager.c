@@ -353,15 +353,24 @@ tepl_metadata_manager_merge_into (TeplMetadataManager *into_manager,
 				  GFile               *for_location,
 				  TeplMetadata        *from_metadata)
 {
-	TeplMetadataAttic *metadata_attic;
+	TeplMetadataAttic *into_metadata_attic;
 
 	g_return_if_fail (TEPL_IS_METADATA_MANAGER (into_manager));
 	g_return_if_fail (G_IS_FILE (for_location));
 	g_return_if_fail (TEPL_IS_METADATA (from_metadata));
 
-	metadata_attic = g_hash_table_lookup (into_manager->priv->hash_table, for_location);
+	into_metadata_attic = g_hash_table_lookup (into_manager->priv->hash_table, for_location);
 
-	/* TODO */
+	if (into_metadata_attic == NULL)
+	{
+		into_metadata_attic = _tepl_metadata_attic_new ();
+
+		g_hash_table_replace (into_manager->priv->hash_table,
+				      g_object_ref (for_location),
+				      into_metadata_attic);
+	}
+
+	_tepl_metadata_attic_merge_into (into_metadata_attic, from_metadata);
 
 	into_manager->priv->modified = TRUE;
 }

@@ -89,6 +89,16 @@ tepl_metadata_set (TeplMetadata *metadata,
 			      g_strdup (value));
 }
 
+void
+_tepl_metadata_foreach (TeplMetadata *metadata,
+			GHFunc        func,
+			gpointer      user_data)
+{
+	g_return_if_fail (TEPL_IS_METADATA (metadata));
+
+	g_hash_table_foreach (metadata->priv->hash_table, func, user_data);
+}
+
 static gboolean
 key_char_is_valid (gchar ch)
 {

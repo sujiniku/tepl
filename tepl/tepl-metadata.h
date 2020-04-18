@@ -65,6 +65,11 @@ void		tepl_metadata_set		(TeplMetadata *metadata,
 						 const gchar  *value);
 
 G_GNUC_INTERNAL
+void		_tepl_metadata_foreach		(TeplMetadata *metadata,
+						 GHFunc        func,
+						 gpointer      user_data);
+
+G_GNUC_INTERNAL
 gboolean	_tepl_metadata_key_is_valid	(const gchar *key);
 
 G_END_DECLS

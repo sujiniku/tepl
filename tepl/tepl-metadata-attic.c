@@ -210,3 +210,37 @@ _tepl_metadata_attic_copy_into (TeplMetadataAttic *from_metadata_attic,
 
 	set_current_atime (from_metadata_attic);
 }
+
+static void
+merge_into__from_metadata_foreach_cb (gpointer key_p,
+				      gpointer value_p,
+				      gpointer user_data)
+{
+	const gchar *key = key_p;
+	const gchar *value = value_p; /* Can be NULL. */
+	TeplMetadataAttic *into_metadata_attic = TEPL_METADATA_ATTIC (user_data);
+
+	if (value != NULL)
+	{
+		_tepl_metadata_attic_insert_entry (into_metadata_attic, key, value);
+	}
+	else
+	{
+		/* Unset. */
+		g_hash_table_remove (into_metadata_attic->priv->hash_table, key);
+	}
+}
+
+void
+_tepl_metadata_attic_merge_into (TeplMetadataAttic *into_metadata_attic,
+				 TeplMetadata      *from_metadata)
+{
+	g_return_if_fail (TEPL_IS_METADATA_ATTIC (into_metadata_attic));
+	g_return_if_fail (TEPL_IS_METADATA (from_metadata));
+
+	_tepl_metadata_foreach (from_metadata,
+				merge_into__from_metadata_foreach_cb,
+				into_metadata_attic);
+
+	set_current_atime (into_metadata_attic);
+}

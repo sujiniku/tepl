@@ -21,6 +21,7 @@
 #define TEPL_METADATA_ATTIC_H
 
 #include <gio/gio.h>
+#include "tepl-metadata.h"
 
 G_BEGIN_DECLS
 
@@ -70,6 +71,10 @@ G_GNUC_INTERNAL
 void			_tepl_metadata_attic_append_xml_to_string	(TeplMetadataAttic *metadata,
 									 GFile             *location,
 									 GString           *string);
+
+G_GNUC_INTERNAL
+void			_tepl_metadata_attic_copy_into			(TeplMetadataAttic *from_metadata_attic,
+									 TeplMetadata      *to_metadata);
 
 G_END_DECLS
 

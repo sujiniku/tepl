@@ -18,7 +18,6 @@
  */
 
 #include "tepl-metadata-attic.h"
-#include "tepl-metadata.h"
 
 struct _TeplMetadataAtticPrivate
 {
@@ -187,4 +186,27 @@ _tepl_metadata_attic_append_xml_to_string (TeplMetadataAttic *metadata,
 
 	g_free (uri);
 	g_free (uri_escaped);
+}
+
+void
+_tepl_metadata_attic_copy_into (TeplMetadataAttic *from_metadata_attic,
+				TeplMetadata      *to_metadata)
+{
+	GHashTableIter iter;
+	gpointer key_p;
+	gpointer value_p;
+
+	g_return_if_fail (TEPL_IS_METADATA_ATTIC (from_metadata_attic));
+	g_return_if_fail (TEPL_IS_METADATA (to_metadata));
+
+	g_hash_table_iter_init (&iter, from_metadata_attic->priv->hash_table);
+	while (g_hash_table_iter_next (&iter, &key_p, &value_p))
+	{
+		const gchar *key = key_p;
+		const gchar *value = value_p;
+
+		tepl_metadata_set (to_metadata, key, value);
+	}
+
+	set_current_atime (from_metadata_attic);
 }

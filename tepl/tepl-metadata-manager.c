@@ -324,17 +324,17 @@ tepl_metadata_manager_copy_from (TeplMetadataManager *from_manager,
 				 GFile               *for_location,
 				 TeplMetadata        *to_metadata)
 {
-	TeplMetadataAttic *metadata_attic;
+	TeplMetadataAttic *from_metadata_attic;
 
 	g_return_if_fail (TEPL_IS_METADATA_MANAGER (from_manager));
 	g_return_if_fail (G_IS_FILE (for_location));
 	g_return_if_fail (TEPL_IS_METADATA (to_metadata));
 
-	metadata_attic = g_hash_table_lookup (from_manager->priv->hash_table, for_location);
+	from_metadata_attic = g_hash_table_lookup (from_manager->priv->hash_table, for_location);
 
-	if (metadata_attic != NULL)
+	if (from_metadata_attic != NULL)
 	{
-		/* TODO */
+		_tepl_metadata_attic_copy_into (from_metadata_attic, to_metadata);
 	}
 }
 

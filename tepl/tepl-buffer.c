@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -19,6 +19,7 @@
 
 #include "tepl-buffer.h"
 #include "tepl-abstract-factory.h"
+#include "tepl-metadata-manager.h"
 #include "tepl-utils.h"
 
 /**
@@ -30,7 +31,8 @@
  * for a text editor.
  *
  * It also adds an association to a #TeplFile that can be retrieved with
- * tepl_buffer_get_file(). The association cannot change.
+ * tepl_buffer_get_file(). The association cannot change. The same for
+ * #TeplMetadata with tepl_buffer_get_metadata().
  *
  * The properties and signals have the tepl namespace, to avoid potential
  * conflicts in the future if the property or signal is moved to
@@ -42,6 +44,7 @@ typedef struct _TeplBufferPrivate TeplBufferPrivate;
 struct _TeplBufferPrivate
 {
 	TeplFile *file;
+	TeplMetadata *metadata;
 
 	GtkTextTag *invalid_char_tag;
 
@@ -147,6 +150,7 @@ tepl_buffer_dispose (GObject *object)
 	TeplBufferPrivate *priv = tepl_buffer_get_instance_private (TEPL_BUFFER (object));
 
 	g_clear_object (&priv->file);
+	g_clear_object (&priv->metadata);
 
 	if (priv->idle_cursor_moved_id != 0)
 	{
@@ -386,6 +390,8 @@ tepl_buffer_init (TeplBuffer *buffer)
 	factory = tepl_abstract_factory_get_singleton ();
 	priv->file = tepl_abstract_factory_create_file (factory);
 
+	priv->metadata = tepl_metadata_new ();
+
 	g_signal_connect_object (priv->file,
 				 "notify::short-name",
 				 G_CALLBACK (file_short_name_notify_cb),
@@ -431,6 +437,87 @@ tepl_buffer_get_file (TeplBuffer *buffer)
 
 	priv = tepl_buffer_get_instance_private (buffer);
 	return priv->file;
+}
+
+/**
+ * tepl_buffer_get_metadata:
+ * @buffer: a #TeplBuffer.
+ *
+ * Returns the #TeplMetadata of @buffer. The returned object is guaranteed to be
+ * the same for the lifetime of @buffer.
+ *
+ * Returns: (transfer none): the associated #TeplMetadata.
+ * Since: 5.0
+ */
+TeplMetadata *
+tepl_buffer_get_metadata (TeplBuffer *buffer)
+{
+	TeplBufferPrivate *priv;
+
+	g_return_val_if_fail (TEPL_IS_BUFFER (buffer), NULL);
+
+	priv = tepl_buffer_get_instance_private (buffer);
+	return priv->metadata;
+}
+
+/**
+ * tepl_buffer_load_metadata_from_metadata_manager:
+ * @buffer: a #TeplBuffer.
+ *
+ * Calls tepl_metadata_manager_copy_from() for #TeplFile:location (if not %NULL)
+ * to the associated #TeplMetadata of @buffer.
+ *
+ * Since: 5.0
+ */
+void
+tepl_buffer_load_metadata_from_metadata_manager (TeplBuffer *buffer)
+{
+	TeplBufferPrivate *priv;
+	GFile *location;
+
+	g_return_if_fail (TEPL_IS_BUFFER (buffer));
+
+	priv = tepl_buffer_get_instance_private (buffer);
+
+	location = tepl_file_get_location (priv->file);
+
+	if (location != NULL)
+	{
+		TeplMetadataManager *manager;
+
+		manager = tepl_metadata_manager_get_singleton ();
+		tepl_metadata_manager_copy_from (manager, location, priv->metadata);
+	}
+}
+
+/**
+ * tepl_buffer_save_metadata_into_metadata_manager:
+ * @buffer: a #TeplBuffer.
+ *
+ * Calls tepl_metadata_manager_merge_into() for #TeplFile:location (if not
+ * %NULL) from the associated #TeplMetadata of @buffer.
+ *
+ * Since: 5.0
+ */
+void
+tepl_buffer_save_metadata_into_metadata_manager (TeplBuffer *buffer)
+{
+	TeplBufferPrivate *priv;
+	GFile *location;
+
+	g_return_if_fail (TEPL_IS_BUFFER (buffer));
+
+	priv = tepl_buffer_get_instance_private (buffer);
+
+	location = tepl_file_get_location (priv->file);
+
+	if (location != NULL)
+	{
+		TeplMetadataManager *manager;
+
+		manager = tepl_metadata_manager_get_singleton ();
+		tepl_metadata_manager_merge_into (manager, location, priv->metadata);
+	}
 }
 
 /**

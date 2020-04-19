@@ -98,6 +98,9 @@ TeplBuffer
 TeplSelectionType
 tepl_buffer_new
 tepl_buffer_get_file
+tepl_buffer_get_metadata
+tepl_buffer_load_metadata_from_metadata_manager
+tepl_buffer_save_metadata_into_metadata_manager
 tepl_buffer_is_untouched
 tepl_buffer_get_short_title
 tepl_buffer_get_full_title

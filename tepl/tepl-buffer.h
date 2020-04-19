@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -26,6 +26,7 @@
 
 #include <gtksourceview/gtksource.h>
 #include <tepl/tepl-file.h>
+#include <tepl/tepl-metadata.h>
 
 G_BEGIN_DECLS
 
@@ -63,6 +64,14 @@ typedef enum _TeplSelectionType
 TeplBuffer *		tepl_buffer_new				(void);
 
 TeplFile *		tepl_buffer_get_file			(TeplBuffer *buffer);
+
+TeplMetadata *		tepl_buffer_get_metadata		(TeplBuffer *buffer);
+
+void			tepl_buffer_load_metadata_from_metadata_manager
+								(TeplBuffer *buffer);
+
+void			tepl_buffer_save_metadata_into_metadata_manager
+								(TeplBuffer *buffer);
 
 gboolean		tepl_buffer_is_untouched		(TeplBuffer *buffer);
 

@@ -25,6 +25,9 @@
  * SECTION:statusbar
  * @Title: TeplStatusbar
  * @Short_description: Subclass of #GtkStatusbar
+ *
+ * #TeplStatusbar is a subclass of #GtkStatusbar with a better look by default,
+ * and with added functions useful for a text editor.
  */
 
 struct _TeplStatusbarPrivate

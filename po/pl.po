@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-03-27 21:10+0000\n"
-"PO-Revision-Date: 2020-03-29 13:23+0200\n"
+"POT-Creation-Date: 2020-04-18 17:15+0000\n"
+"PO-Revision-Date: 2020-04-19 10:33+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -51,7 +51,7 @@ msgid "Open a file"
 msgstr "Otwiera plik"
 
 #: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:143
-#: tepl/tepl-tab.c:750
+#: tepl/tepl-tab.c:724
 msgid "_Save"
 msgstr "_Zapisz"
 
@@ -142,7 +142,7 @@ msgstr "Usuwa wcięcie z zaznaczonych wierszy"
 
 #. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
 #. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
-#. * doesn't have the real path to the file, so it would screw up some
+#. * doesn't have the real path to the file, so it would ruin some
 #. * features for text editors:
 #. * - showing the directory in parentheses in the window title, or in the
 #. *   tab tooltip;
@@ -154,7 +154,7 @@ msgid "Open File"
 msgstr "Otwarcie pliku"
 
 #: tepl/tepl-application-window.c:176
-#: tepl/tepl-close-confirm-dialog-single.c:137 tepl/tepl-tab.c:749
+#: tepl/tepl-close-confirm-dialog-single.c:137 tepl/tepl-tab.c:723
 msgid "_Cancel"
 msgstr "_Anuluj"
 
@@ -327,7 +327,7 @@ msgstr "Dane wejściowe kończą się niepełną sekwencją wielobajtową."
 msgid "The input content ends with incomplete data."
 msgstr "Treść wejściowa kończą się niepełnymi danymi."
 
-#: tepl/tepl-file.c:411
+#: tepl/tepl-file.c:408
 #, c-format
 msgid "Untitled File %d"
 msgstr "Plik bez tytułu %d"
@@ -421,44 +421,44 @@ msgstr ""
 "Kontynuacja zapisywania tego pliku może uszkodzić dokument. Zapisać mimo to?"
 
 #. Translators: do not translate <metadata>.
-#: tepl/tepl-metadata-store.c:392
+#: tepl/tepl-metadata-parser.c:98
 #, c-format
 msgid "The XML file must start with a <metadata> element, not “%s”."
 msgstr "Plik XML musi zaczynać się od elementu <metadata>, nie „%s”."
 
 #. Translators: do not translate <document>.
-#: tepl/tepl-metadata-store.c:424
+#: tepl/tepl-metadata-parser.c:130
 #, c-format
 msgid "Expected a <document> element, got “%s” instead."
 msgstr "Oczekiwano elementu <document>, otrzymano „%s” zamiast niego."
 
 #. Translators: do not translate “atime”.
-#: tepl/tepl-metadata-store.c:450
+#: tepl/tepl-metadata-parser.c:156
 #, c-format
 msgid "Failed to parse the “atime” attribute value “%s”."
 msgstr "Przetworzenie wartości „%s” atrybutu „atime” się nie powiodło."
 
 #. Translators: do not translate <document>, “uri” and “atime”.
-#: tepl/tepl-metadata-store.c:465
+#: tepl/tepl-metadata-parser.c:171
 msgid "The <document> element must contain the “uri” and “atime” attributes."
 msgstr "Element <document> musi zawierać atrybuty „uri” i „atime”."
 
 #. Translators: do not translate <entry>.
-#: tepl/tepl-metadata-store.c:520
+#: tepl/tepl-metadata-parser.c:200
 #, c-format
 msgid "Expected an <entry> element, got “%s” instead."
 msgstr "Oczekiwano elementu <entry>, otrzymano „%s” zamiast niego."
 
 #. Translators: do not translate <entry>, “key” and “value”.
-#: tepl/tepl-metadata-store.c:546
-msgid "The <entry> element must contain the “key” and “value” attributes."
-msgstr "Element <entry> musi zawierać atrybuty „key” i „value”."
+#: tepl/tepl-metadata-parser.c:226
+msgid "The <entry> element is missing the “key” or “value” attribute."
+msgstr "Element <entry> nie ma atrybutu „key” lub „value”."
 
-#: tepl/tepl-tab.c:532
+#: tepl/tepl-tab.c:506
 msgid "Error when loading the file."
 msgstr "Błąd podczas wczytywania pliku."
 
-#: tepl/tepl-tab.c:746
+#: tepl/tepl-tab.c:720
 msgid "Save File"
 msgstr "Zapis pliku"
 

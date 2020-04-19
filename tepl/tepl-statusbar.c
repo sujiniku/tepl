@@ -44,11 +44,8 @@ tepl_statusbar_init (TeplStatusbar *statusbar)
 {
 	statusbar->priv = tepl_statusbar_get_instance_private (statusbar);
 
-	/* FIXME: still needed? */
-	/*
 	gtk_widget_set_margin_top (GTK_WIDGET (statusbar), 0);
 	gtk_widget_set_margin_bottom (GTK_WIDGET (statusbar), 0);
-	*/
 
 	statusbar->priv->label = GTK_LABEL (gtk_label_new (NULL));
 	gtk_widget_set_no_show_all (GTK_WIDGET (statusbar->priv->label), TRUE);

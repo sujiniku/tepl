@@ -319,6 +319,22 @@ tepl_metadata_manager_get_type
 </SECTION>
 
 <SECTION>
+<FILE>statusbar</FILE>
+TeplStatusbar
+tepl_statusbar_new
+<SUBSECTION Standard>
+TEPL_IS_STATUSBAR
+TEPL_IS_STATUSBAR_CLASS
+TEPL_STATUSBAR
+TEPL_STATUSBAR_CLASS
+TEPL_STATUSBAR_GET_CLASS
+TEPL_TYPE_STATUSBAR
+TeplStatusbarClass
+TeplStatusbarPrivate
+tepl_statusbar_get_type
+</SECTION>
+
+<SECTION>
 <FILE>tab</FILE>
 TeplTab
 TeplTabClass

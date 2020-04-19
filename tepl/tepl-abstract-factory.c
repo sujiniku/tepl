@@ -245,3 +245,30 @@ tepl_abstract_factory_create_file (TeplAbstractFactory *factory)
 
 	return TEPL_ABSTRACT_FACTORY_GET_CLASS (factory)->create_file (factory);
 }
+
+/**
+ * tepl_abstract_factory_create_metadata_manager_file:
+ * @factory: the #TeplAbstractFactory.
+ *
+ * Creates a new #GFile that is then intended to be used as an argument to
+ * tepl_metadata_manager_load_from_disk() and
+ * tepl_metadata_manager_save_to_disk(). This function just creates the #GFile
+ * object, it doesn't call any #TeplMetadataManager function.
+ *
+ * Returns: (transfer full) (nullable): a new #GFile, or %NULL if the vfunc is
+ * not implemented.
+ * Since: 5.0
+ */
+GFile *
+tepl_abstract_factory_create_metadata_manager_file (TeplAbstractFactory *factory)
+{
+	g_return_val_if_fail (TEPL_IS_ABSTRACT_FACTORY (factory), NULL);
+
+	if (TEPL_ABSTRACT_FACTORY_GET_CLASS (factory)->create_metadata_manager_file != NULL)
+	{
+		return TEPL_ABSTRACT_FACTORY_GET_CLASS (factory)->create_metadata_manager_file (factory);
+	}
+
+	g_warning ("The TeplAbstractFactory::create_metadata_manager_file vfunc is not implemented.");
+	return NULL;
+}

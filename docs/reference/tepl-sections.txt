@@ -19,6 +19,7 @@ tepl_abstract_factory_create_main_window
 tepl_abstract_factory_create_tab
 tepl_abstract_factory_create_tab_label
 tepl_abstract_factory_create_file
+tepl_abstract_factory_create_metadata_manager_file
 <SUBSECTION Standard>
 TEPL_ABSTRACT_FACTORY
 TEPL_ABSTRACT_FACTORY_CLASS

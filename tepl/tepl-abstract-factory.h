@@ -59,20 +59,25 @@ struct _TeplAbstractFactory
  * @create_file: Virtual function pointer for
  *   tepl_abstract_factory_create_file(). By default the #TeplFile is created
  *   with tepl_file_new().
+ * @create_metadata_manager_file: Virtual function pointer for
+ *   tepl_abstract_factory_create_metadata_manager_file(). It is not implemented
+ *   by default.
  */
 struct _TeplAbstractFactoryClass
 {
 	GObjectClass parent_class;
 
-	GtkApplicationWindow *	(* create_main_window)	(TeplAbstractFactory *factory,
-							 GtkApplication      *app);
+	GtkApplicationWindow *	(* create_main_window)			(TeplAbstractFactory *factory,
+									 GtkApplication      *app);
 
-	TeplTab *		(* create_tab)		(TeplAbstractFactory *factory);
+	TeplTab *		(* create_tab)				(TeplAbstractFactory *factory);
 
-	GtkWidget *		(* create_tab_label)	(TeplAbstractFactory *factory,
-							 TeplTab             *tab);
+	GtkWidget *		(* create_tab_label)			(TeplAbstractFactory *factory,
+									 TeplTab             *tab);
 
-	TeplFile *		(* create_file)		(TeplAbstractFactory *factory);
+	TeplFile *		(* create_file)				(TeplAbstractFactory *factory);
+
+	GFile *			(* create_metadata_manager_file)	(TeplAbstractFactory *factory);
 
 	/*< private >*/
 	gpointer padding[12];
@@ -93,6 +98,9 @@ GtkWidget *		tepl_abstract_factory_create_tab_label		(TeplAbstractFactory *facto
 									 TeplTab             *tab);
 
 TeplFile *		tepl_abstract_factory_create_file		(TeplAbstractFactory *factory);
+
+GFile *			tepl_abstract_factory_create_metadata_manager_file
+									(TeplAbstractFactory *factory);
 
 G_GNUC_INTERNAL
 void			_tepl_abstract_factory_unref_singleton		(void);

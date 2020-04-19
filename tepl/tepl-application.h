@@ -75,6 +75,8 @@ void			tepl_application_handle_activate		(TeplApplication *tepl_app);
 
 void			tepl_application_handle_open			(TeplApplication *tepl_app);
 
+void			tepl_application_handle_metadata		(TeplApplication *tepl_app);
+
 G_END_DECLS
 
 #endif /* TEPL_APPLICATION_H */

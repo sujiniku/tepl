@@ -42,6 +42,7 @@ tepl_application_get_active_main_window
 tepl_application_open_simple
 tepl_application_handle_activate
 tepl_application_handle_open
+tepl_application_handle_metadata
 <SUBSECTION Standard>
 TEPL_APPLICATION
 TEPL_APPLICATION_CLASS

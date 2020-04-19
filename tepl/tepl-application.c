@@ -22,6 +22,7 @@
 #include <glib/gi18n-lib.h>
 #include "tepl-abstract-factory.h"
 #include "tepl-application-window.h"
+#include "tepl-metadata-manager.h"
 
 /**
  * SECTION:application
@@ -60,6 +61,7 @@ struct _TeplApplicationPrivate
 
 	guint handle_activate : 1;
 	guint handle_open : 1;
+	guint handle_metadata : 1;
 };
 
 enum
@@ -598,6 +600,94 @@ tepl_application_handle_open (TeplApplication *tepl_app)
 					 0);
 
 		tepl_app->priv->handle_open = TRUE;
+	}
+}
+
+static void
+handle_metadata__startup_cb (GtkApplication  *gtk_app,
+			     TeplApplication *tepl_app)
+{
+	TeplAbstractFactory *factory = tepl_abstract_factory_get_singleton ();
+	TeplMetadataManager *manager = tepl_metadata_manager_get_singleton ();
+	GFile *file;
+	GError *error = NULL;
+
+	file = tepl_abstract_factory_create_metadata_manager_file (factory);
+	if (file == NULL)
+	{
+		return;
+	}
+
+	tepl_metadata_manager_load_from_disk (manager, file, &error);
+	if (error != NULL)
+	{
+		g_warning ("Failed to load metadata: %s", error->message);
+		g_clear_error (&error);
+	}
+
+	g_object_unref (file);
+}
+
+static void
+handle_metadata__shutdown_cb (GtkApplication  *gtk_app,
+			      TeplApplication *tepl_app)
+{
+	TeplAbstractFactory *factory = tepl_abstract_factory_get_singleton ();
+	TeplMetadataManager *manager = tepl_metadata_manager_get_singleton ();
+	GFile *file;
+	GError *error = NULL;
+
+	file = tepl_abstract_factory_create_metadata_manager_file (factory);
+	if (file == NULL)
+	{
+		return;
+	}
+
+	tepl_metadata_manager_save_to_disk (manager, file, TRUE, &error);
+	if (error != NULL)
+	{
+		g_warning ("Failed to save metadata: %s", error->message);
+		g_clear_error (&error);
+	}
+
+	g_object_unref (file);
+}
+
+/**
+ * tepl_application_handle_metadata:
+ * @tepl_app: a #TeplApplication.
+ *
+ * This function:
+ * - Connects to the #GApplication::startup signal to call
+ *   tepl_metadata_manager_load_from_disk().
+ * - Connects to the #GApplication::shutdown signal to call
+ *   tepl_metadata_manager_save_to_disk() with @trim set to %TRUE.
+ *
+ * It gets the #GFile by calling
+ * tepl_abstract_factory_create_metadata_manager_file().
+ *
+ * Since: 5.0
+ */
+void
+tepl_application_handle_metadata (TeplApplication *tepl_app)
+{
+	g_return_if_fail (TEPL_IS_APPLICATION (tepl_app));
+
+	if (!tepl_app->priv->handle_metadata)
+	{
+		g_signal_connect_object (tepl_app->priv->gtk_app,
+					 "startup",
+					 G_CALLBACK (handle_metadata__startup_cb),
+					 tepl_app,
+					 0);
+
+		g_signal_connect_object (tepl_app->priv->gtk_app,
+					 "shutdown",
+					 G_CALLBACK (handle_metadata__shutdown_cb),
+					 tepl_app,
+					 0);
+
+		tepl_app->priv->handle_metadata = TRUE;
 	}
 }
 

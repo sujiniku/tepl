@@ -411,6 +411,7 @@ tepl_utils_decode_uri
 tepl_utils_create_parent_directories
 tepl_utils_file_query_exists_async
 tepl_utils_file_query_exists_finish
+tepl_utils_create_close_button
 tepl_utils_show_warning_dialog
 </SECTION>
 

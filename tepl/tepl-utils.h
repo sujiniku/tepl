@@ -72,8 +72,7 @@ gboolean	tepl_utils_file_query_exists_finish		(GFile        *file,
 
 /* Widget utilities */
 
-G_GNUC_INTERNAL
-GtkWidget *	_tepl_utils_create_close_button			(void);
+GtkWidget *	tepl_utils_create_close_button			(void);
 
 G_GNUC_INTERNAL
 void		_tepl_utils_associate_secondary_window		(GtkWindow *secondary_window,

@@ -614,8 +614,14 @@ tepl_utils_file_query_exists_finish (GFile        *file,
 	return FALSE;
 }
 
+/**
+ * tepl_utils_create_close_button:
+ *
+ * Returns: (transfer floating): a new close button (a #GtkButton).
+ * Since: 5.0
+ */
 GtkWidget *
-_tepl_utils_create_close_button (void)
+tepl_utils_create_close_button (void)
 {
 	GtkWidget *close_button;
 	GtkStyleContext *style_context;

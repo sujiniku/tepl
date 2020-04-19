@@ -337,7 +337,7 @@ tepl_tab_label_init (TeplTabLabel *tab_label)
 
 	/* Close button */
 
-	close_button = _tepl_utils_create_close_button ();
+	close_button = tepl_utils_create_close_button ();
 	gtk_widget_set_tooltip_text (close_button, _("Close file"));
 
 	g_signal_connect (close_button,

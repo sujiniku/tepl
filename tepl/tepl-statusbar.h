@@ -53,9 +53,15 @@ struct _TeplStatusbarClass
 	gpointer padding[12];
 };
 
-GType		tepl_statusbar_get_type		(void);
+GType		tepl_statusbar_get_type			(void);
 
-TeplStatusbar *	tepl_statusbar_new		(void);
+TeplStatusbar *	tepl_statusbar_new			(void);
+
+void		tepl_statusbar_show_cursor_position	(TeplStatusbar *statusbar,
+							 gint           line,
+							 gint           column);
+
+void		tepl_statusbar_hide_cursor_position	(TeplStatusbar *statusbar);
 
 G_END_DECLS
 

@@ -322,6 +322,8 @@ tepl_metadata_manager_get_type
 <FILE>statusbar</FILE>
 TeplStatusbar
 tepl_statusbar_new
+tepl_statusbar_show_cursor_position
+tepl_statusbar_hide_cursor_position
 <SUBSECTION Standard>
 TEPL_IS_STATUSBAR
 TEPL_IS_STATUSBAR_CLASS

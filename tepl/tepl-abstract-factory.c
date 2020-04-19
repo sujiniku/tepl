@@ -41,8 +41,6 @@
  * “MyappAbstractFactory” is not a good name for a #TeplAbstractFactory
  * subclass. “MyappFactory” is a better name (of course change “Myapp” with the
  * application namespace).
- *
- * For an application written in Vala, see #TeplAbstractFactoryVala.
  */
 
 /* API design:

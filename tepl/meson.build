@@ -1,7 +1,6 @@
 tepl_public_headers = [
   'tepl.h',
   'tepl-abstract-factory.h',
-  'tepl-abstract-factory-vala.h',
   'tepl-application.h',
   'tepl-application-window.h',
   'tepl-buffer.h',
@@ -28,7 +27,6 @@ tepl_public_headers = [
 
 tepl_public_c_files = [
   'tepl-abstract-factory.c',
-  'tepl-abstract-factory-vala.c',
   'tepl-application.c',
   'tepl-application-window.c',
   'tepl-buffer.c',

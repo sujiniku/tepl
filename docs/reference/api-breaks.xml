@@ -151,6 +151,12 @@
           implementation detail).
         </para>
       </listitem>
+      <listitem>
+        <para>
+          The <code>TeplAbstractFactoryVala</code> class has been removed,
+          because it's possible to manually manage GObject references in Vala.
+        </para>
+      </listitem>
     </itemizedlist>
   </chapter>
 </part>

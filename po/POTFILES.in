@@ -1,6 +1,5 @@
 # List of source files containing translatable strings.
 tepl/tepl-abstract-factory.c
-tepl/tepl-abstract-factory-vala.c
 tepl/tepl-application.c
 tepl/tepl-application-window.c
 tepl/tepl-buffer.c

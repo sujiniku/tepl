@@ -27,7 +27,6 @@
 #include <tepl/tepl-enum-types.h>
 
 #include <tepl/tepl-abstract-factory.h>
-#include <tepl/tepl-abstract-factory-vala.h>
 #include <tepl/tepl-application.h>
 #include <tepl/tepl-application-window.h>
 #include <tepl/tepl-buffer.h>

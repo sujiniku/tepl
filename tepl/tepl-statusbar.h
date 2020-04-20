@@ -25,6 +25,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <tepl/tepl-tab-group.h>
 
 G_BEGIN_DECLS
 
@@ -62,6 +63,9 @@ void		tepl_statusbar_show_cursor_position	(TeplStatusbar *statusbar,
 							 gint           column);
 
 void		tepl_statusbar_hide_cursor_position	(TeplStatusbar *statusbar);
+
+void		tepl_statusbar_set_tab_group		(TeplStatusbar *statusbar,
+							 TeplTabGroup  *tab_group);
 
 G_END_DECLS
 

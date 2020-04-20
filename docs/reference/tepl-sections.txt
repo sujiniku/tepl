@@ -324,6 +324,7 @@ TeplStatusbar
 tepl_statusbar_new
 tepl_statusbar_show_cursor_position
 tepl_statusbar_hide_cursor_position
+tepl_statusbar_set_tab_group
 <SUBSECTION Standard>
 TEPL_IS_STATUSBAR
 TEPL_IS_STATUSBAR_CLASS

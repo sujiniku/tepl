@@ -319,6 +319,11 @@ tepl_metadata_manager_get_type
 </SECTION>
 
 <SECTION>
+<FILE>side-panel</FILE>
+tepl_side_panel_new
+</SECTION>
+
+<SECTION>
 <FILE>stack</FILE>
 tepl_stack_add_component
 tepl_stack_bind_setting

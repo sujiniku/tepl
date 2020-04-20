@@ -23,6 +23,7 @@ tepl/tepl-metadata-manager.c
 tepl/tepl-metadata-parser.c
 tepl/tepl-notebook.c
 tepl/tepl-signal-group.c
+tepl/tepl-stack.c
 tepl/tepl-statusbar.c
 tepl/tepl-tab.c
 tepl/tepl-tab-group.c

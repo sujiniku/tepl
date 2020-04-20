@@ -319,6 +319,11 @@ tepl_metadata_manager_get_type
 </SECTION>
 
 <SECTION>
+<FILE>stack</FILE>
+tepl_stack_add_component
+</SECTION>
+
+<SECTION>
 <FILE>statusbar</FILE>
 TeplStatusbar
 tepl_statusbar_new

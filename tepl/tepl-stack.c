@@ -56,3 +56,69 @@ tepl_stack_add_component (GtkStack    *stack,
 				 "icon-name", icon_name,
 				 NULL);
 }
+
+static gboolean
+bind_get_mapping_cb (GValue   *to_property_value,
+		     GVariant *from_setting_variant,
+		     gpointer  user_data)
+{
+	GtkStack *stack = GTK_STACK (user_data);
+	const gchar *child_name;
+	GtkWidget *child_widget;
+
+	child_name = g_variant_get_string (from_setting_variant, NULL);
+	child_widget = gtk_stack_get_child_by_name (stack, child_name);
+
+	/* If child_widget is NULL, do nothing, and do not print an error. It
+	 * can happen if it's an old GSettings value and the child in the
+	 * GtkStack no longer exists after an upgrade of the application.
+	 */
+
+	if (child_widget != NULL)
+	{
+		g_value_set_string (to_property_value, child_name);
+	}
+
+	return TRUE;
+}
+
+/**
+ * tepl_stack_bind_setting:
+ * @stack: a #GtkStack.
+ * @settings: a #GSettings object.
+ * @setting_key: the #GSettings key of type string.
+ *
+ * Binds the provided #GSettings key with the #GtkStack:visible-child-name
+ * property of @stack.
+ *
+ * This function must be called when all #GtkWidget children have been added to
+ * @stack, to initially restore the state from #GSettings and then to update the
+ * #GSettings key when the visible child changes.
+ *
+ * Since: 5.0
+ */
+void
+tepl_stack_bind_setting (GtkStack    *stack,
+			 GSettings   *settings,
+			 const gchar *setting_key)
+{
+	g_return_if_fail (GTK_IS_STACK (stack));
+	g_return_if_fail (G_IS_SETTINGS (settings));
+	g_return_if_fail (setting_key != NULL);
+
+	/* G_SETTINGS_BIND_GET_NO_CHANGES is used because an application can
+	 * have several windows with the same GtkStack/panel class, bound to the
+	 * same GSettings key. But the visible child widget can be different on
+	 * each window. On application exit, the GSettings key is set for the
+	 * last closed window.
+	 */
+	g_settings_bind_with_mapping (settings, setting_key,
+				      stack, "visible-child-name",
+				      G_SETTINGS_BIND_SET |
+				      G_SETTINGS_BIND_GET |
+				      G_SETTINGS_BIND_GET_NO_CHANGES |
+				      G_SETTINGS_BIND_NO_SENSITIVITY,
+				      bind_get_mapping_cb,
+				      NULL,
+				      stack, NULL);
+}

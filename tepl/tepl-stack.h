@@ -34,6 +34,10 @@ void	tepl_stack_add_component	(GtkStack    *stack,
 					 const gchar *title,
 					 const gchar *icon_name);
 
+void	tepl_stack_bind_setting		(GtkStack    *stack,
+					 GSettings   *settings,
+					 const gchar *setting_key);
+
 G_END_DECLS
 
 #endif /* TEPL_STACK_H */

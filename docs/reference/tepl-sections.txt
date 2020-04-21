@@ -341,17 +341,6 @@ tepl_panel_get_type
 </SECTION>
 
 <SECTION>
-<FILE>side-panel</FILE>
-tepl_side_panel_new
-</SECTION>
-
-<SECTION>
-<FILE>stack</FILE>
-tepl_stack_add_component
-tepl_stack_bind_setting
-</SECTION>
-
-<SECTION>
 <FILE>statusbar</FILE>
 TeplStatusbar
 tepl_statusbar_new

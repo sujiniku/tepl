@@ -45,8 +45,6 @@
 #include <tepl/tepl-metadata-manager.h>
 #include <tepl/tepl-notebook.h>
 #include <tepl/tepl-panel.h>
-#include <tepl/tepl-side-panel.h>
-#include <tepl/tepl-stack.h>
 #include <tepl/tepl-statusbar.h>
 #include <tepl/tepl-tab.h>
 #include <tepl/tepl-tab-group.h>

@@ -42,6 +42,7 @@
 
     <chapter id="panels">
       <title>Side and Bottom Panels</title>
+      <xi:include href="xml/panel.xml"/>
       <xi:include href="xml/side-panel.xml"/>
       <xi:include href="xml/stack.xml"/>
     </chapter>

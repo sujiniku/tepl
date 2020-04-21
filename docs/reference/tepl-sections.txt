@@ -319,6 +319,22 @@ tepl_metadata_manager_get_type
 </SECTION>
 
 <SECTION>
+<FILE>panel</FILE>
+TeplPanel
+tepl_panel_new
+<SUBSECTION Standard>
+TEPL_IS_PANEL
+TEPL_IS_PANEL_CLASS
+TEPL_PANEL
+TEPL_PANEL_CLASS
+TEPL_PANEL_GET_CLASS
+TEPL_TYPE_PANEL
+TeplPanelClass
+TeplPanelPrivate
+tepl_panel_get_type
+</SECTION>
+
+<SECTION>
 <FILE>side-panel</FILE>
 tepl_side_panel_new
 </SECTION>

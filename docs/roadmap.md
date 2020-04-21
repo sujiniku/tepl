@@ -6,6 +6,14 @@ future.
 
 See the [NEWS file](../NEWS) for a detailed history.
 
+Side/bottom panel container
+---------------------------
+
+- Status: **done**
+- Release: Tepl 5 (GNOME 3.38)
+
+See the TeplPanel class.
+
 Rework file metadata
 --------------------
 
@@ -34,6 +42,7 @@ Tasks:
   [uchardet](https://www.freedesktop.org/wiki/Software/uchardet/).
 - Use the libicu for character encoding _conversion_, not iconv.
 - Feature parity with the GtkSourceView file loading and saving API.
+- Replace the few functions that do sync I/O with async I/O.
 
 High-level file loading and saving API: separate it from the core framework
 ---------------------------------------------------------------------------
@@ -49,11 +58,6 @@ Continue high-level file loading and saving implementation
 - Status: **todo**
 
 All the errors would be handled by Tepl, showing TeplInfoBars etc.
-
-Side/bottom panel container
----------------------------
-
-- Status: **todo**
 
 File browser widget
 -------------------

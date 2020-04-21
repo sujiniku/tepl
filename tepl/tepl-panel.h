@@ -53,9 +53,27 @@ struct _TeplPanelClass
 	gpointer padding[12];
 };
 
-GType		tepl_panel_get_type	(void);
+GType		tepl_panel_get_type			(void);
 
-TeplPanel *	tepl_panel_new		(void);
+TeplPanel *	tepl_panel_new				(void);
+
+TeplPanel *	tepl_panel_new_for_left_side_panel	(void);
+
+GtkStack *	tepl_panel_get_stack			(TeplPanel *panel);
+
+void		tepl_panel_add_component		(TeplPanel   *panel,
+							 GtkWidget   *component,
+							 const gchar *name,
+							 const gchar *title,
+							 const gchar *icon_name);
+
+void		tepl_panel_set_active_component_setting	(TeplPanel   *panel,
+							 GSettings   *settings,
+							 const gchar *setting_key);
+
+void		tepl_panel_restore_settings		(TeplPanel *panel);
+
+void		tepl_panel_save_settings		(TeplPanel *panel);
 
 G_END_DECLS
 

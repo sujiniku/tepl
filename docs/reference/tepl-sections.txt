@@ -322,6 +322,12 @@ tepl_metadata_manager_get_type
 <FILE>panel</FILE>
 TeplPanel
 tepl_panel_new
+tepl_panel_new_for_left_side_panel
+tepl_panel_get_stack
+tepl_panel_add_component
+tepl_panel_set_active_component_setting
+tepl_panel_restore_settings
+tepl_panel_save_settings
 <SUBSECTION Standard>
 TEPL_IS_PANEL
 TEPL_IS_PANEL_CLASS

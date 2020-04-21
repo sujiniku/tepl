@@ -25,9 +25,13 @@
 /**
  * SECTION:panel
  * @Title: TeplPanel
- * @Short_description: Side or bottom panel
+ * @Short_description: Side or bottom panel container
  *
- * #TeplPanel permits to create a side or bottom panel with several components.
+ * #TeplPanel permits to create a side or bottom panel that contains several
+ * components.
+ *
+ * #TeplPanel is a #GtkGrid subclass containing only one child #GtkWidget by
+ * default: the #GtkStack that can be retrieved with tepl_panel_get_stack().
  */
 
 struct _TeplPanelPrivate
@@ -167,7 +171,8 @@ tepl_panel_new_for_left_side_panel (void)
  * tepl_panel_get_stack:
  * @panel: a #TeplPanel.
  *
- * Returns: (transfer none): the #GtkStack widget of @panel.
+ * Returns: (transfer none): the #GtkStack widget of @panel (a direct child
+ * #GtkWidget of @panel).
  * Since: 5.0
  */
 GtkStack *
@@ -215,7 +220,7 @@ tepl_panel_add_component (TeplPanel   *panel,
 }
 
 /**
- * tepl_panel_set_active_component_setting:
+ * tepl_panel_provide_active_component_gsetting:
  * @panel: a #TeplPanel.
  * @settings: a #GSettings object.
  * @setting_key: a #GSettings key of type string.
@@ -224,14 +229,19 @@ tepl_panel_add_component (TeplPanel   *panel,
  * #GtkStack:visible-child-name property of the #GtkStack belonging to @panel.
  *
  * This function just stores @settings and @setting_key for further use by
- * tepl_panel_restore_settings() and tepl_panel_save_settings().
+ * tepl_panel_restore_state_from_gsettings() and
+ * tepl_panel_save_state_to_gsettings().
+ *
+ * Note that only one @settings/@setting_key pair is stored by @panel for
+ * further use, if you call this function twice on the same @panel, the second
+ * call overrides the first one.
  *
  * Since: 5.0
  */
 void
-tepl_panel_set_active_component_setting (TeplPanel   *panel,
-					 GSettings   *settings,
-					 const gchar *setting_key)
+tepl_panel_provide_active_component_gsetting (TeplPanel   *panel,
+					      GSettings   *settings,
+					      const gchar *setting_key)
 {
 	g_return_if_fail (TEPL_IS_PANEL (panel));
 	g_return_if_fail (G_IS_SETTINGS (settings));
@@ -244,7 +254,7 @@ tepl_panel_set_active_component_setting (TeplPanel   *panel,
 }
 
 /**
- * tepl_panel_restore_settings:
+ * tepl_panel_restore_state_from_gsettings:
  * @panel: a #TeplPanel.
  *
  * Restores the state of @panel according to the provided #GSettings.
@@ -255,7 +265,7 @@ tepl_panel_set_active_component_setting (TeplPanel   *panel,
  * Since: 5.0
  */
 void
-tepl_panel_restore_settings (TeplPanel *panel)
+tepl_panel_restore_state_from_gsettings (TeplPanel *panel)
 {
 	gchar *active_component_name;
 	GtkWidget *child_widget;
@@ -286,7 +296,7 @@ tepl_panel_restore_settings (TeplPanel *panel)
 }
 
 /**
- * tepl_panel_save_settings:
+ * tepl_panel_save_state_to_gsettings:
  * @panel: a #TeplPanel.
  *
  * Saves the current state of @panel to the provided #GSettings.
@@ -294,7 +304,7 @@ tepl_panel_restore_settings (TeplPanel *panel)
  * Since: 5.0
  */
 void
-tepl_panel_save_settings (TeplPanel *panel)
+tepl_panel_save_state_to_gsettings (TeplPanel *panel)
 {
 	const gchar *visible_child_name;
 

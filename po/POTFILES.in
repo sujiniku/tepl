@@ -25,6 +25,7 @@ tepl/tepl-notebook.c
 tepl/tepl-panel.c
 tepl/tepl-signal-group.c
 tepl/tepl-statusbar.c
+tepl/tepl-style-scheme-chooser-widget.c
 tepl/tepl-tab.c
 tepl/tepl-tab-group.c
 tepl/tepl-tab-label.c

@@ -46,6 +46,7 @@
 #include <tepl/tepl-notebook.h>
 #include <tepl/tepl-panel.h>
 #include <tepl/tepl-statusbar.h>
+#include <tepl/tepl-style-scheme-chooser-widget.h>
 #include <tepl/tepl-tab.h>
 #include <tepl/tepl-tab-group.h>
 #include <tepl/tepl-tab-label.h>

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-04-19 23:22+0000\n"
-"PO-Revision-Date: 2020-04-20 13:10+0300\n"
+"POT-Creation-Date: 2020-04-20 19:34+0000\n"
+"PO-Revision-Date: 2020-04-21 08:37+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -451,14 +451,17 @@ msgstr "Мало бути використано елемент <entry>, має�
 
 #. Translators: do not translate <entry>, “key” and “value”.
 #: tepl/tepl-metadata-parser.c:226
-#| msgid "The <entry> element must contain the “key” and “value” attributes."
 msgid "The <entry> element is missing the “key” or “value” attribute."
 msgstr "Елемент <entry> не містити атрибута «key» або «value»."
+
+#: tepl/tepl-side-panel.c:52
+msgid "Hide panel"
+msgstr "Сховати панель"
 
 #. Translators: "Ln" is an abbreviation for "Line", Col is an
 #. * abbreviation for "Column". Please, use abbreviations if possible.
 #.
-#: tepl/tepl-statusbar.c:99
+#: tepl/tepl-statusbar.c:118
 #, c-format
 msgid "Ln %d, Col %d"
 msgstr " Ряд. %d, Ст. %d"

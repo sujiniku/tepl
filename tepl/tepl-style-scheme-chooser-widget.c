@@ -20,6 +20,18 @@
 #include "tepl-style-scheme-chooser-widget.h"
 #include <gtksourceview/gtksource.h>
 
+/**
+ * SECTION:style-scheme-chooser-widget
+ * @Title: TeplStyleSchemeChooserWidget
+ * @Short_description: A simple #GtkSourceStyleSchemeChooser
+ *
+ * #TeplStyleSchemeChooserWidget is a simple implementation of the
+ * #GtkSourceStyleSchemeChooser interface.
+ *
+ * There is an additional convenience property:
+ * #TeplStyleSchemeChooserWidget:tepl-style-scheme-id.
+ */
+
 struct _TeplStyleSchemeChooserWidgetPrivate
 {
 	GtkListBox *list_box;
@@ -154,6 +166,17 @@ tepl_style_scheme_chooser_widget_class_init (TeplStyleSchemeChooserWidgetClass *
 
 	g_object_class_override_property (object_class, PROP_STYLE_SCHEME, "style-scheme");
 
+	/**
+	 * TeplStyleSchemeChooserWidget:tepl-style-scheme-id:
+	 *
+	 * The #GtkSourceStyleSchemeChooser:style-scheme ID, as a string. This
+	 * property is useful for binding it to a #GSettings key.
+	 *
+	 * When the #GtkSourceStyleSchemeChooser:style-scheme is %NULL, this
+	 * property contains the empty string.
+	 *
+	 * Since: 5.0
+	 */
 	g_object_class_install_property (object_class,
 					 PROP_TEPL_STYLE_SCHEME_ID,
 					 g_param_spec_string ("tepl-style-scheme-id",
@@ -319,12 +342,26 @@ tepl_style_scheme_chooser_widget_init (TeplStyleSchemeChooserWidget *chooser)
 			  chooser);
 }
 
+/**
+ * tepl_style_scheme_chooser_widget_new:
+ *
+ * Returns: (transfer floating): a new #TeplStyleSchemeChooserWidget.
+ * Since: 5.0
+ */
 TeplStyleSchemeChooserWidget *
 tepl_style_scheme_chooser_widget_new (void)
 {
 	return g_object_new (TEPL_TYPE_STYLE_SCHEME_CHOOSER_WIDGET, NULL);
 }
 
+/**
+ * tepl_style_scheme_chooser_widget_get_style_scheme_id:
+ * @chooser: a #TeplStyleSchemeChooserWidget.
+ *
+ * Returns: the value of the #TeplStyleSchemeChooserWidget:tepl-style-scheme-id
+ * property. Free with g_free() when no longer needed.
+ * Since: 5.0
+ */
 gchar *
 tepl_style_scheme_chooser_widget_get_style_scheme_id (TeplStyleSchemeChooserWidget *chooser)
 {
@@ -347,6 +384,19 @@ tepl_style_scheme_chooser_widget_get_style_scheme_id (TeplStyleSchemeChooserWidg
 	return id != NULL ? g_strdup (id) : g_strdup ("");
 }
 
+/**
+ * tepl_style_scheme_chooser_widget_set_style_scheme_id:
+ * @chooser: a #TeplStyleSchemeChooserWidget.
+ * @style_scheme_id: the new value.
+ *
+ * Sets the #TeplStyleSchemeChooserWidget:tepl-style-scheme-id property.
+ *
+ * The #GtkSourceStyleScheme is taken from the default
+ * #GtkSourceStyleSchemeManager as returned by
+ * gtk_source_style_scheme_manager_get_default().
+ *
+ * Since: 5.0
+ */
 void
 tepl_style_scheme_chooser_widget_set_style_scheme_id (TeplStyleSchemeChooserWidget *chooser,
 						      const gchar                  *style_scheme_id)

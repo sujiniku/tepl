@@ -360,6 +360,24 @@ tepl_statusbar_get_type
 </SECTION>
 
 <SECTION>
+<FILE>style-scheme-chooser-widget</FILE>
+TeplStyleSchemeChooserWidget
+tepl_style_scheme_chooser_widget_new
+tepl_style_scheme_chooser_widget_get_style_scheme_id
+tepl_style_scheme_chooser_widget_set_style_scheme_id
+<SUBSECTION Standard>
+TEPL_IS_STYLE_SCHEME_CHOOSER_WIDGET
+TEPL_IS_STYLE_SCHEME_CHOOSER_WIDGET_CLASS
+TEPL_STYLE_SCHEME_CHOOSER_WIDGET
+TEPL_STYLE_SCHEME_CHOOSER_WIDGET_CLASS
+TEPL_STYLE_SCHEME_CHOOSER_WIDGET_GET_CLASS
+TEPL_TYPE_STYLE_SCHEME_CHOOSER_WIDGET
+TeplStyleSchemeChooserWidgetClass
+TeplStyleSchemeChooserWidgetPrivate
+tepl_style_scheme_chooser_widget_get_type
+</SECTION>
+
+<SECTION>
 <FILE>tab</FILE>
 TeplTab
 TeplTabClass

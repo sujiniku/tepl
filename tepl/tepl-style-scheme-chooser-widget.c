@@ -26,10 +26,14 @@
  * @Short_description: A simple #GtkSourceStyleSchemeChooser
  *
  * #TeplStyleSchemeChooserWidget is a simple implementation of the
- * #GtkSourceStyleSchemeChooser interface.
+ * #GtkSourceStyleSchemeChooser interface. It already contains a
+ * #GtkScrolledWindow internally.
  *
- * There is an additional convenience property:
- * #TeplStyleSchemeChooserWidget:tepl-style-scheme-id.
+ * Additional features compared to #GtkSourceStyleSchemeChooserWidget:
+ * - There is an additional convenience property:
+ *   #TeplStyleSchemeChooserWidget:tepl-style-scheme-id.
+ * - When the #GtkWidget::map signal is emitted, #TeplStyleSchemeChooserWidget
+ *   scrolls to the selected row.
  */
 
 struct _TeplStyleSchemeChooserWidgetPrivate
@@ -156,13 +160,44 @@ tepl_style_scheme_chooser_widget_dispose (GObject *object)
 }
 
 static void
+scroll_to_selected_row (GtkListBox *list_box)
+{
+	GtkListBoxRow *selected_row = gtk_list_box_get_selected_row (list_box);
+
+	if (selected_row != NULL)
+	{
+		/* See also the call to gtk_container_set_focus_vadjustment()
+		 * below.
+		 */
+		gtk_container_set_focus_child (GTK_CONTAINER (list_box),
+					       GTK_WIDGET (selected_row));
+	}
+}
+
+static void
+tepl_style_scheme_chooser_widget_map (GtkWidget *widget)
+{
+	TeplStyleSchemeChooserWidget *chooser = TEPL_STYLE_SCHEME_CHOOSER_WIDGET (widget);
+
+	if (GTK_WIDGET_CLASS (tepl_style_scheme_chooser_widget_parent_class)->map != NULL)
+	{
+		GTK_WIDGET_CLASS (tepl_style_scheme_chooser_widget_parent_class)->map (widget);
+	}
+
+	scroll_to_selected_row (chooser->priv->list_box);
+}
+
+static void
 tepl_style_scheme_chooser_widget_class_init (TeplStyleSchemeChooserWidgetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
 	object_class->get_property = tepl_style_scheme_chooser_widget_get_property;
 	object_class->set_property = tepl_style_scheme_chooser_widget_set_property;
 	object_class->dispose = tepl_style_scheme_chooser_widget_dispose;
+
+	widget_class->map = tepl_style_scheme_chooser_widget_map;
 
 	g_object_class_override_property (object_class, PROP_STYLE_SCHEME, "style-scheme");
 
@@ -316,6 +351,7 @@ static void
 tepl_style_scheme_chooser_widget_init (TeplStyleSchemeChooserWidget *chooser)
 {
 	GtkWidget *scrolled_window;
+	GtkAdjustment *vadjustment;
 
 	chooser->priv = tepl_style_scheme_chooser_widget_get_instance_private (chooser);
 
@@ -335,6 +371,9 @@ tepl_style_scheme_chooser_widget_init (TeplStyleSchemeChooserWidget *chooser)
 			   GTK_WIDGET (chooser->priv->list_box));
 	gtk_widget_show_all (scrolled_window);
 	gtk_container_add (GTK_CONTAINER (chooser), scrolled_window);
+
+	vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
+	gtk_container_set_focus_vadjustment (GTK_CONTAINER (chooser->priv->list_box), vadjustment);
 
 	g_signal_connect (chooser->priv->list_box,
 			  "selected-rows-changed",

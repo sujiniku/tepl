@@ -409,6 +409,10 @@ tepl_style_scheme_chooser_widget_set_style_scheme_id (TeplStyleSchemeChooserWidg
 
 	manager = gtk_source_style_scheme_manager_get_default ();
 	style_scheme = gtk_source_style_scheme_manager_get_scheme (manager, style_scheme_id);
-	gtk_source_style_scheme_chooser_set_style_scheme (GTK_SOURCE_STYLE_SCHEME_CHOOSER (chooser),
-							  style_scheme);
+
+	if (style_scheme != NULL)
+	{
+		gtk_source_style_scheme_chooser_set_style_scheme (GTK_SOURCE_STYLE_SCHEME_CHOOSER (chooser),
+								  style_scheme);
+	}
 }

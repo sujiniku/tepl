@@ -61,6 +61,21 @@ G_DEFINE_TYPE_WITH_CODE (TeplStyleSchemeChooserWidget,
 						gtk_source_style_scheme_chooser_interface_init))
 
 static void
+clear_list_box_foreach_cb (GtkWidget *child,
+			   gpointer   user_data)
+{
+	gtk_widget_destroy (child);
+}
+
+static void
+clear_list_box (GtkListBox *list_box)
+{
+	gtk_container_foreach (GTK_CONTAINER (list_box),
+			       clear_list_box_foreach_cb,
+			       NULL);
+}
+
+static void
 list_box_row_set_style_scheme (GtkListBoxRow        *list_box_row,
 			       GtkSourceStyleScheme *style_scheme)
 {
@@ -313,6 +328,7 @@ append_style_scheme_to_list_box (TeplStyleSchemeChooserWidget *chooser,
 	list_box_row = gtk_list_box_row_new ();
 	gtk_container_add (GTK_CONTAINER (list_box_row), label);
 	list_box_row_set_style_scheme (GTK_LIST_BOX_ROW (list_box_row), style_scheme);
+	gtk_widget_show_all (list_box_row);
 
 	gtk_list_box_insert (chooser->priv->list_box, list_box_row, -1);
 
@@ -320,7 +336,7 @@ append_style_scheme_to_list_box (TeplStyleSchemeChooserWidget *chooser,
 }
 
 static void
-fill_list_box (TeplStyleSchemeChooserWidget *chooser)
+populate_list_box (TeplStyleSchemeChooserWidget *chooser)
 {
 	GtkSourceStyleSchemeManager *manager;
 	const gchar * const *scheme_ids;
@@ -345,11 +361,64 @@ fill_list_box (TeplStyleSchemeChooserWidget *chooser)
 }
 
 static void
-list_box_selected_rows_changed_cb (GtkListBox                   *list_box,
-				   TeplStyleSchemeChooserWidget *chooser)
+notify_properties (TeplStyleSchemeChooserWidget *chooser)
 {
 	g_object_notify (G_OBJECT (chooser), "style-scheme");
 	g_object_notify (G_OBJECT (chooser), "tepl-style-scheme-id");
+}
+
+static void
+list_box_selected_rows_changed_cb (GtkListBox                   *list_box,
+				   TeplStyleSchemeChooserWidget *chooser)
+{
+	notify_properties (chooser);
+}
+
+static void
+style_scheme_manager_notify_scheme_ids_cb (GtkSourceStyleSchemeManager  *manager,
+					   GParamSpec                   *pspec,
+					   TeplStyleSchemeChooserWidget *chooser)
+{
+	gchar *style_scheme_id;
+
+	g_signal_handlers_block_by_func (chooser->priv->list_box,
+					 list_box_selected_rows_changed_cb,
+					 chooser);
+
+	style_scheme_id = tepl_style_scheme_chooser_widget_get_style_scheme_id (chooser);
+
+	clear_list_box (chooser->priv->list_box);
+	populate_list_box (chooser);
+
+	/* Note that the style_scheme_id may no longer exist, in which case no
+	 * rows will be selected.
+	 */
+	tepl_style_scheme_chooser_widget_set_style_scheme_id (chooser, style_scheme_id);
+
+	scroll_to_selected_row (chooser->priv->list_box);
+
+	g_signal_handlers_unblock_by_func (chooser->priv->list_box,
+					   list_box_selected_rows_changed_cb,
+					   chooser);
+
+	/* Notify properies in all cases, even if no rows are selected. */
+	notify_properties (chooser);
+
+	g_free (style_scheme_id);
+}
+
+static void
+listen_to_scheme_manager_changes (TeplStyleSchemeChooserWidget *chooser)
+{
+	GtkSourceStyleSchemeManager *manager;
+
+	manager = gtk_source_style_scheme_manager_get_default ();
+
+	g_signal_connect_object (manager,
+				 "notify::scheme-ids",
+				 G_CALLBACK (style_scheme_manager_notify_scheme_ids_cb),
+				 chooser,
+				 0);
 }
 
 static void
@@ -363,7 +432,8 @@ tepl_style_scheme_chooser_widget_init (TeplStyleSchemeChooserWidget *chooser)
 	chooser->priv->list_box = GTK_LIST_BOX (gtk_list_box_new ());
 	gtk_list_box_set_selection_mode (chooser->priv->list_box, GTK_SELECTION_BROWSE);
 
-	fill_list_box (chooser);
+	populate_list_box (chooser);
+	listen_to_scheme_manager_changes (chooser);
 
 	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_widget_set_hexpand (scrolled_window, TRUE);

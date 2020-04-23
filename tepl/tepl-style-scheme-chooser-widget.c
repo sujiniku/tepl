@@ -160,17 +160,21 @@ tepl_style_scheme_chooser_widget_dispose (GObject *object)
 }
 
 static void
+scroll_to_row (GtkListBox    *list_box,
+	       GtkListBoxRow *row)
+{
+	/* See also the call to gtk_container_set_focus_vadjustment() below. */
+	gtk_container_set_focus_child (GTK_CONTAINER (list_box), GTK_WIDGET (row));
+}
+
+static void
 scroll_to_selected_row (GtkListBox *list_box)
 {
 	GtkListBoxRow *selected_row = gtk_list_box_get_selected_row (list_box);
 
 	if (selected_row != NULL)
 	{
-		/* See also the call to gtk_container_set_focus_vadjustment()
-		 * below.
-		 */
-		gtk_container_set_focus_child (GTK_CONTAINER (list_box),
-					       GTK_WIDGET (selected_row));
+		scroll_to_row (list_box, selected_row);
 	}
 }
 
@@ -261,6 +265,7 @@ tepl_style_scheme_chooser_widget_set_style_scheme (GtkSourceStyleSchemeChooser *
 		if (style_scheme_equal (cur_style_scheme, style_scheme))
 		{
 			gtk_list_box_select_row (chooser->priv->list_box, cur_list_box_row);
+			scroll_to_row (chooser->priv->list_box, cur_list_box_row);
 			break;
 		}
 	}

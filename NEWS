@@ -1,14 +1,29 @@
-News in x.y.z, 2020-xx-yy (not yet released)
--------------------------
+News in 4.99.1, 2020-04-24
+--------------------------
+
 * Build system: port to Meson, remove Autotools.
-* A complete overhaul of the metadata API and implementation. The libxml2 is no
-  longer required, and GVfs metadata is no longer used.
-* Utils functions: add more functions.
-* TeplInfoBar: add tepl_info_bar_set_buttons_orientation().
-* File loading and saving: add some IO error info bars.
-* Add tepl_view_new_with_buffer().
-* Write a new roadmap in docs/.
-* Translation updates.
+
+* API changes:
+ - A complete overhaul of the metadata API and implementation. The libxml2 is no
+   longer required, and GVfs metadata is no longer used. New API:
+	- TeplMetadata and TeplMetadataManager toolkit classes.
+	- Convenience functions in the framework, in TeplAbstractFactory,
+	  TeplApplication and TeplBuffer.
+ - Remove TeplAbstractFactoryVala, because it's possible to manually manage
+   GObject references in Vala when using TeplAbstractFactory.
+
+* New API:
+ - New class: TeplStatusbar.
+ - New class: TeplPanel.
+ - New class: TeplStyleSchemeChooserWidget.
+ - File loading and saving toolkit: start to add some IO error info bars.
+ - TeplInfoBar: add tepl_info_bar_set_buttons_orientation().
+ - TeplView: add tepl_view_new_with_buffer().
+ - Utility functions: add more functions.
+
+* Misc:
+ - Write a new roadmap in docs/.
+ - Translation updates.
 
 News in 4.4.0, 2020-03-05
 -------------------------

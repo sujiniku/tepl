@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2016, 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2016-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -27,6 +27,7 @@
 #include <gtk/gtk.h>
 #include <tepl/tepl-buffer.h>
 #include <tepl/tepl-view.h>
+#include <tepl/tepl-goto-line-bar.h>
 
 G_BEGIN_DECLS
 
@@ -61,6 +62,9 @@ struct _TeplTab
  *   non-#GtkInfoBar child widget of #TeplTab (so by default it is inserted
  *   below other #GtkInfoBar's, but above the #GtkScrolledWindow containing the
  *   #TeplView).
+ * @pack_goto_line_bar: Virtual function pointer to add a #TeplGotoLineBar in
+ *   the #TeplTab container. By default the #TeplGotoLineBar is added at the
+ *   bottom.
  * @close_request: For the #TeplTab::close-request signal.
  */
 struct _TeplTabClass
@@ -74,6 +78,9 @@ struct _TeplTabClass
 
 	void	(* pack_info_bar)	(TeplTab    *tab,
 					 GtkInfoBar *info_bar);
+
+	void	(* pack_goto_line_bar)	(TeplTab         *tab,
+					 TeplGotoLineBar *goto_line_bar);
 
 	/* Signals */
 
@@ -92,6 +99,8 @@ TeplTab *	tepl_tab_new_with_view		(TeplView *view);
 TeplView *	tepl_tab_get_view		(TeplTab *tab);
 
 TeplBuffer *	tepl_tab_get_buffer		(TeplTab *tab);
+
+TeplGotoLineBar *tepl_tab_get_goto_line_bar	(TeplTab *tab);
 
 void		tepl_tab_add_info_bar		(TeplTab    *tab,
 						 GtkInfoBar *info_bar);

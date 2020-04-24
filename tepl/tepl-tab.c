@@ -66,6 +66,7 @@
 struct _TeplTabPrivate
 {
 	TeplView *view;
+	TeplGotoLineBar *goto_line_bar;
 };
 
 enum
@@ -169,6 +170,13 @@ tepl_tab_pack_info_bar_default (TeplTab    *tab,
 	{
 		gtk_container_add (GTK_CONTAINER (tab), GTK_WIDGET (info_bar));
 	}
+}
+
+static void
+tepl_tab_pack_goto_line_bar_default (TeplTab         *tab,
+				     TeplGotoLineBar *goto_line_bar)
+{
+	gtk_container_add (GTK_CONTAINER (tab), GTK_WIDGET (goto_line_bar));
 }
 
 static void
@@ -289,6 +297,7 @@ tepl_tab_dispose (GObject *object)
 	TeplTab *tab = TEPL_TAB (object);
 
 	g_clear_object (&tab->priv->view);
+	g_clear_object (&tab->priv->goto_line_bar);
 
 	G_OBJECT_CLASS (tepl_tab_parent_class)->dispose (object);
 }
@@ -304,6 +313,7 @@ tepl_tab_class_init (TeplTabClass *klass)
 
 	klass->pack_view = tepl_tab_pack_view_default;
 	klass->pack_info_bar = tepl_tab_pack_info_bar_default;
+	klass->pack_goto_line_bar = tepl_tab_pack_goto_line_bar_default;
 	klass->close_request = tepl_tab_close_request_default;
 
 	/**
@@ -454,6 +464,36 @@ tepl_tab_get_buffer (TeplTab *tab)
 	}
 
 	return TEPL_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (tab->priv->view)));
+}
+
+/**
+ * tepl_tab_get_goto_line_bar:
+ * @tab: a #TeplTab.
+ *
+ * Gets the #TeplGotoLineBar widget belonging to @tab. The #TeplGotoLineBar must
+ * not be destroyed by the application, the purpose of this function is to
+ * show/hide the widget.
+ *
+ * Returns: (transfer none): the #TeplGotoLineBar widget belonging to @tab.
+ * Since: 5.0
+ */
+TeplGotoLineBar *
+tepl_tab_get_goto_line_bar (TeplTab *tab)
+{
+	g_return_val_if_fail (TEPL_IS_TAB (tab), NULL);
+
+	if (tab->priv->goto_line_bar == NULL)
+	{
+		tab->priv->goto_line_bar = tepl_goto_line_bar_new ();
+		g_object_ref_sink (tab->priv->goto_line_bar);
+
+		tepl_goto_line_bar_set_view (tab->priv->goto_line_bar,
+					     tab->priv->view);
+
+		TEPL_TAB_GET_CLASS (tab)->pack_goto_line_bar (tab, tab->priv->goto_line_bar);
+	}
+
+	return tab->priv->goto_line_bar;
 }
 
 /**

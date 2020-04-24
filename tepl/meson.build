@@ -138,14 +138,12 @@ TEPL_LIB_DEP = declare_dependency(
   dependencies: TEPL_DEPS
 )
 
-PKG_CONFIG.generate(
+PKG_CONFIG.generate(tepl_lib,
   filebase: 'tepl-@0@'.format(TEPL_API_VERSION),
   name: 'Tepl',
   description: 'Text editor product line',
-  libraries: tepl_lib,
   subdirs: 'tepl-@0@'.format(TEPL_API_VERSION),
-  requires: TEPL_PUBLIC_DEPS,
-  requires_private: TEPL_PRIVATE_DEPS
+  libraries: TEPL_PUBLIC_DEPS,
 )
 
 GNOME.generate_gir(

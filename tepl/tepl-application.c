@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2017-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -134,6 +134,11 @@ init_tepl_action_info_store (TeplApplication *tepl_app)
 
 		{ "win.tepl-unindent", "format-indent-less", N_("_Unindent"), "<Shift>Tab",
 		  N_("Unindent the selected lines") },
+
+		/* Search menu */
+
+		{ "win.tepl-goto-line", "go-jump", N_("_Go to Line…"), "<Control>l",
+		  N_("Go to a specific line") },
 	};
 
 	g_assert (tepl_app->priv->tepl_action_info_store == NULL);

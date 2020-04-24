@@ -1,7 +1,7 @@
 /*
  * This file is part of Tepl, a text editor library.
  *
- * Copyright 2017 - Sébastien Wilmet <swilmet@gnome.org>
+ * Copyright 2017-2020 - Sébastien Wilmet <swilmet@gnome.org>
  *
  * Tepl is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the
@@ -77,6 +77,19 @@
  *   selected text of the active view.
  *
  * See the tepl_menu_shell_append_edit_actions() convenience function.
+ *
+ * ## For the Search menu
+ *
+ * - `"win.tepl-goto-line"`: shows the #TeplGotoLineBar of all #TeplTab's
+ *   belonging to #TeplApplicationWindow. Even though each #TeplTab has a
+ *   different #TeplGotoLineBar, all #TeplGotoLineBar's of the #TeplTabGroup
+ *   have their #GtkWidget:visible state synchronized, so when one
+ *   #TeplGotoLineBar is hidden, all the other #TeplGotoLineBar's are hidden as
+ *   well. The user may think that there is only one #TeplGotoLineBar per
+ *   window, with the #TeplGotoLineBar remembering a different state (mainly the
+ *   content of the #GtkSearchEntry) for each #TeplTab. To remember the state
+ *   for each #TeplTab, the easiest is to have a different widget for each
+ *   #TeplTab, hence the current implementation.
  */
 
 struct _TeplApplicationWindowPrivate
@@ -410,6 +423,86 @@ unindent_cb (GSimpleAction *action,
 }
 
 static void
+update_goto_line_action_sensitivity (TeplApplicationWindow *tepl_window)
+{
+	TeplTab *active_tab;
+	GActionMap *action_map;
+	GAction *action;
+
+	active_tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
+
+	action_map = G_ACTION_MAP (tepl_window->priv->gtk_window);
+
+	action = g_action_map_lookup_action (action_map, "tepl-goto-line");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+				     active_tab != NULL);
+}
+
+static void
+update_goto_line (TeplApplicationWindow *tepl_window)
+{
+	GActionMap *action_map;
+	GAction *goto_line_action;
+	TeplTab *active_tab;
+	TeplGotoLineBar *goto_line_bar;
+
+	update_goto_line_action_sensitivity (tepl_window);
+
+	action_map = G_ACTION_MAP (tepl_window->priv->gtk_window);
+	goto_line_action = g_action_map_lookup_action (action_map, "tepl-goto-line");
+
+	active_tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
+	if (active_tab == NULL)
+	{
+		/* FIXME: should be done when the TeplTabGroup is *empty*. When
+		 * the active_tab == NULL it's an approximation. More APIs need
+		 * to be added to TeplTabGroup.
+		 */
+		g_simple_action_set_state (G_SIMPLE_ACTION (goto_line_action),
+					   g_variant_new_boolean (FALSE));
+		return;
+	}
+
+	/* FIXME: would be nice to call
+	 * _tepl_goto_line_bar_bind_to_gaction_state() directly for all
+	 * TeplTab's, when they are added to the TeplTabGroup.
+	 */
+	goto_line_bar = tepl_tab_get_goto_line_bar (active_tab);
+	_tepl_goto_line_bar_bind_to_gaction_state (goto_line_bar, goto_line_action);
+}
+
+static void
+goto_line_activate_cb (GSimpleAction *action,
+		       GVariant      *parameter,
+		       gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplTab *active_tab;
+
+	g_action_change_state (G_ACTION (action), g_variant_new_boolean (TRUE));
+
+	active_tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
+	if (active_tab != NULL)
+	{
+		TeplGotoLineBar *goto_line_bar;
+
+		goto_line_bar = tepl_tab_get_goto_line_bar (active_tab);
+		tepl_goto_line_bar_grab_focus_to_entry (goto_line_bar);
+	}
+}
+
+static void
+goto_line_change_state_cb (GSimpleAction *action,
+			   GVariant      *value,
+			   gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+
+	g_simple_action_set_state (action, value);
+	update_goto_line (tepl_window);
+}
+
+static void
 update_save_actions_sensitivity (TeplApplicationWindow *tepl_window)
 {
 	TeplBuffer *buffer;
@@ -626,6 +719,7 @@ update_actions_sensitivity (TeplApplicationWindow *tepl_window)
 	update_undo_redo_actions_sensitivity (tepl_window);
 	update_basic_edit_actions_sensitivity (tepl_window);
 	update_paste_action_sensitivity (tepl_window);
+	update_goto_line_action_sensitivity (tepl_window);
 }
 
 static void
@@ -655,6 +749,9 @@ add_actions (TeplApplicationWindow *tepl_window)
 		{ "tepl-select-all", select_all_cb },
 		{ "tepl-indent", indent_cb },
 		{ "tepl-unindent", unindent_cb },
+
+		/* Search menu */
+		{ "tepl-goto-line", goto_line_activate_cb, NULL, "false", goto_line_change_state_cb },
 	};
 
 	amtk_action_map_add_action_entries_check_dups (G_ACTION_MAP (tepl_window->priv->gtk_window),
@@ -1021,6 +1118,7 @@ active_tab_changed (TeplApplicationWindow *tepl_window)
 	update_basic_edit_actions_sensitivity (tepl_window);
 	update_paste_action_sensitivity (tepl_window);
 
+	update_goto_line (tepl_window);
 	update_title (tepl_window);
 }
 

@@ -35,6 +35,7 @@
 #include <tepl/tepl-file-loader.h>
 #include <tepl/tepl-file-saver.h>
 #include <tepl/tepl-fold-region.h>
+#include <tepl/tepl-goto-line-bar.h>
 #include <tepl/tepl-gutter-renderer-folds.h>
 #include <tepl/tepl-info-bar.h>
 #include <tepl/tepl-init.h>

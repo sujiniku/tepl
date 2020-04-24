@@ -160,5 +160,6 @@ GNOME.generate_gir(
     tepl_public_headers,
     tepl_public_c_files,
     tepl_enum_types
-  ]
+  ],
+  dependencies: TEPL_DEPS,
 )

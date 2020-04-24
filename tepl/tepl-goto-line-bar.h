@@ -25,6 +25,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <tepl/tepl-view.h>
 
 G_BEGIN_DECLS
 
@@ -53,9 +54,18 @@ struct _TeplGotoLineBarClass
 	gpointer padding[12];
 };
 
-GType			tepl_goto_line_bar_get_type	(void);
+GType			tepl_goto_line_bar_get_type			(void);
 
-TeplGotoLineBar *	tepl_goto_line_bar_new		(void);
+TeplGotoLineBar *	tepl_goto_line_bar_new				(void);
+
+void			tepl_goto_line_bar_set_view			(TeplGotoLineBar *bar,
+									 TeplView        *view);
+
+void			tepl_goto_line_bar_grab_focus_to_entry		(TeplGotoLineBar *bar);
+
+G_GNUC_INTERNAL
+void			_tepl_goto_line_bar_bind_to_gaction_state	(TeplGotoLineBar *bar,
+									 GAction         *action);
 
 G_END_DECLS
 

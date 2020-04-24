@@ -232,6 +232,24 @@ TeplFoldRegionClass
 </SECTION>
 
 <SECTION>
+<FILE>goto-line-bar</FILE>
+TeplGotoLineBar
+tepl_goto_line_bar_new
+tepl_goto_line_bar_set_view
+tepl_goto_line_bar_grab_focus_to_entry
+<SUBSECTION Standard>
+TEPL_GOTO_LINE_BAR
+TEPL_GOTO_LINE_BAR_CLASS
+TEPL_GOTO_LINE_BAR_GET_CLASS
+TEPL_IS_GOTO_LINE_BAR
+TEPL_IS_GOTO_LINE_BAR_CLASS
+TEPL_TYPE_GOTO_LINE_BAR
+TeplGotoLineBarClass
+TeplGotoLineBarPrivate
+tepl_goto_line_bar_get_type
+</SECTION>
+
+<SECTION>
 <FILE>gutter-renderer-folds</FILE>
 TeplGutterRendererFolds
 TeplGutterRendererFoldsState

@@ -63,6 +63,7 @@
 
     <chapter id="misc">
       <title>Misc</title>
+      <xi:include href="xml/goto-line-bar.xml"/>
       <xi:include href="xml/info-bar.xml"/>
       <xi:include href="xml/iter.xml"/>
       <xi:include href="xml/panel.xml"/>

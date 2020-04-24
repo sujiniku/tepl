@@ -1,15 +1,15 @@
 # Swedish translation for tepl.
-# Copyright © 2017, 2018 tepl's COPYRIGHT HOLDER
+# Copyright © 2017-2020 tepl's COPYRIGHT HOLDER
 # This file is distributed under the same license as the tepl package.
-# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2017, 2018.
+# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2017, 2018, 2020.
 # Josef Andersson <l10nl18nsweja@gmail.com>, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2018-02-27 19:31+0000\n"
-"PO-Revision-Date: 2018-03-11 22:01+0100\n"
+"POT-Creation-Date: 2020-04-21 18:26+0000\n"
+"PO-Revision-Date: 2020-04-24 22:12+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -17,23 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
-
-#. Translators: %s is a filename.
-#: amtk/amtk-application-window.c:374
-#, c-format
-msgid "Open “%s”"
-msgstr "Öppna ”%s”"
-
-#: amtk/amtk-application-window.c:630
-msgid "Open _Recent"
-msgstr "Öppna _senaste"
-
-#. Translators: %s is the application name.
-#: amtk/amtk-application-window.c:633
-#, c-format
-msgid "Open a file recently used with %s"
-msgstr "Öppna en fil som tidigare använts med %s"
+"X-Generator: Poedit 2.3\n"
 
 #. action, icon, label, accel, tooltip
 #. File menu
@@ -42,152 +26,152 @@ msgstr "Öppna en fil som tidigare använts med %s"
 #. document. For example a LaTeX document can be composed of
 #. several _files_. Or for source code we do not really create a
 #. new "document".
-#: tepl/tepl-application.c:92
+#: tepl/tepl-application.c:94
 msgid "_New"
 msgstr "_Ny"
 
-#: tepl/tepl-application.c:93
+#: tepl/tepl-application.c:95
 msgid "New file"
 msgstr "Ny fil"
 
-#: tepl/tepl-application.c:95
+#: tepl/tepl-application.c:97
 msgid "New _Window"
 msgstr "Nytt _fönster"
 
-#: tepl/tepl-application.c:96
+#: tepl/tepl-application.c:98
 msgid "Create a new window"
 msgstr "Skapa ett nytt fönster"
 
-#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:178
+#: tepl/tepl-application.c:100 tepl/tepl-application-window.c:177
 msgid "_Open"
 msgstr "Ö_ppna"
 
-#: tepl/tepl-application.c:99
+#: tepl/tepl-application.c:101
 msgid "Open a file"
 msgstr "Öppna en fil"
 
-#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:144
-#: tepl/tepl-tab.c:752
+#: tepl/tepl-application.c:103 tepl/tepl-close-confirm-dialog-single.c:143
+#: tepl/tepl-tab.c:724
 msgid "_Save"
 msgstr "_Spara"
 
-#: tepl/tepl-application.c:102
+#: tepl/tepl-application.c:104
 msgid "Save the current file"
 msgstr "Spara aktuell fil"
 
-#: tepl/tepl-application.c:104
+#: tepl/tepl-application.c:106
 msgid "Save _As"
 msgstr "S_para som"
 
-#: tepl/tepl-application.c:105
+#: tepl/tepl-application.c:107
 msgid "Save the current file to a different location"
 msgstr "Spara den aktuella filen till en annan plats"
 
 #. Edit menu
-#: tepl/tepl-application.c:109
+#: tepl/tepl-application.c:111
 msgid "_Undo"
 msgstr "Å_ngra"
 
-#: tepl/tepl-application.c:110
+#: tepl/tepl-application.c:112
 msgid "Undo the last action"
 msgstr "Ångra den senaste åtgärden"
 
-#: tepl/tepl-application.c:112
+#: tepl/tepl-application.c:114
 msgid "_Redo"
 msgstr "_Gör om"
 
-#: tepl/tepl-application.c:113
+#: tepl/tepl-application.c:115
 msgid "Redo the last undone action"
 msgstr "Gör om senaste ångrade åtgärden"
 
-#: tepl/tepl-application.c:115
+#: tepl/tepl-application.c:117
 msgid "Cu_t"
 msgstr "Klipp _ut"
 
-#: tepl/tepl-application.c:116
+#: tepl/tepl-application.c:118
 msgid "Cut the selection"
 msgstr "Klipp ut markering"
 
-#: tepl/tepl-application.c:118
+#: tepl/tepl-application.c:120
 msgid "_Copy"
 msgstr "_Kopiera"
 
-#: tepl/tepl-application.c:119
+#: tepl/tepl-application.c:121
 msgid "Copy the selection"
 msgstr "Kopiera markeringen"
 
-#: tepl/tepl-application.c:121
+#: tepl/tepl-application.c:123
 msgid "_Paste"
 msgstr "K_listra in"
 
-#: tepl/tepl-application.c:122
+#: tepl/tepl-application.c:124
 msgid "Paste the clipboard"
 msgstr "Klistra in urklipp"
 
-#: tepl/tepl-application.c:124
+#: tepl/tepl-application.c:126
 msgid "_Delete"
 msgstr "_Ta bort"
 
-#: tepl/tepl-application.c:125
+#: tepl/tepl-application.c:127
 msgid "Delete the selected text"
 msgstr "Ta bort den markerade texten"
 
-#: tepl/tepl-application.c:127
+#: tepl/tepl-application.c:129
 msgid "Select _All"
 msgstr "Markera _allt"
 
-#: tepl/tepl-application.c:128
+#: tepl/tepl-application.c:130
 msgid "Select all the text"
 msgstr "Markera all text"
 
-#: tepl/tepl-application.c:130
+#: tepl/tepl-application.c:132
 msgid "_Indent"
 msgstr "_Indentera"
 
-#: tepl/tepl-application.c:131
+#: tepl/tepl-application.c:133
 msgid "Indent the selected lines"
 msgstr "Indentera de markerade raderna"
 
-#: tepl/tepl-application.c:133
+#: tepl/tepl-application.c:135
 msgid "_Unindent"
 msgstr "_Avindentera"
 
-#: tepl/tepl-application.c:134
+#: tepl/tepl-application.c:136
 msgid "Unindent the selected lines"
 msgstr "Avindentera de markerade raderna"
 
 #. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
 #. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
-#. * doesn't have the real path to the file, so it would screw up some
+#. * doesn't have the real path to the file, so it would ruin some
 #. * features for text editors:
 #. * - showing the directory in parentheses in the window title, or in the
 #. *   tab tooltip;
 #. * - opening a recent file.
 #. * Basically everywhere where the directory is shown.
 #.
-#: tepl/tepl-application-window.c:174
+#: tepl/tepl-application-window.c:173
 msgid "Open File"
 msgstr "Öppna fil"
 
-#: tepl/tepl-application-window.c:177
-#: tepl/tepl-close-confirm-dialog-single.c:138 tepl/tepl-tab.c:751
+#: tepl/tepl-application-window.c:176
+#: tepl/tepl-close-confirm-dialog-single.c:137 tepl/tepl-tab.c:723
 msgid "_Cancel"
 msgstr "A_vbryt"
 
-#: tepl/tepl-application-window.c:708
+#: tepl/tepl-application-window.c:707
 msgid "Read-Only"
 msgstr "Skrivskyddad"
 
-#: tepl/tepl-close-confirm-dialog-single.c:133
+#: tepl/tepl-close-confirm-dialog-single.c:132
 #, c-format
 msgid "Save changes to file “%s” before closing?"
 msgstr "Spara ändringar till filen ”%s” innan du stänger?"
 
-#: tepl/tepl-close-confirm-dialog-single.c:137
+#: tepl/tepl-close-confirm-dialog-single.c:136
 msgid "Close _without Saving"
 msgstr "Stäng _utan att spara"
 
-#: tepl/tepl-close-confirm-dialog-single.c:150
+#: tepl/tepl-close-confirm-dialog-single.c:149
 msgid "_Save As…"
 msgstr "_Spara som…"
 
@@ -316,75 +300,199 @@ msgstr "Okänd"
 msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 
-#: tepl/tepl-encoding-converter.c:302
+#: tepl/tepl-encoding-converter.c:305
 #, c-format
 msgid "Conversion from character set “%s” to “%s” is not supported."
 msgstr "Konvertering från teckentabellen ”%s” till ”%s” stöds inte."
 
-#: tepl/tepl-encoding-converter.c:311
+#: tepl/tepl-encoding-converter.c:314
 #, c-format
 msgid "Could not open converter from “%s” to “%s”: %s"
 msgstr "Kunde inte öppna konverteraren från ”%s” till ”%s”: %s"
 
-#: tepl/tepl-encoding-converter.c:368
+#: tepl/tepl-encoding-converter.c:374
 msgid "The input data contains an invalid sequence."
 msgstr "Indata innehåller en ogiltig sekvens."
 
-#: tepl/tepl-encoding-converter.c:377
+#: tepl/tepl-encoding-converter.c:383
 #, c-format
 msgid "Error when converting data: %s"
 msgstr "Fel vid konvertering av data: %s"
 
-#: tepl/tepl-encoding-converter.c:556
+#: tepl/tepl-encoding-converter.c:562
 msgid "The input data ends with an incomplete multi-byte sequence."
 msgstr "Indata avslutas med en ofullständig flerbytesekvens."
 
-#: tepl/tepl-encoding-converter.c:579
+#: tepl/tepl-encoding-converter.c:585
 msgid "The input content ends with incomplete data."
 msgstr "Inmatningsinnehållet avslutas med ofullständiga data."
 
-#: tepl/tepl-file.c:413
+#: tepl/tepl-file.c:408
 #, c-format
 msgid "Untitled File %d"
 msgstr "Namnlös fil %d"
 
-#: tepl/tepl-file-content-loader.c:331
+#: tepl/tepl-file-content-loader.c:336
 #, c-format
 msgid "The file is too big. Maximum %s can be loaded."
 msgstr "Filen är för stor. Högst %s kan läsas in."
 
-#: tepl/tepl-file-loader.c:872
+#: tepl/tepl-file-loader.c:869
 msgid "It is not possible to detect the character encoding automatically."
 msgstr "Det går inte att identifiera teckenkodningen automatiskt."
 
-#: tepl/tepl-file-saver.c:784
+#: tepl/tepl-file-saver.c:781
 msgid "The file is externally modified."
 msgstr "Filen har ändrats externt."
 
-#: tepl/tepl-file-saver.c:1318
+#: tepl/tepl-file-saver.c:1315
 msgid "The buffer contains invalid characters."
 msgstr "Bufferten innehåller ogiltiga tecken."
 
-#: tepl/tepl-tab.c:534
+#: tepl/tepl-io-error-info-bars.c:57
+msgid "_Edit Anyway"
+msgstr "R_edigera ändå"
+
+#: tepl/tepl-io-error-info-bars.c:61
+msgid "_Don’t Edit"
+msgstr "Redigera _inte"
+
+#: tepl/tepl-io-error-info-bars.c:67
+#, c-format
+msgid "This file “%s” is already open in another window."
+msgstr "Denna fil ”%s” är redan öppnad i ett annat fönster."
+
+#: tepl/tepl-io-error-info-bars.c:72
+msgid "Do you want to edit it anyway?"
+msgstr "Vill du redigera den ändå?"
+
+#: tepl/tepl-io-error-info-bars.c:106 tepl/tepl-io-error-info-bars.c:208
+msgid "S_ave Anyway"
+msgstr "Sp_ara ändå"
+
+#: tepl/tepl-io-error-info-bars.c:110 tepl/tepl-io-error-info-bars.c:212
+msgid "_Don’t Save"
+msgstr "Spara _inte"
+
+#: tepl/tepl-io-error-info-bars.c:116
+#, c-format
+msgid "Could not create a backup file while saving “%s”"
+msgstr "Kunde inte skapa en säkerhetskopia när ”%s” sparades"
+
+#: tepl/tepl-io-error-info-bars.c:121
+msgid ""
+"Could not back up the old copy of the file before saving the new one. You "
+"can ignore this warning and save the file anyway, but if an error occurs "
+"while saving, you could lose the old copy of the file. Save anyway?"
+msgstr ""
+"Kunde inte säkerhetskopiera den gamla kopian av filen före den nya sparas. "
+"Du kan ignorera denna varning och spara filen ändå, men om ett fel inträffar "
+"när den sparas så kan du förlora den gamla kopian av filen. Spara ändå?"
+
+#: tepl/tepl-io-error-info-bars.c:130
+#, c-format
+msgid "Error message: %s"
+msgstr "Felmeddelande: %s"
+
+#: tepl/tepl-io-error-info-bars.c:167
+#, c-format
+msgid "The file “%s” changed on disk."
+msgstr "Filen ”%s” har ändrats på disken."
+
+#: tepl/tepl-io-error-info-bars.c:172
+msgid "Drop Changes and _Reload"
+msgstr "Förkasta ändringar och _läs om"
+
+#: tepl/tepl-io-error-info-bars.c:172
+msgid "_Reload"
+msgstr "_Läs om"
+
+#: tepl/tepl-io-error-info-bars.c:218
+#, c-format
+msgid "Some invalid characters have been detected while saving “%s”."
+msgstr "Några ogiltiga tecken har upptäckts under sparning av ”%s”."
+
+#: tepl/tepl-io-error-info-bars.c:223
+msgid ""
+"If you continue saving this file you can corrupt the document. Save anyway?"
+msgstr ""
+"Om du fortsätter med att spara denna fil kan du skada dokumentet. Spara ändå?"
+
+#. Translators: do not translate <metadata>.
+#: tepl/tepl-metadata-parser.c:98
+#, c-format
+msgid "The XML file must start with a <metadata> element, not “%s”."
+msgstr "XML-filen måste starta med elementet <metadata>, inte ”%s”."
+
+#. Translators: do not translate <document>.
+#: tepl/tepl-metadata-parser.c:130
+#, c-format
+msgid "Expected a <document> element, got “%s” instead."
+msgstr "Förväntade elementet <document>, hittade ”%s” istället."
+
+#. Translators: do not translate “atime”.
+#: tepl/tepl-metadata-parser.c:156
+#, c-format
+msgid "Failed to parse the “atime” attribute value “%s”."
+msgstr "Misslyckades med att tolka attributvärdet ”%s” för ”atime”."
+
+#. Translators: do not translate <document>, “uri” and “atime”.
+#: tepl/tepl-metadata-parser.c:171
+msgid "The <document> element must contain the “uri” and “atime” attributes."
+msgstr "Elementet <document> måste innehålla attributen ”uri” och ”atime”."
+
+#. Translators: do not translate <entry>.
+#: tepl/tepl-metadata-parser.c:200
+#, c-format
+msgid "Expected an <entry> element, got “%s” instead."
+msgstr "Förväntade elementet <entry>, hittade ”%s” istället."
+
+#. Translators: do not translate <entry>, “key” and “value”.
+#: tepl/tepl-metadata-parser.c:226
+msgid "The <entry> element is missing the “key” or “value” attribute."
+msgstr "Elementet <entry> saknar attributet ”key” eller ”value”."
+
+#: tepl/tepl-panel.c:107
+msgid "Hide panel"
+msgstr "Dölj panel"
+
+#. Translators: "Ln" is an abbreviation for "Line", Col is an
+#. * abbreviation for "Column". Please, use abbreviations if possible.
+#.
+#: tepl/tepl-statusbar.c:118
+#, c-format
+msgid "Ln %d, Col %d"
+msgstr "Rad %d, Kol %d"
+
+#: tepl/tepl-tab.c:506
 msgid "Error when loading the file."
 msgstr "Fel vid inläsning av filen."
 
-#: tepl/tepl-tab.c:748
+#: tepl/tepl-tab.c:720
 msgid "Save File"
 msgstr "Spara fil"
 
 #. Translators: location of a file.
-#: tepl/tepl-tab-label.c:273
+#: tepl/tepl-tab-label.c:272
 msgid "Location:"
 msgstr "Plats:"
 
-#: tepl/tepl-tab-label.c:342
+#: tepl/tepl-tab-label.c:341
 msgid "Close file"
 msgstr "Stäng fil"
 
-#: tepl/tepl-tab-saving.c:64
+#: tepl/tepl-tab-saving.c:62
 msgid "Error when saving the file."
 msgstr "Fel vid sparande av filen."
+
+#~ msgid "Open “%s”"
+#~ msgstr "Öppna ”%s”"
+
+#~ msgid "Open _Recent"
+#~ msgstr "Öppna _senaste"
+
+#~ msgid "Open a file recently used with %s"
+#~ msgstr "Öppna en fil som tidigare använts med %s"
 
 #~ msgid "Could not find the file “%s”."
 #~ msgstr "Kunde inte hitta filen ”%s”."
@@ -404,11 +512,19 @@ msgstr "Fel vid sparande av filen."
 #~ msgid "“%s” is not a valid location."
 #~ msgstr "”%s” är inte en giltig plats."
 
-#~ msgid "Host “%s” could not be found. Please check that your proxy settings are correct and try again."
-#~ msgstr "Värden ”%s” kunde inte hittas. Kontrollera att dina proxyinställningar är korrekta och försök igen."
+#~ msgid ""
+#~ "Host “%s” could not be found. Please check that your proxy settings are "
+#~ "correct and try again."
+#~ msgstr ""
+#~ "Värden ”%s” kunde inte hittas. Kontrollera att dina proxyinställningar är "
+#~ "korrekta och försök igen."
 
-#~ msgid "Hostname was invalid. Please check that you typed the location correctly and try again."
-#~ msgstr "Värdnamnet var ogiltigt. Kontrollera att du angav platsen korrekt och försök igen."
+#~ msgid ""
+#~ "Hostname was invalid. Please check that you typed the location correctly "
+#~ "and try again."
+#~ msgstr ""
+#~ "Värdnamnet var ogiltigt. Kontrollera att du angav platsen korrekt och "
+#~ "försök igen."
 
 #~ msgid "“%s” is not a regular file."
 #~ msgstr "”%s” är inte en vanlig fil."
@@ -422,11 +538,12 @@ msgstr "Fel vid sparande av filen."
 #~ msgid "_Retry"
 #~ msgstr "_Försök igen"
 
-#~ msgid "Edit Any_way"
-#~ msgstr "Redigera än_då"
-
-#~ msgid "The number of followed links is limited and the actual file could not be found within this limit."
-#~ msgstr "Antalet följda länkar är begränsat och den faktiska filen kunde inte hittas inom denna gräns."
+#~ msgid ""
+#~ "The number of followed links is limited and the actual file could not be "
+#~ "found within this limit."
+#~ msgstr ""
+#~ "Antalet följda länkar är begränsat och den faktiska filen kunde inte "
+#~ "hittas inom denna gräns."
 
 #~ msgid "You do not have the permissions necessary to open the file."
 #~ msgstr "Du har inte de rättigheter som krävs för att öppna filen."
@@ -444,10 +561,12 @@ msgstr "Fel vid sparande av filen."
 #~ msgstr "Det uppstod ett problem vid öppnandet av filen ”%s”."
 
 #~ msgid ""
-#~ "The file you opened has some invalid characters. If you continue editing this file you could corrupt it.\n"
+#~ "The file you opened has some invalid characters. If you continue editing "
+#~ "this file you could corrupt it.\n"
 #~ "You can also choose another character encoding and try again."
 #~ msgstr ""
-#~ "Filen du öppnade innehåller ogiltiga tecken. Om du fortsätter redigera denna fil kan du förstöra den.\n"
+#~ "Filen du öppnade innehåller ogiltiga tecken. Om du fortsätter redigera "
+#~ "denna fil kan du förstöra den.\n"
 #~ "Du kan också välja en annan teckenkodning och försöka igen."
 
 #~ msgid "Could not open the file “%s” using the “%s” character encoding."
@@ -459,6 +578,3 @@ msgstr "Fel vid sparande av filen."
 #~ msgstr ""
 #~ "Kontrollera att du inte försöker öppna en binär fil.\n"
 #~ "Välj en annan teckenkodning från menyn och försök igen."
-
-#~ msgid "Could not open the file “%s”."
-#~ msgstr "Kunde inte öppna filen ”%s”."

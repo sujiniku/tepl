@@ -33,6 +33,12 @@
  *
  * When the #GtkSearchEntry's content changes, tepl_view_goto_line() is called
  * on the associated #TeplView.
+ *
+ * # High-level API
+ *
+ * #TeplGotoLineBar is integrated in the Tepl framework, see:
+ * - The `"win.tepl-goto-line"` #GAction in #TeplApplicationWindow.
+ * - The tepl_tab_get_goto_line_bar() function.
  */
 
 struct _TeplGotoLineBarPrivate

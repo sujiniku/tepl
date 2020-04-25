@@ -283,48 +283,6 @@ tepl_goto_line_bar_grab_focus_to_entry (TeplGotoLineBar *bar)
 	gtk_widget_grab_focus (GTK_WIDGET (bar->priv->entry));
 }
 
-static gboolean
-binding_transform_smart_bool (GBinding     *binding,
-			      const GValue *from_value,
-			      GValue       *to_value,
-			      gpointer      user_data)
-{
-	if (G_VALUE_TYPE (from_value) == G_TYPE_BOOLEAN &&
-	    G_VALUE_TYPE (to_value) == G_TYPE_VARIANT)
-	{
-		gboolean bool_value;
-
-		bool_value = g_value_get_boolean (from_value);
-		g_value_set_variant (to_value, g_variant_new_boolean (bool_value));
-
-		return TRUE;
-	}
-	else if (G_VALUE_TYPE (from_value) == G_TYPE_VARIANT &&
-		 G_VALUE_TYPE (to_value) == G_TYPE_BOOLEAN)
-	{
-		GVariant *variant_value;
-		gboolean bool_value;
-
-		variant_value = g_value_get_variant (from_value);
-		if (variant_value == NULL)
-		{
-			return FALSE;
-		}
-
-		if (!g_variant_type_equal (g_variant_get_type (variant_value), G_VARIANT_TYPE_BOOLEAN))
-		{
-			return FALSE;
-		}
-
-		bool_value = g_variant_get_boolean (variant_value);
-		g_value_set_boolean (to_value, bool_value);
-
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
 void
 _tepl_goto_line_bar_bind_to_gaction_state (TeplGotoLineBar *bar,
 					   GAction         *action)
@@ -338,8 +296,8 @@ _tepl_goto_line_bar_bind_to_gaction_state (TeplGotoLineBar *bar,
 					     bar, "visible",
 					     G_BINDING_BIDIRECTIONAL |
 					     G_BINDING_SYNC_CREATE,
-					     binding_transform_smart_bool,
-					     binding_transform_smart_bool,
+					     tepl_utils_binding_transform_func_smart_bool,
+					     tepl_utils_binding_transform_func_smart_bool,
 					     NULL, NULL);
 
 		bar->priv->bound_to_gaction_state = TRUE;

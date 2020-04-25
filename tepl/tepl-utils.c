@@ -744,3 +744,69 @@ tepl_utils_show_warning_dialog (GtkWindow   *parent,
 
 	gtk_widget_show (dialog);
 }
+
+/**
+ * tepl_utils_binding_transform_func_smart_bool:
+ * @binding: a #GBinding.
+ * @from_value: the #GValue containing the value to transform.
+ * @to_value: the #GValue in which to store the transformed value.
+ * @user_data: data passed to the transform function.
+ *
+ * A #GBindingTransformFunc to transform between these two #GValue types:
+ * - A #GValue of type #gboolean.
+ * - A #GValue of type #GVariant, with the #GVariant of type boolean.
+ *
+ * For convenience, this function works in both directions (hence the “smart”),
+ * it introspects the types of @from_value and @to_value.
+ *
+ * Note that if @from_value and @to_value are of the same #GValue type, this
+ * function won't work and you shouldn't use a custom #GBindingTransformFunc in
+ * the first place.
+ *
+ * Returns: %TRUE if the transformation was successful, and %FALSE otherwise.
+ * Since: 5.0
+ */
+gboolean
+tepl_utils_binding_transform_func_smart_bool (GBinding     *binding,
+					      const GValue *from_value,
+					      GValue       *to_value,
+					      gpointer      user_data)
+{
+	g_return_val_if_fail (G_IS_VALUE (from_value), FALSE);
+	g_return_val_if_fail (G_IS_VALUE (to_value), FALSE);
+
+	if (G_VALUE_TYPE (from_value) == G_TYPE_BOOLEAN &&
+	    G_VALUE_TYPE (to_value) == G_TYPE_VARIANT)
+	{
+		gboolean bool_value;
+
+		bool_value = g_value_get_boolean (from_value);
+		g_value_set_variant (to_value, g_variant_new_boolean (bool_value));
+
+		return TRUE;
+	}
+	else if (G_VALUE_TYPE (from_value) == G_TYPE_VARIANT &&
+		 G_VALUE_TYPE (to_value) == G_TYPE_BOOLEAN)
+	{
+		GVariant *variant_value;
+		gboolean bool_value;
+
+		variant_value = g_value_get_variant (from_value);
+		if (variant_value == NULL)
+		{
+			return FALSE;
+		}
+
+		if (!g_variant_type_equal (g_variant_get_type (variant_value), G_VARIANT_TYPE_BOOLEAN))
+		{
+			return FALSE;
+		}
+
+		bool_value = g_variant_get_boolean (variant_value);
+		g_value_set_boolean (to_value, bool_value);
+
+		return TRUE;
+	}
+
+	return FALSE;
+}

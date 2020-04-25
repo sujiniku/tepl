@@ -82,6 +82,13 @@ void		tepl_utils_show_warning_dialog			(GtkWindow   *parent,
 								 const gchar *format,
 								 ...) G_GNUC_PRINTF(2, 3);
 
+/* Other */
+
+gboolean	tepl_utils_binding_transform_func_smart_bool	(GBinding     *binding,
+								 const GValue *from_value,
+								 GValue       *to_value,
+								 gpointer      user_data);
+
 G_END_DECLS
 
 #endif /* TEPL_UTILS_H */

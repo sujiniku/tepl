@@ -14,6 +14,14 @@ Side/bottom panel container
 
 See the TeplPanel class.
 
+Goto line UI
+------------
+
+- Status: **done**
+- Release: Tepl 5 (GNOME 3.38)
+
+See the TeplGotoLineBar class and "win.tepl-goto-line" GAction.
+
 Rework file metadata
 --------------------
 
@@ -23,11 +31,11 @@ Rework file metadata
 Tasks:
 - Make the metadata API independent of TeplFile, to better isolate toolkit
   features (separation of concerns).
-- No longer use GVfs metadata, it complicates everything. With GVfs metadata
-  there is the need to have async APIs, and the need to anyway have another
-  backend for platforms that don't support GVfs metadata.
-  See commit 2f21d526271a433466e4e546af9a358f80ee1f94 , the implementation and
-  API was too complicated.
+- Apply the “worse is better” philosophy: no longer use GVfs metadata, it
+  complicates everything. With GVfs metadata there is the need to have async
+  APIs, and the need to anyway have another backend for platforms that don't
+  support GVfs metadata. See commit 2f21d526271a433466e4e546af9a358f80ee1f94 ,
+  the implementation and API was too complicated.
 - Keep only the TeplMetadataManager for storing metadata on disk, and
   re-implement it to no longer depend on the libxml2.
 
@@ -66,18 +74,10 @@ File browser widget
 
 To be integrated in a side panel.
 
-Goto line UI
-------------
-
-- Status: **todo**
-
 Search and replace UI
 ---------------------
 
 - Status: **todo**
-
-The goto line is similar and much easier to do than the search and replace, so
-goto line can be done as a first step.
 
 File printing UI
 ----------------
@@ -89,5 +89,5 @@ High-level spell-checking API
 
 - Status: **todo**
 
-Integrating [gspell](https://wiki.gnome.org/Projects/gspell) with the Tepl
+Integrate [gspell](https://wiki.gnome.org/Projects/gspell) with the Tepl
 framework.

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-04-18 17:15+0000\n"
-"PO-Revision-Date: 2020-04-19 10:33+0200\n"
+"POT-Creation-Date: 2020-04-25 13:41+0000\n"
+"PO-Revision-Date: 2020-04-26 11:24+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -26,119 +26,128 @@ msgstr ""
 #. document. For example a LaTeX document can be composed of
 #. several _files_. Or for source code we do not really create a
 #. new "document".
-#: tepl/tepl-application.c:92
+#: tepl/tepl-application.c:94
 msgid "_New"
 msgstr "_Nowy"
 
-#: tepl/tepl-application.c:93
+#: tepl/tepl-application.c:95
 msgid "New file"
 msgstr "Nowy plik"
 
-#: tepl/tepl-application.c:95
+#: tepl/tepl-application.c:97
 msgid "New _Window"
 msgstr "No_we okno"
 
-#: tepl/tepl-application.c:96
+#: tepl/tepl-application.c:98
 msgid "Create a new window"
 msgstr "Otwiera nowe okno"
 
-#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:177
+#: tepl/tepl-application.c:100 tepl/tepl-application-window.c:190
 msgid "_Open"
 msgstr "_Otwórz"
 
-#: tepl/tepl-application.c:99
+#: tepl/tepl-application.c:101
 msgid "Open a file"
 msgstr "Otwiera plik"
 
-#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:143
-#: tepl/tepl-tab.c:724
+#: tepl/tepl-application.c:103 tepl/tepl-close-confirm-dialog-single.c:143
+#: tepl/tepl-tab.c:764
 msgid "_Save"
 msgstr "_Zapisz"
 
-#: tepl/tepl-application.c:102
+#: tepl/tepl-application.c:104
 msgid "Save the current file"
 msgstr "Zapisuje obecny plik"
 
-#: tepl/tepl-application.c:104
+#: tepl/tepl-application.c:106
 msgid "Save _As"
 msgstr "Z_apisz jako"
 
-#: tepl/tepl-application.c:105
+#: tepl/tepl-application.c:107
 msgid "Save the current file to a different location"
 msgstr "Zapisuje obecny plik w innym miejscu"
 
 #. Edit menu
-#: tepl/tepl-application.c:109
+#: tepl/tepl-application.c:111
 msgid "_Undo"
 msgstr "_Cofnij"
 
-#: tepl/tepl-application.c:110
+#: tepl/tepl-application.c:112
 msgid "Undo the last action"
 msgstr "Cofa ostatnie działanie"
 
-#: tepl/tepl-application.c:112
+#: tepl/tepl-application.c:114
 msgid "_Redo"
 msgstr "P_onów"
 
-#: tepl/tepl-application.c:113
+#: tepl/tepl-application.c:115
 msgid "Redo the last undone action"
 msgstr "Ponawia ostatnio cofnięte działanie"
 
-#: tepl/tepl-application.c:115
+#: tepl/tepl-application.c:117
 msgid "Cu_t"
 msgstr "_Wytnij"
 
-#: tepl/tepl-application.c:116
+#: tepl/tepl-application.c:118
 msgid "Cut the selection"
 msgstr "Wycina zaznaczenie"
 
-#: tepl/tepl-application.c:118
+#: tepl/tepl-application.c:120
 msgid "_Copy"
 msgstr "S_kopiuj"
 
-#: tepl/tepl-application.c:119
+#: tepl/tepl-application.c:121
 msgid "Copy the selection"
 msgstr "Kopiuje zaznaczenie"
 
-#: tepl/tepl-application.c:121
+#: tepl/tepl-application.c:123
 msgid "_Paste"
 msgstr "Wk_lej"
 
-#: tepl/tepl-application.c:122
+#: tepl/tepl-application.c:124
 msgid "Paste the clipboard"
 msgstr "Wkleja zawartość schowka"
 
-#: tepl/tepl-application.c:124
+#: tepl/tepl-application.c:126
 msgid "_Delete"
 msgstr "_Usuń"
 
-#: tepl/tepl-application.c:125
+#: tepl/tepl-application.c:127
 msgid "Delete the selected text"
 msgstr "Usuwa zaznaczony tekst"
 
-#: tepl/tepl-application.c:127
+#: tepl/tepl-application.c:129
 msgid "Select _All"
 msgstr "Z_aznacz wszystko"
 
-#: tepl/tepl-application.c:128
+#: tepl/tepl-application.c:130
 msgid "Select all the text"
 msgstr "Zaznacza cały tekst"
 
-#: tepl/tepl-application.c:130
+#: tepl/tepl-application.c:132
 msgid "_Indent"
 msgstr "_Dodaj wcięcie"
 
-#: tepl/tepl-application.c:131
+#: tepl/tepl-application.c:133
 msgid "Indent the selected lines"
 msgstr "Dodaje wcięcie do zaznaczonych wierszy"
 
-#: tepl/tepl-application.c:133
+#: tepl/tepl-application.c:135
 msgid "_Unindent"
 msgstr "_Usuń wcięcie"
 
-#: tepl/tepl-application.c:134
+#: tepl/tepl-application.c:136
 msgid "Unindent the selected lines"
 msgstr "Usuwa wcięcie z zaznaczonych wierszy"
+
+#. Search menu
+#: tepl/tepl-application.c:140
+msgid "_Go to Line…"
+msgstr "_Przejdź do wiersza…"
+
+#: tepl/tepl-application.c:141
+msgid "Go to a specific line"
+msgstr "Przechodzi do podanego wiersza"
 
 #. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
 #. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
@@ -149,16 +158,16 @@ msgstr "Usuwa wcięcie z zaznaczonych wierszy"
 #. * - opening a recent file.
 #. * Basically everywhere where the directory is shown.
 #.
-#: tepl/tepl-application-window.c:173
+#: tepl/tepl-application-window.c:186
 msgid "Open File"
 msgstr "Otwarcie pliku"
 
-#: tepl/tepl-application-window.c:176
-#: tepl/tepl-close-confirm-dialog-single.c:137 tepl/tepl-tab.c:723
+#: tepl/tepl-application-window.c:189
+#: tepl/tepl-close-confirm-dialog-single.c:137 tepl/tepl-tab.c:763
 msgid "_Cancel"
 msgstr "_Anuluj"
 
-#: tepl/tepl-application-window.c:707
+#: tepl/tepl-application-window.c:804
 msgid "Read-Only"
 msgstr "Tylko do odczytu"
 
@@ -349,6 +358,14 @@ msgstr "Plik został zmodyfikowany poza programem."
 msgid "The buffer contains invalid characters."
 msgstr "Bufor zawiera nieprawidłowe znaki."
 
+#: tepl/tepl-goto-line-bar.c:208
+msgid "Go to line:"
+msgstr "Przejście do wiersza:"
+
+#: tepl/tepl-goto-line-bar.c:216
+msgid "Close"
+msgstr "Zamyka"
+
 #: tepl/tepl-io-error-info-bars.c:57
 msgid "_Edit Anyway"
 msgstr "_Modyfikuj mimo to"
@@ -454,11 +471,23 @@ msgstr "Oczekiwano elementu <entry>, otrzymano „%s” zamiast niego."
 msgid "The <entry> element is missing the “key” or “value” attribute."
 msgstr "Element <entry> nie ma atrybutu „key” lub „value”."
 
-#: tepl/tepl-tab.c:506
+#: tepl/tepl-panel.c:107
+msgid "Hide panel"
+msgstr "Ukrywa panel"
+
+#. Translators: "Ln" is an abbreviation for "Line", Col is an
+#. * abbreviation for "Column". Please, use abbreviations if possible.
+#.
+#: tepl/tepl-statusbar.c:118
+#, c-format
+msgid "Ln %d, Col %d"
+msgstr "Wrsz %d, kol %d"
+
+#: tepl/tepl-tab.c:546
 msgid "Error when loading the file."
 msgstr "Błąd podczas wczytywania pliku."
 
-#: tepl/tepl-tab.c:720
+#: tepl/tepl-tab.c:760
 msgid "Save File"
 msgstr "Zapis pliku"
 

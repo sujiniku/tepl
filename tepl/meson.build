@@ -15,6 +15,7 @@ tepl_public_headers = [
   'tepl-init.h',
   'tepl-io-error-info-bars.h',
   'tepl-iter.h',
+  'tepl-macros.h',
   'tepl-menu-shell.h',
   'tepl-metadata.h',
   'tepl-metadata-manager.h',

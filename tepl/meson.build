@@ -129,13 +129,21 @@ TEPL_STATIC_DEP = declare_dependency(
   dependencies: TEPL_DEPS
 )
 
-symbol_map = meson.current_source_dir() / 'symbol.map'
+tepl_link_args = []
+tepl_link_depends = []
+
+if meson.get_compiler('c').get_argument_syntax() != 'msvc'
+  symbol_map = meson.current_source_dir() / 'symbol.map'
+  tepl_link_args = '-Wl,--version-script,' + symbol_map
+  tepl_link_depends = symbol_map
+endif
 
 tepl_lib = library(
   'tepl-@0@'.format(TEPL_API_VERSION),
-  link_whole: tepl_static_lib,
-  link_args: '-Wl,--version-script,' + symbol_map,
-  link_depends: symbol_map,
+  dependencies: TEPL_DEPS,
+  link_args: tepl_link_args,
+  link_depends: tepl_link_depends,
+  objects: tepl_static_lib.extract_all_objects(),
   version: TEPL_LT_VERSION,
   install: true
 )

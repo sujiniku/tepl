@@ -30,6 +30,7 @@
 G_BEGIN_DECLS
 
 #define TEPL_TYPE_FILE (tepl_file_get_type ())
+_TEPL_EXTERN
 G_DECLARE_DERIVABLE_TYPE (TeplFile, tepl_file,
 			  TEPL, FILE,
 			  GObject)
@@ -96,36 +97,50 @@ typedef enum
 	TEPL_COMPRESSION_TYPE_GZIP
 } TeplCompressionType;
 
+_TEPL_EXTERN
 TeplFile *		tepl_file_new				(void);
 
+_TEPL_EXTERN
 GFile *			tepl_file_get_location			(TeplFile *file);
 
+_TEPL_EXTERN
 void			tepl_file_set_location			(TeplFile *file,
 								 GFile    *location);
 
+_TEPL_EXTERN
 const gchar *		tepl_file_get_short_name		(TeplFile *file);
 
+_TEPL_EXTERN
 const TeplEncoding *	tepl_file_get_encoding			(TeplFile *file);
 
+_TEPL_EXTERN
 TeplNewlineType		tepl_file_get_newline_type		(TeplFile *file);
 
+_TEPL_EXTERN
 TeplCompressionType	tepl_file_get_compression_type		(TeplFile *file);
 
+_TEPL_EXTERN
 void		 	tepl_file_set_mount_operation_factory	(TeplFile                  *file,
 								 TeplMountOperationFactory  callback,
 								 gpointer                   user_data,
 								 GDestroyNotify             notify);
 
+_TEPL_EXTERN
 void		 	tepl_file_check_file_on_disk		(TeplFile *file);
 
+_TEPL_EXTERN
 gboolean	 	tepl_file_is_local			(TeplFile *file);
 
+_TEPL_EXTERN
 gboolean	 	tepl_file_is_externally_modified	(TeplFile *file);
 
+_TEPL_EXTERN
 gboolean	 	tepl_file_is_deleted			(TeplFile *file);
 
+_TEPL_EXTERN
 gboolean	 	tepl_file_is_readonly			(TeplFile *file);
 
+_TEPL_EXTERN
 void			tepl_file_add_uri_to_recent_manager	(TeplFile *file);
 
 G_GNUC_INTERNAL

@@ -90,40 +90,54 @@ struct _TeplTabClass
 	gpointer padding[12];
 };
 
+_TEPL_EXTERN
 GType		tepl_tab_get_type		(void);
 
+_TEPL_EXTERN
 TeplTab *	tepl_tab_new			(void);
 
+_TEPL_EXTERN
 TeplTab *	tepl_tab_new_with_view		(TeplView *view);
 
+_TEPL_EXTERN
 TeplView *	tepl_tab_get_view		(TeplTab *tab);
 
+_TEPL_EXTERN
 TeplBuffer *	tepl_tab_get_buffer		(TeplTab *tab);
 
+_TEPL_EXTERN
 TeplGotoLineBar *tepl_tab_get_goto_line_bar	(TeplTab *tab);
 
+_TEPL_EXTERN
 void		tepl_tab_add_info_bar		(TeplTab    *tab,
 						 GtkInfoBar *info_bar);
 
+_TEPL_EXTERN
 void		tepl_tab_load_file		(TeplTab *tab,
 						 GFile   *location);
 
+_TEPL_EXTERN
 void		tepl_tab_save_async		(TeplTab             *tab,
 						 GAsyncReadyCallback  callback,
 						 gpointer             user_data);
 
+_TEPL_EXTERN
 gboolean	tepl_tab_save_finish		(TeplTab      *tab,
 						 GAsyncResult *result);
 
+_TEPL_EXTERN
 void		tepl_tab_save_async_simple	(TeplTab *tab);
 
+_TEPL_EXTERN
 void		tepl_tab_save_as_async		(TeplTab             *tab,
 						 GAsyncReadyCallback  callback,
 						 gpointer             user_data);
 
+_TEPL_EXTERN
 gboolean	tepl_tab_save_as_finish		(TeplTab      *tab,
 						 GAsyncResult *result);
 
+_TEPL_EXTERN
 void		tepl_tab_save_as_async_simple	(TeplTab *tab);
 
 G_END_DECLS

@@ -25,6 +25,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <tepl/tepl-macros.h>
 
 G_BEGIN_DECLS
 
@@ -53,26 +54,34 @@ struct _TeplPanelClass
 	gpointer padding[12];
 };
 
+_TEPL_EXTERN
 GType		tepl_panel_get_type				(void);
 
+_TEPL_EXTERN
 TeplPanel *	tepl_panel_new					(void);
 
+_TEPL_EXTERN
 TeplPanel *	tepl_panel_new_for_left_side_panel		(void);
 
+_TEPL_EXTERN
 GtkStack *	tepl_panel_get_stack				(TeplPanel *panel);
 
+_TEPL_EXTERN
 void		tepl_panel_add_component			(TeplPanel   *panel,
 								 GtkWidget   *component,
 								 const gchar *name,
 								 const gchar *title,
 								 const gchar *icon_name);
 
+_TEPL_EXTERN
 void		tepl_panel_provide_active_component_gsetting	(TeplPanel   *panel,
 								 GSettings   *settings,
 								 const gchar *setting_key);
 
+_TEPL_EXTERN
 void		tepl_panel_restore_state_from_gsettings		(TeplPanel *panel);
 
+_TEPL_EXTERN
 void		tepl_panel_save_state_to_gsettings 		(TeplPanel *panel);
 
 G_END_DECLS

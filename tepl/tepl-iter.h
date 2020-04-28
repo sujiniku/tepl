@@ -25,9 +25,11 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <tepl/tepl-macros.h>
 
 G_BEGIN_DECLS
 
+_TEPL_EXTERN
 gchar *		tepl_iter_get_line_indentation		(const GtkTextIter *iter);
 
 G_END_DECLS

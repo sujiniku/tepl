@@ -25,14 +25,18 @@
 
 G_BEGIN_DECLS
 
+_TEPL_EXTERN
 TeplInfoBar *	tepl_io_error_info_bar_file_already_open		(GFile *location);
 
+_TEPL_EXTERN
 TeplInfoBar *	tepl_io_error_info_bar_cant_create_backup		(GFile        *location,
 									 const GError *error);
 
+_TEPL_EXTERN
 TeplInfoBar *	tepl_io_error_info_bar_externally_modified		(GFile    *location,
 									 gboolean  document_modified);
 
+_TEPL_EXTERN
 TeplInfoBar *	tepl_io_error_info_bar_invalid_characters		(GFile *location);
 
 G_END_DECLS

@@ -54,16 +54,21 @@ struct _TeplStatusbarClass
 	gpointer padding[12];
 };
 
+_TEPL_EXTERN
 GType		tepl_statusbar_get_type			(void);
 
+_TEPL_EXTERN
 TeplStatusbar *	tepl_statusbar_new			(void);
 
+_TEPL_EXTERN
 void		tepl_statusbar_show_cursor_position	(TeplStatusbar *statusbar,
 							 gint           line,
 							 gint           column);
 
+_TEPL_EXTERN
 void		tepl_statusbar_hide_cursor_position	(TeplStatusbar *statusbar);
 
+_TEPL_EXTERN
 void		tepl_statusbar_set_tab_group		(TeplStatusbar *statusbar,
 							 TeplTabGroup  *tab_group);
 

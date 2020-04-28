@@ -67,12 +67,16 @@ struct _TeplTabLabelClass
 	gpointer padding[12];
 };
 
+_TEPL_EXTERN
 GType		tepl_tab_label_get_type		(void);
 
+_TEPL_EXTERN
 GtkWidget *	tepl_tab_label_new		(TeplTab *tab);
 
+_TEPL_EXTERN
 TeplTab *	tepl_tab_label_get_tab		(TeplTabLabel *tab_label);
 
+_TEPL_EXTERN
 void		tepl_tab_label_update_tooltip	(TeplTabLabel *tab_label);
 
 G_END_DECLS

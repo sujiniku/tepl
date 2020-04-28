@@ -25,9 +25,11 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <tepl/tepl-macros.h>
 
 G_BEGIN_DECLS
 
+_TEPL_EXTERN
 void	tepl_menu_shell_append_edit_actions	(GtkMenuShell *menu_shell);
 
 G_END_DECLS

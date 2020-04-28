@@ -25,10 +25,12 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <tepl/tepl-macros.h>
 
 G_BEGIN_DECLS
 
 #define TEPL_TYPE_FOLD_REGION (tepl_fold_region_get_type ())
+_TEPL_EXTERN
 G_DECLARE_DERIVABLE_TYPE (TeplFoldRegion, tepl_fold_region,
 			  TEPL, FOLD_REGION,
 			  GObject)
@@ -40,22 +42,28 @@ struct _TeplFoldRegionClass
 	gpointer padding[12];
 };
 
+_TEPL_EXTERN
 TeplFoldRegion *
 		tepl_fold_region_new		(GtkTextBuffer     *buffer,
 						 const GtkTextIter *start,
 						 const GtkTextIter *end);
 
+_TEPL_EXTERN
 GtkTextBuffer * tepl_fold_region_get_buffer	(TeplFoldRegion    *fold_region);
 
+_TEPL_EXTERN
 gboolean	tepl_fold_region_get_folded 	(TeplFoldRegion    *fold_region);
 
+_TEPL_EXTERN
 void		tepl_fold_region_set_folded 	(TeplFoldRegion    *fold_region,
 						 gboolean           folded);
 
+_TEPL_EXTERN
 gboolean	tepl_fold_region_get_bounds	(TeplFoldRegion    *fold_region,
 						 GtkTextIter       *start,
 						 GtkTextIter       *end);
 
+_TEPL_EXTERN
 void		tepl_fold_region_set_bounds	(TeplFoldRegion    *fold_region,
 						 const GtkTextIter *start,
 						 const GtkTextIter *end);

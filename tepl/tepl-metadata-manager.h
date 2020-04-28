@@ -54,29 +54,36 @@ struct _TeplMetadataManagerClass
 	gpointer padding[12];
 };
 
+_TEPL_EXTERN
 GType			tepl_metadata_manager_get_type		(void);
 
+_TEPL_EXTERN
 TeplMetadataManager *	tepl_metadata_manager_get_singleton	(void);
 
 G_GNUC_INTERNAL
 void			_tepl_metadata_manager_unref_singleton	(void);
 
+_TEPL_EXTERN
 void			tepl_metadata_manager_trim		(TeplMetadataManager *manager,
 								 gint                 max_number_of_locations);
 
+_TEPL_EXTERN
 gboolean		tepl_metadata_manager_load_from_disk	(TeplMetadataManager  *manager,
 								 GFile                *from_file,
 								 GError              **error);
 
+_TEPL_EXTERN
 gboolean		tepl_metadata_manager_save_to_disk	(TeplMetadataManager  *manager,
 								 GFile                *to_file,
 								 gboolean              trim,
 								 GError              **error);
 
+_TEPL_EXTERN
 void			tepl_metadata_manager_copy_from		(TeplMetadataManager *from_manager,
 								 GFile               *for_location,
 								 TeplMetadata        *to_metadata);
 
+_TEPL_EXTERN
 void			tepl_metadata_manager_merge_into	(TeplMetadataManager *into_manager,
 								 GFile               *for_location,
 								 TeplMetadata        *from_metadata);

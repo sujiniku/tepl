@@ -26,10 +26,12 @@
 #endif
 
 #include <gtksourceview/gtksource.h>
+#include <tepl/tepl-macros.h>
 
 G_BEGIN_DECLS
 
 #define TEPL_TYPE_GUTTER_RENDERER_FOLDS (tepl_gutter_renderer_folds_get_type ())
+_TEPL_EXTERN
 G_DECLARE_DERIVABLE_TYPE (TeplGutterRendererFolds, tepl_gutter_renderer_folds,
 			  TEPL, GUTTER_RENDERER_FOLDS,
 			  GtkSourceGutterRenderer)
@@ -68,9 +70,11 @@ typedef enum
 	TEPL_GUTTER_RENDERER_FOLDS_STATE_END		= 1 << 3
 } TeplGutterRendererFoldsState;
 
+_TEPL_EXTERN
 GtkSourceGutterRenderer *
 		tepl_gutter_renderer_folds_new			(void);
 
+_TEPL_EXTERN
 void		tepl_gutter_renderer_folds_set_state		(TeplGutterRendererFolds      *self,
 								 TeplGutterRendererFoldsState  state);
 

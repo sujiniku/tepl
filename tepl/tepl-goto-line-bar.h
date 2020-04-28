@@ -54,13 +54,17 @@ struct _TeplGotoLineBarClass
 	gpointer padding[12];
 };
 
+_TEPL_EXTERN
 GType			tepl_goto_line_bar_get_type			(void);
 
+_TEPL_EXTERN
 TeplGotoLineBar *	tepl_goto_line_bar_new				(void);
 
+_TEPL_EXTERN
 void			tepl_goto_line_bar_set_view			(TeplGotoLineBar *bar,
 									 TeplView        *view);
 
+_TEPL_EXTERN
 void			tepl_goto_line_bar_grab_focus_to_entry		(TeplGotoLineBar *bar);
 
 G_GNUC_INTERNAL

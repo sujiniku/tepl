@@ -32,6 +32,7 @@
 G_BEGIN_DECLS
 
 #define TEPL_TYPE_FILE_LOADER (tepl_file_loader_get_type ())
+_TEPL_EXTERN
 G_DECLARE_DERIVABLE_TYPE (TeplFileLoader, tepl_file_loader,
 			  TEPL, FILE_LOADER,
 			  GObject)
@@ -61,27 +62,37 @@ struct _TeplFileLoaderClass
 	gpointer padding[12];
 };
 
+_TEPL_EXTERN
 GQuark			tepl_file_loader_error_quark				(void);
 
+_TEPL_EXTERN
 TeplFileLoader *	tepl_file_loader_new					(TeplBuffer *buffer,
 										 TeplFile   *file);
 
+_TEPL_EXTERN
 TeplBuffer *		tepl_file_loader_get_buffer				(TeplFileLoader *loader);
 
+_TEPL_EXTERN
 TeplFile *		tepl_file_loader_get_file				(TeplFileLoader *loader);
 
+_TEPL_EXTERN
 GFile *			tepl_file_loader_get_location				(TeplFileLoader *loader);
 
+_TEPL_EXTERN
 gint64			tepl_file_loader_get_max_size				(TeplFileLoader *loader);
 
+_TEPL_EXTERN
 void			tepl_file_loader_set_max_size				(TeplFileLoader *loader,
 										 gint64          max_size);
 
+_TEPL_EXTERN
 gint64			tepl_file_loader_get_chunk_size				(TeplFileLoader *loader);
 
+_TEPL_EXTERN
 void			tepl_file_loader_set_chunk_size				(TeplFileLoader *loader,
 										 gint64          chunk_size);
 
+_TEPL_EXTERN
 void			tepl_file_loader_load_async				(TeplFileLoader        *loader,
 										 gint                   io_priority,
 										 GCancellable          *cancellable,
@@ -91,12 +102,15 @@ void			tepl_file_loader_load_async				(TeplFileLoader        *loader,
 										 GAsyncReadyCallback    callback,
 										 gpointer               user_data);
 
+_TEPL_EXTERN
 gboolean		tepl_file_loader_load_finish				(TeplFileLoader  *loader,
 										 GAsyncResult    *result,
 										 GError         **error);
 
+_TEPL_EXTERN
 const TeplEncoding *	tepl_file_loader_get_encoding				(TeplFileLoader *loader);
 
+_TEPL_EXTERN
 TeplNewlineType		tepl_file_loader_get_newline_type			(TeplFileLoader *loader);
 
 G_END_DECLS

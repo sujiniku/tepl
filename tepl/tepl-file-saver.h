@@ -95,43 +95,59 @@ struct _TeplFileSaverClass
 	gpointer padding[12];
 };
 
+_TEPL_EXTERN
 GType			 tepl_file_saver_get_type		(void);
 
+_TEPL_EXTERN
 GQuark			 tepl_file_saver_error_quark		(void);
 
+_TEPL_EXTERN
 TeplFileSaver *		 tepl_file_saver_new			(TeplBuffer *buffer,
 								 TeplFile   *file);
 
+_TEPL_EXTERN
 TeplFileSaver *		 tepl_file_saver_new_with_target	(TeplBuffer *buffer,
 								 TeplFile   *file,
 								 GFile      *target_location);
 
+_TEPL_EXTERN
 TeplBuffer *		 tepl_file_saver_get_buffer		(TeplFileSaver *saver);
 
+_TEPL_EXTERN
 TeplFile *		 tepl_file_saver_get_file		(TeplFileSaver *saver);
 
+_TEPL_EXTERN
 GFile *			 tepl_file_saver_get_location		(TeplFileSaver *saver);
 
+_TEPL_EXTERN
 void			 tepl_file_saver_set_encoding		(TeplFileSaver      *saver,
 								 const TeplEncoding *encoding);
 
+_TEPL_EXTERN
 const TeplEncoding *	 tepl_file_saver_get_encoding		(TeplFileSaver *saver);
 
+_TEPL_EXTERN
 void			 tepl_file_saver_set_newline_type	(TeplFileSaver   *saver,
 								 TeplNewlineType  newline_type);
 
+_TEPL_EXTERN
 TeplNewlineType		 tepl_file_saver_get_newline_type	(TeplFileSaver *saver);
 
+_TEPL_EXTERN
 void			 tepl_file_saver_set_compression_type	(TeplFileSaver       *saver,
 								 TeplCompressionType  compression_type);
 
+_TEPL_EXTERN
 TeplCompressionType	 tepl_file_saver_get_compression_type	(TeplFileSaver *saver);
 
+_TEPL_EXTERN
 void			 tepl_file_saver_set_flags		(TeplFileSaver      *saver,
 								 TeplFileSaverFlags  flags);
 
+_TEPL_EXTERN
 TeplFileSaverFlags	 tepl_file_saver_get_flags		(TeplFileSaver *saver);
 
+_TEPL_EXTERN
 void			 tepl_file_saver_save_async		(TeplFileSaver         *saver,
 								 gint                   io_priority,
 								 GCancellable          *cancellable,
@@ -141,6 +157,7 @@ void			 tepl_file_saver_save_async		(TeplFileSaver         *saver,
 								 GAsyncReadyCallback    callback,
 								 gpointer               user_data);
 
+_TEPL_EXTERN
 gboolean		 tepl_file_saver_save_finish		(TeplFileSaver  *saver,
 								 GAsyncResult   *result,
 								 GError        **error);

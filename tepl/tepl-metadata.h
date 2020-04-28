@@ -25,6 +25,7 @@
 #endif
 
 #include <gio/gio.h>
+#include <tepl/tepl-macros.h>
 
 G_BEGIN_DECLS
 
@@ -53,13 +54,17 @@ struct _TeplMetadataClass
 	gpointer padding[12];
 };
 
+_TEPL_EXTERN
 GType		tepl_metadata_get_type		(void);
 
+_TEPL_EXTERN
 TeplMetadata *	tepl_metadata_new		(void);
 
+_TEPL_EXTERN
 gchar *		tepl_metadata_get		(TeplMetadata *metadata,
 						 const gchar  *key);
 
+_TEPL_EXTERN
 void		tepl_metadata_set		(TeplMetadata *metadata,
 						 const gchar  *key,
 						 const gchar  *value);

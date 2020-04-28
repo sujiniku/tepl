@@ -26,6 +26,7 @@
 
 #include <gtk/gtk.h>
 #include <amtk/amtk.h>
+#include <tepl/tepl-macros.h>
 
 G_BEGIN_DECLS
 
@@ -54,27 +55,38 @@ struct _TeplApplicationClass
 	gpointer padding[12];
 };
 
+_TEPL_EXTERN
 GType			tepl_application_get_type			(void) G_GNUC_CONST;
 
+_TEPL_EXTERN
 TeplApplication *	tepl_application_get_from_gtk_application	(GtkApplication *gtk_app);
 
+_TEPL_EXTERN
 TeplApplication *	tepl_application_get_default			(void);
 
+_TEPL_EXTERN
 GtkApplication *	tepl_application_get_application		(TeplApplication *tepl_app);
 
+_TEPL_EXTERN
 AmtkActionInfoStore *	tepl_application_get_app_action_info_store	(TeplApplication *tepl_app);
 
+_TEPL_EXTERN
 AmtkActionInfoStore *	tepl_application_get_tepl_action_info_store	(TeplApplication *tepl_app);
 
+_TEPL_EXTERN
 GtkApplicationWindow *	tepl_application_get_active_main_window		(TeplApplication *tepl_app);
 
+_TEPL_EXTERN
 void			tepl_application_open_simple			(TeplApplication *tepl_app,
 									 GFile           *file);
 
+_TEPL_EXTERN
 void			tepl_application_handle_activate		(TeplApplication *tepl_app);
 
+_TEPL_EXTERN
 void			tepl_application_handle_open			(TeplApplication *tepl_app);
 
+_TEPL_EXTERN
 void			tepl_application_handle_metadata		(TeplApplication *tepl_app);
 
 G_END_DECLS

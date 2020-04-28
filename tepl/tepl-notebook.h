@@ -25,6 +25,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <tepl/tepl-macros.h>
 
 G_BEGIN_DECLS
 
@@ -53,8 +54,10 @@ struct _TeplNotebookClass
 	gpointer padding[12];
 };
 
+_TEPL_EXTERN
 GType		tepl_notebook_get_type	(void);
 
+_TEPL_EXTERN
 GtkWidget *	tepl_notebook_new	(void);
 
 G_END_DECLS

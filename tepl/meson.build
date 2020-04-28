@@ -110,6 +110,11 @@ tepl_enum_types = GNOME.mkenums_simple(
   install_dir: headers_install_dir
 )
 
+tepl_static_lib_c_args = [ '-DTEPL_COMPILATION' ]
+if meson.get_compiler('c').get_argument_syntax() == 'msvc'
+  tepl_static_lib_c_args += '-D_TEPL_EXTERN=__declspec(dllexport) extern'
+endif
+
 tepl_static_lib = static_library(
   'tepl-static',
   [tepl_public_c_files,
@@ -118,7 +123,7 @@ tepl_static_lib = static_library(
   pic: true, # tepl_static_lib is linked in a shared library.
   include_directories: ROOT_INCLUDE_DIR,
   dependencies: TEPL_DEPS,
-  c_args: '-DTEPL_COMPILATION'
+  c_args: tepl_static_lib_c_args
 )
 
 # For unit tests, to be able to test private functions.
@@ -129,20 +134,20 @@ TEPL_STATIC_DEP = declare_dependency(
   dependencies: TEPL_DEPS
 )
 
-tepl_link_args = []
-tepl_link_depends = []
+tepl_lib_link_args = []
+tepl_lib_link_depends = []
 
 if meson.get_compiler('c').get_argument_syntax() != 'msvc'
   symbol_map = meson.current_source_dir() / 'symbol.map'
-  tepl_link_args = '-Wl,--version-script,' + symbol_map
-  tepl_link_depends = symbol_map
+  tepl_lib_link_args = '-Wl,--version-script,' + symbol_map
+  tepl_lib_link_depends = symbol_map
 endif
 
 tepl_lib = library(
   'tepl-@0@'.format(TEPL_API_VERSION),
   dependencies: TEPL_DEPS,
-  link_args: tepl_link_args,
-  link_depends: tepl_link_depends,
+  link_args: tepl_lib_link_args,
+  link_depends: tepl_lib_link_depends,
   objects: tepl_static_lib.extract_all_objects(),
   version: TEPL_LT_VERSION,
   install: true

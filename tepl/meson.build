@@ -97,6 +97,8 @@ install_headers(
 
 tepl_enum_types = GNOME.mkenums_simple(
   'tepl-enum-types',
+  decorator: '_TEPL_EXTERN',
+  header_prefix: '#include <tepl/tepl-macros.h>',
   sources: tepl_public_headers,
   install_header: true,
   install_dir: headers_install_dir

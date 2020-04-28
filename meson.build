@@ -78,50 +78,65 @@ add_project_arguments(
 # even at the maximum level.
 # The following warning_cflags suppose that warning_level=2.
 
-warning_cflags = [
-  '-fno-strict-aliasing',
-  '-Wundef',
-  '-Wnested-externs',
-  '-Wwrite-strings',
-  '-Wpointer-arith',
-  '-Wmissing-declarations',
-  '-Wmissing-prototypes',
-  '-Wstrict-prototypes',
-  '-Wredundant-decls',
-  '-Wno-unused-parameter',
-  '-Wno-missing-field-initializers',
-  '-Wdeclaration-after-statement',
-  '-Wformat=2',
-  '-Wold-style-definition',
-  '-Wcast-align',
-  '-Wformat-nonliteral',
-  '-Wformat-security',
-  '-Wsign-compare',
-  '-Wstrict-aliasing',
-  '-Wshadow',
-  '-Winline',
-  '-Wpacked',
-  '-Wmissing-format-attribute',
-  '-Wmissing-noreturn',
-  '-Winit-self',
-  '-Wredundant-decls',
-  '-Wmissing-include-dirs',
-  '-Wunused-but-set-variable',
-  '-Warray-bounds',
-  '-Wimplicit-function-declaration',
-  '-Wreturn-type',
-  '-Wswitch-enum',
-  '-Wswitch-default',
-  '-Wduplicated-cond',
-  '-Wduplicated-branches',
-  '-Wlogical-op',
-  '-Wrestrict',
-  '-Wnull-dereference',
-  '-Wjump-misses-init',
-  '-Wdouble-promotion'
-]
-
 c_compiler = meson.get_compiler('c')
+
+warning_cflags = []
+
+if c_compiler.get_id() == 'msvc'
+  # Use GLib's msvc_recommended_pragmas.h to filter out
+  # the warnings we don't really need to worry about,
+  # but do make the ones we want to be wary stand out
+  warning_cflags += [
+    '-FImsvc_recommended_pragmas.h',
+    '-utf-8', # Available in Visual Studio 2015 or later,
+              # to prevent unicode handling issues in the
+              # compiler
+  ]
+else
+  warning_cflags += [
+    '-fno-strict-aliasing',
+    '-Wundef',
+    '-Wnested-externs',
+    '-Wwrite-strings',
+    '-Wpointer-arith',
+    '-Wmissing-declarations',
+    '-Wmissing-prototypes',
+    '-Wstrict-prototypes',
+    '-Wredundant-decls',
+    '-Wno-unused-parameter',
+    '-Wno-missing-field-initializers',
+    '-Wdeclaration-after-statement',
+    '-Wformat=2',
+    '-Wold-style-definition',
+    '-Wcast-align',
+    '-Wformat-nonliteral',
+    '-Wformat-security',
+    '-Wsign-compare',
+    '-Wstrict-aliasing',
+    '-Wshadow',
+    '-Winline',
+    '-Wpacked',
+    '-Wmissing-format-attribute',
+    '-Wmissing-noreturn',
+    '-Winit-self',
+    '-Wredundant-decls',
+    '-Wmissing-include-dirs',
+    '-Wunused-but-set-variable',
+    '-Warray-bounds',
+    '-Wimplicit-function-declaration',
+    '-Wreturn-type',
+    '-Wswitch-enum',
+    '-Wswitch-default',
+    '-Wduplicated-cond',
+    '-Wduplicated-branches',
+    '-Wlogical-op',
+    '-Wrestrict',
+    '-Wnull-dereference',
+    '-Wjump-misses-init',
+    '-Wdouble-promotion'
+  ]
+endif
+
 supported_warning_cflags = c_compiler.get_supported_arguments(warning_cflags)
 add_project_arguments(supported_warning_cflags, language: 'c')
 ##### end CFLAGS

@@ -88,9 +88,6 @@ if c_compiler.get_id() == 'msvc'
   # but do make the ones we want to be wary stand out
   warning_cflags += [
     '-FImsvc_recommended_pragmas.h',
-    '-utf-8', # Available in Visual Studio 2015 or later,
-              # to prevent unicode handling issues in the
-              # compiler
   ]
 else
   warning_cflags += [

@@ -18,7 +18,12 @@
  */
 
 #include <tepl/tepl.h>
-#include <unistd.h>
+
+static void
+sleep_for_one_second (void)
+{
+	g_usleep (G_USEC_PER_SEC);
+}
 
 static void
 load_cb (GObject      *source_object,
@@ -183,7 +188,7 @@ test_externally_modified (void)
 	/* Modify externally and then save.
 	 * Sleep one second to force the timestamp/etag to change.
 	 */
-	sleep (1);
+	sleep_for_one_second ();
 	g_file_set_contents (path, "b", -1, &error);
 	g_assert_no_error (error);
 	tepl_file_check_file_on_disk (file);
@@ -195,7 +200,7 @@ test_externally_modified (void)
 	g_assert_true (!tepl_file_is_externally_modified (file));
 
 	/* Modify externally and then load */
-	sleep (1);
+	sleep_for_one_second ();
 	g_file_set_contents (path, "c", -1, &error);
 	g_assert_no_error (error);
 	tepl_file_check_file_on_disk (file);
@@ -207,7 +212,7 @@ test_externally_modified (void)
 	g_assert_true (!tepl_file_is_externally_modified (file));
 
 	/* Modify externally and then save as */
-	sleep (1);
+	sleep_for_one_second ();
 	g_file_set_contents (path, "d", -1, &error);
 	g_assert_no_error (error);
 	tepl_file_check_file_on_disk (file);
@@ -225,7 +230,7 @@ test_externally_modified (void)
 	g_assert_true (!tepl_file_is_externally_modified (file));
 
 	/* Modify externally and then save as to same location */
-	sleep (1);
+	sleep_for_one_second ();
 	g_file_set_contents (new_path, "f", -1, &error);
 	g_assert_no_error (error);
 	tepl_file_check_file_on_disk (file);

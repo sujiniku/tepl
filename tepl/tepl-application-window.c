@@ -11,6 +11,7 @@
 #include "tepl-signal-group.h"
 #include "tepl-view.h"
 #include "tepl-window-actions-file.h"
+#include "tepl-window-actions-edit.h"
 
 /**
  * SECTION:application-window
@@ -110,28 +111,6 @@ G_DEFINE_TYPE_WITH_CODE (TeplApplicationWindow,
 			 G_ADD_PRIVATE (TeplApplicationWindow)
 			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_TAB_GROUP,
 						tepl_tab_group_interface_init))
-
-static void
-undo_cb (GSimpleAction *action,
-	 GVariant      *parameter,
-	 gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-	TeplView *view;
-
-	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
-
-	if (view != NULL)
-	{
-		TeplBuffer *buffer;
-
-		buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
-
-		gtk_source_buffer_undo (GTK_SOURCE_BUFFER (buffer));
-		tepl_view_scroll_to_cursor (view);
-		gtk_widget_grab_focus (GTK_WIDGET (view));
-	}
-}
 
 static void
 redo_cb (GSimpleAction *action,
@@ -570,7 +549,6 @@ add_actions (TeplApplicationWindow *tepl_window)
 	 */
 	const GActionEntry entries[] = {
 		/* Edit menu */
-		{ "tepl-undo", undo_cb },
 		{ "tepl-redo", redo_cb },
 		{ "tepl-cut", cut_cb },
 		{ "tepl-copy", copy_cb },
@@ -590,6 +568,7 @@ add_actions (TeplApplicationWindow *tepl_window)
 						       tepl_window);
 
 	_tepl_window_actions_file_add_actions (tepl_window);
+	_tepl_window_actions_edit_add_actions (tepl_window);
 
 	update_actions_sensitivity (tepl_window);
 }

@@ -1,7 +1,4 @@
-/*
- * This file is part of Tepl, a text editor library.
- *
- * Copyright 2005-2007 - Paolo Borelli and Paolo Maggi
+/* Copyright 2005-2007 - Paolo Borelli and Paolo Maggi
  * Copyright 2007 - Steve Frécinaux
  * Copyright 2008 - Jesse van den Kieboom
  * Copyright 2014, 2016, 2017 - Sébastien Wilmet

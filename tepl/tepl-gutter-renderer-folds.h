@@ -1,7 +1,4 @@
-/*
- * This file is part of Tepl, a text editor library.
- *
- * Copyright 2013, 2016 - Sébastien Wilmet <swilmet@gnome.org>
+/* Copyright 2013, 2016 - Sébastien Wilmet <swilmet@gnome.org>
  * Copyright 2016 - David Rabel <david.rabel@noresoft.com>
  *
  * Tepl is free software; you can redistribute it and/or modify it under

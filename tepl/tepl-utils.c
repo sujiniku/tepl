@@ -1,7 +1,4 @@
-/*
- * This file is part of Tepl, a text editor library.
- *
- * From gedit-utils.c:
+/* From gedit-utils.c:
  * Copyright 1998, 1999 - Alex Roberts, Evan Lawrence
  * Copyright 2000, 2002 - Chema Celorio, Paolo Maggi
  * Copyright 2003-2005 - Paolo Maggi

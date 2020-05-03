@@ -1,7 +1,4 @@
-/*
- * This file is part of Tepl, a text editor library.
- *
- * Copyright 2010 - Jesse van den Kieboom
+/* Copyright 2010 - Jesse van den Kieboom
  * Copyright 2014, 2017 - Sébastien Wilmet
  *
  * Tepl is free software; you can redistribute it and/or modify it under

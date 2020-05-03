@@ -113,86 +113,6 @@ G_DEFINE_TYPE_WITH_CODE (TeplApplicationWindow,
 						tepl_tab_group_interface_init))
 
 static void
-cut_cb (GSimpleAction *action,
-	GVariant      *parameter,
-	gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-	TeplView *active_view;
-
-	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
-
-	if (active_view != NULL)
-	{
-		tepl_view_cut_clipboard (active_view);
-	}
-}
-
-static void
-copy_cb (GSimpleAction *action,
-	 GVariant      *parameter,
-	 gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-	TeplView *active_view;
-
-	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
-
-	if (active_view != NULL)
-	{
-		tepl_view_copy_clipboard (active_view);
-	}
-}
-
-static void
-paste_cb (GSimpleAction *action,
-	  GVariant      *parameter,
-	  gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-	TeplView *active_view;
-
-	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
-
-	if (active_view != NULL)
-	{
-		tepl_view_paste_clipboard (active_view);
-	}
-}
-
-static void
-delete_cb (GSimpleAction *action,
-	   GVariant      *parameter,
-	   gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-	TeplView *active_view;
-
-	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
-
-	if (active_view != NULL)
-	{
-		tepl_view_delete_selection (active_view);
-	}
-}
-
-static void
-select_all_cb (GSimpleAction *action,
-	       GVariant      *parameter,
-	       gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-	TeplView *active_view;
-
-	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
-
-	if (active_view != NULL)
-	{
-		tepl_view_select_all (active_view);
-	}
-}
-
-static void
 indent_cb (GSimpleAction *action,
 	   GVariant      *parameter,
 	   gpointer       user_data)
@@ -527,11 +447,6 @@ add_actions (TeplApplicationWindow *tepl_window)
 	 */
 	const GActionEntry entries[] = {
 		/* Edit menu */
-		{ "tepl-cut", cut_cb },
-		{ "tepl-copy", copy_cb },
-		{ "tepl-paste", paste_cb },
-		{ "tepl-delete", delete_cb },
-		{ "tepl-select-all", select_all_cb },
 		{ "tepl-indent", indent_cb },
 		{ "tepl-unindent", unindent_cb },
 

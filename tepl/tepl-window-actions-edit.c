@@ -53,6 +53,86 @@ redo_activate_cb (GSimpleAction *action,
 	}
 }
 
+static void
+cut_activate_cb (GSimpleAction *action,
+		 GVariant      *parameter,
+		 gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplView *active_view;
+
+	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (active_view != NULL)
+	{
+		tepl_view_cut_clipboard (active_view);
+	}
+}
+
+static void
+copy_activate_cb (GSimpleAction *action,
+		  GVariant      *parameter,
+		  gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplView *active_view;
+
+	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (active_view != NULL)
+	{
+		tepl_view_copy_clipboard (active_view);
+	}
+}
+
+static void
+paste_activate_cb (GSimpleAction *action,
+		   GVariant      *parameter,
+		   gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplView *active_view;
+
+	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (active_view != NULL)
+	{
+		tepl_view_paste_clipboard (active_view);
+	}
+}
+
+static void
+delete_activate_cb (GSimpleAction *action,
+		    GVariant      *parameter,
+		    gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplView *active_view;
+
+	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (active_view != NULL)
+	{
+		tepl_view_delete_selection (active_view);
+	}
+}
+
+static void
+select_all_activate_cb (GSimpleAction *action,
+			GVariant      *parameter,
+			gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplView *active_view;
+
+	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (active_view != NULL)
+	{
+		tepl_view_select_all (active_view);
+	}
+}
+
 void
 _tepl_window_actions_edit_add_actions (TeplApplicationWindow *tepl_window)
 {
@@ -61,6 +141,11 @@ _tepl_window_actions_edit_add_actions (TeplApplicationWindow *tepl_window)
 	const GActionEntry entries[] = {
 		{ "tepl-undo", undo_activate_cb },
 		{ "tepl-redo", redo_activate_cb },
+		{ "tepl-cut", cut_activate_cb },
+		{ "tepl-copy", copy_activate_cb },
+		{ "tepl-paste", paste_activate_cb },
+		{ "tepl-delete", delete_activate_cb },
+		{ "tepl-select-all", select_all_activate_cb },
 	};
 
 	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));

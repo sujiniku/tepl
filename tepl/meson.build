@@ -73,6 +73,7 @@ TEPL_PRIVATE_HEADERS = [
   'tepl-progress-info-bar.h',
   'tepl-signal-group.h',
   'tepl-tab-saving.h',
+  'tepl-window-actions-edit.h',
   'tepl-window-actions-file.h'
 ]
 
@@ -88,6 +89,7 @@ tepl_private_c_files = [
   'tepl-progress-info-bar.c',
   'tepl-signal-group.c',
   'tepl-tab-saving.c',
+  'tepl-window-actions-edit.c',
   'tepl-window-actions-file.c'
 ]
 

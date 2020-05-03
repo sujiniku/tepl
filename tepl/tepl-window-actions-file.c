@@ -18,3 +18,9 @@
  */
 
 #include "tepl-window-actions-file.h"
+
+void
+_tepl_window_actions_file_add_actions (TeplApplicationWindow *tepl_window)
+{
+	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));
+}

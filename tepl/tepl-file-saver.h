@@ -1,7 +1,7 @@
-/* Copyright 2005, 2007 - Paolo Maggi
+/* SPDX-FileCopyrightText: 2005, 2007 - Paolo Maggi
  * Copyrhing 2007 - Steve Frécinaux
- * Copyright 2008 - Jesse van den Kieboom
- * Copyright 2014, 2016, 2017 - Sébastien Wilmet
+ * SPDX-FileCopyrightText: 2008 - Jesse van den Kieboom
+ * SPDX-FileCopyrightText: 2014, 2016, 2017 - Sébastien Wilmet
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 

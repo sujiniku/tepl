@@ -1,4 +1,4 @@
-/* Copyright 2010 - Ignacio Casal Quinteiro
+/* SPDX-FileCopyrightText: 2010 - Ignacio Casal Quinteiro
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 

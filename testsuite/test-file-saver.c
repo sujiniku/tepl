@@ -1,5 +1,5 @@
-/* Copyright 2010 - Jesse van den Kieboom
- * Copyright 2014, 2017 - Sébastien Wilmet
+/* SPDX-FileCopyrightText: 2010 - Jesse van den Kieboom
+ * SPDX-FileCopyrightText: 2014, 2017 - Sébastien Wilmet
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 

@@ -1,4 +1,4 @@
-/* Copyright 2020 - Chun-wei Fan <fanc999@yahoo.com.tw>
+/* SPDX-FileCopyrightText: 2020 - Chun-wei Fan <fanc999@yahoo.com.tw>
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 

@@ -1,5 +1,5 @@
-/* Copyright 2005 - Paolo Maggi
- * Copyright 2016 - Sébastien Wilmet <swilmet@gnome.org>
+/* SPDX-FileCopyrightText: 2005 - Paolo Maggi
+ * SPDX-FileCopyrightText: 2016 - Sébastien Wilmet <swilmet@gnome.org>
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 

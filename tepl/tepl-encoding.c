@@ -1,5 +1,5 @@
-/* Copyright 2002-2005 - Paolo Maggi
- * Copyright 2014, 2015, 2017 - Sébastien Wilmet <swilmet@gnome.org>
+/* SPDX-FileCopyrightText: 2002-2005 - Paolo Maggi
+ * SPDX-FileCopyrightText: 2014, 2015, 2017 - Sébastien Wilmet <swilmet@gnome.org>
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
@@ -90,7 +90,7 @@ G_DEFINE_BOXED_TYPE (TeplEncoding, tepl_encoding,
  * duplicated encodings in a GtkComboBox when choosing manually an encoding.
  *
  * The original version of this table comes from profterm.
- * Copyright (C) 2002 Red Hat, Inc.
+ * SPDX-FileCopyrightText: (C) 2002 Red Hat, Inc.
  */
 static const EncodingData encodings_table[] =
 {

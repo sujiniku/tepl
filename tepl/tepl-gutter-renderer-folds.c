@@ -1,5 +1,5 @@
-/* Copyright 2013, 2016 - Sébastien Wilmet <swilmet@gnome.org>
- * Copyright 2016 - David Rabel <david.rabel@noresoft.com>
+/* SPDX-FileCopyrightText: 2013, 2016 - Sébastien Wilmet <swilmet@gnome.org>
+ * SPDX-FileCopyrightText: 2016 - David Rabel <david.rabel@noresoft.com>
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 

@@ -1,5 +1,5 @@
-/* Copyright 2010 - Ignacio Casal Quinteiro
- * Copyright 2014, 2016 - Sébastien Wilmet <swilmet@gnome.org>
+/* SPDX-FileCopyrightText: 2010 - Ignacio Casal Quinteiro
+ * SPDX-FileCopyrightText: 2014, 2016 - Sébastien Wilmet <swilmet@gnome.org>
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 

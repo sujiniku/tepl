@@ -72,7 +72,8 @@ TEPL_PRIVATE_HEADERS = [
   'tepl-metadata-parser.h',
   'tepl-progress-info-bar.h',
   'tepl-signal-group.h',
-  'tepl-tab-saving.h'
+  'tepl-tab-saving.h',
+  'tepl-window-actions-file.h'
 ]
 
 tepl_private_c_files = [
@@ -86,7 +87,8 @@ tepl_private_c_files = [
   'tepl-metadata-parser.c',
   'tepl-progress-info-bar.c',
   'tepl-signal-group.c',
-  'tepl-tab-saving.c'
+  'tepl-tab-saving.c',
+  'tepl-window-actions-file.c'
 ]
 
 headers_install_dir = get_option('includedir') / 'tepl-@0@/tepl/'.format(TEPL_API_VERSION)

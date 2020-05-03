@@ -33,3 +33,4 @@ tepl/tepl-tab-label.c
 tepl/tepl-tab-saving.c
 tepl/tepl-utils.c
 tepl/tepl-view.c
+tepl/tepl-window-actions-file.c

@@ -27,6 +27,7 @@
 #include "tepl-signal-group.h"
 #include "tepl-tab.h"
 #include "tepl-view.h"
+#include "tepl-window-actions-file.h"
 
 /**
  * SECTION:application-window
@@ -126,22 +127,6 @@ G_DEFINE_TYPE_WITH_CODE (TeplApplicationWindow,
 			 G_ADD_PRIVATE (TeplApplicationWindow)
 			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_TAB_GROUP,
 						tepl_tab_group_interface_init))
-
-static void
-new_file_cb (GSimpleAction *action,
-	     GVariant      *parameter,
-	     gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-	TeplAbstractFactory *factory;
-	TeplTab *new_tab;
-
-	factory = tepl_abstract_factory_get_singleton ();
-	new_tab = tepl_abstract_factory_create_tab (factory);
-	gtk_widget_show (GTK_WIDGET (new_tab));
-
-	tepl_tab_group_append_tab (TEPL_TAB_GROUP (tepl_window), new_tab, TRUE);
-}
 
 static void
 open_file_chooser_response_cb (GtkFileChooserDialog  *file_chooser_dialog,
@@ -734,7 +719,6 @@ add_actions (TeplApplicationWindow *tepl_window)
 	 */
 	const GActionEntry entries[] = {
 		/* File menu */
-		{ "tepl-new-file", new_file_cb },
 		{ "tepl-open", open_cb },
 		{ "tepl-save", save_cb },
 		{ "tepl-save-as", save_as_cb },
@@ -758,6 +742,8 @@ add_actions (TeplApplicationWindow *tepl_window)
 						       entries,
 						       G_N_ELEMENTS (entries),
 						       tepl_window);
+
+	_tepl_window_actions_file_add_actions (tepl_window);
 
 	update_actions_sensitivity (tepl_window);
 }

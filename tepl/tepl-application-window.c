@@ -113,28 +113,6 @@ G_DEFINE_TYPE_WITH_CODE (TeplApplicationWindow,
 						tepl_tab_group_interface_init))
 
 static void
-redo_cb (GSimpleAction *action,
-	 GVariant      *parameter,
-	 gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-	TeplView *view;
-
-	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
-
-	if (view != NULL)
-	{
-		TeplBuffer *buffer;
-
-		buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
-
-		gtk_source_buffer_redo (GTK_SOURCE_BUFFER (buffer));
-		tepl_view_scroll_to_cursor (view);
-		gtk_widget_grab_focus (GTK_WIDGET (view));
-	}
-}
-
-static void
 cut_cb (GSimpleAction *action,
 	GVariant      *parameter,
 	gpointer       user_data)
@@ -549,7 +527,6 @@ add_actions (TeplApplicationWindow *tepl_window)
 	 */
 	const GActionEntry entries[] = {
 		/* Edit menu */
-		{ "tepl-redo", redo_cb },
 		{ "tepl-cut", cut_cb },
 		{ "tepl-copy", copy_cb },
 		{ "tepl-paste", paste_cb },

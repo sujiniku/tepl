@@ -22,6 +22,8 @@
 #include "tepl-abstract-factory.h"
 #include "tepl-tab-group.h"
 
+/* TeplApplicationWindow GActions for the File menu. */
+
 static void
 new_file_cb (GSimpleAction *action,
 	     GVariant      *parameter,

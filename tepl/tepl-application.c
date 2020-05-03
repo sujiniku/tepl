@@ -634,8 +634,8 @@ handle_metadata__startup_cb (GtkApplication  *gtk_app,
 }
 
 static void
-handle_metadata__shutdown_cb (GtkApplication  *gtk_app,
-			      TeplApplication *tepl_app)
+handle_metadata__shutdown_after_cb (GtkApplication  *gtk_app,
+				    TeplApplication *tepl_app)
 {
 	TeplAbstractFactory *factory = tepl_abstract_factory_get_singleton ();
 	TeplMetadataManager *manager = tepl_metadata_manager_get_singleton ();
@@ -686,11 +686,14 @@ tepl_application_handle_metadata (TeplApplication *tepl_app)
 					 tepl_app,
 					 0);
 
+		/* Connect with G_CONNECT_AFTER, so that GTK is properly
+		 * shutdown. Saving metadata should be done last.
+		 */
 		g_signal_connect_object (tepl_app->priv->gtk_app,
 					 "shutdown",
-					 G_CALLBACK (handle_metadata__shutdown_cb),
+					 G_CALLBACK (handle_metadata__shutdown_after_cb),
 					 tepl_app,
-					 0);
+					 G_CONNECT_AFTER);
 
 		tepl_app->priv->handle_metadata = TRUE;
 	}

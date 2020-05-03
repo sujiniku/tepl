@@ -162,6 +162,34 @@ save_as_activate_cb (GSimpleAction *save_as_action,
 	tepl_tab_save_as_async_simple (tab);
 }
 
+static void
+update_actions_sensitivity (TeplApplicationWindow *tepl_window)
+{
+	TeplBuffer *buffer;
+	GActionMap *action_map;
+	GAction *action;
+
+	buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
+
+	action_map = G_ACTION_MAP (tepl_application_window_get_application_window (tepl_window));
+
+	action = g_action_map_lookup_action (action_map, "tepl-save");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+				     buffer != NULL);
+
+	action = g_action_map_lookup_action (action_map, "tepl-save-as");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+				     buffer != NULL);
+}
+
+static void
+active_buffer_notify_cb (TeplApplicationWindow *tepl_window,
+			 GParamSpec            *pspec,
+			 gpointer               user_data)
+{
+	update_actions_sensitivity (tepl_window);
+}
+
 void
 _tepl_window_actions_file_add_actions (TeplApplicationWindow *tepl_window)
 {
@@ -177,9 +205,15 @@ _tepl_window_actions_file_add_actions (TeplApplicationWindow *tepl_window)
 	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));
 
 	gtk_window = tepl_application_window_get_application_window (tepl_window);
-
 	amtk_action_map_add_action_entries_check_dups (G_ACTION_MAP (gtk_window),
 						       entries,
 						       G_N_ELEMENTS (entries),
 						       tepl_window);
+
+	update_actions_sensitivity (tepl_window);
+
+	g_signal_connect (tepl_window,
+			  "notify::active-buffer",
+			  G_CALLBACK (active_buffer_notify_cb),
+			  NULL);
 }

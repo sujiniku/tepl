@@ -377,26 +377,6 @@ goto_line_change_state_cb (GSimpleAction *action,
 }
 
 static void
-update_save_actions_sensitivity (TeplApplicationWindow *tepl_window)
-{
-	TeplBuffer *buffer;
-	GActionMap *action_map;
-	GAction *action;
-
-	buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
-
-	action_map = G_ACTION_MAP (tepl_window->priv->gtk_window);
-
-	action = g_action_map_lookup_action (action_map, "tepl-save");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
-				     buffer != NULL);
-
-	action = g_action_map_lookup_action (action_map, "tepl-save-as");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
-				     buffer != NULL);
-}
-
-static void
 update_undo_redo_actions_sensitivity (TeplApplicationWindow *tepl_window)
 {
 	TeplView *view;
@@ -589,7 +569,6 @@ update_basic_edit_actions_sensitivity (TeplApplicationWindow *tepl_window)
 static void
 update_actions_sensitivity (TeplApplicationWindow *tepl_window)
 {
-	update_save_actions_sensitivity (tepl_window);
 	update_undo_redo_actions_sensitivity (tepl_window);
 	update_basic_edit_actions_sensitivity (tepl_window);
 	update_paste_action_sensitivity (tepl_window);
@@ -1098,7 +1077,6 @@ active_buffer_changed (TeplApplicationWindow *tepl_window)
 						  tepl_window));
 
 end:
-	update_save_actions_sensitivity (tepl_window);
 	update_undo_redo_actions_sensitivity (tepl_window);
 	update_basic_edit_actions_sensitivity (tepl_window);
 

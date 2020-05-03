@@ -8,9 +8,7 @@
 #include <glib/gi18n-lib.h>
 #include "tepl-abstract-factory.h"
 #include "tepl-buffer.h"
-#include "tepl-file.h"
 #include "tepl-signal-group.h"
-#include "tepl-tab.h"
 #include "tepl-view.h"
 #include "tepl-window-actions-file.h"
 

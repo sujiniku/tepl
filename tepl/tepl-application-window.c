@@ -129,20 +129,6 @@ G_DEFINE_TYPE_WITH_CODE (TeplApplicationWindow,
 						tepl_tab_group_interface_init))
 
 static void
-save_as_cb (GSimpleAction *save_as_action,
-	    GVariant      *parameter,
-	    gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-	TeplTab *tab;
-
-	tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
-	g_return_if_fail (tab != NULL);
-
-	tepl_tab_save_as_async_simple (tab);
-}
-
-static void
 undo_cb (GSimpleAction *action,
 	 GVariant      *parameter,
 	 gpointer       user_data)
@@ -621,9 +607,6 @@ add_actions (TeplApplicationWindow *tepl_window)
 	 * in tepl-application.c.
 	 */
 	const GActionEntry entries[] = {
-		/* File menu */
-		{ "tepl-save-as", save_as_cb },
-
 		/* Edit menu */
 		{ "tepl-undo", undo_cb },
 		{ "tepl-redo", redo_cb },

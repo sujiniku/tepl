@@ -148,6 +148,20 @@ save_activate_cb (GSimpleAction *save_action,
 	}
 }
 
+static void
+save_as_activate_cb (GSimpleAction *save_as_action,
+		     GVariant      *parameter,
+		     gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplTab *tab;
+
+	tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
+	g_return_if_fail (tab != NULL);
+
+	tepl_tab_save_as_async_simple (tab);
+}
+
 void
 _tepl_window_actions_file_add_actions (TeplApplicationWindow *tepl_window)
 {
@@ -157,6 +171,7 @@ _tepl_window_actions_file_add_actions (TeplApplicationWindow *tepl_window)
 		{ "tepl-new-file", new_file_activate_cb },
 		{ "tepl-open", open_activate_cb },
 		{ "tepl-save", save_activate_cb },
+		{ "tepl-save-as", save_as_activate_cb },
 	};
 
 	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));

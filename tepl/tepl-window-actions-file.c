@@ -25,9 +25,9 @@
 /* TeplApplicationWindow GActions for the File menu. */
 
 static void
-new_file_cb (GSimpleAction *action,
-	     GVariant      *parameter,
-	     gpointer       user_data)
+new_file_activate_cb (GSimpleAction *action,
+		      GVariant      *parameter,
+		      gpointer       user_data)
 {
 	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
 	TeplAbstractFactory *factory;
@@ -46,7 +46,7 @@ _tepl_window_actions_file_add_actions (TeplApplicationWindow *tepl_window)
 	GtkApplicationWindow *gtk_window;
 
 	const GActionEntry entries[] = {
-		{ "tepl-new-file", new_file_cb },
+		{ "tepl-new-file", new_file_activate_cb },
 	};
 
 	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));

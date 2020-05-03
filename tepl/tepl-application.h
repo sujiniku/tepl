@@ -92,5 +92,3 @@ void			tepl_application_handle_metadata		(TeplApplication *tepl_app);
 G_END_DECLS
 
 #endif /* TEPL_APPLICATION_H */
-
-/* ex:set ts=8 noet: */

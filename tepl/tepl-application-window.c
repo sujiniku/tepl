@@ -1482,5 +1482,3 @@ tepl_application_window_open_file (TeplApplicationWindow *tepl_window,
 
 	tepl_tab_load_file (tab, location);
 }
-
-/* ex:set ts=8 noet: */

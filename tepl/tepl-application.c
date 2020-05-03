@@ -695,5 +695,3 @@ tepl_application_handle_metadata (TeplApplication *tepl_app)
 		tepl_app->priv->handle_metadata = TRUE;
 	}
 }
-
-/* ex:set ts=8 noet: */

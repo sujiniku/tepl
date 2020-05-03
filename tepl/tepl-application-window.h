@@ -88,5 +88,3 @@ void			tepl_application_window_open_file			(TeplApplicationWindow *tepl_window,
 G_END_DECLS
 
 #endif /* TEPL_APPLICATION_WINDOW_H */
-
-/* ex:set ts=8 noet: */

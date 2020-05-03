@@ -129,73 +129,6 @@ G_DEFINE_TYPE_WITH_CODE (TeplApplicationWindow,
 						tepl_tab_group_interface_init))
 
 static void
-open_file_chooser_response_cb (GtkFileChooserDialog  *file_chooser_dialog,
-			       gint                   response_id,
-			       TeplApplicationWindow *tepl_window)
-{
-	if (response_id == GTK_RESPONSE_ACCEPT)
-	{
-		GFile *location;
-
-		location = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (file_chooser_dialog));
-		tepl_application_window_open_file (tepl_window, location, TRUE);
-		g_object_unref (location);
-
-		/* Present the window because it is not necessarily the most
-		 * recently focused window.
-		 */
-		gtk_window_present (GTK_WINDOW (tepl_window->priv->gtk_window));
-	}
-
-	gtk_widget_destroy (GTK_WIDGET (file_chooser_dialog));
-}
-
-static void
-open_cb (GSimpleAction *open_action,
-	 GVariant      *parameter,
-	 gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-	GtkWidget *file_chooser_dialog;
-	GtkWindowGroup *window_group;
-
-	/* Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
-	 * with GtkFileChooserNative the GFile that we obtain (in flatpak)
-	 * doesn't have the real path to the file, so it would ruin some
-	 * features for text editors:
-	 * - showing the directory in parentheses in the window title, or in the
-	 *   tab tooltip;
-	 * - opening a recent file.
-	 * Basically everywhere where the directory is shown.
-	 */
-	file_chooser_dialog = gtk_file_chooser_dialog_new (_("Open File"),
-							   GTK_WINDOW (tepl_window->priv->gtk_window),
-							   GTK_FILE_CHOOSER_ACTION_OPEN,
-							   _("_Cancel"), GTK_RESPONSE_CANCEL,
-							   _("_Open"), GTK_RESPONSE_ACCEPT,
-							   NULL);
-
-	gtk_dialog_set_default_response (GTK_DIALOG (file_chooser_dialog), GTK_RESPONSE_ACCEPT);
-	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_chooser_dialog), FALSE);
-
-	/* Do not set it modal, it's not absolutely required. But in that case
-	 * it's better to destroy the dialog when the main window is closed.
-	 */
-	gtk_window_set_destroy_with_parent (GTK_WINDOW (file_chooser_dialog), TRUE);
-
-	window_group = tepl_application_window_get_window_group (tepl_window);
-	gtk_window_group_add_window (window_group, GTK_WINDOW (file_chooser_dialog));
-
-	g_signal_connect_object (file_chooser_dialog,
-				 "response",
-				 G_CALLBACK (open_file_chooser_response_cb),
-				 tepl_window,
-				 0);
-
-	gtk_widget_show (file_chooser_dialog);
-}
-
-static void
 save_cb (GSimpleAction *save_action,
 	 GVariant      *parameter,
 	 gpointer       user_data)
@@ -719,7 +652,6 @@ add_actions (TeplApplicationWindow *tepl_window)
 	 */
 	const GActionEntry entries[] = {
 		/* File menu */
-		{ "tepl-open", open_cb },
 		{ "tepl-save", save_cb },
 		{ "tepl-save-as", save_as_cb },
 

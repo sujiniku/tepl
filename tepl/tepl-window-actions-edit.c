@@ -133,6 +133,50 @@ select_all_activate_cb (GSimpleAction *action,
 	}
 }
 
+static void
+indent_activate_cb (GSimpleAction *action,
+		    GVariant      *parameter,
+		    gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplView *view;
+
+	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (view != NULL)
+	{
+		TeplBuffer *buffer;
+		GtkTextIter start;
+		GtkTextIter end;
+
+		buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
+		gtk_text_buffer_get_selection_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
+		gtk_source_view_indent_lines (GTK_SOURCE_VIEW (view), &start, &end);
+	}
+}
+
+static void
+unindent_activate_cb (GSimpleAction *action,
+		      GVariant      *parameter,
+		      gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplView *view;
+
+	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (view != NULL)
+	{
+		TeplBuffer *buffer;
+		GtkTextIter start;
+		GtkTextIter end;
+
+		buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
+		gtk_text_buffer_get_selection_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
+		gtk_source_view_unindent_lines (GTK_SOURCE_VIEW (view), &start, &end);
+	}
+}
+
 void
 _tepl_window_actions_edit_add_actions (TeplApplicationWindow *tepl_window)
 {
@@ -146,6 +190,8 @@ _tepl_window_actions_edit_add_actions (TeplApplicationWindow *tepl_window)
 		{ "tepl-paste", paste_activate_cb },
 		{ "tepl-delete", delete_activate_cb },
 		{ "tepl-select-all", select_all_activate_cb },
+		{ "tepl-indent", indent_activate_cb },
+		{ "tepl-unindent", unindent_activate_cb },
 	};
 
 	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));

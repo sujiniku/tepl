@@ -113,50 +113,6 @@ G_DEFINE_TYPE_WITH_CODE (TeplApplicationWindow,
 						tepl_tab_group_interface_init))
 
 static void
-indent_cb (GSimpleAction *action,
-	   GVariant      *parameter,
-	   gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-	TeplView *view;
-
-	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
-
-	if (view != NULL)
-	{
-		TeplBuffer *buffer;
-		GtkTextIter start;
-		GtkTextIter end;
-
-		buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
-		gtk_text_buffer_get_selection_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
-		gtk_source_view_indent_lines (GTK_SOURCE_VIEW (view), &start, &end);
-	}
-}
-
-static void
-unindent_cb (GSimpleAction *action,
-	     GVariant      *parameter,
-	     gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-	TeplView *view;
-
-	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
-
-	if (view != NULL)
-	{
-		TeplBuffer *buffer;
-		GtkTextIter start;
-		GtkTextIter end;
-
-		buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
-		gtk_text_buffer_get_selection_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
-		gtk_source_view_unindent_lines (GTK_SOURCE_VIEW (view), &start, &end);
-	}
-}
-
-static void
 update_goto_line_action_sensitivity (TeplApplicationWindow *tepl_window)
 {
 	TeplTab *active_tab;
@@ -446,10 +402,6 @@ add_actions (TeplApplicationWindow *tepl_window)
 	 * in tepl-application.c.
 	 */
 	const GActionEntry entries[] = {
-		/* Edit menu */
-		{ "tepl-indent", indent_cb },
-		{ "tepl-unindent", unindent_cb },
-
 		/* Search menu */
 		{ "tepl-goto-line", goto_line_activate_cb, NULL, "false", goto_line_change_state_cb },
 	};

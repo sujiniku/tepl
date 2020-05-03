@@ -129,36 +129,6 @@ G_DEFINE_TYPE_WITH_CODE (TeplApplicationWindow,
 						tepl_tab_group_interface_init))
 
 static void
-save_cb (GSimpleAction *save_action,
-	 GVariant      *parameter,
-	 gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-	TeplTab *tab;
-	TeplBuffer *buffer;
-	TeplFile *file;
-	GFile *location;
-
-	tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
-	g_return_if_fail (tab != NULL);
-
-	buffer = tepl_tab_get_buffer (tab);
-	file = tepl_buffer_get_file (buffer);
-	location = tepl_file_get_location (file);
-
-	if (location != NULL)
-	{
-		tepl_tab_save_async_simple (tab);
-	}
-	else
-	{
-		g_action_group_activate_action (G_ACTION_GROUP (tepl_window->priv->gtk_window),
-						"tepl-save-as",
-						NULL);
-	}
-}
-
-static void
 save_as_cb (GSimpleAction *save_as_action,
 	    GVariant      *parameter,
 	    gpointer       user_data)
@@ -652,7 +622,6 @@ add_actions (TeplApplicationWindow *tepl_window)
 	 */
 	const GActionEntry entries[] = {
 		/* File menu */
-		{ "tepl-save", save_cb },
 		{ "tepl-save-as", save_as_cb },
 
 		/* Edit menu */

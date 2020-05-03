@@ -22,6 +22,9 @@
 #include <amtk/amtk.h>
 #include <glib/gi18n-lib.h>
 #include "tepl-abstract-factory.h"
+#include "tepl-buffer.h"
+#include "tepl-file.h"
+#include "tepl-tab.h"
 #include "tepl-tab-group.h"
 
 /* TeplApplicationWindow GActions for the File menu. */
@@ -114,6 +117,37 @@ open_activate_cb (GSimpleAction *open_action,
 	gtk_widget_show (file_chooser_dialog);
 }
 
+static void
+save_activate_cb (GSimpleAction *save_action,
+		  GVariant      *parameter,
+		  gpointer       user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	TeplTab *tab;
+	TeplBuffer *buffer;
+	TeplFile *file;
+	GFile *location;
+
+	tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
+	g_return_if_fail (tab != NULL);
+
+	buffer = tepl_tab_get_buffer (tab);
+	file = tepl_buffer_get_file (buffer);
+	location = tepl_file_get_location (file);
+
+	if (location != NULL)
+	{
+		tepl_tab_save_async_simple (tab);
+	}
+	else
+	{
+		GtkApplicationWindow *gtk_window;
+
+		gtk_window = tepl_application_window_get_application_window (tepl_window);
+		g_action_group_activate_action (G_ACTION_GROUP (gtk_window), "tepl-save-as", NULL);
+	}
+}
+
 void
 _tepl_window_actions_file_add_actions (TeplApplicationWindow *tepl_window)
 {
@@ -122,6 +156,7 @@ _tepl_window_actions_file_add_actions (TeplApplicationWindow *tepl_window)
 	const GActionEntry entries[] = {
 		{ "tepl-new-file", new_file_activate_cb },
 		{ "tepl-open", open_activate_cb },
+		{ "tepl-save", save_activate_cb },
 	};
 
 	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));

@@ -148,6 +148,7 @@ tepl_lib = library(
   dependencies: TEPL_DEPS,
   link_args: tepl_lib_link_args,
   link_depends: tepl_lib_link_depends,
+  # link_whole is not supported with MSVC, so we use extract_all_objects().
   objects: tepl_static_lib.extract_all_objects(),
   version: TEPL_LT_VERSION,
   install: true

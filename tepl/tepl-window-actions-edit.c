@@ -9,6 +9,11 @@
 
 /* TeplApplicationWindow GActions for the Edit menu. */
 
+struct _TeplWindowActionsEdit
+{
+	gint something;
+};
+
 static void
 undo_activate_cb (GSimpleAction *action,
 		  GVariant      *parameter,
@@ -177,10 +182,11 @@ unindent_activate_cb (GSimpleAction *action,
 	}
 }
 
-void
-_tepl_window_actions_edit_add_actions (TeplApplicationWindow *tepl_window)
+TeplWindowActionsEdit *
+_tepl_window_actions_edit_new (TeplApplicationWindow *tepl_window)
 {
 	GtkApplicationWindow *gtk_window;
+	TeplWindowActionsEdit *window_actions_edit;
 
 	const GActionEntry entries[] = {
 		{ "tepl-undo", undo_activate_cb },
@@ -194,11 +200,35 @@ _tepl_window_actions_edit_add_actions (TeplApplicationWindow *tepl_window)
 		{ "tepl-unindent", unindent_activate_cb },
 	};
 
-	g_return_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window));
+	g_return_val_if_fail (TEPL_IS_APPLICATION_WINDOW (tepl_window), NULL);
 
 	gtk_window = tepl_application_window_get_application_window (tepl_window);
 	amtk_action_map_add_action_entries_check_dups (G_ACTION_MAP (gtk_window),
 						       entries,
 						       G_N_ELEMENTS (entries),
 						       tepl_window);
+
+	window_actions_edit = g_new0 (TeplWindowActionsEdit, 1);
+
+	return window_actions_edit;
+}
+
+static void
+window_actions_edit_free (TeplWindowActionsEdit *window_actions_edit)
+{
+	if (window_actions_edit == NULL)
+	{
+		return;
+	}
+
+	g_free (window_actions_edit);
+}
+
+void
+_tepl_window_actions_edit_clear (TeplWindowActionsEdit **window_actions_edit_p)
+{
+	g_return_if_fail (window_actions_edit_p != NULL);
+
+	window_actions_edit_free (*window_actions_edit_p);
+	*window_actions_edit_p = NULL;
 }

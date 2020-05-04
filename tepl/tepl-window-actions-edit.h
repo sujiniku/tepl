@@ -9,8 +9,13 @@
 
 G_BEGIN_DECLS
 
+typedef struct _TeplWindowActionsEdit TeplWindowActionsEdit;
+
 G_GNUC_INTERNAL
-void	_tepl_window_actions_edit_add_actions	(TeplApplicationWindow *tepl_window);
+TeplWindowActionsEdit *	_tepl_window_actions_edit_new	(TeplApplicationWindow *tepl_window);
+
+G_GNUC_INTERNAL
+void			_tepl_window_actions_edit_clear	(TeplWindowActionsEdit **window_actions_edit_p);
 
 G_END_DECLS
 

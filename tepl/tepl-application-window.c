@@ -81,6 +81,8 @@ struct _TeplApplicationWindowPrivate
 {
 	GtkApplicationWindow *gtk_window;
 
+	TeplWindowActionsEdit *window_actions_edit;
+
 	GtkWindowGroup *window_group;
 
 	TeplTabGroup *tab_group;
@@ -412,7 +414,9 @@ add_actions (TeplApplicationWindow *tepl_window)
 						       tepl_window);
 
 	_tepl_window_actions_file_add_actions (tepl_window);
-	_tepl_window_actions_edit_add_actions (tepl_window);
+
+	g_assert (tepl_window->priv->window_actions_edit == NULL);
+	tepl_window->priv->window_actions_edit = _tepl_window_actions_edit_new (tepl_window);
 
 	update_actions_sensitivity (tepl_window);
 }
@@ -578,6 +582,8 @@ tepl_application_window_dispose (GObject *object)
 	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (object);
 
 	tepl_window->priv->gtk_window = NULL;
+
+	_tepl_window_actions_edit_clear (&tepl_window->priv->window_actions_edit);
 
 	g_clear_object (&tepl_window->priv->window_group);
 

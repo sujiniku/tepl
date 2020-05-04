@@ -6,21 +6,21 @@ future.
 
 See the [NEWS file](../NEWS) for a detailed history.
 
-Side/bottom panel container
----------------------------
+New small features in Tepl 5 (GNOME 3.38)
+-----------------------------------------
+
+- Status: **done**
+- Goto line UI: see the TeplGotoLineBar class and "win.tepl-goto-line" GAction.
+- TeplPanel: side/bottom panel container.
+- TeplStatusbar.
+- TeplStyleSchemeChooserWidget.
+- Plus new functions here and there.
+
+Build system: Autotools -> Meson
+--------------------------------
 
 - Status: **done**
 - Release: Tepl 5 (GNOME 3.38)
-
-See the TeplPanel class.
-
-Goto line UI
-------------
-
-- Status: **done**
-- Release: Tepl 5 (GNOME 3.38)
-
-See the TeplGotoLineBar class and "win.tepl-goto-line" GAction.
 
 Rework file metadata
 --------------------

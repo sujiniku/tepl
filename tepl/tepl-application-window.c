@@ -4,7 +4,6 @@
 
 #include "config.h"
 #include "tepl-application-window.h"
-#include <amtk/amtk.h>
 #include <glib/gi18n-lib.h>
 #include "tepl-abstract-factory.h"
 #include "tepl-buffer.h"

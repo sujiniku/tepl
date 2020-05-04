@@ -74,7 +74,8 @@ TEPL_PRIVATE_HEADERS = [
   'tepl-signal-group.h',
   'tepl-tab-saving.h',
   'tepl-window-actions-edit.h',
-  'tepl-window-actions-file.h'
+  'tepl-window-actions-file.h',
+  'tepl-window-actions-search.h'
 ]
 
 tepl_private_c_files = [
@@ -90,7 +91,8 @@ tepl_private_c_files = [
   'tepl-signal-group.c',
   'tepl-tab-saving.c',
   'tepl-window-actions-edit.c',
-  'tepl-window-actions-file.c'
+  'tepl-window-actions-file.c',
+  'tepl-window-actions-search.c'
 ]
 
 headers_install_dir = get_option('includedir') / 'tepl-@0@/tepl/'.format(TEPL_API_VERSION)

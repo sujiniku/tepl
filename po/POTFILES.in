@@ -35,3 +35,4 @@ tepl/tepl-utils.c
 tepl/tepl-view.c
 tepl/tepl-window-actions-edit.c
 tepl/tepl-window-actions-file.c
+tepl/tepl-window-actions-search.c

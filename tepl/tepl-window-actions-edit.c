@@ -17,6 +17,7 @@ struct _TeplWindowActionsEdit
 	TeplSignalGroup *tepl_window_signal_group;
 	TeplSignalGroup *view_signal_group;
 	TeplSignalGroup *buffer_signal_group;
+	TeplSignalGroup *clipboard_signal_group;
 };
 
 /******************************************************************************/
@@ -225,12 +226,119 @@ update_undo_redo_actions_sensitivity (TeplApplicationWindow *tepl_window)
 				     gtk_source_buffer_can_redo (buffer));
 }
 
+/* @can_paste_according_to_clipboard: TRUE if calling
+ * tepl_view_paste_clipboard() will paste something.
+ */
+static void
+set_paste_action_sensitivity_according_to_clipboard (TeplApplicationWindow *tepl_window,
+						     gboolean               can_paste_according_to_clipboard)
+{
+	TeplView *view;
+	gboolean view_is_editable = FALSE;
+	GActionMap *action_map;
+	GAction *action;
+
+	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+
+	if (view != NULL)
+	{
+		view_is_editable = gtk_text_view_get_editable (GTK_TEXT_VIEW (view));
+	}
+
+	action_map = G_ACTION_MAP (tepl_application_window_get_application_window (tepl_window));
+	action = g_action_map_lookup_action (action_map, "tepl-paste");
+
+	/* Since this is called async, the disposal of the actions may have
+	 * already happened. Ensure that we have an action before setting the
+	 * state.
+	 */
+	if (action != NULL)
+	{
+		g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+					     view_is_editable &&
+					     can_paste_according_to_clipboard);
+	}
+}
+
+static void
+clipboard_targets_received_cb (GtkClipboard *clipboard,
+			       GdkAtom      *atoms,
+			       gint          n_atoms,
+			       gpointer      user_data)
+{
+	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
+	GtkApplicationWindow *gtk_window;
+	TeplBuffer *active_buffer;
+	GtkTargetList *target_list;
+	gboolean can_paste = FALSE;
+	gint i;
+
+	active_buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
+	if (active_buffer == NULL)
+	{
+		goto end;
+	}
+
+	target_list = gtk_text_buffer_get_paste_target_list (GTK_TEXT_BUFFER (active_buffer));
+
+	for (i = 0; i < n_atoms; i++)
+	{
+		if (gtk_target_list_find (target_list, atoms[i], NULL))
+		{
+			can_paste = TRUE;
+			break;
+		}
+	}
+
+end:
+	set_paste_action_sensitivity_according_to_clipboard (tepl_window, can_paste);
+
+	/* Async operation finished. */
+	gtk_window = tepl_application_window_get_application_window (tepl_window);
+	g_object_unref (gtk_window);
+}
+
+/* How to test this easily: with a clipboard manager like xsel:
+ * $ xsel --clipboard --clear
+ * $ echo -n 'bloum!' | xsel --clipboard # -> GdkAtom "TEXT"
+ * Copy text in a GtkTextBuffer -> GdkAtom "GTK_TEXT_BUFFER_CONTENTS"
+ */
+static void
+update_paste_action_sensitivity (TeplApplicationWindow *tepl_window)
+{
+	GtkApplicationWindow *gtk_window;
+	GtkClipboard *clipboard;
+	GdkDisplay *display;
+
+	gtk_window = tepl_application_window_get_application_window (tepl_window);
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (gtk_window), GDK_SELECTION_CLIPBOARD);
+	g_return_if_fail (clipboard != NULL);
+
+	display = gtk_clipboard_get_display (clipboard);
+	if (!gdk_display_supports_selection_notification (display))
+	{
+		/* Do as if it can always paste, because if we set the paste
+		 * action as insensitive, we won't get the notification when the
+		 * clipboard contains something that we can paste (i.e.
+		 * clipboard_owner_change_cb() will not be called).
+		 */
+		set_paste_action_sensitivity_according_to_clipboard (tepl_window, TRUE);
+		return;
+	}
+
+	g_object_ref (gtk_window);
+	gtk_clipboard_request_targets (clipboard,
+				       clipboard_targets_received_cb,
+				       tepl_window);
+}
+
 static void
 active_view_editable_notify_cb (GtkTextView           *active_view,
 				GParamSpec            *pspec,
 				TeplWindowActionsEdit *window_actions_edit)
 {
 	update_undo_redo_actions_sensitivity (window_actions_edit->tepl_window);
+	update_paste_action_sensitivity (window_actions_edit->tepl_window);
 }
 
 static void
@@ -256,6 +364,7 @@ active_view_changed (TeplWindowActionsEdit *window_actions_edit)
 
 end:
 	update_undo_redo_actions_sensitivity (window_actions_edit->tepl_window);
+	update_paste_action_sensitivity (window_actions_edit->tepl_window);
 }
 
 static void
@@ -321,6 +430,14 @@ active_buffer_notify_cb (TeplApplicationWindow *tepl_window,
 	active_buffer_changed (window_actions_edit);
 }
 
+static void
+clipboard_owner_change_cb (GtkClipboard          *clipboard,
+			   GdkEvent              *event,
+			   TeplWindowActionsEdit *window_actions_edit)
+{
+	update_paste_action_sensitivity (window_actions_edit->tepl_window);
+}
+
 /******************************************************************************/
 /* Public functions */
 
@@ -329,6 +446,7 @@ _tepl_window_actions_edit_new (TeplApplicationWindow *tepl_window)
 {
 	GtkApplicationWindow *gtk_window;
 	TeplWindowActionsEdit *window_actions_edit;
+	GtkClipboard *clipboard;
 
 	const GActionEntry entries[] = {
 		{ "tepl-undo", undo_activate_cb },
@@ -366,6 +484,14 @@ _tepl_window_actions_edit_new (TeplApplicationWindow *tepl_window)
 						  G_CALLBACK (active_buffer_notify_cb),
 						  window_actions_edit));
 
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (gtk_window), GDK_SELECTION_CLIPBOARD);
+	window_actions_edit->clipboard_signal_group = _tepl_signal_group_new (G_OBJECT (clipboard));
+	_tepl_signal_group_add (window_actions_edit->clipboard_signal_group,
+				g_signal_connect (clipboard,
+						  "owner-change",
+						  G_CALLBACK (clipboard_owner_change_cb),
+						  window_actions_edit));
+
 	active_view_changed (window_actions_edit);
 	active_buffer_changed (window_actions_edit);
 
@@ -383,6 +509,7 @@ window_actions_edit_free (TeplWindowActionsEdit *window_actions_edit)
 	_tepl_signal_group_clear (&window_actions_edit->tepl_window_signal_group);
 	_tepl_signal_group_clear (&window_actions_edit->view_signal_group);
 	_tepl_signal_group_clear (&window_actions_edit->buffer_signal_group);
+	_tepl_signal_group_clear (&window_actions_edit->clipboard_signal_group);
 	g_free (window_actions_edit);
 }
 

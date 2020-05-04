@@ -9,7 +9,6 @@
 #include "tepl-abstract-factory.h"
 #include "tepl-buffer.h"
 #include "tepl-signal-group.h"
-#include "tepl-view.h"
 #include "tepl-window-actions-file.h"
 #include "tepl-window-actions-edit.h"
 

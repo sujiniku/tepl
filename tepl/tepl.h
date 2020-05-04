@@ -10,6 +10,7 @@
 #include <amtk/amtk.h>
 
 #include <tepl/tepl-enum-types.h>
+#include <tepl/tepl-macros.h>
 
 #include <tepl/tepl-abstract-factory.h>
 #include <tepl/tepl-application.h>
@@ -26,7 +27,6 @@
 #include <tepl/tepl-init.h>
 #include <tepl/tepl-io-error-info-bars.h>
 #include <tepl/tepl-iter.h>
-#include <tepl/tepl-macros.h>
 #include <tepl/tepl-menu-shell.h>
 #include <tepl/tepl-metadata.h>
 #include <tepl/tepl-metadata-manager.h>

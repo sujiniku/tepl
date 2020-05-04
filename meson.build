@@ -73,13 +73,11 @@ add_project_arguments(
 
 #####
 # CFLAGS
-# Try to mimic the AX_COMPILER_FLAGS Autotools macro.
 # Some flags are missing when using only the builtin warning_level meson option,
 # even at the maximum level.
 # The following warning_cflags suppose that warning_level=2.
 
 c_compiler = meson.get_compiler('c')
-
 warning_cflags = []
 
 if c_compiler.get_id() == 'msvc'
@@ -90,6 +88,7 @@ if c_compiler.get_id() == 'msvc'
     '-FImsvc_recommended_pragmas.h',
   ]
 else
+  # Try to mimic the AX_COMPILER_FLAGS Autotools macro.
   warning_cflags += [
     '-fno-strict-aliasing',
     '-Wundef',

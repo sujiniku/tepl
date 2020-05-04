@@ -160,6 +160,8 @@ TEPL_LIB_DEP = declare_dependency(
   dependencies: TEPL_DEPS
 )
 
+# pkg-config file generation. Supports GtkSourceView being built as a
+# subproject.
 PKG_CONFIG.generate(tepl_lib,
   filebase: 'tepl-@0@'.format(TEPL_API_VERSION),
   name: 'Tepl',

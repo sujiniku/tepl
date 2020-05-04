@@ -11,6 +11,7 @@
 #include "tepl-signal-group.h"
 #include "tepl-window-actions-file.h"
 #include "tepl-window-actions-edit.h"
+#include "tepl-window-actions-search.h"
 
 /**
  * SECTION:application-window
@@ -112,107 +113,6 @@ G_DEFINE_TYPE_WITH_CODE (TeplApplicationWindow,
 			 G_ADD_PRIVATE (TeplApplicationWindow)
 			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_TAB_GROUP,
 						tepl_tab_group_interface_init))
-
-static void
-update_goto_line_action_sensitivity (TeplApplicationWindow *tepl_window)
-{
-	TeplTab *active_tab;
-	GActionMap *action_map;
-	GAction *action;
-
-	active_tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
-
-	action_map = G_ACTION_MAP (tepl_window->priv->gtk_window);
-
-	action = g_action_map_lookup_action (action_map, "tepl-goto-line");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
-				     active_tab != NULL);
-}
-
-static void
-update_goto_line (TeplApplicationWindow *tepl_window)
-{
-	GActionMap *action_map;
-	GAction *goto_line_action;
-	TeplTab *active_tab;
-	TeplGotoLineBar *goto_line_bar;
-
-	update_goto_line_action_sensitivity (tepl_window);
-
-	action_map = G_ACTION_MAP (tepl_window->priv->gtk_window);
-	goto_line_action = g_action_map_lookup_action (action_map, "tepl-goto-line");
-
-	active_tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
-	if (active_tab == NULL)
-	{
-		/* FIXME: should be done when the TeplTabGroup is *empty*. When
-		 * the active_tab == NULL it's an approximation. More APIs need
-		 * to be added to TeplTabGroup.
-		 */
-		g_simple_action_set_state (G_SIMPLE_ACTION (goto_line_action),
-					   g_variant_new_boolean (FALSE));
-		return;
-	}
-
-	/* FIXME: would be nice to call
-	 * _tepl_goto_line_bar_bind_to_gaction_state() directly for all
-	 * TeplTab's, when they are added to the TeplTabGroup.
-	 */
-	goto_line_bar = tepl_tab_get_goto_line_bar (active_tab);
-	_tepl_goto_line_bar_bind_to_gaction_state (goto_line_bar, goto_line_action);
-}
-
-static void
-goto_line_activate_cb (GSimpleAction *action,
-		       GVariant      *parameter,
-		       gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-	TeplTab *active_tab;
-
-	g_action_change_state (G_ACTION (action), g_variant_new_boolean (TRUE));
-
-	active_tab = tepl_tab_group_get_active_tab (TEPL_TAB_GROUP (tepl_window));
-	if (active_tab != NULL)
-	{
-		TeplGotoLineBar *goto_line_bar;
-
-		goto_line_bar = tepl_tab_get_goto_line_bar (active_tab);
-		tepl_goto_line_bar_grab_focus_to_entry (goto_line_bar);
-	}
-}
-
-static void
-goto_line_change_state_cb (GSimpleAction *action,
-			   GVariant      *value,
-			   gpointer       user_data)
-{
-	TeplApplicationWindow *tepl_window = TEPL_APPLICATION_WINDOW (user_data);
-
-	g_simple_action_set_state (action, value);
-	update_goto_line (tepl_window);
-}
-
-static void
-add_actions (TeplApplicationWindow *tepl_window)
-{
-	const GActionEntry entries[] = {
-		/* Search menu */
-		{ "tepl-goto-line", goto_line_activate_cb, NULL, "false", goto_line_change_state_cb },
-	};
-
-	amtk_action_map_add_action_entries_check_dups (G_ACTION_MAP (tepl_window->priv->gtk_window),
-						       entries,
-						       G_N_ELEMENTS (entries),
-						       tepl_window);
-
-	_tepl_window_actions_file_add_actions (tepl_window);
-
-	g_assert (tepl_window->priv->window_actions_edit == NULL);
-	tepl_window->priv->window_actions_edit = _tepl_window_actions_edit_new (tepl_window);
-
-	update_goto_line_action_sensitivity (tepl_window);
-}
 
 static void
 update_title (TeplApplicationWindow *tepl_window)
@@ -348,7 +248,11 @@ tepl_application_window_constructed (GObject *object)
 		G_OBJECT_CLASS (tepl_application_window_parent_class)->constructed (object);
 	}
 
-	add_actions (tepl_window);
+	_tepl_window_actions_file_add_actions (tepl_window);
+	_tepl_window_actions_search_add_actions (tepl_window);
+
+	g_assert (tepl_window->priv->window_actions_edit == NULL);
+	tepl_window->priv->window_actions_edit = _tepl_window_actions_edit_new (tepl_window);
 }
 
 static void
@@ -550,7 +454,6 @@ tepl_application_window_get_application_window (TeplApplicationWindow *tepl_wind
 static void
 active_tab_changed (TeplApplicationWindow *tepl_window)
 {
-	update_goto_line (tepl_window);
 	update_title (tepl_window);
 }
 

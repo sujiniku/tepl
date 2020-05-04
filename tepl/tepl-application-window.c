@@ -195,77 +195,8 @@ goto_line_change_state_cb (GSimpleAction *action,
 }
 
 static void
-update_basic_edit_actions_sensitivity (TeplApplicationWindow *tepl_window)
-{
-	TeplView *view;
-	TeplBuffer *buffer;
-	gboolean view_is_editable = FALSE;
-	gboolean buffer_has_selection = FALSE;
-	GActionMap *action_map;
-	GAction *action;
-
-	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
-	buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
-
-	if (view != NULL)
-	{
-		view_is_editable = gtk_text_view_get_editable (GTK_TEXT_VIEW (view));
-	}
-
-	if (buffer != NULL)
-	{
-		buffer_has_selection = gtk_text_buffer_get_has_selection (GTK_TEXT_BUFFER (buffer));
-	}
-
-	action_map = G_ACTION_MAP (tepl_window->priv->gtk_window);
-
-	action = g_action_map_lookup_action (action_map, "tepl-cut");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
-				     view_is_editable && buffer_has_selection);
-
-	action = g_action_map_lookup_action (action_map, "tepl-copy");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
-				     buffer_has_selection);
-
-	/* tepl-paste is treated separately with
-	 * update_paste_action_sensitivity(), to request the clipboard only when
-	 * necessary.
-	 */
-
-	action = g_action_map_lookup_action (action_map, "tepl-delete");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
-				     view_is_editable && buffer_has_selection);
-
-	action = g_action_map_lookup_action (action_map, "tepl-select-all");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
-				     buffer != NULL);
-
-	action = g_action_map_lookup_action (action_map, "tepl-indent");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
-				     view_is_editable);
-
-	action = g_action_map_lookup_action (action_map, "tepl-unindent");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
-				     view_is_editable);
-}
-
-static void
-update_actions_sensitivity (TeplApplicationWindow *tepl_window)
-{
-	update_basic_edit_actions_sensitivity (tepl_window);
-	update_goto_line_action_sensitivity (tepl_window);
-}
-
-static void
 add_actions (TeplApplicationWindow *tepl_window)
 {
-	/* The actions need to be namespaced, to not conflict with the
-	 * application or other libraries.
-	 *
-	 * Do not forget to document each action in the TeplApplicationWindow
-	 * class description, and to add the corresponding AmtkActionInfoEntry
-	 * in tepl-application.c.
-	 */
 	const GActionEntry entries[] = {
 		/* Search menu */
 		{ "tepl-goto-line", goto_line_activate_cb, NULL, "false", goto_line_change_state_cb },
@@ -281,7 +212,7 @@ add_actions (TeplApplicationWindow *tepl_window)
 	g_assert (tepl_window->priv->window_actions_edit == NULL);
 	tepl_window->priv->window_actions_edit = _tepl_window_actions_edit_new (tepl_window);
 
-	update_actions_sensitivity (tepl_window);
+	update_goto_line_action_sensitivity (tepl_window);
 }
 
 static void
@@ -620,7 +551,6 @@ tepl_application_window_get_application_window (TeplApplicationWindow *tepl_wind
 static void
 active_tab_changed (TeplApplicationWindow *tepl_window)
 {
-	update_basic_edit_actions_sensitivity (tepl_window);
 	update_goto_line (tepl_window);
 	update_title (tepl_window);
 }
@@ -630,7 +560,6 @@ active_view_editable_notify_cb (GtkTextView           *active_view,
 				GParamSpec            *pspec,
 				TeplApplicationWindow *tepl_window)
 {
-	update_basic_edit_actions_sensitivity (tepl_window);
 	update_title (tepl_window);
 }
 
@@ -654,14 +583,6 @@ active_view_changed (TeplApplicationWindow *tepl_window)
 						  "notify::editable",
 						  G_CALLBACK (active_view_editable_notify_cb),
 						  tepl_window));
-}
-
-static void
-active_buffer_has_selection_notify_cb (GtkTextBuffer         *buffer,
-				       GParamSpec            *pspec,
-				       TeplApplicationWindow *tepl_window)
-{
-	update_basic_edit_actions_sensitivity (tepl_window);
 }
 
 static void
@@ -689,18 +610,11 @@ active_buffer_changed (TeplApplicationWindow *tepl_window)
 
 	_tepl_signal_group_add (tepl_window->priv->buffer_signal_group,
 				g_signal_connect (active_buffer,
-						  "notify::has-selection",
-						  G_CALLBACK (active_buffer_has_selection_notify_cb),
-						  tepl_window));
-
-	_tepl_signal_group_add (tepl_window->priv->buffer_signal_group,
-				g_signal_connect (active_buffer,
 						  "notify::tepl-full-title",
 						  G_CALLBACK (active_buffer_full_title_notify_cb),
 						  tepl_window));
 
 end:
-	update_basic_edit_actions_sensitivity (tepl_window);
 	update_title (tepl_window);
 }
 

@@ -194,38 +194,6 @@ goto_line_change_state_cb (GSimpleAction *action,
 	update_goto_line (tepl_window);
 }
 
-static void
-update_undo_redo_actions_sensitivity (TeplApplicationWindow *tepl_window)
-{
-	TeplView *view;
-	gboolean view_is_editable = FALSE;
-	GtkSourceBuffer *buffer;
-	GActionMap *action_map;
-	GAction *action;
-
-	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
-	if (view != NULL)
-	{
-		view_is_editable = gtk_text_view_get_editable (GTK_TEXT_VIEW (view));
-	}
-
-	buffer = GTK_SOURCE_BUFFER (tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window)));
-
-	action_map = G_ACTION_MAP (tepl_window->priv->gtk_window);
-
-	action = g_action_map_lookup_action (action_map, "tepl-undo");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
-				     view_is_editable &&
-				     buffer != NULL &&
-				     gtk_source_buffer_can_undo (buffer));
-
-	action = g_action_map_lookup_action (action_map, "tepl-redo");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
-				     view_is_editable &&
-				     buffer != NULL &&
-				     gtk_source_buffer_can_redo (buffer));
-}
-
 /* @can_paste_according_to_clipboard: TRUE if calling
  * tepl_view_paste_clipboard() will paste something.
  */
@@ -387,7 +355,6 @@ update_basic_edit_actions_sensitivity (TeplApplicationWindow *tepl_window)
 static void
 update_actions_sensitivity (TeplApplicationWindow *tepl_window)
 {
-	update_undo_redo_actions_sensitivity (tepl_window);
 	update_basic_edit_actions_sensitivity (tepl_window);
 	update_paste_action_sensitivity (tepl_window);
 	update_goto_line_action_sensitivity (tepl_window);
@@ -775,7 +742,6 @@ tepl_application_window_get_application_window (TeplApplicationWindow *tepl_wind
 static void
 active_tab_changed (TeplApplicationWindow *tepl_window)
 {
-	update_undo_redo_actions_sensitivity (tepl_window);
 	update_basic_edit_actions_sensitivity (tepl_window);
 	update_paste_action_sensitivity (tepl_window);
 
@@ -788,7 +754,6 @@ active_view_editable_notify_cb (GtkTextView           *active_view,
 				GParamSpec            *pspec,
 				TeplApplicationWindow *tepl_window)
 {
-	update_undo_redo_actions_sensitivity (tepl_window);
 	update_basic_edit_actions_sensitivity (tepl_window);
 	update_paste_action_sensitivity (tepl_window);
 
@@ -826,22 +791,6 @@ active_buffer_has_selection_notify_cb (GtkTextBuffer         *buffer,
 }
 
 static void
-active_buffer_can_undo_notify_cb (GtkSourceBuffer       *buffer,
-				  GParamSpec            *pspec,
-				  TeplApplicationWindow *tepl_window)
-{
-	update_undo_redo_actions_sensitivity (tepl_window);
-}
-
-static void
-active_buffer_can_redo_notify_cb (GtkSourceBuffer       *buffer,
-				  GParamSpec            *pspec,
-				  TeplApplicationWindow *tepl_window)
-{
-	update_undo_redo_actions_sensitivity (tepl_window);
-}
-
-static void
 active_buffer_full_title_notify_cb (TeplBuffer            *buffer,
 				    GParamSpec            *pspec,
 				    TeplApplicationWindow *tepl_window)
@@ -872,26 +821,12 @@ active_buffer_changed (TeplApplicationWindow *tepl_window)
 
 	_tepl_signal_group_add (tepl_window->priv->buffer_signal_group,
 				g_signal_connect (active_buffer,
-						  "notify::can-undo",
-						  G_CALLBACK (active_buffer_can_undo_notify_cb),
-						  tepl_window));
-
-	_tepl_signal_group_add (tepl_window->priv->buffer_signal_group,
-				g_signal_connect (active_buffer,
-						  "notify::can-redo",
-						  G_CALLBACK (active_buffer_can_redo_notify_cb),
-						  tepl_window));
-
-	_tepl_signal_group_add (tepl_window->priv->buffer_signal_group,
-				g_signal_connect (active_buffer,
 						  "notify::tepl-full-title",
 						  G_CALLBACK (active_buffer_full_title_notify_cb),
 						  tepl_window));
 
 end:
-	update_undo_redo_actions_sensitivity (tepl_window);
 	update_basic_edit_actions_sensitivity (tepl_window);
-
 	update_title (tepl_window);
 }
 

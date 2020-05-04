@@ -4,6 +4,7 @@
 
 #include "tepl-window-actions-edit.h"
 #include <amtk/amtk.h>
+#include "tepl-signal-group.h"
 #include "tepl-tab-group.h"
 #include "tepl-view.h"
 
@@ -12,7 +13,14 @@
 struct _TeplWindowActionsEdit
 {
 	TeplApplicationWindow *tepl_window; /* unowned */
+
+	TeplSignalGroup *tepl_window_signal_group;
+	TeplSignalGroup *view_signal_group;
+	TeplSignalGroup *buffer_signal_group;
 };
+
+/******************************************************************************/
+/* Activate callbacks */
 
 static void
 undo_activate_cb (GSimpleAction *action,
@@ -182,6 +190,140 @@ unindent_activate_cb (GSimpleAction *action,
 	}
 }
 
+/******************************************************************************/
+/* Update sensitivity */
+
+static void
+update_undo_redo_actions_sensitivity (TeplApplicationWindow *tepl_window)
+{
+	TeplView *view;
+	gboolean view_is_editable = FALSE;
+	GtkSourceBuffer *buffer;
+	GActionMap *action_map;
+	GAction *action;
+
+	view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
+	if (view != NULL)
+	{
+		view_is_editable = gtk_text_view_get_editable (GTK_TEXT_VIEW (view));
+	}
+
+	buffer = GTK_SOURCE_BUFFER (tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window)));
+
+	action_map = G_ACTION_MAP (tepl_application_window_get_application_window (tepl_window));
+
+	action = g_action_map_lookup_action (action_map, "tepl-undo");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+				     view_is_editable &&
+				     buffer != NULL &&
+				     gtk_source_buffer_can_undo (buffer));
+
+	action = g_action_map_lookup_action (action_map, "tepl-redo");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+				     view_is_editable &&
+				     buffer != NULL &&
+				     gtk_source_buffer_can_redo (buffer));
+}
+
+static void
+active_view_editable_notify_cb (GtkTextView           *active_view,
+				GParamSpec            *pspec,
+				TeplWindowActionsEdit *window_actions_edit)
+{
+	update_undo_redo_actions_sensitivity (window_actions_edit->tepl_window);
+}
+
+static void
+active_view_changed (TeplWindowActionsEdit *window_actions_edit)
+{
+	TeplView *active_view;
+
+	_tepl_signal_group_clear (&window_actions_edit->view_signal_group);
+
+	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (window_actions_edit->tepl_window));
+	if (active_view == NULL)
+	{
+		goto end;
+	}
+
+	window_actions_edit->view_signal_group = _tepl_signal_group_new (G_OBJECT (active_view));
+
+	_tepl_signal_group_add (window_actions_edit->view_signal_group,
+				g_signal_connect (active_view,
+						  "notify::editable",
+						  G_CALLBACK (active_view_editable_notify_cb),
+						  window_actions_edit));
+
+end:
+	update_undo_redo_actions_sensitivity (window_actions_edit->tepl_window);
+}
+
+static void
+active_view_notify_cb (TeplApplicationWindow *tepl_window,
+		       GParamSpec            *pspec,
+		       TeplWindowActionsEdit *window_actions_edit)
+{
+	active_view_changed (window_actions_edit);
+}
+
+static void
+active_buffer_can_undo_notify_cb (GtkSourceBuffer       *buffer,
+				  GParamSpec            *pspec,
+				  TeplWindowActionsEdit *window_actions_edit)
+{
+	update_undo_redo_actions_sensitivity (window_actions_edit->tepl_window);
+}
+
+static void
+active_buffer_can_redo_notify_cb (GtkSourceBuffer       *buffer,
+				  GParamSpec            *pspec,
+				  TeplWindowActionsEdit *window_actions_edit)
+{
+	update_undo_redo_actions_sensitivity (window_actions_edit->tepl_window);
+}
+
+static void
+active_buffer_changed (TeplWindowActionsEdit *window_actions_edit)
+{
+	TeplBuffer *active_buffer;
+
+	_tepl_signal_group_clear (&window_actions_edit->buffer_signal_group);
+
+	active_buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (window_actions_edit->tepl_window));
+	if (active_buffer == NULL)
+	{
+		goto end;
+	}
+
+	window_actions_edit->buffer_signal_group = _tepl_signal_group_new (G_OBJECT (active_buffer));
+
+	_tepl_signal_group_add (window_actions_edit->buffer_signal_group,
+				g_signal_connect (active_buffer,
+						  "notify::can-undo",
+						  G_CALLBACK (active_buffer_can_undo_notify_cb),
+						  window_actions_edit));
+
+	_tepl_signal_group_add (window_actions_edit->buffer_signal_group,
+				g_signal_connect (active_buffer,
+						  "notify::can-redo",
+						  G_CALLBACK (active_buffer_can_redo_notify_cb),
+						  window_actions_edit));
+
+end:
+	update_undo_redo_actions_sensitivity (window_actions_edit->tepl_window);
+}
+
+static void
+active_buffer_notify_cb (TeplApplicationWindow *tepl_window,
+			 GParamSpec            *pspec,
+			 TeplWindowActionsEdit *window_actions_edit)
+{
+	active_buffer_changed (window_actions_edit);
+}
+
+/******************************************************************************/
+/* Public functions */
+
 TeplWindowActionsEdit *
 _tepl_window_actions_edit_new (TeplApplicationWindow *tepl_window)
 {
@@ -210,6 +352,22 @@ _tepl_window_actions_edit_new (TeplApplicationWindow *tepl_window)
 
 	window_actions_edit = g_new0 (TeplWindowActionsEdit, 1);
 	window_actions_edit->tepl_window = tepl_window;
+	window_actions_edit->tepl_window_signal_group = _tepl_signal_group_new (G_OBJECT (tepl_window));
+
+	_tepl_signal_group_add (window_actions_edit->tepl_window_signal_group,
+				g_signal_connect (tepl_window,
+						  "notify::active-view",
+						  G_CALLBACK (active_view_notify_cb),
+						  window_actions_edit));
+
+	_tepl_signal_group_add (window_actions_edit->tepl_window_signal_group,
+				g_signal_connect (tepl_window,
+						  "notify::active-buffer",
+						  G_CALLBACK (active_buffer_notify_cb),
+						  window_actions_edit));
+
+	active_view_changed (window_actions_edit);
+	active_buffer_changed (window_actions_edit);
 
 	return window_actions_edit;
 }
@@ -222,6 +380,9 @@ window_actions_edit_free (TeplWindowActionsEdit *window_actions_edit)
 		return;
 	}
 
+	_tepl_signal_group_clear (&window_actions_edit->tepl_window_signal_group);
+	_tepl_signal_group_clear (&window_actions_edit->view_signal_group);
+	_tepl_signal_group_clear (&window_actions_edit->buffer_signal_group);
 	g_free (window_actions_edit);
 }
 

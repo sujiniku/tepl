@@ -185,5 +185,6 @@ GNOME.generate_gir(
     tepl_public_c_files,
     tepl_enum_types
   ],
+  # Support for deps being built as subprojects:
   dependencies: TEPL_DEPS,
 )

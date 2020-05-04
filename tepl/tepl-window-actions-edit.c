@@ -11,7 +11,7 @@
 
 struct _TeplWindowActionsEdit
 {
-	gint something;
+	TeplApplicationWindow *tepl_window; /* unowned */
 };
 
 static void
@@ -209,6 +209,7 @@ _tepl_window_actions_edit_new (TeplApplicationWindow *tepl_window)
 						       tepl_window);
 
 	window_actions_edit = g_new0 (TeplWindowActionsEdit, 1);
+	window_actions_edit->tepl_window = tepl_window;
 
 	return window_actions_edit;
 }

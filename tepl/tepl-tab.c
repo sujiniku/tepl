@@ -472,6 +472,9 @@ tepl_tab_get_goto_line_bar (TeplTab *tab)
 		tab->priv->goto_line_bar = tepl_goto_line_bar_new ();
 		g_object_ref_sink (tab->priv->goto_line_bar);
 
+		/* The TeplGotoLineBar needs to be explicitly shown/hidden. */
+		gtk_widget_set_no_show_all (GTK_WIDGET (tab->priv->goto_line_bar), TRUE);
+
 		tepl_goto_line_bar_set_view (tab->priv->goto_line_bar,
 					     tab->priv->view);
 

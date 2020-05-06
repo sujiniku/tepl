@@ -59,6 +59,17 @@ tepl_goto_line_bar_class_init (TeplGotoLineBarClass *klass)
 }
 
 static void
+hide_bar_by_explicit_user_action (TeplGotoLineBar *bar)
+{
+	gtk_widget_hide (GTK_WIDGET (bar));
+
+	if (bar->priv->view != NULL)
+	{
+		gtk_widget_grab_focus (GTK_WIDGET (bar->priv->view));
+	}
+}
+
+static void
 set_success (GtkEntry *entry,
 	     gboolean  success)
 {
@@ -114,7 +125,7 @@ static void
 entry_activate_cb (GtkEntry        *entry,
 		   TeplGotoLineBar *bar)
 {
-	gtk_widget_hide (GTK_WIDGET (bar));
+	hide_bar_by_explicit_user_action (bar);
 }
 
 static void
@@ -141,7 +152,7 @@ static void
 close_button_clicked_cb (GtkButton       *close_button,
 			 TeplGotoLineBar *bar)
 {
-	gtk_widget_hide (GTK_WIDGET (bar));
+	hide_bar_by_explicit_user_action (bar);
 }
 
 static void

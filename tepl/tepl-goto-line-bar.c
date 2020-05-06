@@ -56,6 +56,8 @@ tepl_goto_line_bar_class_init (TeplGotoLineBarClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	object_class->dispose = tepl_goto_line_bar_dispose;
+
+	gtk_widget_class_set_css_name (GTK_WIDGET_CLASS (klass), "TeplGotoLineBar");
 }
 
 static void
@@ -189,6 +191,36 @@ bar_hide_cb (TeplGotoLineBar *bar,
 }
 
 static void
+apply_style (TeplGotoLineBar *bar)
+{
+	GtkStyleContext *style_context;
+	const gchar *css;
+	GtkCssProvider *css_provider;
+
+	style_context = gtk_widget_get_style_context (GTK_WIDGET (bar));
+	gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_FRAME);
+
+	css = "TeplGotoLineBar {\n"
+	      "  padding-left: 6px;\n"
+	      "  padding-right: 4px;\n"
+	      "  padding-top: 3px;\n"
+	      "  padding-bottom: 3px;\n"
+	      "\n"
+	      "  border-bottom: none;\n"
+	      "  border-left: none;\n"
+	      "  border-right: none;\n"
+	      "}\n";
+
+	css_provider = gtk_css_provider_new ();
+	gtk_css_provider_load_from_data (css_provider, css, -1, NULL);
+	gtk_style_context_add_provider (style_context,
+					GTK_STYLE_PROVIDER (css_provider),
+					/* Priority "library". */
+					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION - 1);
+	g_object_unref (css_provider);
+}
+
+static void
 tepl_goto_line_bar_init (TeplGotoLineBar *bar)
 {
 	GtkWidget *label;
@@ -196,11 +228,9 @@ tepl_goto_line_bar_init (TeplGotoLineBar *bar)
 
 	bar->priv = tepl_goto_line_bar_get_instance_private (bar);
 
+	apply_style (bar);
+
 	gtk_grid_set_column_spacing (GTK_GRID (bar), 6);
-	gtk_widget_set_margin_start (GTK_WIDGET (bar), 6);
-	gtk_widget_set_margin_end (GTK_WIDGET (bar), 4);
-	gtk_widget_set_margin_top (GTK_WIDGET (bar), 3);
-	gtk_widget_set_margin_bottom (GTK_WIDGET (bar), 3);
 
 	label = gtk_label_new (_("Go to line:"));
 	gtk_widget_show (label);

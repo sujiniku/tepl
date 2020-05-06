@@ -28,6 +28,7 @@
 
 struct _TeplGotoLineBarPrivate
 {
+	/* A GtkSearchEntry. */
 	GtkEntry *entry;
 
 	/* Owns a strong ref. */

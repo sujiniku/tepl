@@ -57,6 +57,8 @@ TEPL_DEPS = [TEPL_PUBLIC_DEPS, TEPL_PRIVATE_DEPS]
 config_data = configuration_data()
 GETTEXT_PACKAGE_NAME = 'tepl-' + TEPL_API_VERSION
 config_data.set_quoted('GETTEXT_PACKAGE', GETTEXT_PACKAGE_NAME)
+config_data.set_quoted('TEPL_LOCALEDIR', get_option('prefix') / get_option('localedir'))
+
 configure_file(
   output: 'config.h',
   configuration: config_data

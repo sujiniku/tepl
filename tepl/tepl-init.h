@@ -16,6 +16,7 @@ G_BEGIN_DECLS
 
 _TEPL_EXTERN
 void	tepl_init		(void);
+
 _TEPL_EXTERN
 void	tepl_finalize		(void);
 

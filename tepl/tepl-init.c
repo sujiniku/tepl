@@ -2,11 +2,30 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
+#include "config.h"
 #include "tepl-init.h"
+#include <glib/gi18n-lib.h>
 #include <amtk/amtk.h>
 #include <gtksourceview/gtksource.h>
 #include "tepl-abstract-factory.h"
 #include "tepl-metadata-manager.h"
+
+static gchar *
+get_locale_directory (void)
+{
+#ifdef G_OS_WIN32
+	gchar *base_dir;
+	gchar *locale_dir;
+
+	base_dir = g_win32_get_package_installation_directory_of_module (NULL);
+	locale_dir = g_build_filename (base_dir, "share", "locale", NULL);
+	g_free (base_dir);
+
+	return locale_dir;
+#else
+	return g_strdup (TEPL_LOCALEDIR);
+#endif
+}
 
 /**
  * tepl_init:
@@ -23,8 +42,23 @@
 void
 tepl_init (void)
 {
-	amtk_init ();
-	gtk_source_init ();
+	static gboolean done = FALSE;
+
+	if (!done)
+	{
+		gchar *locale_dir;
+
+		amtk_init ();
+		gtk_source_init ();
+
+		locale_dir = get_locale_directory ();
+		bindtextdomain (GETTEXT_PACKAGE, locale_dir);
+		g_free (locale_dir);
+
+		bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+
+		done = TRUE;
+	}
 }
 
 /**

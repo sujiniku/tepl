@@ -209,6 +209,7 @@ main (gint    argc,
 {
 	GtkWidget *window;
 
+	gtk_source_init ();
 	gtk_init (&argc, &argv);
 
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);

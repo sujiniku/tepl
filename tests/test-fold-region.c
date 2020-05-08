@@ -37,7 +37,7 @@ main (int argc, char *argv[])
 	GtkWidget *window;
 	GtkWidget *scrolled_window;
 
-	gtk_source_init ();
+	tepl_init ();
 	gtk_init (&argc, &argv);
 
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -51,5 +51,6 @@ main (int argc, char *argv[])
 	gtk_widget_show_all (window);
 
 	gtk_main ();
+	tepl_finalize ();
 	return 0;
 }

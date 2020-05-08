@@ -209,7 +209,7 @@ main (gint    argc,
 {
 	GtkWidget *window;
 
-	gtk_source_init ();
+	tepl_init ();
 	gtk_init (&argc, &argv);
 
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -223,6 +223,6 @@ main (gint    argc,
 			  NULL);
 
 	gtk_main ();
-
+	tepl_finalize ();
 	return EXIT_SUCCESS;
 }

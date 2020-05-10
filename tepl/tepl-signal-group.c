@@ -1,4 +1,4 @@
-/* SPDX-FileCopyrightText: 2017 - Sébastien Wilmet <swilmet@gnome.org>
+/* SPDX-FileCopyrightText: 2017-2020 - Sébastien Wilmet <swilmet@gnome.org>
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
@@ -31,8 +31,7 @@ _tepl_signal_group_new (GObject *object)
 
 	group = g_new0 (TeplSignalGroup, 1);
 
-	group->object = object;
-	g_object_add_weak_pointer (object, (gpointer *) &group->object);
+	g_set_weak_pointer (&group->object, object);
 
 	group->handler_ids = g_array_new (FALSE, TRUE, sizeof (gulong));
 
@@ -61,8 +60,7 @@ _tepl_signal_group_free (TeplSignalGroup *group)
 			g_signal_handler_disconnect (group->object, handler_id);
 		}
 
-		g_object_remove_weak_pointer (group->object, (gpointer *) &group->object);
-		group->object = NULL;
+		g_clear_weak_pointer (&group->object);
 	}
 
 	g_array_free (group->handler_ids, TRUE);

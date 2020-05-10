@@ -9,6 +9,7 @@ unit_tests = [
   'test-fold-region',
   'test-info-bar',
   'test-metadata',
+  'test-metadata-manager',
   'test-notebook',
   'test-utils'
 ]

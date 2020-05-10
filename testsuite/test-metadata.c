@@ -27,6 +27,46 @@ test_key_is_valid (void)
 	g_assert_true (!_tepl_metadata_key_is_valid ("\xFF"));
 }
 
+static void
+check_get (TeplMetadata *metadata,
+	   const gchar  *key,
+	   const gchar  *expected_value)
+{
+	gchar *received_value;
+
+	received_value = tepl_metadata_get (metadata, key);
+	g_assert_cmpstr (expected_value, ==, received_value);
+	g_free (received_value);
+}
+
+static void
+test_get_set (void)
+{
+	TeplMetadata *metadata;
+
+	metadata = tepl_metadata_new ();
+	check_get (metadata, "keyA", NULL);
+
+	tepl_metadata_set (metadata, "keyA", "valueA1");
+	check_get (metadata, "keyA", "valueA1");
+
+	tepl_metadata_set (metadata, "keyB", "valueB");
+	check_get (metadata, "keyA", "valueA1");
+	check_get (metadata, "keyB", "valueB");
+	check_get (metadata, "keyC", NULL);
+
+	tepl_metadata_set (metadata, "keyA", "valueA2");
+	check_get (metadata, "keyA", "valueA2");
+	check_get (metadata, "keyB", "valueB");
+
+	tepl_metadata_set (metadata, "keyB", NULL);
+	check_get (metadata, "keyA", "valueA2");
+	check_get (metadata, "keyB", NULL);
+	check_get (metadata, "keyC", NULL);
+
+	g_object_unref (metadata);
+}
+
 int
 main (int    argc,
       char **argv)
@@ -34,6 +74,7 @@ main (int    argc,
 	g_test_init (&argc, &argv, NULL);
 
 	g_test_add_func ("/metadata/key_is_valid", test_key_is_valid);
+	g_test_add_func ("/metadata/get_set", test_get_set);
 
 	return g_test_run ();
 }

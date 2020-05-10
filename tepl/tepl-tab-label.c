@@ -153,9 +153,7 @@ set_tab (TeplTabLabel *tab_label,
 	g_return_if_fail (TEPL_IS_TAB (tab));
 
 	g_assert (tab_label->priv->tab == NULL);
-	tab_label->priv->tab = tab;
-	g_object_add_weak_pointer (G_OBJECT (tab_label->priv->tab),
-				   (gpointer *) &tab_label->priv->tab);
+	g_set_weak_pointer (&tab_label->priv->tab, tab);
 
 	view = tepl_tab_get_view (tab);
 	g_signal_connect_object (view,
@@ -212,13 +210,7 @@ tepl_tab_label_dispose (GObject *object)
 {
 	TeplTabLabel *tab_label = TEPL_TAB_LABEL (object);
 
-	if (tab_label->priv->tab != NULL)
-	{
-		g_object_remove_weak_pointer (G_OBJECT (tab_label->priv->tab),
-					      (gpointer *) &tab_label->priv->tab);
-		tab_label->priv->tab = NULL;
-	}
-
+	g_clear_weak_pointer (&tab_label->priv->tab);
 	_tepl_signal_group_clear (&tab_label->priv->buffer_signal_group);
 	_tepl_signal_group_clear (&tab_label->priv->file_signal_group);
 

@@ -15,6 +15,24 @@
  * #TeplMetadataManager permits to store file metadata on disk. It serves both
  * as an easier replacement for GVfs metadata, and to have metadata support on
  * platforms that don't support GVfs metadata.
+ *
+ * For the #GFile where the metadata are stored (see the
+ * tepl_metadata_manager_load_from_disk() and
+ * tepl_metadata_manager_save_to_disk() functions), the following applies:
+ * - A good place to store the metadata is in a sub-directory of the user data
+ *   directory. See g_get_user_data_dir().
+ * - The #GFile must be different for each process. It is advised for your
+ *   application to rely on #GApplication process uniqueness.
+ *   #TeplMetadataManager doesn't support concurrent accesses to the same #GFile
+ *   from different processes. Which means that metadata cannot be shared
+ *   between applications.
+ *
+ * # High-level API
+ *
+ * #TeplMetadataManager and #TeplMetadata are integrated in the Tepl framework,
+ * see:
+ * - tepl_application_handle_metadata().
+ * - the metadata API of #TeplBuffer.
  */
 
 /* This code is a modified version of GeditMetadataManager, coming from gedit:
@@ -302,6 +320,12 @@ tepl_metadata_manager_save_to_disk (TeplMetadataManager  *manager,
  * Copies the metadata stored in @from_manager for @for_location into
  * @to_metadata.
  *
+ * If @to_metadata already contains a key that is also present in @from_manager,
+ * the value in @to_metadata is overwritten.
+ *
+ * If @to_metadata already contains a key that is not present in @from_manager,
+ * the key/value pair is kept in @to_metadata, it is not erased.
+ *
  * Since: 5.0
  */
 void
@@ -330,6 +354,14 @@ tepl_metadata_manager_copy_from (TeplMetadataManager *from_manager,
  * @from_metadata: a #TeplMetadata.
  *
  * Merges the metadata from @from_metadata into @into_manager for @for_location.
+ *
+ * If a key from @from_metadata has been set to %NULL, the key/value pair is
+ * removed from @into_manager. In other words that key/value pair will not be
+ * saved at all when calling tepl_metadata_manager_save_to_disk().
+ *
+ * If @into_manager already contains a key that is not present in
+ * @from_metadata, the key/value pair is kept in @into_manager, it is not
+ * erased.
  *
  * Since: 5.0
  */

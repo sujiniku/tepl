@@ -134,9 +134,7 @@ tepl_fold_region_set_property (GObject       *object,
 	{
 		case PROP_BUFFER:
 			g_assert (priv->buffer == NULL);
-			priv->buffer = GTK_TEXT_BUFFER (g_value_get_object (value));
-			g_object_add_weak_pointer (G_OBJECT (priv->buffer),
-						   (gpointer *) &priv->buffer);
+			g_set_weak_pointer (&priv->buffer, g_value_get_object (value));
 			break;
 
 		case PROP_FOLDED:
@@ -177,9 +175,7 @@ tepl_fold_region_dispose (GObject *object)
 			priv->end_mark = NULL;
 		}
 
-		g_object_remove_weak_pointer (G_OBJECT (priv->buffer),
-					      (gpointer *) &priv->buffer);
-		priv->buffer = NULL;
+		g_clear_weak_pointer (&priv->buffer);
 	}
 
 	priv->start_mark = NULL;

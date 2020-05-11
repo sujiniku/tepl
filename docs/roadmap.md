@@ -6,8 +6,8 @@ future.
 
 See the [NEWS file](../NEWS) for a detailed history.
 
-New small features in Tepl 5 (GNOME 3.38)
------------------------------------------
+New small features in Tepl 5.0 (GNOME 3.38)
+-------------------------------------------
 
 - Status: **done**
 - Goto line UI: see the TeplGotoLineBar class and "win.tepl-goto-line" GAction.
@@ -20,13 +20,13 @@ Build system: Autotools -> Meson
 --------------------------------
 
 - Status: **done**
-- Release: Tepl 5 (GNOME 3.38)
+- Release: Tepl 5.0 (GNOME 3.38)
 
 Rework file metadata
 --------------------
 
 - Status: **mostly done**
-- Target release: Tepl 5 (GNOME 3.38)
+- Target release: Tepl 5.0 (GNOME 3.38)
 
 Tasks:
 - Make the metadata API independent of TeplFile, to better isolate toolkit

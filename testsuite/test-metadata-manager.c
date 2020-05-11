@@ -16,6 +16,63 @@ check_get (TeplMetadata *metadata,
 	g_free (received_value);
 }
 
+static GFile *
+get_store_file_for_test_data_filename (const gchar *filename)
+{
+	return g_file_new_build_filename (UNIT_TESTS_SOURCE_DIR,
+					  "test-metadata-manager-data",
+					  filename,
+					  NULL);
+}
+
+static gchar *
+get_file_content (GFile *file)
+{
+	GError *error = NULL;
+	gchar *file_content = NULL;
+
+	g_file_load_contents (file, NULL, &file_content, NULL, NULL, &error);
+	g_assert_no_error (error);
+	g_assert_true (file_content != NULL);
+
+	return file_content;
+}
+
+static void
+check_equal_file_content (GFile *file1,
+			  GFile *file2)
+{
+	gchar *file1_content = get_file_content (file1);
+	gchar *file2_content = get_file_content (file2);
+
+	g_assert_true (g_str_equal (file1_content, file2_content));
+
+	g_free (file1_content);
+	g_free (file2_content);
+}
+
+static GFile *
+save_metadata_manager (void)
+{
+	GFile *tmp_file;
+	TeplMetadataManager *manager;
+	GError *error = NULL;
+
+	tmp_file = g_file_new_build_filename (g_get_tmp_dir (), "tepl-test-metadata-manager.xml", NULL);
+	g_file_delete (tmp_file, NULL, &error);
+	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
+	{
+		g_clear_error (&error);
+	}
+	g_assert_no_error (error);
+
+	manager = tepl_metadata_manager_get_singleton ();
+	tepl_metadata_manager_save_to_disk (manager, tmp_file, TRUE, &error);
+	g_assert_no_error (error);
+
+	return tmp_file;
+}
+
 static void
 test_merge_into_and_copy_from_part1 (void)
 {
@@ -121,7 +178,8 @@ test_merge_into_and_copy_from_part3 (void)
 }
 
 static void
-check_load_from_disk_expected_to_fail (const gchar *filename)
+check_load_from_disk (const gchar *filename,
+		      gboolean     expect_to_succeed)
 {
 	TeplMetadataManager *manager;
 	GFile *file;
@@ -129,14 +187,17 @@ check_load_from_disk_expected_to_fail (const gchar *filename)
 
 	manager = tepl_metadata_manager_get_singleton ();
 
-	file = g_file_new_build_filename (UNIT_TESTS_SOURCE_DIR,
-					  "test-metadata-manager-data",
-					  filename,
-					  NULL);
-
+	file = get_store_file_for_test_data_filename (filename);
 	tepl_metadata_manager_load_from_disk (manager, file, &error);
-	g_assert_true (error != NULL);
-	g_error_free (error);
+	if (expect_to_succeed)
+	{
+		g_assert_no_error (error);
+	}
+	else
+	{
+		g_assert_true (error != NULL);
+		g_error_free (error);
+	}
 
 	g_object_unref (file);
 	_tepl_metadata_manager_unref_singleton ();
@@ -145,14 +206,21 @@ check_load_from_disk_expected_to_fail (const gchar *filename)
 static void
 test_load_from_disk_expected_to_fail (void)
 {
-	check_load_from_disk_expected_to_fail ("expected-to-fail-00-empty.xml");
-	check_load_from_disk_expected_to_fail ("expected-to-fail-01.xml");
-	check_load_from_disk_expected_to_fail ("expected-to-fail-02.xml");
-	check_load_from_disk_expected_to_fail ("expected-to-fail-03.xml");
-	check_load_from_disk_expected_to_fail ("expected-to-fail-04.xml");
-	check_load_from_disk_expected_to_fail ("expected-to-fail-05.xml");
-	check_load_from_disk_expected_to_fail ("expected-to-fail-06.xml");
-	check_load_from_disk_expected_to_fail ("expected-to-fail-07-garbage.xml");
+	check_load_from_disk ("expected-to-fail-00-empty.xml", FALSE);
+	check_load_from_disk ("expected-to-fail-01.xml", FALSE);
+	check_load_from_disk ("expected-to-fail-02.xml", FALSE);
+	check_load_from_disk ("expected-to-fail-03.xml", FALSE);
+	check_load_from_disk ("expected-to-fail-04.xml", FALSE);
+	check_load_from_disk ("expected-to-fail-05.xml", FALSE);
+	check_load_from_disk ("expected-to-fail-06.xml", FALSE);
+	check_load_from_disk ("expected-to-fail-07-garbage.xml", FALSE);
+}
+
+static void
+test_load_from_disk_expected_to_succeed (void)
+{
+	check_load_from_disk ("expected-to-succeed-01-trim-before.xml", TRUE);
+	check_load_from_disk ("expected-to-succeed-01-trim-after.xml", TRUE);
 }
 
 static void
@@ -174,16 +242,7 @@ check_value_round_trip (const gchar *value)
 	g_object_unref (metadata);
 
 	/* Save to disk */
-	store_file = g_file_new_build_filename (g_get_tmp_dir (), "tepl-test-metadata-manager.xml", NULL);
-	g_file_delete (store_file, NULL, &error);
-	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
-	{
-		g_clear_error (&error);
-	}
-	g_assert_no_error (error);
-
-	tepl_metadata_manager_save_to_disk (manager, store_file, TRUE, &error);
-	g_assert_no_error (error);
+	store_file = save_metadata_manager ();
 	_tepl_metadata_manager_unref_singleton ();
 
 	/* Load from disk */
@@ -215,6 +274,32 @@ test_value_round_trip (void)
 	//check_value_round_trip ("\t"); // FIXME: fails.
 }
 
+static void
+test_trim (void)
+{
+	TeplMetadataManager *manager;
+	GFile *file_before;
+	GFile *file_after;
+	GFile *expected_file_after;
+	GError *error = NULL;
+
+	manager = tepl_metadata_manager_get_singleton ();
+	file_before = get_store_file_for_test_data_filename ("expected-to-succeed-01-trim-before.xml");
+	tepl_metadata_manager_load_from_disk (manager, file_before, &error);
+	g_assert_no_error (error);
+
+	tepl_metadata_manager_trim (manager, 1);
+
+	file_after = save_metadata_manager ();
+	expected_file_after = get_store_file_for_test_data_filename ("expected-to-succeed-01-trim-after.xml");
+	check_equal_file_content (file_after, expected_file_after);
+
+	g_object_unref (file_before);
+	g_object_unref (file_after);
+	g_object_unref (expected_file_after);
+	_tepl_metadata_manager_unref_singleton ();
+}
+
 int
 main (int    argc,
       char **argv)
@@ -225,7 +310,9 @@ main (int    argc,
 	g_test_add_func ("/metadata_manager/merge_into_and_copy_from_part2", test_merge_into_and_copy_from_part2);
 	g_test_add_func ("/metadata_manager/merge_into_and_copy_from_part3", test_merge_into_and_copy_from_part3);
 	g_test_add_func ("/metadata_manager/load_from_disk_expected_to_fail", test_load_from_disk_expected_to_fail);
+	g_test_add_func ("/metadata_manager/load_from_disk_expected_to_succeed", test_load_from_disk_expected_to_succeed);
 	g_test_add_func ("/metadata_manager/value_round_trip", test_value_round_trip);
+	g_test_add_func ("/metadata_manager/trim", test_trim);
 
 	return g_test_run ();
 }

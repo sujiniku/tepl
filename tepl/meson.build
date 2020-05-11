@@ -61,7 +61,6 @@ tepl_public_c_files = [
 ]
 
 TEPL_PRIVATE_HEADERS = [
-  'tepl-buffer-input-stream.h',
   'tepl-close-confirm-dialog-single.h',
   'tepl-encoding-converter.h',
   'tepl-encoding-private.h',
@@ -79,7 +78,6 @@ TEPL_PRIVATE_HEADERS = [
 ]
 
 tepl_private_c_files = [
-  'tepl-buffer-input-stream.c',
   'tepl-close-confirm-dialog-single.c',
   'tepl-encoding-converter.c',
   'tepl-file-content.c',

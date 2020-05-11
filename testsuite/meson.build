@@ -1,11 +1,9 @@
 unit_tests = [
-  'test-buffer-input-stream',
   'test-encoding',
   'test-encoding-converter',
-  'test-file',
+  #'test-file',
   'test-file-content',
   'test-file-loader',
-  'test-file-saver',
   'test-fold-region',
   'test-info-bar',
   'test-metadata',

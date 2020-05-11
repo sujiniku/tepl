@@ -1,7 +1,7 @@
 /* SPDX-FileCopyrightText: 2005, 2007 - Paolo Maggi
- * Copyrhing 2007 - Steve Frécinaux
+ * SPDX-FileCopyrightText: 2007 - Steve Frécinaux
  * SPDX-FileCopyrightText: 2008 - Jesse van den Kieboom
- * SPDX-FileCopyrightText: 2014, 2016, 2017 - Sébastien Wilmet
+ * SPDX-FileCopyrightText: 2014-2020 - Sébastien Wilmet
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
@@ -14,7 +14,6 @@
 
 #include <gtksourceview/gtksource.h>
 #include <tepl/tepl-buffer.h>
-#include <tepl/tepl-encoding.h>
 #include <tepl/tepl-file.h>
 
 G_BEGIN_DECLS
@@ -40,6 +39,7 @@ typedef struct _TeplFileSaverPrivate TeplFileSaverPrivate;
  *   modified.
  *
  * An error code used with the %TEPL_FILE_SAVER_ERROR domain.
+ *
  * Since: 1.0
  */
 typedef enum
@@ -56,6 +56,7 @@ typedef enum
  * @TEPL_FILE_SAVER_FLAGS_CREATE_BACKUP: Create a backup before saving the file.
  *
  * Flags to define the behavior of a #TeplFileSaver.
+ *
  * Since: 1.0
  */
 typedef enum
@@ -103,13 +104,6 @@ TeplFile *		 tepl_file_saver_get_file		(TeplFileSaver *saver);
 
 _TEPL_EXTERN
 GFile *			 tepl_file_saver_get_location		(TeplFileSaver *saver);
-
-_TEPL_EXTERN
-void			 tepl_file_saver_set_encoding		(TeplFileSaver      *saver,
-								 const TeplEncoding *encoding);
-
-_TEPL_EXTERN
-const TeplEncoding *	 tepl_file_saver_get_encoding		(TeplFileSaver *saver);
 
 _TEPL_EXTERN
 void			 tepl_file_saver_set_newline_type	(TeplFileSaver   *saver,

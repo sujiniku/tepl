@@ -76,9 +76,6 @@ launch_saver (GTask *task)
 	tepl_file_saver_save_async (saver,
 				    G_PRIORITY_DEFAULT,
 				    NULL,
-				    NULL,
-				    NULL,
-				    NULL,
 				    launch_saver_cb,
 				    task);
 }

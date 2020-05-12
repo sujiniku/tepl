@@ -28,7 +28,6 @@ enum
 	PROP_FILE,
 	PROP_LOCATION,
 	PROP_NEWLINE_TYPE,
-	PROP_COMPRESSION_TYPE,
 	PROP_FLAGS,
 	N_PROPERTIES
 };
@@ -50,10 +49,9 @@ struct _TeplFileSaverPrivate
 	GFile *location;
 
 	TeplNewlineType newline_type;
-	TeplCompressionType compression_type;
 	TeplFileSaverFlags flags;
 
-	GTask *task;
+	guint is_saving : 1;
 };
 
 typedef struct _TaskData TaskData;
@@ -107,10 +105,6 @@ tepl_file_saver_set_property (GObject      *object,
 			tepl_file_saver_set_newline_type (saver, g_value_get_enum (value));
 			break;
 
-		case PROP_COMPRESSION_TYPE:
-			tepl_file_saver_set_compression_type (saver, g_value_get_enum (value));
-			break;
-
 		case PROP_FLAGS:
 			tepl_file_saver_set_flags (saver, g_value_get_flags (value));
 			break;
@@ -147,10 +141,6 @@ tepl_file_saver_get_property (GObject    *object,
 			g_value_set_enum (value, saver->priv->newline_type);
 			break;
 
-		case PROP_COMPRESSION_TYPE:
-			g_value_set_enum (value, saver->priv->compression_type);
-			break;
-
 		case PROP_FLAGS:
 			g_value_set_flags (value, saver->priv->flags);
 			break;
@@ -169,13 +159,9 @@ tepl_file_saver_constructed (GObject *object)
 	if (saver->priv->file != NULL)
 	{
 		TeplNewlineType newline_type;
-		TeplCompressionType compression_type;
 
 		newline_type = tepl_file_get_newline_type (saver->priv->file);
 		tepl_file_saver_set_newline_type (saver, newline_type);
-
-		compression_type = tepl_file_get_compression_type (saver->priv->file);
-		tepl_file_saver_set_compression_type (saver, compression_type);
 
 		if (saver->priv->location == NULL)
 		{
@@ -204,7 +190,6 @@ tepl_file_saver_dispose (GObject *object)
 	g_clear_weak_pointer (&saver->priv->buffer);
 	g_clear_weak_pointer (&saver->priv->file);
 	g_clear_object (&saver->priv->location);
-	g_clear_object (&saver->priv->task);
 
 	G_OBJECT_CLASS (tepl_file_saver_parent_class)->dispose (object);
 }
@@ -288,23 +273,6 @@ tepl_file_saver_class_init (TeplFileSaverClass *klass)
 				   G_PARAM_STATIC_STRINGS);
 
 	/**
-	 * TeplFileSaver:compression-type:
-	 *
-	 * The compression type.
-	 *
-	 * Since: 1.0
-	 */
-	properties[PROP_COMPRESSION_TYPE] =
-		g_param_spec_enum ("compression-type",
-				   "compression-type",
-				   "",
-				   TEPL_TYPE_COMPRESSION_TYPE,
-				   TEPL_COMPRESSION_TYPE_NONE,
-				   G_PARAM_READWRITE |
-				   G_PARAM_CONSTRUCT |
-				   G_PARAM_STATIC_STRINGS);
-
-	/**
 	 * TeplFileSaver:flags:
 	 *
 	 * File saving flags.
@@ -328,19 +296,6 @@ static void
 tepl_file_saver_init (TeplFileSaver *saver)
 {
 	saver->priv = tepl_file_saver_get_instance_private (saver);
-}
-
-GQuark
-tepl_file_saver_error_quark (void)
-{
-	static GQuark quark = 0;
-
-	if (G_UNLIKELY (quark == 0))
-	{
-		quark = g_quark_from_static_string ("TeplFileSaverError");
-	}
-
-	return quark;
 }
 
 /**
@@ -381,9 +336,6 @@ tepl_file_saver_new (TeplBuffer *buffer,
  * #TeplFile:location property. If an error occurs, the previous valid
  * location is still available in #TeplFile.
  *
- * This constructor adds %TEPL_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME to the
- * #TeplFileSaver:flags property.
- *
  * This constructor is suitable for a "save as" operation, or for saving a new
  * buffer for the first time.
  *
@@ -403,7 +355,6 @@ tepl_file_saver_new_with_target (TeplBuffer *buffer,
 			     "buffer", buffer,
 			     "file", file,
 			     "location", target_location,
-			     "flags", TEPL_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME,
 			     NULL);
 }
 
@@ -419,7 +370,7 @@ tepl_file_saver_get_buffer (TeplFileSaver *saver)
 {
 	g_return_val_if_fail (TEPL_IS_FILE_SAVER (saver), NULL);
 
-	return TEPL_BUFFER (saver->priv->buffer);
+	return saver->priv->buffer;
 }
 
 /**
@@ -467,7 +418,7 @@ tepl_file_saver_set_newline_type (TeplFileSaver   *saver,
 				  TeplNewlineType  newline_type)
 {
 	g_return_if_fail (TEPL_IS_FILE_SAVER (saver));
-	g_return_if_fail (saver->priv->task == NULL);
+	g_return_if_fail (!saver->priv->is_saving);
 
 	if (saver->priv->newline_type != newline_type)
 	{
@@ -492,45 +443,6 @@ tepl_file_saver_get_newline_type (TeplFileSaver *saver)
 }
 
 /**
- * tepl_file_saver_set_compression_type:
- * @saver: a #TeplFileSaver.
- * @compression_type: the new compression type.
- *
- * Sets the compression type. By default the compression type is taken from the
- * #TeplFile.
- *
- * Since: 1.0
- */
-void
-tepl_file_saver_set_compression_type (TeplFileSaver       *saver,
-				      TeplCompressionType  compression_type)
-{
-	g_return_if_fail (TEPL_IS_FILE_SAVER (saver));
-	g_return_if_fail (saver->priv->task == NULL);
-
-	if (saver->priv->compression_type != compression_type)
-	{
-		saver->priv->compression_type = compression_type;
-		g_object_notify_by_pspec (G_OBJECT (saver), properties[PROP_COMPRESSION_TYPE]);
-	}
-}
-
-/**
- * tepl_file_saver_get_compression_type:
- * @saver: a #TeplFileSaver.
- *
- * Returns: the compression type.
- * Since: 1.0
- */
-TeplCompressionType
-tepl_file_saver_get_compression_type (TeplFileSaver *saver)
-{
-	g_return_val_if_fail (TEPL_IS_FILE_SAVER (saver), TEPL_COMPRESSION_TYPE_NONE);
-
-	return saver->priv->compression_type;
-}
-
-/**
  * tepl_file_saver_set_flags:
  * @saver: a #TeplFileSaver.
  * @flags: the new flags.
@@ -542,7 +454,7 @@ tepl_file_saver_set_flags (TeplFileSaver      *saver,
 			   TeplFileSaverFlags  flags)
 {
 	g_return_if_fail (TEPL_IS_FILE_SAVER (saver));
-	g_return_if_fail (saver->priv->task == NULL);
+	g_return_if_fail (!saver->priv->is_saving);
 
 	if (saver->priv->flags != flags)
 	{
@@ -572,12 +484,6 @@ tepl_file_saver_get_flags (TeplFileSaver *saver)
  * @io_priority: the I/O priority of the request. E.g. %G_PRIORITY_LOW,
  *   %G_PRIORITY_DEFAULT or %G_PRIORITY_HIGH.
  * @cancellable: (nullable): optional #GCancellable object, %NULL to ignore.
- * @progress_callback: (scope notified) (nullable): function to call back with
- *   progress information, or %NULL if progress information is not needed.
- * @progress_callback_data: (closure): user data to pass to @progress_callback.
- * @progress_callback_notify: (nullable): function to call on
- *   @progress_callback_data when the @progress_callback is no longer needed, or
- *   %NULL.
  * @callback: (scope async): a #GAsyncReadyCallback to call when the request is
  *   satisfied.
  * @user_data: user data to pass to @callback.
@@ -585,43 +491,41 @@ tepl_file_saver_get_flags (TeplFileSaver *saver)
  * Saves asynchronously the buffer into the file. See the #GAsyncResult
  * documentation to know how to use this function.
  *
- * Since: 1.0
- */
-
-/* The GDestroyNotify is needed, currently the following bug is not fixed:
- * https://gitlab.gnome.org/GNOME/gobject-introspection/issues/25
+ * Since: 5.0
  */
 void
-tepl_file_saver_save_async (TeplFileSaver         *saver,
-			    gint                   io_priority,
-			    GCancellable          *cancellable,
-			    GFileProgressCallback  progress_callback,
-			    gpointer               progress_callback_data,
-			    GDestroyNotify         progress_callback_notify,
-			    GAsyncReadyCallback    callback,
-			    gpointer               user_data)
+tepl_file_saver_save_async (TeplFileSaver       *saver,
+			    gint                 io_priority,
+			    GCancellable        *cancellable,
+			    GAsyncReadyCallback  callback,
+			    gpointer             user_data)
 {
+	GTask *task;
 	TaskData *task_data;
 
 	g_return_if_fail (TEPL_IS_FILE_SAVER (saver));
 	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
-	g_return_if_fail (saver->priv->task == NULL);
+	g_return_if_fail (!saver->priv->is_saving);
 
-	saver->priv->task = g_task_new (saver, cancellable, callback, user_data);
-	g_task_set_priority (saver->priv->task, io_priority);
+	saver->priv->is_saving = TRUE;
+
+	task = g_task_new (saver, cancellable, callback, user_data);
+	g_task_set_priority (task, io_priority);
 
 	task_data = task_data_new ();
-	g_task_set_task_data (saver->priv->task, task_data, (GDestroyNotify)task_data_free);
+	g_task_set_task_data (task, task_data, (GDestroyNotify)task_data_free);
 
 	if (saver->priv->buffer == NULL ||
 	    saver->priv->file == NULL ||
 	    saver->priv->location == NULL)
 	{
-		g_task_return_boolean (saver->priv->task, FALSE);
+		g_task_return_boolean (task, FALSE);
+		g_object_unref (task);
 		return;
 	}
 
-	g_task_return_boolean (saver->priv->task, TRUE);
+	g_task_return_boolean (task, TRUE);
+	g_object_unref (task);
 }
 
 /**
@@ -633,8 +537,7 @@ tepl_file_saver_save_async (TeplFileSaver         *saver,
  * Finishes a file saving started with tepl_file_saver_save_async().
  *
  * If the file has been saved successfully, the following #TeplFile
- * properties will be updated: the location, the encoding, the newline type and
- * the compression type.
+ * properties will be updated: the location and the newline type.
  *
  * gtk_text_buffer_set_modified() is called with %FALSE if the file has been
  * saved successfully.
@@ -662,9 +565,6 @@ tepl_file_saver_save_finish (TeplFileSaver  *saver,
 
 		_tepl_file_set_newline_type (saver->priv->file,
 					     saver->priv->newline_type);
-
-		_tepl_file_set_compression_type (saver->priv->file,
-						 saver->priv->compression_type);
 	}
 
 	if (ok && saver->priv->buffer != NULL)
@@ -672,7 +572,6 @@ tepl_file_saver_save_finish (TeplFileSaver  *saver,
 		gtk_text_buffer_set_modified (GTK_TEXT_BUFFER (saver->priv->buffer), FALSE);
 	}
 
-	g_clear_object (&saver->priv->task);
-
+	saver->priv->is_saving = FALSE;
 	return ok;
 }

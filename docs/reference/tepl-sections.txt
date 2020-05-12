@@ -181,8 +181,6 @@ tepl_file_loader_error_quark
 <SECTION>
 <FILE>file-saver</FILE>
 TeplFileSaver
-TEPL_FILE_SAVER_ERROR
-TeplFileSaverError
 TeplFileSaverFlags
 <SUBSECTION>
 tepl_file_saver_new
@@ -192,8 +190,6 @@ tepl_file_saver_get_file
 tepl_file_saver_get_location
 tepl_file_saver_set_newline_type
 tepl_file_saver_get_newline_type
-tepl_file_saver_set_compression_type
-tepl_file_saver_get_compression_type
 tepl_file_saver_set_flags
 tepl_file_saver_get_flags
 tepl_file_saver_save_async
@@ -208,10 +204,7 @@ TEPL_TYPE_FILE_SAVER
 TeplFileSaverClass
 TeplFileSaverPrivate
 tepl_file_saver_get_type
-tepl_file_saver_error_quark
-TEPL_TYPE_FILE_SAVER_ERROR
 TEPL_TYPE_FILE_SAVER_FLAGS
-tepl_file_saver_error_get_type
 tepl_file_saver_flags_get_type
 </SECTION>
 

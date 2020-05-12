@@ -12,7 +12,6 @@
 #error "Only <tepl/tepl.h> can be included directly."
 #endif
 
-#include <gtksourceview/gtksource.h>
 #include <tepl/tepl-buffer.h>
 #include <tepl/tepl-file.h>
 
@@ -29,30 +28,9 @@ typedef struct _TeplFileSaver        TeplFileSaver;
 typedef struct _TeplFileSaverClass   TeplFileSaverClass;
 typedef struct _TeplFileSaverPrivate TeplFileSaverPrivate;
 
-#define TEPL_FILE_SAVER_ERROR tepl_file_saver_error_quark ()
-
-/**
- * TeplFileSaverError:
- * @TEPL_FILE_SAVER_ERROR_INVALID_CHARS: The buffer contains invalid
- *   characters.
- * @TEPL_FILE_SAVER_ERROR_EXTERNALLY_MODIFIED: The file is externally
- *   modified.
- *
- * An error code used with the %TEPL_FILE_SAVER_ERROR domain.
- *
- * Since: 1.0
- */
-typedef enum
-{
-	TEPL_FILE_SAVER_ERROR_INVALID_CHARS,
-	TEPL_FILE_SAVER_ERROR_EXTERNALLY_MODIFIED
-} TeplFileSaverError;
-
 /**
  * TeplFileSaverFlags:
  * @TEPL_FILE_SAVER_FLAGS_NONE: No flags.
- * @TEPL_FILE_SAVER_FLAGS_IGNORE_INVALID_CHARS: Ignore invalid characters.
- * @TEPL_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME: Save file despite external modifications.
  * @TEPL_FILE_SAVER_FLAGS_CREATE_BACKUP: Create a backup before saving the file.
  *
  * Flags to define the behavior of a #TeplFileSaver.
@@ -61,10 +39,8 @@ typedef enum
  */
 typedef enum
 {
-	TEPL_FILE_SAVER_FLAGS_NONE			= 0,
-	TEPL_FILE_SAVER_FLAGS_IGNORE_INVALID_CHARS	= 1 << 0,
-	TEPL_FILE_SAVER_FLAGS_IGNORE_MODIFICATION_TIME	= 1 << 1,
-	TEPL_FILE_SAVER_FLAGS_CREATE_BACKUP		= 1 << 2
+	TEPL_FILE_SAVER_FLAGS_NONE		= 0,
+	TEPL_FILE_SAVER_FLAGS_CREATE_BACKUP	= 1 << 0
 } TeplFileSaverFlags;
 
 struct _TeplFileSaver
@@ -83,9 +59,6 @@ struct _TeplFileSaverClass
 
 _TEPL_EXTERN
 GType			 tepl_file_saver_get_type		(void);
-
-_TEPL_EXTERN
-GQuark			 tepl_file_saver_error_quark		(void);
 
 _TEPL_EXTERN
 TeplFileSaver *		 tepl_file_saver_new			(TeplBuffer *buffer,
@@ -113,13 +86,6 @@ _TEPL_EXTERN
 TeplNewlineType		 tepl_file_saver_get_newline_type	(TeplFileSaver *saver);
 
 _TEPL_EXTERN
-void			 tepl_file_saver_set_compression_type	(TeplFileSaver       *saver,
-								 TeplCompressionType  compression_type);
-
-_TEPL_EXTERN
-TeplCompressionType	 tepl_file_saver_get_compression_type	(TeplFileSaver *saver);
-
-_TEPL_EXTERN
 void			 tepl_file_saver_set_flags		(TeplFileSaver      *saver,
 								 TeplFileSaverFlags  flags);
 
@@ -127,14 +93,11 @@ _TEPL_EXTERN
 TeplFileSaverFlags	 tepl_file_saver_get_flags		(TeplFileSaver *saver);
 
 _TEPL_EXTERN
-void			 tepl_file_saver_save_async		(TeplFileSaver         *saver,
-								 gint                   io_priority,
-								 GCancellable          *cancellable,
-								 GFileProgressCallback  progress_callback,
-								 gpointer               progress_callback_data,
-								 GDestroyNotify         progress_callback_notify,
-								 GAsyncReadyCallback    callback,
-								 gpointer               user_data);
+void			 tepl_file_saver_save_async		(TeplFileSaver       *saver,
+								 gint                 io_priority,
+								 GCancellable        *cancellable,
+								 GAsyncReadyCallback  callback,
+								 gpointer             user_data);
 
 _TEPL_EXTERN
 gboolean		 tepl_file_saver_save_finish		(TeplFileSaver  *saver,

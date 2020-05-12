@@ -6,6 +6,7 @@
  */
 
 #include "tepl-file-saver.h"
+#include <string.h>
 #include "tepl-enum-types.h"
 
 /**
@@ -57,7 +58,7 @@ struct _TeplFileSaverPrivate
 typedef struct _TaskData TaskData;
 struct _TaskData
 {
-	gint something;
+	gchar *buffer_content;
 };
 
 static GParamSpec *properties[N_PROPERTIES];
@@ -73,7 +74,11 @@ task_data_new (void)
 static void
 task_data_free (TaskData *data)
 {
-	g_free (data);
+	if (data != NULL)
+	{
+		g_free (data->buffer_content);
+		g_free (data);
+	}
 }
 
 static void
@@ -478,6 +483,65 @@ tepl_file_saver_get_flags (TeplFileSaver *saver)
 	return saver->priv->flags;
 }
 
+static void
+get_all_buffer_content (GTask *task)
+{
+	TeplFileSaver *saver = g_task_get_source_object (task);
+	TaskData *task_data = g_task_get_task_data (task);
+	GtkTextIter start;
+	GtkTextIter end;
+
+	gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (saver->priv->buffer), &start, &end);
+
+	g_free (task_data->buffer_content);
+	task_data->buffer_content = gtk_text_buffer_get_text (GTK_TEXT_BUFFER (saver->priv->buffer),
+							      &start,
+							      &end,
+							      TRUE);
+}
+
+static void
+save_all_buffer_content_cb (GObject      *source_object,
+			    GAsyncResult *result,
+			    gpointer      user_data)
+{
+	GFile *location = G_FILE (source_object);
+	GTask *task = G_TASK (user_data);
+	GError *error = NULL;
+
+	g_file_replace_contents_finish (location, result, NULL, &error);
+
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		g_object_unref (task);
+		return;
+	}
+
+	g_task_return_boolean (task, TRUE);
+	g_object_unref (task);
+}
+
+static void
+save_all_buffer_content (GTask *task)
+{
+	TeplFileSaver *saver = g_task_get_source_object (task);
+	TaskData *task_data = g_task_get_task_data (task);
+	gboolean make_backup;
+
+	make_backup = (saver->priv->flags & TEPL_FILE_SAVER_FLAGS_CREATE_BACKUP) != 0;
+
+	g_file_replace_contents_async (saver->priv->location,
+				       task_data->buffer_content,
+				       strlen (task_data->buffer_content),
+				       NULL,
+				       make_backup,
+				       G_FILE_CREATE_NONE,
+				       g_task_get_cancellable (task),
+				       save_all_buffer_content_cb,
+				       task);
+}
+
 /**
  * tepl_file_saver_save_async:
  * @saver: a #TeplFileSaver.
@@ -524,8 +588,8 @@ tepl_file_saver_save_async (TeplFileSaver       *saver,
 		return;
 	}
 
-	g_task_return_boolean (task, TRUE);
-	g_object_unref (task);
+	get_all_buffer_content (task);
+	save_all_buffer_content (task);
 }
 
 /**

@@ -21,8 +21,6 @@
  * operation with tepl_file_saver_save_async().
  */
 
-#define WRITE_CHUNK_SIZE 8192
-
 enum
 {
 	PROP_0,
@@ -37,11 +35,11 @@ enum
 
 struct _TeplFileSaverPrivate
 {
-	/* Weak ref to the GtkSourceBuffer. A strong ref could create a
-	 * reference cycle in an application. For example a subclass of
-	 * GtkSourceBuffer can have a strong ref to the FileSaver.
+	/* Weak ref to the TeplBuffer. A strong ref could create a reference
+	 * cycle in an application. For example a subclass of TeplBuffer can
+	 * have a strong ref to the FileSaver.
 	 */
-	GtkSourceBuffer *source_buffer;
+	TeplBuffer *buffer;
 
 	/* Weak ref to the TeplFile. A strong ref could create a reference
 	 * cycle in an application. For example a subclass of TeplFile can
@@ -91,8 +89,8 @@ tepl_file_saver_set_property (GObject      *object,
 	switch (prop_id)
 	{
 		case PROP_BUFFER:
-			g_assert (saver->priv->source_buffer == NULL);
-			g_set_weak_pointer (&saver->priv->source_buffer, g_value_get_object (value));
+			g_assert (saver->priv->buffer == NULL);
+			g_set_weak_pointer (&saver->priv->buffer, g_value_get_object (value));
 			break;
 
 		case PROP_FILE:
@@ -134,7 +132,7 @@ tepl_file_saver_get_property (GObject    *object,
 	switch (prop_id)
 	{
 		case PROP_BUFFER:
-			g_value_set_object (value, saver->priv->source_buffer);
+			g_value_set_object (value, saver->priv->buffer);
 			break;
 
 		case PROP_FILE:
@@ -203,7 +201,7 @@ tepl_file_saver_dispose (GObject *object)
 {
 	TeplFileSaver *saver = TEPL_FILE_SAVER (object);
 
-	g_clear_weak_pointer (&saver->priv->source_buffer);
+	g_clear_weak_pointer (&saver->priv->buffer);
 	g_clear_weak_pointer (&saver->priv->file);
 	g_clear_object (&saver->priv->location);
 	g_clear_object (&saver->priv->task);
@@ -233,7 +231,7 @@ tepl_file_saver_class_init (TeplFileSaverClass *klass)
 		g_param_spec_object ("buffer",
 				     "buffer",
 				     "",
-				     GTK_SOURCE_TYPE_BUFFER,
+				     TEPL_TYPE_BUFFER,
 				     G_PARAM_READWRITE |
 				     G_PARAM_CONSTRUCT_ONLY |
 				     G_PARAM_STATIC_STRINGS);
@@ -283,7 +281,7 @@ tepl_file_saver_class_init (TeplFileSaverClass *klass)
 		g_param_spec_enum ("newline-type",
 				   "newline-type",
 				   "",
-				   GTK_SOURCE_TYPE_NEWLINE_TYPE,
+				   TEPL_TYPE_NEWLINE_TYPE,
 				   TEPL_NEWLINE_TYPE_LF,
 				   G_PARAM_READWRITE |
 				   G_PARAM_CONSTRUCT |
@@ -300,7 +298,7 @@ tepl_file_saver_class_init (TeplFileSaverClass *klass)
 		g_param_spec_enum ("compression-type",
 				   "compression-type",
 				   "",
-				   GTK_SOURCE_TYPE_COMPRESSION_TYPE,
+				   TEPL_TYPE_COMPRESSION_TYPE,
 				   TEPL_COMPRESSION_TYPE_NONE,
 				   G_PARAM_READWRITE |
 				   G_PARAM_CONSTRUCT |
@@ -421,7 +419,7 @@ tepl_file_saver_get_buffer (TeplFileSaver *saver)
 {
 	g_return_val_if_fail (TEPL_IS_FILE_SAVER (saver), NULL);
 
-	return TEPL_BUFFER (saver->priv->source_buffer);
+	return TEPL_BUFFER (saver->priv->buffer);
 }
 
 /**
@@ -615,7 +613,7 @@ tepl_file_saver_save_async (TeplFileSaver         *saver,
 	task_data = task_data_new ();
 	g_task_set_task_data (saver->priv->task, task_data, (GDestroyNotify)task_data_free);
 
-	if (saver->priv->source_buffer == NULL ||
+	if (saver->priv->buffer == NULL ||
 	    saver->priv->file == NULL ||
 	    saver->priv->location == NULL)
 	{
@@ -667,16 +665,11 @@ tepl_file_saver_save_finish (TeplFileSaver  *saver,
 
 		_tepl_file_set_compression_type (saver->priv->file,
 						 saver->priv->compression_type);
-
-		_tepl_file_set_externally_modified (saver->priv->file, FALSE);
-		_tepl_file_set_deleted (saver->priv->file, FALSE);
-		_tepl_file_set_readonly (saver->priv->file, FALSE);
 	}
 
-	if (ok && saver->priv->source_buffer != NULL)
+	if (ok && saver->priv->buffer != NULL)
 	{
-		gtk_text_buffer_set_modified (GTK_TEXT_BUFFER (saver->priv->source_buffer),
-					      FALSE);
+		gtk_text_buffer_set_modified (GTK_TEXT_BUFFER (saver->priv->buffer), FALSE);
 	}
 
 	g_clear_object (&saver->priv->task);

@@ -28,6 +28,18 @@ check_equal_content (GFile       *file,
 	g_free (file_content);
 }
 
+static GFile *
+get_tmp_location (void)
+{
+	return g_file_new_build_filename (g_get_tmp_dir (), "tepl-file-saver-test", NULL);
+}
+
+static GFile *
+get_tmp_backup_location (void)
+{
+	return g_file_new_build_filename (g_get_tmp_dir (), "tepl-file-saver-test~", NULL);
+}
+
 static void
 save_sync_cb (GObject      *source_object,
 	      GAsyncResult *result,
@@ -67,7 +79,7 @@ check_save_content (const gchar *content)
 	gtk_text_buffer_set_text (GTK_TEXT_BUFFER (buffer), content, -1);
 
 	file = tepl_file_new ();
-	location = g_file_new_build_filename (g_get_tmp_dir (), "tepl-file-saver-test", NULL);
+	location = get_tmp_location ();
 	saver = tepl_file_saver_new_with_target (buffer, file, location);
 
 	save_sync (saver);
@@ -102,7 +114,7 @@ test_backup (void)
 	gtk_text_buffer_set_text (GTK_TEXT_BUFFER (buffer), "contentA", -1);
 
 	file = tepl_file_new ();
-	location = g_file_new_build_filename (g_get_tmp_dir (), "tepl-file-saver-test", NULL);
+	location = get_tmp_location ();
 
 	saver = tepl_file_saver_new_with_target (buffer, file, location);
 	save_sync (saver);
@@ -117,13 +129,62 @@ test_backup (void)
 	check_equal_content (location, "contentB");
 	g_object_unref (saver);
 
-	backup_location = g_file_new_build_filename (g_get_tmp_dir (), "tepl-file-saver-test~", NULL);
+	backup_location = get_tmp_backup_location ();
 	check_equal_content (backup_location, "contentA");
 
 	g_object_unref (buffer);
 	g_object_unref (file);
 	g_object_unref (location);
 	g_object_unref (backup_location);
+}
+
+static void
+test_properties (void)
+{
+	TeplBuffer *buffer;
+	GtkTextBuffer *text_buffer;
+	TeplFile *file;
+	GFile *location;
+	TeplFileSaver *saver;
+
+	buffer = tepl_buffer_new ();
+	text_buffer = GTK_TEXT_BUFFER (buffer);
+	file = tepl_file_new ();
+	location = get_tmp_location ();
+
+	saver = tepl_file_saver_new_with_target (buffer, file, location);
+	g_assert_true (tepl_file_saver_get_buffer (saver) == buffer);
+	g_assert_true (tepl_file_saver_get_file (saver) == file);
+	g_assert_true (tepl_file_saver_get_location (saver) == location);
+	g_assert_cmpint (tepl_file_saver_get_flags (saver), ==, TEPL_FILE_SAVER_FLAGS_NONE);
+	g_object_unref (saver);
+
+	tepl_file_set_location (file, location);
+	saver = tepl_file_saver_new (buffer, file);
+	g_assert_true (tepl_file_saver_get_buffer (saver) == buffer);
+	g_assert_true (tepl_file_saver_get_file (saver) == file);
+	g_assert_true (tepl_file_saver_get_location (saver) == location);
+	g_assert_cmpint (tepl_file_saver_get_flags (saver), ==, TEPL_FILE_SAVER_FLAGS_NONE);
+
+	gtk_text_buffer_set_text (text_buffer, "oh", -1);
+	g_assert_true (gtk_text_buffer_get_modified (text_buffer));
+	save_sync (saver);
+	g_assert_true (!gtk_text_buffer_get_modified (text_buffer));
+
+	g_object_unref (file);
+	g_object_unref (saver);
+
+	file = tepl_file_new ();
+	g_assert_true (tepl_file_get_location (file) == NULL);
+	saver = tepl_file_saver_new_with_target (buffer, file, location);
+	g_assert_true (tepl_file_get_location (file) == NULL);
+	save_sync (saver);
+	g_assert_true (tepl_file_get_location (file) == location);
+
+	g_object_unref (buffer);
+	g_object_unref (file);
+	g_object_unref (location);
+	g_object_unref (saver);
 }
 
 int
@@ -134,6 +195,7 @@ main (int    argc,
 
 	g_test_add_func ("/file_saver/basic", test_basic);
 	g_test_add_func ("/file_saver/backup", test_backup);
+	g_test_add_func ("/file_saver/properties", test_properties);
 
 	return g_test_run ();
 }

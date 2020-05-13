@@ -20,6 +20,17 @@
  * A file saver should be used only for one save operation, including errors
  * handling. If an error occurs, you can reconfigure the saver and relaunch the
  * operation with tepl_file_saver_save_async().
+ *
+ * # Things that need to be done at a higher level
+ *
+ * Make the #GtkTextView non-editable during the save operation. See
+ * gtk_text_view_set_editable(). Because the save operation is asynchronous, and
+ * gtk_text_buffer_set_modified() must be called (with a %FALSE value) only when
+ * the file has been successfully saved. So that's why
+ * gtk_text_buffer_set_modified() is called by tepl_file_saver_save_finish(),
+ * not at the beginning of the save operation. If the view/buffer is editable
+ * during the save operation, gtk_text_buffer_set_modified() may be called at
+ * the wrong place in the undo/redo history.
  */
 
 enum

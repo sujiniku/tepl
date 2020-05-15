@@ -1,9 +1,12 @@
+*.abw.crashed
 *.abw.gz
 authors
+*.C
 changelog
 cmakelists.txt
 copying
 credits
+*.geo.json
 gmon.out
 gnumakefile
 install
@@ -12,7 +15,9 @@ makefile.*
 meson.build
 meson_options.txt
 pom.xml
+*.qti.gz
 readme*
+*.reg
 sconscript
 sconscript.*
 sconstruct

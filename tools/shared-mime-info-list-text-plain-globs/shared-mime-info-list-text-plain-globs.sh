@@ -2,6 +2,10 @@
 # SPDX-FileCopyrightText: 2020 - Sébastien Wilmet <swilmet@gnome.org>
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
+# To have a list of all globs for text/plain files, taken from the
+# shared-mime-info database. The list is useful for Microsoft Windows packaging
+# purposes, to package a general-purpose text editor.
+
 shared_mime_info_xml_file='/usr/share/mime/packages/freedesktop.org.xml'
 tmp_dir='/tmp/tepl-shared-mime-info-tool/'
 

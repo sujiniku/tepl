@@ -47,10 +47,7 @@ TEPL_PUBLIC_DEPS = [
   dependency('gtksourceview-4', version: '>= 4.0'),
   dependency('amtk-5', version: '>= 5.0')
 ]
-TEPL_PRIVATE_DEPS = [
-  dependency('uchardet')
-]
-TEPL_DEPS = [TEPL_PUBLIC_DEPS, TEPL_PRIVATE_DEPS]
+TEPL_DEPS = [TEPL_PUBLIC_DEPS]
 
 # config.h
 

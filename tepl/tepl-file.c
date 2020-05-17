@@ -10,35 +10,24 @@
 
 /**
  * SECTION:file
- * @Short_description: On-disk representation of a TeplBuffer
  * @Title: TeplFile
+ * @Short_description: On-disk representation of a #TeplBuffer
  * @See_also: #TeplFileLoader, #TeplFileSaver
  *
  * A #TeplFile object is the on-disk representation of a #TeplBuffer.
  *
- * With a #TeplFile, you can create and configure a #TeplFileLoader
- * and #TeplFileSaver which take by default the values of the
- * #TeplFile properties (except for the file loader which auto-detect some
- * properties). On a successful load or save operation, the #TeplFile
- * properties are updated. If an operation fails, the #TeplFile properties
- * have still the previous valid values.
- *
- * #TeplFile is a fork of #GtkSourceFile. #TeplFileLoader is a new
- * implementation for file loading, but it needs to call private functions of
- * #TeplFile in order to update its properties. So it was not possible for
- * #TeplFileLoader to use #GtkSourceFile. So the whole file loading and saving
- * API of GtkSourceView has been forked; hopefully the new implementation will
- * be folded back to GtkSourceView in a later version.
+ * With a #TeplFile, you can create and configure a #TeplFileLoader and
+ * #TeplFileSaver which take by default the values of the #TeplFile properties
+ * (except for the file loader which auto-detect some properties). On a
+ * successful load or save operation, the #TeplFile properties are updated. If
+ * an operation fails, the #TeplFile properties have still the previous valid
+ * values.
  */
-
-typedef struct _TeplFilePrivate TeplFilePrivate;
 
 struct _TeplFilePrivate
 {
 	GFile *location;
-	TeplEncoding *encoding;
 	TeplNewlineType newline_type;
-	TeplCompressionType compression_type;
 
 	gchar *short_name;
 	gint untitled_number;
@@ -61,9 +50,7 @@ enum
 {
 	PROP_0,
 	PROP_LOCATION,
-	PROP_ENCODING,
 	PROP_NEWLINE_TYPE,
-	PROP_COMPRESSION_TYPE,
 	PROP_READ_ONLY,
 	PROP_SHORT_NAME,
 	N_PROPERTIES
@@ -140,16 +127,8 @@ tepl_file_get_property (GObject    *object,
 			g_value_set_object (value, tepl_file_get_location (file));
 			break;
 
-		case PROP_ENCODING:
-			g_value_set_boxed (value, tepl_file_get_encoding (file));
-			break;
-
 		case PROP_NEWLINE_TYPE:
 			g_value_set_enum (value, tepl_file_get_newline_type (file));
-			break;
-
-		case PROP_COMPRESSION_TYPE:
-			g_value_set_enum (value, tepl_file_get_compression_type (file));
 			break;
 
 		case PROP_READ_ONLY:
@@ -189,14 +168,14 @@ tepl_file_set_property (GObject      *object,
 static void
 tepl_file_dispose (GObject *object)
 {
-	TeplFilePrivate *priv = tepl_file_get_instance_private (TEPL_FILE (object));
+	TeplFile *file = TEPL_FILE (object);
 
-	g_clear_object (&priv->location);
+	g_clear_object (&file->priv->location);
 
-	if (priv->mount_operation_notify != NULL)
+	if (file->priv->mount_operation_notify != NULL)
 	{
-		priv->mount_operation_notify (priv->mount_operation_userdata);
-		priv->mount_operation_notify = NULL;
+		file->priv->mount_operation_notify (file->priv->mount_operation_userdata);
+		file->priv->mount_operation_notify = NULL;
 	}
 
 	G_OBJECT_CLASS (tepl_file_parent_class)->dispose (object);
@@ -207,7 +186,6 @@ tepl_file_finalize (GObject *object)
 {
 	TeplFilePrivate *priv = tepl_file_get_instance_private (TEPL_FILE (object));
 
-	tepl_encoding_free (priv->encoding);
 	g_free (priv->short_name);
 	g_free (priv->etag);
 
@@ -238,28 +216,12 @@ tepl_file_class_init (TeplFileClass *klass)
 	 */
 	properties[PROP_LOCATION] =
 		g_param_spec_object ("location",
-				     "Location",
+				     "location",
 				     "",
 				     G_TYPE_FILE,
 				     G_PARAM_READWRITE |
 				     G_PARAM_CONSTRUCT |
 				     G_PARAM_STATIC_STRINGS);
-
-	/**
-	 * TeplFile:encoding:
-	 *
-	 * The character encoding, initially %NULL. After a successful file
-	 * loading or saving operation, the encoding is non-%NULL.
-	 *
-	 * Since: 1.0
-	 */
-	properties[PROP_ENCODING] =
-		g_param_spec_boxed ("encoding",
-				    "Encoding",
-				    "",
-				    TEPL_TYPE_ENCODING,
-				    G_PARAM_READABLE |
-				    G_PARAM_STATIC_STRINGS);
 
 	/**
 	 * TeplFile:newline-type:
@@ -270,26 +232,10 @@ tepl_file_class_init (TeplFileClass *klass)
 	 */
 	properties[PROP_NEWLINE_TYPE] =
 		g_param_spec_enum ("newline-type",
-				   "Newline type",
+				   "newline-type",
 				   "",
 				   TEPL_TYPE_NEWLINE_TYPE,
 				   TEPL_NEWLINE_TYPE_LF,
-				   G_PARAM_READABLE |
-				   G_PARAM_STATIC_STRINGS);
-
-	/**
-	 * TeplFile:compression-type:
-	 *
-	 * The compression type.
-	 *
-	 * Since: 1.0
-	 */
-	properties[PROP_COMPRESSION_TYPE] =
-		g_param_spec_enum ("compression-type",
-				   "Compression type",
-				   "",
-				   TEPL_TYPE_COMPRESSION_TYPE,
-				   TEPL_COMPRESSION_TYPE_NONE,
 				   G_PARAM_READABLE |
 				   G_PARAM_STATIC_STRINGS);
 
@@ -303,7 +249,7 @@ tepl_file_class_init (TeplFileClass *klass)
 	 */
 	properties[PROP_READ_ONLY] =
 		g_param_spec_boolean ("read-only",
-				      "Read Only",
+				      "read-only",
 				      "",
 				      FALSE,
 				      G_PARAM_READABLE |
@@ -318,7 +264,7 @@ tepl_file_class_init (TeplFileClass *klass)
 	 */
 	properties[PROP_SHORT_NAME] =
 		g_param_spec_string ("short-name",
-				     "Short Name",
+				     "short-name",
 				     "",
 				     NULL,
 				     G_PARAM_READABLE |
@@ -334,11 +280,8 @@ query_display_name_cb (GObject      *source_object,
 {
 	GFile *location = G_FILE (source_object);
 	TeplFile *file = TEPL_FILE (user_data);
-	TeplFilePrivate *priv;
 	GFileInfo *info;
 	GError *error = NULL;
-
-	priv = tepl_file_get_instance_private (file);
 
 	info = g_file_query_info_finish (location, result, &error);
 
@@ -354,19 +297,19 @@ query_display_name_cb (GObject      *source_object,
 		 */
 		g_clear_error (&error);
 
-		g_free (priv->short_name);
-		priv->short_name = _tepl_utils_get_fallback_basename_for_display (location);
+		g_free (file->priv->short_name);
+		file->priv->short_name = _tepl_utils_get_fallback_basename_for_display (location);
 	}
 	else
 	{
-		g_free (priv->short_name);
-		priv->short_name = g_strdup (g_file_info_get_display_name (info));
+		g_free (file->priv->short_name);
+		file->priv->short_name = g_strdup (g_file_info_get_display_name (info));
 	}
 
-	if (priv->untitled_number > 0)
+	if (file->priv->untitled_number > 0)
 	{
-		release_untitled_number (priv->untitled_number);
-		priv->untitled_number = 0;
+		release_untitled_number (file->priv->untitled_number);
+		file->priv->untitled_number = 0;
 	}
 
 	g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_SHORT_NAME]);
@@ -380,18 +323,16 @@ query_display_name_cb (GObject      *source_object,
 static void
 update_short_name (TeplFile *file)
 {
-	TeplFilePrivate *priv = tepl_file_get_instance_private (file);
-
-	if (priv->location == NULL)
+	if (file->priv->location == NULL)
 	{
-		if (priv->untitled_number == 0)
+		if (file->priv->untitled_number == 0)
 		{
-			priv->untitled_number = allocate_first_available_untitled_number ();
+			file->priv->untitled_number = allocate_first_available_untitled_number ();
 		}
 
-		g_free (priv->short_name);
-		priv->short_name = g_strdup_printf (_("Untitled File %d"),
-						    priv->untitled_number);
+		g_free (file->priv->short_name);
+		file->priv->short_name = g_strdup_printf (_("Untitled File %d"),
+							  file->priv->untitled_number);
 
 		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_SHORT_NAME]);
 		return;
@@ -401,23 +342,23 @@ update_short_name (TeplFile *file)
 	 * display-name for those URIs return "/", which can be confused with
 	 * the local root directory.
 	 */
-	if (!g_file_has_uri_scheme (priv->location, "file") &&
-	    !g_file_has_parent (priv->location, NULL))
+	if (!g_file_has_uri_scheme (file->priv->location, "file") &&
+	    !g_file_has_parent (file->priv->location, NULL))
 	{
-		g_free (priv->short_name);
-		priv->short_name = _tepl_utils_get_fallback_basename_for_display (priv->location);
+		g_free (file->priv->short_name);
+		file->priv->short_name = _tepl_utils_get_fallback_basename_for_display (file->priv->location);
 
-		if (priv->untitled_number > 0)
+		if (file->priv->untitled_number > 0)
 		{
-			release_untitled_number (priv->untitled_number);
-			priv->untitled_number = 0;
+			release_untitled_number (file->priv->untitled_number);
+			file->priv->untitled_number = 0;
 		}
 
 		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_SHORT_NAME]);
 		return;
 	}
 
-	g_file_query_info_async (priv->location,
+	g_file_query_info_async (file->priv->location,
 				 G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
 				 G_FILE_QUERY_INFO_NONE,
 				 G_PRIORITY_DEFAULT,
@@ -429,12 +370,9 @@ update_short_name (TeplFile *file)
 static void
 tepl_file_init (TeplFile *file)
 {
-	TeplFilePrivate *priv = tepl_file_get_instance_private (file);
+	file->priv = tepl_file_get_instance_private (file);
 
-	priv->encoding = NULL;
-	priv->newline_type = TEPL_NEWLINE_TYPE_LF;
-	priv->compression_type = TEPL_COMPRESSION_TYPE_NONE;
-
+	file->priv->newline_type = TEPL_NEWLINE_TYPE_LF;
 	update_short_name (file);
 }
 
@@ -463,23 +401,19 @@ void
 tepl_file_set_location (TeplFile *file,
 			GFile    *location)
 {
-	TeplFilePrivate *priv;
-
 	g_return_if_fail (TEPL_IS_FILE (file));
 	g_return_if_fail (location == NULL || G_IS_FILE (location));
 
-	priv = tepl_file_get_instance_private (file);
-
-	if (g_set_object (&priv->location, location))
+	if (g_set_object (&file->priv->location, location))
 	{
 		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_LOCATION]);
 
 		/* The etag is for the old location. */
-		g_free (priv->etag);
-		priv->etag = NULL;
+		g_free (file->priv->etag);
+		file->priv->etag = NULL;
 
-		priv->externally_modified = FALSE;
-		priv->deleted = FALSE;
+		file->priv->externally_modified = FALSE;
+		file->priv->deleted = FALSE;
 
 		update_short_name (file);
 	}
@@ -495,12 +429,9 @@ tepl_file_set_location (TeplFile *file,
 GFile *
 tepl_file_get_location (TeplFile *file)
 {
-	TeplFilePrivate *priv;
-
 	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
 
-	priv = tepl_file_get_instance_private (file);
-	return priv->location;
+	return file->priv->location;
 }
 
 /**
@@ -519,67 +450,20 @@ tepl_file_get_location (TeplFile *file)
 const gchar *
 tepl_file_get_short_name (TeplFile *file)
 {
-	TeplFilePrivate *priv;
-
 	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
 
-	priv = tepl_file_get_instance_private (file);
-	return priv->short_name;
-}
-
-void
-_tepl_file_set_encoding (TeplFile           *file,
-			 const TeplEncoding *encoding)
-{
-	TeplFilePrivate *priv;
-
-	g_return_if_fail (TEPL_IS_FILE (file));
-
-	priv = tepl_file_get_instance_private (file);
-
-	if (!tepl_encoding_equals (priv->encoding, encoding))
-	{
-		tepl_encoding_free (priv->encoding);
-		priv->encoding = tepl_encoding_copy (encoding);
-
-		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_ENCODING]);
-	}
-}
-
-/**
- * tepl_file_get_encoding:
- * @file: a #TeplFile.
- *
- * The encoding is initially %NULL. After a successful file loading or saving
- * operation, the encoding is non-%NULL.
- *
- * Returns: the character encoding.
- * Since: 1.0
- */
-const TeplEncoding *
-tepl_file_get_encoding (TeplFile *file)
-{
-	TeplFilePrivate *priv;
-
-	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
-
-	priv = tepl_file_get_instance_private (file);
-	return priv->encoding;
+	return file->priv->short_name;
 }
 
 void
 _tepl_file_set_newline_type (TeplFile        *file,
 			     TeplNewlineType  newline_type)
 {
-	TeplFilePrivate *priv;
-
 	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = tepl_file_get_instance_private (file);
-
-	if (priv->newline_type != newline_type)
+	if (file->priv->newline_type != newline_type)
 	{
-		priv->newline_type = newline_type;
+		file->priv->newline_type = newline_type;
 		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_NEWLINE_TYPE]);
 	}
 }
@@ -594,47 +478,9 @@ _tepl_file_set_newline_type (TeplFile        *file,
 TeplNewlineType
 tepl_file_get_newline_type (TeplFile *file)
 {
-	TeplFilePrivate *priv;
-
 	g_return_val_if_fail (TEPL_IS_FILE (file), TEPL_NEWLINE_TYPE_DEFAULT);
 
-	priv = tepl_file_get_instance_private (file);
-	return priv->newline_type;
-}
-
-void
-_tepl_file_set_compression_type (TeplFile            *file,
-				 TeplCompressionType  compression_type)
-{
-	TeplFilePrivate *priv;
-
-	g_return_if_fail (TEPL_IS_FILE (file));
-
-	priv = tepl_file_get_instance_private (file);
-
-	if (priv->compression_type != compression_type)
-	{
-		priv->compression_type = compression_type;
-		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_COMPRESSION_TYPE]);
-	}
-}
-
-/**
- * tepl_file_get_compression_type:
- * @file: a #TeplFile.
- *
- * Returns: the compression type.
- * Since: 1.0
- */
-TeplCompressionType
-tepl_file_get_compression_type (TeplFile *file)
-{
-	TeplFilePrivate *priv;
-
-	g_return_val_if_fail (TEPL_IS_FILE (file), TEPL_COMPRESSION_TYPE_NONE);
-
-	priv = tepl_file_get_instance_private (file);
-	return priv->compression_type;
+	return file->priv->newline_type;
 }
 
 /**
@@ -661,27 +507,21 @@ tepl_file_set_mount_operation_factory (TeplFile                  *file,
 				       gpointer                   user_data,
 				       GDestroyNotify             notify)
 {
-	TeplFilePrivate *priv;
-
 	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = tepl_file_get_instance_private (file);
-
-	if (priv->mount_operation_notify != NULL)
+	if (file->priv->mount_operation_notify != NULL)
 	{
-		priv->mount_operation_notify (priv->mount_operation_userdata);
+		file->priv->mount_operation_notify (file->priv->mount_operation_userdata);
 	}
 
-	priv->mount_operation_factory = callback;
-	priv->mount_operation_userdata = user_data;
-	priv->mount_operation_notify = notify;
+	file->priv->mount_operation_factory = callback;
+	file->priv->mount_operation_userdata = user_data;
+	file->priv->mount_operation_notify = notify;
 }
 
 GMountOperation *
 _tepl_file_create_mount_operation (TeplFile *file)
 {
-	TeplFilePrivate *priv;
-
 	if (file == NULL)
 	{
 		goto fallback;
@@ -689,11 +529,9 @@ _tepl_file_create_mount_operation (TeplFile *file)
 
 	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
 
-	priv = tepl_file_get_instance_private (file);
-
-	if (priv->mount_operation_factory != NULL)
+	if (file->priv->mount_operation_factory != NULL)
 	{
-		return priv->mount_operation_factory (file, priv->mount_operation_userdata);
+		return file->priv->mount_operation_factory (file, file->priv->mount_operation_userdata);
 	}
 
 fallback:
@@ -713,8 +551,6 @@ _tepl_file_set_mounted (TeplFile *file)
 const gchar *
 _tepl_file_get_etag (TeplFile *file)
 {
-	TeplFilePrivate *priv;
-
 	if (file == NULL)
 	{
 		return NULL;
@@ -722,16 +558,13 @@ _tepl_file_get_etag (TeplFile *file)
 
 	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
 
-	priv = tepl_file_get_instance_private (file);
-	return priv->etag;
+	return file->priv->etag;
 }
 
 void
 _tepl_file_set_etag (TeplFile    *file,
 		     const gchar *etag)
 {
-	TeplFilePrivate *priv;
-
 	if (file == NULL)
 	{
 		return;
@@ -739,10 +572,8 @@ _tepl_file_set_etag (TeplFile    *file,
 
 	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = tepl_file_get_instance_private (file);
-
-	g_free (priv->etag);
-	priv->etag = g_strdup (etag);
+	g_free (file->priv->etag);
+	file->priv->etag = g_strdup (etag);
 }
 
 /**
@@ -758,18 +589,14 @@ _tepl_file_set_etag (TeplFile    *file,
 gboolean
 tepl_file_is_local (TeplFile *file)
 {
-	TeplFilePrivate *priv;
-
 	g_return_val_if_fail (TEPL_IS_FILE (file), FALSE);
 
-	priv = tepl_file_get_instance_private (file);
-
-	if (priv->location == NULL)
+	if (file->priv->location == NULL)
 	{
 		return FALSE;
 	}
 
-	return g_file_has_uri_scheme (priv->location, "file");
+	return g_file_has_uri_scheme (file->priv->location, "file");
 }
 
 /**
@@ -791,19 +618,16 @@ tepl_file_is_local (TeplFile *file)
 void
 tepl_file_check_file_on_disk (TeplFile *file)
 {
-	TeplFilePrivate *priv;
 	GFileInfo *info;
 
 	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = tepl_file_get_instance_private (file);
-
-	if (priv->location == NULL)
+	if (file->priv->location == NULL)
 	{
 		return;
 	}
 
-	info = g_file_query_info (priv->location,
+	info = g_file_query_info (file->priv->location,
 				  G_FILE_ATTRIBUTE_ETAG_VALUE ","
 				  G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE,
 				  G_FILE_QUERY_INFO_NONE,
@@ -812,22 +636,22 @@ tepl_file_check_file_on_disk (TeplFile *file)
 
 	if (info == NULL)
 	{
-		priv->deleted = TRUE;
+		file->priv->deleted = TRUE;
 		return;
 	}
 
-	priv->deleted = FALSE;
+	file->priv->deleted = FALSE;
 
 	if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_ETAG_VALUE) &&
-	    priv->etag != NULL)
+	    file->priv->etag != NULL)
 	{
 		const gchar *etag;
 
 		etag = g_file_info_get_etag (info);
 
-		if (g_strcmp0 (priv->etag, etag) != 0)
+		if (g_strcmp0 (file->priv->etag, etag) != 0)
 		{
-			priv->externally_modified = TRUE;
+			file->priv->externally_modified = TRUE;
 		}
 	}
 
@@ -847,13 +671,9 @@ void
 _tepl_file_set_externally_modified (TeplFile *file,
 				    gboolean  externally_modified)
 {
-	TeplFilePrivate *priv;
-
 	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = tepl_file_get_instance_private (file);
-
-	priv->externally_modified = externally_modified != FALSE;
+	file->priv->externally_modified = externally_modified != FALSE;
 }
 
 /**
@@ -872,25 +692,18 @@ _tepl_file_set_externally_modified (TeplFile *file,
 gboolean
 tepl_file_is_externally_modified (TeplFile *file)
 {
-	TeplFilePrivate *priv;
-
 	g_return_val_if_fail (TEPL_IS_FILE (file), FALSE);
 
-	priv = tepl_file_get_instance_private (file);
-	return priv->externally_modified;
+	return file->priv->externally_modified;
 }
 
 void
 _tepl_file_set_deleted (TeplFile *file,
 			gboolean  deleted)
 {
-	TeplFilePrivate *priv;
-
 	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = tepl_file_get_instance_private (file);
-
-	priv->deleted = deleted != FALSE;
+	file->priv->deleted = deleted != FALSE;
 }
 
 /**
@@ -909,29 +722,22 @@ _tepl_file_set_deleted (TeplFile *file,
 gboolean
 tepl_file_is_deleted (TeplFile *file)
 {
-	TeplFilePrivate *priv;
-
 	g_return_val_if_fail (TEPL_IS_FILE (file), FALSE);
 
-	priv = tepl_file_get_instance_private (file);
-	return priv->deleted;
+	return file->priv->deleted;
 }
 
 void
 _tepl_file_set_readonly (TeplFile *file,
 			 gboolean  readonly)
 {
-	TeplFilePrivate *priv;
-
 	g_return_if_fail (TEPL_IS_FILE (file));
-
-	priv = tepl_file_get_instance_private (file);
 
 	readonly = readonly != FALSE;
 
-	if (priv->readonly != readonly)
+	if (file->priv->readonly != readonly)
 	{
-		priv->readonly = readonly;
+		file->priv->readonly = readonly;
 		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_READ_ONLY]);
 	}
 }
@@ -952,12 +758,9 @@ _tepl_file_set_readonly (TeplFile *file,
 gboolean
 tepl_file_is_readonly (TeplFile *file)
 {
-	TeplFilePrivate *priv;
-
 	g_return_val_if_fail (TEPL_IS_FILE (file), FALSE);
 
-	priv = tepl_file_get_instance_private (file);
-	return priv->readonly;
+	return file->priv->readonly;
 }
 
 /**
@@ -976,22 +779,19 @@ tepl_file_is_readonly (TeplFile *file)
 void
 tepl_file_add_uri_to_recent_manager (TeplFile *file)
 {
-	TeplFilePrivate *priv;
 	GtkRecentManager *recent_manager;
 	gchar *uri;
 
 	g_return_if_fail (TEPL_IS_FILE (file));
 
-	priv = tepl_file_get_instance_private (file);
-
-	if (priv->location == NULL)
+	if (file->priv->location == NULL)
 	{
 		return;
 	}
 
 	recent_manager = gtk_recent_manager_get_default ();
 
-	uri = g_file_get_uri (priv->location);
+	uri = g_file_get_uri (file->priv->location);
 	gtk_recent_manager_add_item (recent_manager, uri);
 	g_free (uri);
 }

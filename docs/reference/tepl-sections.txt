@@ -101,41 +101,17 @@ tepl_selection_type_get_type
 </SECTION>
 
 <SECTION>
-<FILE>encoding</FILE>
-TeplEncoding
-<SUBSECTION>
-tepl_encoding_new
-tepl_encoding_new_utf8
-tepl_encoding_new_from_locale
-tepl_encoding_copy
-tepl_encoding_free
-tepl_encoding_get_charset
-tepl_encoding_get_name
-tepl_encoding_to_string
-tepl_encoding_is_utf8
-tepl_encoding_equals
-tepl_encoding_get_all
-tepl_encoding_get_default_candidates
-<SUBSECTION Standard>
-TEPL_TYPE_ENCODING
-tepl_encoding_get_type
-</SECTION>
-
-<SECTION>
 <FILE>file</FILE>
 TeplFile
 TeplNewlineType
 TEPL_NEWLINE_TYPE_DEFAULT
-TeplCompressionType
 TeplMountOperationFactory
 <SUBSECTION>
 tepl_file_new
 tepl_file_get_location
 tepl_file_set_location
 tepl_file_get_short_name
-tepl_file_get_encoding
 tepl_file_get_newline_type
-tepl_file_get_compression_type
 tepl_file_check_file_on_disk
 tepl_file_is_local
 tepl_file_is_externally_modified
@@ -147,9 +123,7 @@ tepl_file_add_uri_to_recent_manager
 TeplFileClass
 TEPL_TYPE_FILE
 TEPL_TYPE_NEWLINE_TYPE
-TEPL_TYPE_COMPRESSION_TYPE
 tepl_newline_type_get_type
-tepl_compression_type_get_type
 </SECTION>
 
 <SECTION>

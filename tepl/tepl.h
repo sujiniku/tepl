@@ -16,7 +16,6 @@
 #include <tepl/tepl-application.h>
 #include <tepl/tepl-application-window.h>
 #include <tepl/tepl-buffer.h>
-#include <tepl/tepl-encoding.h>
 #include <tepl/tepl-file.h>
 #include <tepl/tepl-file-loader.h>
 #include <tepl/tepl-file-saver.h>

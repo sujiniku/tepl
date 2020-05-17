@@ -1,5 +1,4 @@
 unit_tests = [
-  'test-encoding',
   #'test-file',
   'test-file-saver',
   'test-fold-region',

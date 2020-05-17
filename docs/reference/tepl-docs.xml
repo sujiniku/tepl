@@ -42,7 +42,6 @@
 
     <chapter id="file-loading-and-saving">
       <title>File Loading and Saving</title>
-      <xi:include href="xml/encoding.xml"/>
       <xi:include href="xml/file.xml"/>
       <xi:include href="xml/file-loader.xml"/>
       <xi:include href="xml/file-saver.xml"/>

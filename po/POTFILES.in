@@ -4,7 +4,6 @@ tepl/tepl-application.c
 tepl/tepl-application-window.c
 tepl/tepl-buffer.c
 tepl/tepl-close-confirm-dialog-single.c
-tepl/tepl-encoding.c
 tepl/tepl-file.c
 tepl/tepl-file-loader.c
 tepl/tepl-file-saver.c

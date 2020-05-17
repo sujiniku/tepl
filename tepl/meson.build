@@ -4,7 +4,6 @@ tepl_public_headers = [
   'tepl-application.h',
   'tepl-application-window.h',
   'tepl-buffer.h',
-  'tepl-encoding.h',
   'tepl-file.h',
   'tepl-file-loader.h',
   'tepl-file-saver.h',
@@ -35,7 +34,6 @@ tepl_public_c_files = [
   'tepl-application.c',
   'tepl-application-window.c',
   'tepl-buffer.c',
-  'tepl-encoding.c',
   'tepl-file.c',
   'tepl-file-loader.c',
   'tepl-file-saver.c',
@@ -62,7 +60,6 @@ tepl_public_c_files = [
 
 TEPL_PRIVATE_HEADERS = [
   'tepl-close-confirm-dialog-single.h',
-  'tepl-encoding-private.h',
   'tepl-io-error-info-bar.h',
   'tepl-metadata-attic.h',
   'tepl-metadata-parser.h',

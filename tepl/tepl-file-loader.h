@@ -15,11 +15,23 @@
 
 G_BEGIN_DECLS
 
-#define TEPL_TYPE_FILE_LOADER (tepl_file_loader_get_type ())
-_TEPL_EXTERN
-G_DECLARE_DERIVABLE_TYPE (TeplFileLoader, tepl_file_loader,
-			  TEPL, FILE_LOADER,
-			  GObject)
+#define TEPL_TYPE_FILE_LOADER             (tepl_file_loader_get_type ())
+#define TEPL_FILE_LOADER(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), TEPL_TYPE_FILE_LOADER, TeplFileLoader))
+#define TEPL_FILE_LOADER_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), TEPL_TYPE_FILE_LOADER, TeplFileLoaderClass))
+#define TEPL_IS_FILE_LOADER(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TEPL_TYPE_FILE_LOADER))
+#define TEPL_IS_FILE_LOADER_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), TEPL_TYPE_FILE_LOADER))
+#define TEPL_FILE_LOADER_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), TEPL_TYPE_FILE_LOADER, TeplFileLoaderClass))
+
+typedef struct _TeplFileLoader         TeplFileLoader;
+typedef struct _TeplFileLoaderClass    TeplFileLoaderClass;
+typedef struct _TeplFileLoaderPrivate  TeplFileLoaderPrivate;
+
+struct _TeplFileLoader
+{
+	GObject parent;
+
+	TeplFileLoaderPrivate *priv;
+};
 
 struct _TeplFileLoaderClass
 {
@@ -27,6 +39,9 @@ struct _TeplFileLoaderClass
 
 	gpointer padding[12];
 };
+
+_TEPL_EXTERN
+GType			tepl_file_loader_get_type		(void);
 
 _TEPL_EXTERN
 TeplFileLoader *	tepl_file_loader_new			(TeplBuffer *buffer,

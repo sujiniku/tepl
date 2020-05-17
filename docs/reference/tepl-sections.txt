@@ -163,8 +163,15 @@ tepl_file_loader_get_location
 tepl_file_loader_load_async
 tepl_file_loader_load_finish
 <SUBSECTION Standard>
+TEPL_FILE_LOADER
+TEPL_FILE_LOADER_CLASS
+TEPL_FILE_LOADER_GET_CLASS
+TEPL_IS_FILE_LOADER
+TEPL_IS_FILE_LOADER_CLASS
 TEPL_TYPE_FILE_LOADER
 TeplFileLoaderClass
+TeplFileLoaderPrivate
+tepl_file_loader_get_type
 </SECTION>
 
 <SECTION>

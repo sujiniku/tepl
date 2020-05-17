@@ -27,7 +27,6 @@
  * gtk_text_buffer_set_modified() is called with %FALSE.
  */
 
-typedef struct _TeplFileLoaderPrivate TeplFileLoaderPrivate;
 struct _TeplFileLoaderPrivate
 {
 	/* Weak ref to the TeplBuffer. A strong ref could create a reference
@@ -93,23 +92,22 @@ tepl_file_loader_set_property (GObject      *object,
 			       GParamSpec   *pspec)
 {
 	TeplFileLoader *loader = TEPL_FILE_LOADER (object);
-	TeplFileLoaderPrivate *priv = tepl_file_loader_get_instance_private (loader);
 
 	switch (prop_id)
 	{
 		case PROP_BUFFER:
-			g_assert (priv->buffer == NULL);
-			g_set_weak_pointer (&priv->buffer, g_value_get_object (value));
+			g_assert (loader->priv->buffer == NULL);
+			g_set_weak_pointer (&loader->priv->buffer, g_value_get_object (value));
 			break;
 
 		case PROP_FILE:
-			g_assert (priv->file == NULL);
-			g_set_weak_pointer (&priv->file, g_value_get_object (value));
+			g_assert (loader->priv->file == NULL);
+			g_set_weak_pointer (&loader->priv->file, g_value_get_object (value));
 			break;
 
 		case PROP_LOCATION:
-			g_assert (priv->location == NULL);
-			priv->location = g_value_dup_object (value);
+			g_assert (loader->priv->location == NULL);
+			loader->priv->location = g_value_dup_object (value);
 			break;
 
 		default:
@@ -121,18 +119,18 @@ tepl_file_loader_set_property (GObject      *object,
 static void
 tepl_file_loader_constructed (GObject *object)
 {
-	TeplFileLoaderPrivate *priv = tepl_file_loader_get_instance_private (TEPL_FILE_LOADER (object));
+	TeplFileLoader *loader = TEPL_FILE_LOADER (object);
 
 	G_OBJECT_CLASS (tepl_file_loader_parent_class)->constructed (object);
 
-	if (priv->file != NULL &&
-	    priv->location == NULL)
+	if (loader->priv->file != NULL &&
+	    loader->priv->location == NULL)
 	{
-		priv->location = tepl_file_get_location (priv->file);
+		loader->priv->location = tepl_file_get_location (loader->priv->file);
 
-		if (priv->location != NULL)
+		if (loader->priv->location != NULL)
 		{
-			g_object_ref (priv->location);
+			g_object_ref (loader->priv->location);
 		}
 		else
 		{
@@ -145,11 +143,11 @@ tepl_file_loader_constructed (GObject *object)
 static void
 tepl_file_loader_dispose (GObject *object)
 {
-	TeplFileLoaderPrivate *priv = tepl_file_loader_get_instance_private (TEPL_FILE_LOADER (object));
+	TeplFileLoader *loader = TEPL_FILE_LOADER (object);
 
-	g_clear_weak_pointer (&priv->buffer);
-	g_clear_weak_pointer (&priv->file);
-	g_clear_object (&priv->location);
+	g_clear_weak_pointer (&loader->priv->buffer);
+	g_clear_weak_pointer (&loader->priv->file);
+	g_clear_object (&loader->priv->location);
 
 	G_OBJECT_CLASS (tepl_file_loader_parent_class)->dispose (object);
 }
@@ -221,6 +219,7 @@ tepl_file_loader_class_init (TeplFileLoaderClass *klass)
 static void
 tepl_file_loader_init (TeplFileLoader *loader)
 {
+	loader->priv = tepl_file_loader_get_instance_private (loader);
 }
 
 /**
@@ -264,12 +263,9 @@ tepl_file_loader_new (TeplBuffer *buffer,
 TeplBuffer *
 tepl_file_loader_get_buffer (TeplFileLoader *loader)
 {
-	TeplFileLoaderPrivate *priv;
-
 	g_return_val_if_fail (TEPL_IS_FILE_LOADER (loader), NULL);
 
-	priv = tepl_file_loader_get_instance_private (loader);
-	return priv->buffer;
+	return loader->priv->buffer;
 }
 
 /**
@@ -282,12 +278,9 @@ tepl_file_loader_get_buffer (TeplFileLoader *loader)
 TeplFile *
 tepl_file_loader_get_file (TeplFileLoader *loader)
 {
-	TeplFileLoaderPrivate *priv;
-
 	g_return_val_if_fail (TEPL_IS_FILE_LOADER (loader), NULL);
 
-	priv = tepl_file_loader_get_instance_private (loader);
-	return priv->file;
+	return loader->priv->file;
 }
 
 /**
@@ -300,12 +293,9 @@ tepl_file_loader_get_file (TeplFileLoader *loader)
 GFile *
 tepl_file_loader_get_location (TeplFileLoader *loader)
 {
-	TeplFileLoaderPrivate *priv;
-
 	g_return_val_if_fail (TEPL_IS_FILE_LOADER (loader), NULL);
 
-	priv = tepl_file_loader_get_instance_private (loader);
-	return priv->location;
+	return loader->priv->location;
 }
 
 /**

@@ -35,7 +35,6 @@ GNOME.gtkdoc(
   content_files: [
     'api-breaks.xml',
     'intro.xml',
-    'porting-guides.xml'
   ],
   ignore_headers: TEPL_PRIVATE_HEADERS,
   install: true

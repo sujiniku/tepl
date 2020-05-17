@@ -73,7 +73,6 @@
   </part>
 
   <xi:include href="api-breaks.xml"/>
-  <xi:include href="porting-guides.xml"/>
 
   <part id="annexes">
     <title>Annexes</title>

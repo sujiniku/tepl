@@ -1,9 +1,6 @@
 unit_tests = [
   'test-encoding',
-  'test-encoding-converter',
   #'test-file',
-  'test-file-content',
-  'test-file-loader',
   'test-file-saver',
   'test-fold-region',
   'test-info-bar',

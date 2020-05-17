@@ -155,27 +155,16 @@ tepl_compression_type_get_type
 <SECTION>
 <FILE>file-loader</FILE>
 TeplFileLoader
-TEPL_FILE_LOADER_ERROR
-TeplFileLoaderError
 <SUBSECTION>
 tepl_file_loader_new
 tepl_file_loader_get_buffer
 tepl_file_loader_get_file
 tepl_file_loader_get_location
-tepl_file_loader_get_max_size
-tepl_file_loader_set_max_size
-tepl_file_loader_get_chunk_size
-tepl_file_loader_set_chunk_size
 tepl_file_loader_load_async
 tepl_file_loader_load_finish
-tepl_file_loader_get_encoding
-tepl_file_loader_get_newline_type
 <SUBSECTION Standard>
 TEPL_TYPE_FILE_LOADER
-TEPL_TYPE_FILE_LOADER_ERROR
 TeplFileLoaderClass
-tepl_file_loader_error_get_type
-tepl_file_loader_error_quark
 </SECTION>
 
 <SECTION>

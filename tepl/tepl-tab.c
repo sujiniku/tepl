@@ -577,7 +577,6 @@ tepl_tab_load_file (TeplTab *tab,
 	tepl_file_loader_load_async (loader,
 				     G_PRIORITY_DEFAULT,
 				     NULL, /* cancellable */
-				     NULL, NULL, NULL, /* progress */
 				     load_file_content_cb,
 				     g_object_ref (tab));
 }

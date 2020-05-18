@@ -29,8 +29,9 @@ struct _TeplFilePrivate
 	GFile *location;
 	TeplNewlineType newline_type;
 
-	gchar *short_name;
+	/* For the short-name. */
 	gint untitled_number;
+	gchar *display_name;
 
 	TeplMountOperationFactory mount_operation_factory;
 	gpointer mount_operation_userdata;
@@ -127,7 +128,7 @@ tepl_file_get_property (GObject    *object,
 			break;
 
 		case PROP_SHORT_NAME:
-			g_value_set_string (value, tepl_file_get_short_name (file));
+			g_value_take_string (value, tepl_file_get_short_name (file));
 			break;
 
 		default:
@@ -177,13 +178,13 @@ tepl_file_finalize (GObject *object)
 {
 	TeplFile *file = TEPL_FILE (object);
 
-	g_free (file->priv->short_name);
-	g_free (file->priv->etag);
-
 	if (file->priv->untitled_number > 0)
 	{
 		release_untitled_number (file->priv->untitled_number);
 	}
+
+	g_free (file->priv->display_name);
+	g_free (file->priv->etag);
 
 	G_OBJECT_CLASS (tepl_file_parent_class)->finalize (object);
 }
@@ -256,42 +257,20 @@ query_display_name_cb (GObject      *source_object,
 	GFile *location = G_FILE (source_object);
 	TeplFile *file = TEPL_FILE (user_data);
 	GFileInfo *info;
-	GError *error = NULL;
 
-	info = g_file_query_info_finish (location, result, &error);
+	info = g_file_query_info_finish (location, result, NULL);
 
-	if (error != NULL)
+	if (info != NULL)
 	{
-		/* Ignore error, because there is no GError to report it. The
-		 * same error will probably occur when the user will load or
-		 * save the file, and in that case the FileLoader or FileSaver
-		 * can report a GError which can be displayed at an appropriate
-		 * place in the UI.
-		 *
-		 * Instead, use a fallback short-name.
-		 */
-		g_clear_error (&error);
+		g_free (file->priv->display_name);
+		file->priv->display_name = g_strdup (g_file_info_get_display_name (info));
 
-		g_free (file->priv->short_name);
-		file->priv->short_name = _tepl_utils_get_fallback_basename_for_display (location);
-	}
-	else
-	{
-		g_free (file->priv->short_name);
-		file->priv->short_name = g_strdup (g_file_info_get_display_name (info));
-	}
-
-	if (file->priv->untitled_number > 0)
-	{
-		release_untitled_number (file->priv->untitled_number);
-		file->priv->untitled_number = 0;
+		g_object_unref (info);
 	}
 
 	g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_SHORT_NAME]);
 
-	g_clear_object (&info);
-
-	/* Async operation finished */
+	/* Async operation finished. */
 	g_object_unref (file);
 }
 
@@ -305,14 +284,17 @@ update_short_name (TeplFile *file)
 			file->priv->untitled_number = allocate_first_available_untitled_number ();
 		}
 
-		g_free (file->priv->short_name);
-		file->priv->short_name = g_strdup_printf (_("Untitled File %d"),
-							  file->priv->untitled_number);
-
 		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_SHORT_NAME]);
 		return;
 	}
 
+	if (file->priv->untitled_number > 0)
+	{
+		release_untitled_number (file->priv->untitled_number);
+		file->priv->untitled_number = 0;
+	}
+
+#if 0
 	/* Special case for URIs like "https://example.net". Querying the
 	 * display-name for those URIs return "/", which can be confused with
 	 * the local root directory.
@@ -320,18 +302,10 @@ update_short_name (TeplFile *file)
 	if (!g_file_has_uri_scheme (file->priv->location, "file") &&
 	    !g_file_has_parent (file->priv->location, NULL))
 	{
-		g_free (file->priv->short_name);
-		file->priv->short_name = _tepl_utils_get_fallback_basename_for_display (file->priv->location);
-
-		if (file->priv->untitled_number > 0)
-		{
-			release_untitled_number (file->priv->untitled_number);
-			file->priv->untitled_number = 0;
-		}
-
 		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_SHORT_NAME]);
 		return;
 	}
+#endif
 
 	g_file_query_info_async (file->priv->location,
 				 G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
@@ -381,13 +355,15 @@ tepl_file_set_location (TeplFile *file,
 
 	if (g_set_object (&file->priv->location, location))
 	{
-		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_LOCATION]);
-
 		/* The etag is for the old location. */
 		g_free (file->priv->etag);
 		file->priv->etag = NULL;
 
+		g_free (file->priv->display_name);
+		file->priv->display_name = NULL;
 		update_short_name (file);
+
+		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_LOCATION]);
 	}
 }
 
@@ -413,18 +389,28 @@ tepl_file_get_location (TeplFile *file)
  * Gets the @file short name. If the #TeplFile:location isn't %NULL,
  * returns its display-name (see #G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME).
  * Otherwise returns "Untitled File N", with N the Nth untitled file of the
- * application, starting at 1. When an untitled file is closed, its number is
- * released and can be used by a later untitled file.
+ * application, starting at 1. When an untitled file is closed or its location
+ * is set, its untitled number is released and can be used by a later file.
  *
- * Returns: the @file short name.
- * Since: 1.0
+ * Returns: the @file short name. Free with g_free() when no longer needed.
+ * Since: 5.0
  */
-const gchar *
+gchar *
 tepl_file_get_short_name (TeplFile *file)
 {
 	g_return_val_if_fail (TEPL_IS_FILE (file), NULL);
 
-	return file->priv->short_name;
+	if (file->priv->untitled_number > 0)
+	{
+		return g_strdup_printf (_("Untitled File %d"), file->priv->untitled_number);
+	}
+
+	if (file->priv->display_name != NULL)
+	{
+		return g_strdup (file->priv->display_name);
+	}
+
+	return _tepl_utils_get_fallback_basename_for_display (file->priv->location);
 }
 
 void

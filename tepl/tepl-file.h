@@ -95,7 +95,7 @@ void			tepl_file_set_location			(TeplFile *file,
 								 GFile    *location);
 
 _TEPL_EXTERN
-const gchar *		tepl_file_get_short_name		(TeplFile *file);
+gchar *			tepl_file_get_short_name		(TeplFile *file);
 
 _TEPL_EXTERN
 TeplNewlineType		tepl_file_get_newline_type		(TeplFile *file);

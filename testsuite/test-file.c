@@ -11,14 +11,17 @@ check_short_name_is_untitled_file_number (TeplFile *file,
 					  gint      untitled_number)
 {
 	gchar *expected_short_name;
+	gchar *received_short_name;
 
 	/* For the translation it needs to be the exact same string as in the
 	 * TeplFile implementation, to be able to run the unit test with any
 	 * locale.
 	 */
 	expected_short_name = g_strdup_printf (_("Untitled File %d"), untitled_number);
-	g_assert_cmpstr (tepl_file_get_short_name (file), ==, expected_short_name);
+	received_short_name = tepl_file_get_short_name (file);
+	g_assert_cmpstr (received_short_name, ==, expected_short_name);
 	g_free (expected_short_name);
+	g_free (received_short_name);
 }
 
 static void

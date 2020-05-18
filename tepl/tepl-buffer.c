@@ -553,7 +553,7 @@ gchar *
 tepl_buffer_get_short_title (TeplBuffer *buffer)
 {
 	TeplBufferPrivate *priv;
-	const gchar *short_name;
+	gchar *short_name;
 	gchar *short_title;
 
 	g_return_val_if_fail (TEPL_IS_BUFFER (buffer), NULL);
@@ -565,10 +565,11 @@ tepl_buffer_get_short_title (TeplBuffer *buffer)
 	if (gtk_text_buffer_get_modified (GTK_TEXT_BUFFER (buffer)))
 	{
 		short_title = g_strconcat ("*", short_name, NULL);
+		g_free (short_name);
 	}
 	else
 	{
-		short_title = g_strdup (short_name);
+		short_title = short_name;
 	}
 
 	return short_title;

@@ -99,7 +99,7 @@ create_dialog (GTask *task)
 	TeplBuffer *buffer;
 	TeplFile *file;
 	GFile *location;
-	const gchar *file_short_name;
+	gchar *file_short_name;
 	GtkWidget *dialog;
 
 	tab = g_task_get_source_object (task);
@@ -116,6 +116,8 @@ create_dialog (GTask *task)
 					 GTK_BUTTONS_NONE,
 					 _("Save changes to file “%s” before closing?"),
 					 file_short_name);
+	g_free (file_short_name);
+	file_short_name = NULL;
 
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
 				_("Close _without Saving"), GTK_RESPONSE_CLOSE,

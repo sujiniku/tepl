@@ -1,5 +1,5 @@
 unit_tests = [
-  #'test-file',
+  'test-file',
   'test-file-saver',
   'test-fold-region',
   'test-info-bar',

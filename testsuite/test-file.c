@@ -1,9 +1,60 @@
-/* SPDX-FileCopyrightText: 2016 - Sébastien Wilmet <swilmet@gnome.org>
+/* SPDX-FileCopyrightText: 2016-2020 - Sébastien Wilmet <swilmet@gnome.org>
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
+#include "config.h"
 #include <tepl/tepl.h>
+#include <glib/gi18n-lib.h>
 
+static void
+check_short_name_is_untitled_file_number (TeplFile *file,
+					  gint      untitled_number)
+{
+	gchar *expected_short_name;
+
+	/* For the translation it needs to be the exact same string as in the
+	 * TeplFile implementation, to be able to run the unit test with any
+	 * locale.
+	 */
+	expected_short_name = g_strdup_printf (_("Untitled File %d"), untitled_number);
+	g_assert_cmpstr (tepl_file_get_short_name (file), ==, expected_short_name);
+	g_free (expected_short_name);
+}
+
+static void
+test_untitled_files (void)
+{
+	TeplFile *file1;
+	TeplFile *file2;
+	TeplFile *file3;
+	GFile *location;
+
+	file1 = tepl_file_new ();
+	check_short_name_is_untitled_file_number (file1, 1);
+
+	file2 = tepl_file_new ();
+	check_short_name_is_untitled_file_number (file2, 2);
+
+	/* Release an untitled number by destroying a file. */
+	g_object_unref (file1);
+	check_short_name_is_untitled_file_number (file2, 2); // still the same.
+	file1 = tepl_file_new ();
+	check_short_name_is_untitled_file_number (file1, 1);
+
+	/* Release an untitled number by setting a location. */
+	location = g_file_new_for_path ("location");
+	tepl_file_set_location (file1, location);
+	check_short_name_is_untitled_file_number (file2, 2); // still the same.
+	file3 = tepl_file_new ();
+	check_short_name_is_untitled_file_number (file3, 1);
+
+	g_object_unref (file1);
+	g_object_unref (file2);
+	g_object_unref (file3);
+	g_object_unref (location);
+}
+
+#if 0
 static void
 sleep_for_one_second (void)
 {
@@ -239,14 +290,19 @@ test_externally_modified (void)
 	g_object_unref (new_location);
 	g_object_unref (buffer);
 }
+#endif
 
-gint
-main (gint   argc,
-      gchar *argv[])
+int
+main (int    argc,
+      char **argv)
 {
 	gtk_test_init (&argc, &argv);
 
-	g_test_add_func ("/file/externally-modified", test_externally_modified);
+	g_test_add_func ("/file/untitled_files", test_untitled_files);
+
+#if 0
+	g_test_add_func ("/file/externally_modified", test_externally_modified);
+#endif
 
 	return g_test_run ();
 }

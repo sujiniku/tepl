@@ -119,9 +119,6 @@ _TEPL_EXTERN
 gboolean	 	tepl_file_is_deleted			(TeplFile *file);
 
 _TEPL_EXTERN
-gboolean	 	tepl_file_is_readonly			(TeplFile *file);
-
-_TEPL_EXTERN
 void			tepl_file_add_uri_to_recent_manager	(TeplFile *file);
 
 G_GNUC_INTERNAL
@@ -148,10 +145,6 @@ void			_tepl_file_set_externally_modified	(TeplFile *file,
 G_GNUC_INTERNAL
 void			_tepl_file_set_deleted			(TeplFile *file,
 								 gboolean  deleted);
-
-G_GNUC_INTERNAL
-void			_tepl_file_set_readonly			(TeplFile *file,
-								 gboolean  readonly);
 
 G_END_DECLS
 

@@ -43,7 +43,6 @@ struct _TeplFilePrivate
 
 	guint externally_modified : 1;
 	guint deleted : 1;
-	guint readonly : 1;
 };
 
 enum
@@ -51,7 +50,6 @@ enum
 	PROP_0,
 	PROP_LOCATION,
 	PROP_NEWLINE_TYPE,
-	PROP_READ_ONLY,
 	PROP_SHORT_NAME,
 	N_PROPERTIES
 };
@@ -129,10 +127,6 @@ tepl_file_get_property (GObject    *object,
 
 		case PROP_NEWLINE_TYPE:
 			g_value_set_enum (value, tepl_file_get_newline_type (file));
-			break;
-
-		case PROP_READ_ONLY:
-			g_value_set_boolean (value, tepl_file_is_readonly (file));
 			break;
 
 		case PROP_SHORT_NAME:
@@ -238,22 +232,6 @@ tepl_file_class_init (TeplFileClass *klass)
 				   TEPL_NEWLINE_TYPE_LF,
 				   G_PARAM_READABLE |
 				   G_PARAM_STATIC_STRINGS);
-
-	/**
-	 * TeplFile:read-only:
-	 *
-	 * Whether the file is read-only or not. The value of this property is
-	 * not updated automatically (there is no file monitors).
-	 *
-	 * Since: 1.0
-	 */
-	properties[PROP_READ_ONLY] =
-		g_param_spec_boolean ("read-only",
-				      "read-only",
-				      "",
-				      FALSE,
-				      G_PARAM_READABLE |
-				      G_PARAM_STATIC_STRINGS);
 
 	/**
 	 * TeplFile:short-name:
@@ -604,7 +582,7 @@ tepl_file_is_local (TeplFile *file)
  * @file: a #TeplFile.
  *
  * Checks synchronously the file on disk, to know whether the file is externally
- * modified, or has been deleted, and whether the file is read-only.
+ * modified or has been deleted.
  *
  * #TeplFile doesn't create a #GFileMonitor to track those properties, so
  * this function needs to be called instead. Creating lots of #GFileMonitor's
@@ -628,8 +606,7 @@ tepl_file_check_file_on_disk (TeplFile *file)
 	}
 
 	info = g_file_query_info (file->priv->location,
-				  G_FILE_ATTRIBUTE_ETAG_VALUE ","
-				  G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE,
+				  G_FILE_ATTRIBUTE_ETAG_VALUE,
 				  G_FILE_QUERY_INFO_NONE,
 				  NULL,
 				  NULL);
@@ -653,15 +630,6 @@ tepl_file_check_file_on_disk (TeplFile *file)
 		{
 			file->priv->externally_modified = TRUE;
 		}
-	}
-
-	if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE))
-	{
-		gboolean readonly;
-
-		readonly = !g_file_info_get_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE);
-
-		_tepl_file_set_readonly (file, readonly);
 	}
 
 	g_object_unref (info);
@@ -725,42 +693,6 @@ tepl_file_is_deleted (TeplFile *file)
 	g_return_val_if_fail (TEPL_IS_FILE (file), FALSE);
 
 	return file->priv->deleted;
-}
-
-void
-_tepl_file_set_readonly (TeplFile *file,
-			 gboolean  readonly)
-{
-	g_return_if_fail (TEPL_IS_FILE (file));
-
-	readonly = readonly != FALSE;
-
-	if (file->priv->readonly != readonly)
-	{
-		file->priv->readonly = readonly;
-		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_READ_ONLY]);
-	}
-}
-
-/**
- * tepl_file_is_readonly:
- * @file: a #TeplFile.
- *
- * Returns whether the file is read-only. If the
- * #TeplFile:location is %NULL, returns %FALSE.
- *
- * To have an up-to-date value, you must first call
- * tepl_file_check_file_on_disk().
- *
- * Returns: whether the file is read-only.
- * Since: 1.0
- */
-gboolean
-tepl_file_is_readonly (TeplFile *file)
-{
-	g_return_val_if_fail (TEPL_IS_FILE (file), FALSE);
-
-	return file->priv->readonly;
 }
 
 /**

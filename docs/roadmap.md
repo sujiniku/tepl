@@ -22,8 +22,8 @@ Build system: Autotools -> Meson
 - Status: **done**
 - Release: Tepl 5.0 (GNOME 3.38)
 
-Rework file metadata
---------------------
+A complete overhaul of file metadata
+------------------------------------
 
 - Status: **mostly done**
 - Target release: Tepl 5.0 (GNOME 3.38)
@@ -39,17 +39,20 @@ Tasks:
 - Keep only the TeplMetadataManager for storing metadata on disk, and
   re-implement it to no longer depend on the libxml2.
 
-Rework file loading and saving toolkit
---------------------------------------
+A complete overhaul of the file loading and saving toolkit
+----------------------------------------------------------
 
-- Status: **todo**
+- Status: **in progress**
 
 Tasks:
+- New and hopefully simpler implementation, the API will still be mostly the
+  same.
 - Use the [libicu](http://site.icu-project.org/) for character encoding
-  _auto-detection_, not
+  _conversion_, not iconv.
+- Use the libicu for character encoding _auto-detection_, not
   [uchardet](https://www.freedesktop.org/wiki/Software/uchardet/).
-- Use the libicu for character encoding _conversion_, not iconv.
-- Feature parity with the GtkSourceView file loading and saving API.
+- Almost have a feature parity with the GtkSourceView file loading and saving
+  API, drop gzip compression support and progress callbacks.
 - Replace the few functions that do sync I/O with async I/O.
 
 High-level file loading and saving API: separate it from the core framework
@@ -58,7 +61,7 @@ High-level file loading and saving API: separate it from the core framework
 - Status: **todo**
 
 The purpose is to have a more minimal core framework, and have the file loading
-and saving high-level API in a separate sub-namespace: TeplFls for instance.
+and saving high-level API in separate sub-namespace(s).
 
 Continue high-level file loading and saving implementation
 ----------------------------------------------------------

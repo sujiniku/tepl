@@ -283,7 +283,7 @@ tepl_file_saver_class_init (TeplFileSaverClass *klass)
 				   "newline-type",
 				   "",
 				   TEPL_TYPE_NEWLINE_TYPE,
-				   TEPL_NEWLINE_TYPE_LF,
+				   TEPL_NEWLINE_TYPE_DEFAULT,
 				   G_PARAM_READWRITE |
 				   G_PARAM_CONSTRUCT |
 				   G_PARAM_STATIC_STRINGS);
@@ -312,6 +312,9 @@ static void
 tepl_file_saver_init (TeplFileSaver *saver)
 {
 	saver->priv = tepl_file_saver_get_instance_private (saver);
+
+	saver->priv->newline_type = TEPL_NEWLINE_TYPE_DEFAULT;
+	saver->priv->flags = TEPL_FILE_SAVER_FLAGS_NONE;
 }
 
 /**

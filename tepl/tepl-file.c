@@ -279,6 +279,9 @@ update_short_name (TeplFile *file)
 {
 	if (file->priv->location == NULL)
 	{
+		g_free (file->priv->display_name);
+		file->priv->display_name = NULL;
+
 		if (file->priv->untitled_number == 0)
 		{
 			file->priv->untitled_number = allocate_first_available_untitled_number ();
@@ -294,7 +297,6 @@ update_short_name (TeplFile *file)
 		file->priv->untitled_number = 0;
 	}
 
-#if 0
 	/* Special case for URIs like "https://example.net". Querying the
 	 * display-name for those URIs return "/", which can be confused with
 	 * the local root directory.
@@ -302,10 +304,12 @@ update_short_name (TeplFile *file)
 	if (!g_file_has_uri_scheme (file->priv->location, "file") &&
 	    !g_file_has_parent (file->priv->location, NULL))
 	{
+		g_free (file->priv->display_name);
+		file->priv->display_name = NULL;
+
 		g_object_notify_by_pspec (G_OBJECT (file), properties[PROP_SHORT_NAME]);
 		return;
 	}
-#endif
 
 	g_file_query_info_async (file->priv->location,
 				 G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,

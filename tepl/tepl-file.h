@@ -107,16 +107,7 @@ void		 	tepl_file_set_mount_operation_factory	(TeplFile                  *file,
 								 GDestroyNotify             notify);
 
 _TEPL_EXTERN
-void		 	tepl_file_check_file_on_disk		(TeplFile *file);
-
-_TEPL_EXTERN
 gboolean	 	tepl_file_is_local			(TeplFile *file);
-
-_TEPL_EXTERN
-gboolean	 	tepl_file_is_externally_modified	(TeplFile *file);
-
-_TEPL_EXTERN
-gboolean	 	tepl_file_is_deleted			(TeplFile *file);
 
 _TEPL_EXTERN
 void			tepl_file_add_uri_to_recent_manager	(TeplFile *file);
@@ -137,14 +128,6 @@ const gchar *		_tepl_file_get_etag			(TeplFile *file);
 G_GNUC_INTERNAL
 void			_tepl_file_set_etag			(TeplFile    *file,
 								 const gchar *etag);
-
-G_GNUC_INTERNAL
-void			_tepl_file_set_externally_modified	(TeplFile *file,
-								 gboolean  externally_modified);
-
-G_GNUC_INTERNAL
-void			_tepl_file_set_deleted			(TeplFile *file,
-								 gboolean  deleted);
 
 G_END_DECLS
 

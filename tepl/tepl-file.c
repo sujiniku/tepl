@@ -40,9 +40,6 @@ struct _TeplFilePrivate
 	 * loading or file saving.
 	 */
 	gchar *etag;
-
-	guint externally_modified : 1;
-	guint deleted : 1;
 };
 
 enum
@@ -390,9 +387,6 @@ tepl_file_set_location (TeplFile *file,
 		g_free (file->priv->etag);
 		file->priv->etag = NULL;
 
-		file->priv->externally_modified = FALSE;
-		file->priv->deleted = FALSE;
-
 		update_short_name (file);
 	}
 }
@@ -575,124 +569,6 @@ tepl_file_is_local (TeplFile *file)
 	}
 
 	return g_file_has_uri_scheme (file->priv->location, "file");
-}
-
-/**
- * tepl_file_check_file_on_disk:
- * @file: a #TeplFile.
- *
- * Checks synchronously the file on disk, to know whether the file is externally
- * modified or has been deleted.
- *
- * #TeplFile doesn't create a #GFileMonitor to track those properties, so
- * this function needs to be called instead. Creating lots of #GFileMonitor's
- * would take lots of resources.
- *
- * Since this function is synchronous, it is advised to call it only on local
- * files. See tepl_file_is_local().
- *
- * Since: 1.0
- */
-void
-tepl_file_check_file_on_disk (TeplFile *file)
-{
-	GFileInfo *info;
-
-	g_return_if_fail (TEPL_IS_FILE (file));
-
-	if (file->priv->location == NULL)
-	{
-		return;
-	}
-
-	info = g_file_query_info (file->priv->location,
-				  G_FILE_ATTRIBUTE_ETAG_VALUE,
-				  G_FILE_QUERY_INFO_NONE,
-				  NULL,
-				  NULL);
-
-	if (info == NULL)
-	{
-		file->priv->deleted = TRUE;
-		return;
-	}
-
-	file->priv->deleted = FALSE;
-
-	if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_ETAG_VALUE) &&
-	    file->priv->etag != NULL)
-	{
-		const gchar *etag;
-
-		etag = g_file_info_get_etag (info);
-
-		if (g_strcmp0 (file->priv->etag, etag) != 0)
-		{
-			file->priv->externally_modified = TRUE;
-		}
-	}
-
-	g_object_unref (info);
-}
-
-void
-_tepl_file_set_externally_modified (TeplFile *file,
-				    gboolean  externally_modified)
-{
-	g_return_if_fail (TEPL_IS_FILE (file));
-
-	file->priv->externally_modified = externally_modified != FALSE;
-}
-
-/**
- * tepl_file_is_externally_modified:
- * @file: a #TeplFile.
- *
- * Returns whether the file is externally modified. If the
- * #TeplFile:location is %NULL, returns %FALSE.
- *
- * To have an up-to-date value, you must first call
- * tepl_file_check_file_on_disk().
- *
- * Returns: whether the file is externally modified.
- * Since: 1.0
- */
-gboolean
-tepl_file_is_externally_modified (TeplFile *file)
-{
-	g_return_val_if_fail (TEPL_IS_FILE (file), FALSE);
-
-	return file->priv->externally_modified;
-}
-
-void
-_tepl_file_set_deleted (TeplFile *file,
-			gboolean  deleted)
-{
-	g_return_if_fail (TEPL_IS_FILE (file));
-
-	file->priv->deleted = deleted != FALSE;
-}
-
-/**
- * tepl_file_is_deleted:
- * @file: a #TeplFile.
- *
- * Returns whether the file has been deleted. If the
- * #TeplFile:location is %NULL, returns %FALSE.
- *
- * To have an up-to-date value, you must first call
- * tepl_file_check_file_on_disk().
- *
- * Returns: whether the file has been deleted.
- * Since: 1.0
- */
-gboolean
-tepl_file_is_deleted (TeplFile *file)
-{
-	g_return_val_if_fail (TEPL_IS_FILE (file), FALSE);
-
-	return file->priv->deleted;
 }
 
 /**

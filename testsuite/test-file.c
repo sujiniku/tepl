@@ -51,6 +51,10 @@ test_untitled_files (void)
 	file3 = tepl_file_new ();
 	check_short_name_is_untitled_file_number (file3, 1);
 
+	/* Reset location to NULL. */
+	tepl_file_set_location (file1, NULL);
+	check_short_name_is_untitled_file_number (file1, 3);
+
 	g_object_unref (file1);
 	g_object_unref (file2);
 	g_object_unref (file3);

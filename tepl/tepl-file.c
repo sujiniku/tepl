@@ -184,14 +184,14 @@ tepl_file_dispose (GObject *object)
 static void
 tepl_file_finalize (GObject *object)
 {
-	TeplFilePrivate *priv = tepl_file_get_instance_private (TEPL_FILE (object));
+	TeplFile *file = TEPL_FILE (object);
 
-	g_free (priv->short_name);
-	g_free (priv->etag);
+	g_free (file->priv->short_name);
+	g_free (file->priv->etag);
 
-	if (priv->untitled_number > 0)
+	if (file->priv->untitled_number > 0)
 	{
-		release_untitled_number (priv->untitled_number);
+		release_untitled_number (file->priv->untitled_number);
 	}
 
 	G_OBJECT_CLASS (tepl_file_parent_class)->finalize (object);

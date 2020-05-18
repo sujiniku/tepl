@@ -227,7 +227,7 @@ tepl_file_class_init (TeplFileClass *klass)
 				   "newline-type",
 				   "",
 				   TEPL_TYPE_NEWLINE_TYPE,
-				   TEPL_NEWLINE_TYPE_LF,
+				   TEPL_NEWLINE_TYPE_DEFAULT,
 				   G_PARAM_READABLE |
 				   G_PARAM_STATIC_STRINGS);
 
@@ -321,7 +321,7 @@ tepl_file_init (TeplFile *file)
 {
 	file->priv = tepl_file_get_instance_private (file);
 
-	file->priv->newline_type = TEPL_NEWLINE_TYPE_LF;
+	file->priv->newline_type = TEPL_NEWLINE_TYPE_DEFAULT;
 	update_short_name (file);
 }
 

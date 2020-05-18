@@ -112,7 +112,6 @@ tepl_file_get_location
 tepl_file_set_location
 tepl_file_get_short_name
 tepl_file_get_newline_type
-tepl_file_is_local
 tepl_file_set_mount_operation_factory
 tepl_file_add_uri_to_recent_manager
 <SUBSECTION Standard>

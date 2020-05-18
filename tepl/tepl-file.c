@@ -549,29 +549,6 @@ _tepl_file_set_etag (TeplFile    *file,
 }
 
 /**
- * tepl_file_is_local:
- * @file: a #TeplFile.
- *
- * Returns whether the file is local. If the #TeplFile:location is %NULL,
- * returns %FALSE.
- *
- * Returns: whether the file is local.
- * Since: 1.0
- */
-gboolean
-tepl_file_is_local (TeplFile *file)
-{
-	g_return_val_if_fail (TEPL_IS_FILE (file), FALSE);
-
-	if (file->priv->location == NULL)
-	{
-		return FALSE;
-	}
-
-	return g_file_has_uri_scheme (file->priv->location, "file");
-}
-
-/**
  * tepl_file_add_uri_to_recent_manager:
  * @file: a #TeplFile.
  *

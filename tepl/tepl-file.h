@@ -107,9 +107,6 @@ void		 	tepl_file_set_mount_operation_factory	(TeplFile                  *file,
 								 GDestroyNotify             notify);
 
 _TEPL_EXTERN
-gboolean	 	tepl_file_is_local			(TeplFile *file);
-
-_TEPL_EXTERN
 void			tepl_file_add_uri_to_recent_manager	(TeplFile *file);
 
 G_GNUC_INTERNAL

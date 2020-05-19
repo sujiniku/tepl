@@ -311,6 +311,11 @@ update_short_name (TeplFile *file)
 		return;
 	}
 
+	/* Note: fetching the display name can take a lot of time, for example
+	 * for a remote location with a slow response time.
+	 * Tested with Slowwly, a test service to mock a slow http response:
+	 * http://slowwly.robertomurray.co.uk/
+	 */
 	g_file_query_info_async (file->priv->location,
 				 G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
 				 G_FILE_QUERY_INFO_NONE,

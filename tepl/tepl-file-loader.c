@@ -2,7 +2,9 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
+#include "config.h"
 #include "tepl-file-loader.h"
+#include <glib/gi18n-lib.h>
 
 /**
  * SECTION:file-loader
@@ -42,6 +44,8 @@ struct _TeplFileLoaderPrivate
 	TeplFile *file;
 
 	GFile *location;
+
+	guint is_loading : 1;
 };
 
 enum
@@ -298,6 +302,56 @@ tepl_file_loader_get_location (TeplFileLoader *loader)
 	return loader->priv->location;
 }
 
+static void
+load_contents_cb (GObject      *source_object,
+		  GAsyncResult *result,
+		  gpointer      user_data)
+{
+	GFile *location = G_FILE (source_object);
+	GTask *task = G_TASK (user_data);
+	TeplFileLoader *loader = g_task_get_source_object (task);
+	gchar *content = NULL;
+	gsize content_length = 0;
+	GError *error = NULL;
+
+	g_file_load_contents_finish (location,
+				     result,
+				     &content,
+				     &content_length,
+				     NULL,
+				     &error);
+
+	if (error != NULL)
+	{
+		g_task_return_error (task, error);
+		g_object_unref (task);
+		goto out;
+	}
+
+	if (!g_utf8_validate_len (content, content_length, NULL))
+	{
+		g_task_return_new_error (task,
+					 G_IO_ERROR,
+					 G_IO_ERROR_INVALID_DATA,
+					 _("The content must be encoded with the UTF-8 character encoding."));
+		g_object_unref (task);
+		goto out;
+	}
+
+	if (loader->priv->buffer != NULL)
+	{
+		gtk_text_buffer_set_text (GTK_TEXT_BUFFER (loader->priv->buffer),
+					  content,
+					  content_length);
+	}
+
+	g_task_return_boolean (task, TRUE);
+	g_object_unref (task);
+
+out:
+	g_free (content);
+}
+
 /**
  * tepl_file_loader_load_async:
  * @loader: a #TeplFileLoader.
@@ -321,8 +375,34 @@ tepl_file_loader_load_async (TeplFileLoader      *loader,
 			     GAsyncReadyCallback  callback,
 			     gpointer             user_data)
 {
+	GTask *task;
+
 	g_return_if_fail (TEPL_IS_FILE_LOADER (loader));
 	g_return_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable));
+	g_return_if_fail (!loader->priv->is_loading);
+
+	loader->priv->is_loading = TRUE;
+
+	task = g_task_new (loader, cancellable, callback, user_data);
+	g_task_set_priority (task, io_priority);
+
+	if (loader->priv->buffer == NULL ||
+	    loader->priv->file == NULL ||
+	    loader->priv->location == NULL)
+	{
+		g_task_return_boolean (task, FALSE);
+		g_object_unref (task);
+		return;
+	}
+
+	gtk_source_buffer_begin_not_undoable_action (GTK_SOURCE_BUFFER (loader->priv->buffer));
+	gtk_text_buffer_set_text (GTK_TEXT_BUFFER (loader->priv->buffer), "", -1);
+	gtk_text_buffer_set_modified (GTK_TEXT_BUFFER (loader->priv->buffer), FALSE);
+
+	g_file_load_contents_async (loader->priv->location,
+				    cancellable,
+				    load_contents_cb,
+				    task);
 }
 
 /**
@@ -345,5 +425,12 @@ tepl_file_loader_load_finish (TeplFileLoader  *loader,
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 	g_return_val_if_fail (g_task_is_valid (result, loader), FALSE);
 
-	return FALSE;
+	if (loader->priv->buffer != NULL)
+	{
+		gtk_source_buffer_end_not_undoable_action (GTK_SOURCE_BUFFER (loader->priv->buffer));
+		gtk_text_buffer_set_modified (GTK_TEXT_BUFFER (loader->priv->buffer), FALSE);
+	}
+
+	loader->priv->is_loading = FALSE;
+	return g_task_propagate_boolean (G_TASK (result), error);
 }

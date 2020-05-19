@@ -260,6 +260,15 @@ query_display_name_cb (GObject      *source_object,
 
 	info = g_file_query_info_finish (location, result, NULL);
 
+	/* Note: we ignore errors here, because there is no GError to report it.
+	 * The same error will probably occur when the user will load or save
+	 * the file, and in that case the FileLoader or FileSaver can report a
+	 * GError which can be displayed at an appropriate place in the UI.
+	 *
+	 * When querying the display name fails, the fallback short-name is used
+	 * instead.
+	 */
+
 	if (info != NULL)
 	{
 		g_free (file->priv->display_name);
@@ -315,6 +324,9 @@ update_short_name (TeplFile *file)
 	 * for a remote location with a slow response time.
 	 * Tested with Slowwly, a test service to mock a slow http response:
 	 * http://slowwly.robertomurray.co.uk/
+	 *
+	 * Note 2: the GFile location needs to really exist, if the file is not
+	 * found, then querying the display name fails.
 	 */
 	g_file_query_info_async (file->priv->location,
 				 G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,

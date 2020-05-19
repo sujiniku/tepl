@@ -543,7 +543,7 @@ tepl_buffer_is_untouched (TeplBuffer *buffer)
  *
  * Returns a title suitable for a tab label. It contains (in that order):
  * - '*' if the buffer is modified;
- * - the #TeplFile:short-name;
+ * - the #TeplFile:short-name.
  *
  * Returns: the @buffer short title. Free the return value with g_free() when no
  * longer needed.

@@ -6,22 +6,96 @@
 #include <tepl/tepl.h>
 #include <glib/gi18n-lib.h>
 
+typedef struct _WaitSignalData WaitSignalData;
+struct _WaitSignalData
+{
+	guint signal_received : 1;
+	guint nested_main_loop : 1;
+};
+
+static void
+wait_signal_cb (WaitSignalData *data)
+{
+	data->signal_received = TRUE;
+
+	if (data->nested_main_loop)
+	{
+		gtk_main_quit ();
+	}
+}
+
+static WaitSignalData *
+wait_signal_setup (GObject     *object,
+		   const gchar *detailed_signal_name)
+{
+	WaitSignalData *data;
+
+	data = g_new0 (WaitSignalData, 1);
+	data->signal_received = FALSE;
+	data->nested_main_loop = FALSE;
+
+	g_signal_connect_swapped (object,
+				  detailed_signal_name,
+				  G_CALLBACK (wait_signal_cb),
+				  data);
+
+	return data;
+}
+
+static void
+wait_signal (WaitSignalData *data)
+{
+	if (!data->signal_received)
+	{
+		data->nested_main_loop = TRUE;
+		gtk_main ();
+	}
+
+	g_free (data);
+}
+
+static void
+set_file_content (GFile       *file,
+		  const gchar *content)
+{
+	GError *error = NULL;
+
+	g_file_replace_contents (file,
+				 content,
+				 strlen (content),
+				 NULL,
+				 FALSE,
+				 G_FILE_CREATE_REPLACE_DESTINATION,
+				 NULL,
+				 NULL,
+				 &error);
+	g_assert_no_error (error);
+}
+
+static void
+check_short_name (TeplFile    *file,
+		  const gchar *expected_short_name)
+{
+	gchar *received_short_name;
+
+	received_short_name = tepl_file_get_short_name (file);
+	g_assert_cmpstr (received_short_name, ==, expected_short_name);
+	g_free (received_short_name);
+}
+
 static void
 check_short_name_is_untitled_file_number (TeplFile *file,
 					  gint      untitled_number)
 {
 	gchar *expected_short_name;
-	gchar *received_short_name;
 
 	/* For the translation it needs to be the exact same string as in the
 	 * TeplFile implementation, to be able to run the unit test with any
 	 * locale.
 	 */
 	expected_short_name = g_strdup_printf (_("Untitled File %d"), untitled_number);
-	received_short_name = tepl_file_get_short_name (file);
-	g_assert_cmpstr (received_short_name, ==, expected_short_name);
+	check_short_name (file, expected_short_name);
 	g_free (expected_short_name);
-	g_free (received_short_name);
 }
 
 static void
@@ -58,6 +132,65 @@ test_untitled_files (void)
 	g_object_unref (file1);
 	g_object_unref (file2);
 	g_object_unref (file3);
+	g_object_unref (location);
+}
+
+static void
+test_short_name (void)
+{
+	TeplFile *file;
+	GFile *location;
+	WaitSignalData *data;
+	GError *error = NULL;
+
+	location = g_file_new_build_filename (g_get_tmp_dir (), "tepl-test-file", NULL);
+
+	/* Get the fallback short-name, for a file that doesn't exist. */
+	g_file_delete (location, NULL, &error);
+	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
+	{
+		g_clear_error (&error);
+	}
+	g_assert_no_error (error);
+
+	file = tepl_file_new ();
+	data = wait_signal_setup (G_OBJECT (file), "notify::short-name");
+	tepl_file_set_location (file, location);
+	wait_signal (data);
+	check_short_name (file, "tepl-test-file");
+	g_object_unref (file);
+
+	/* Get the display-name for a local file (so the file must exist). */
+	set_file_content (location, "file content");
+
+	file = tepl_file_new ();
+	data = wait_signal_setup (G_OBJECT (file), "notify::short-name");
+	tepl_file_set_location (file, location);
+	wait_signal (data);
+	check_short_name (file, "tepl-test-file");
+	g_object_unref (file);
+	g_object_unref (location);
+
+	/* Test the special case for a remote location that has no parent GFile. */
+	location = g_file_new_for_uri ("https://swilmet.be");
+	file = tepl_file_new ();
+	data = wait_signal_setup (G_OBJECT (file), "notify::short-name");
+	tepl_file_set_location (file, location);
+	wait_signal (data);
+	check_short_name (file, "https://swilmet.be");
+	g_object_unref (file);
+	g_object_unref (location);
+
+	// It's not really important if the trailing slash is still present or
+	// not in the short-name, but test it anyway. The important thing is to
+	// have the https://swilmet.be prefix, with an optional trailing slash.
+	location = g_file_new_for_uri ("https://swilmet.be/");
+	file = tepl_file_new ();
+	data = wait_signal_setup (G_OBJECT (file), "notify::short-name");
+	tepl_file_set_location (file, location);
+	wait_signal (data);
+	check_short_name (file, "https://swilmet.be/");
+	g_object_unref (file);
 	g_object_unref (location);
 }
 
@@ -306,6 +439,7 @@ main (int    argc,
 	gtk_test_init (&argc, &argv);
 
 	g_test_add_func ("/file/untitled_files", test_untitled_files);
+	g_test_add_func ("/file/short_name", test_short_name);
 
 #if 0
 	g_test_add_func ("/file/externally_modified", test_externally_modified);

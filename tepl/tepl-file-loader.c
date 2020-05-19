@@ -340,9 +340,13 @@ load_contents_cb (GObject      *source_object,
 
 	if (loader->priv->buffer != NULL)
 	{
-		gtk_text_buffer_set_text (GTK_TEXT_BUFFER (loader->priv->buffer),
-					  content,
-					  content_length);
+		GtkTextBuffer *text_buffer = GTK_TEXT_BUFFER (loader->priv->buffer);
+		GtkTextIter start;
+
+		gtk_text_buffer_set_text (text_buffer, content, content_length);
+
+		gtk_text_buffer_get_start_iter (text_buffer, &start);
+		gtk_text_buffer_place_cursor (text_buffer, &start);
 	}
 
 	g_task_return_boolean (task, TRUE);

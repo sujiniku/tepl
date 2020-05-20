@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-04-25 13:41+0000\n"
-"PO-Revision-Date: 2020-04-30 12:48+0200\n"
+"POT-Creation-Date: 2020-05-19 00:52+0000\n"
+"PO-Revision-Date: 2020-05-20 12:12+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -25,380 +25,199 @@ msgstr ""
 #. document. For example a LaTeX document can be composed of
 #. several _files_. Or for source code we do not really create a
 #. new "document".
-#: tepl/tepl-application.c:94
+#: tepl/tepl-application.c:79
 msgid "_New"
 msgstr "_Nuevo"
 
-#: tepl/tepl-application.c:95
+#: tepl/tepl-application.c:80
 msgid "New file"
 msgstr "Archivo nuevo"
 
-#: tepl/tepl-application.c:97
+#: tepl/tepl-application.c:82
 msgid "New _Window"
 msgstr "_Ventana nueva"
 
-#: tepl/tepl-application.c:98
+#: tepl/tepl-application.c:83
 msgid "Create a new window"
 msgstr "Crear una ventana nueva"
 
-#: tepl/tepl-application.c:100 tepl/tepl-application-window.c:190
+#: tepl/tepl-application.c:85 tepl/tepl-window-actions-file.c:82
 msgid "_Open"
 msgstr "Ab_rir"
 
-#: tepl/tepl-application.c:101
+#: tepl/tepl-application.c:86
 msgid "Open a file"
 msgstr "Abrir un archivo"
 
-#: tepl/tepl-application.c:103 tepl/tepl-close-confirm-dialog-single.c:143
-#: tepl/tepl-tab.c:764
+#: tepl/tepl-application.c:88 tepl/tepl-close-confirm-dialog-single.c:130
+#: tepl/tepl-tab.c:751
 msgid "_Save"
 msgstr "_Guardar"
 
-#: tepl/tepl-application.c:104
+#: tepl/tepl-application.c:89
 msgid "Save the current file"
 msgstr "Guardar el archivo actual"
 
-#: tepl/tepl-application.c:106
+#: tepl/tepl-application.c:91
 msgid "Save _As"
 msgstr "Guardar _como"
 
-#: tepl/tepl-application.c:107
+#: tepl/tepl-application.c:92
 msgid "Save the current file to a different location"
 msgstr "Guarda el archivo actual en un lugar diferente"
 
 #. Edit menu
-#: tepl/tepl-application.c:111
+#: tepl/tepl-application.c:96
 msgid "_Undo"
 msgstr "Des_hacer"
 
-#: tepl/tepl-application.c:112
+#: tepl/tepl-application.c:97
 msgid "Undo the last action"
 msgstr "Deshace la última acción"
 
-#: tepl/tepl-application.c:114
+#: tepl/tepl-application.c:99
 msgid "_Redo"
 msgstr "_Rehacer"
 
-#: tepl/tepl-application.c:115
+#: tepl/tepl-application.c:100
 msgid "Redo the last undone action"
 msgstr "Rehacer la última acción deshecha"
 
-#: tepl/tepl-application.c:117
+#: tepl/tepl-application.c:102
 msgid "Cu_t"
 msgstr "C_ortar"
 
-#: tepl/tepl-application.c:118
+#: tepl/tepl-application.c:103
 msgid "Cut the selection"
 msgstr "Cortar la selección"
 
-#: tepl/tepl-application.c:120
+#: tepl/tepl-application.c:105
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: tepl/tepl-application.c:121
+#: tepl/tepl-application.c:106
 msgid "Copy the selection"
 msgstr "Copiar la selección"
 
-#: tepl/tepl-application.c:123
+#: tepl/tepl-application.c:108
 msgid "_Paste"
 msgstr "_Pegar"
 
-#: tepl/tepl-application.c:124
+#: tepl/tepl-application.c:109
 msgid "Paste the clipboard"
 msgstr "Pegar del portapapeles"
 
-#: tepl/tepl-application.c:126
+#: tepl/tepl-application.c:111
 msgid "_Delete"
 msgstr "_Eliminar"
 
-#: tepl/tepl-application.c:127
+#: tepl/tepl-application.c:112
 msgid "Delete the selected text"
 msgstr "Eliminar el texto seleccionado"
 
-#: tepl/tepl-application.c:129
+#: tepl/tepl-application.c:114
 msgid "Select _All"
 msgstr "Seleccionar _todo"
 
-#: tepl/tepl-application.c:130
+#: tepl/tepl-application.c:115
 msgid "Select all the text"
 msgstr "Seleccionar todo el texto"
 
-#: tepl/tepl-application.c:132
+#: tepl/tepl-application.c:117
 msgid "_Indent"
 msgstr "_Sangrar"
 
-#: tepl/tepl-application.c:133
+#: tepl/tepl-application.c:118
 msgid "Indent the selected lines"
 msgstr "Sangrar las líneas seleccionadas"
 
-#: tepl/tepl-application.c:135
+#: tepl/tepl-application.c:120
 msgid "_Unindent"
 msgstr "Qui_tar sangrado"
 
-#: tepl/tepl-application.c:136
+#: tepl/tepl-application.c:121
 msgid "Unindent the selected lines"
 msgstr "Quitar sangrado de las líneas seleccionadas"
 
 #. Search menu
-#: tepl/tepl-application.c:140
+#: tepl/tepl-application.c:125
 msgid "_Go to Line…"
 msgstr "_Ir a la línea…"
 
-#: tepl/tepl-application.c:141
+#: tepl/tepl-application.c:126
 msgid "Go to a specific line"
 msgstr "Ir a una línea específica"
 
-#. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
-#. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
-#. * doesn't have the real path to the file, so it would ruin some
-#. * features for text editors:
-#. * - showing the directory in parentheses in the window title, or in the
-#. *   tab tooltip;
-#. * - opening a recent file.
-#. * Basically everywhere where the directory is shown.
-#.
-#: tepl/tepl-application-window.c:186
-msgid "Open File"
-msgstr "Abrir archivo"
-
-#: tepl/tepl-application-window.c:189
-#: tepl/tepl-close-confirm-dialog-single.c:137 tepl/tepl-tab.c:763
-msgid "_Cancel"
-msgstr "_Cancelar"
-
-#: tepl/tepl-application-window.c:804
+#: tepl/tepl-application-window.c:155
 msgid "Read-Only"
 msgstr "Sólo lectura"
 
-#: tepl/tepl-close-confirm-dialog-single.c:132
+#: tepl/tepl-close-confirm-dialog-single.c:117
 #, c-format
 msgid "Save changes to file “%s” before closing?"
 msgstr "¿Quiere guardar los cambios en el archivo «%s» antes de cerrar?"
 
-#: tepl/tepl-close-confirm-dialog-single.c:136
+#: tepl/tepl-close-confirm-dialog-single.c:123
 msgid "Close _without Saving"
 msgstr "Cerrar _sin guardar"
 
-#: tepl/tepl-close-confirm-dialog-single.c:149
+#: tepl/tepl-close-confirm-dialog-single.c:124 tepl/tepl-tab.c:750
+#: tepl/tepl-window-actions-file.c:81
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#: tepl/tepl-close-confirm-dialog-single.c:136
 msgid "_Save As…"
 msgstr "Guardar _como…"
 
-#. UTF-8 first, so that it's the first encoding returned by
-#. * tepl_encoding_get_all().
-#.
-#: tepl/tepl-encoding.c:115 tepl/tepl-encoding.c:132 tepl/tepl-encoding.c:133
-#: tepl/tepl-encoding.c:134 tepl/tepl-encoding.c:135 tepl/tepl-encoding.c:136
-#: tepl/tepl-encoding.c:137 tepl/tepl-encoding.c:138
-msgid "Unicode"
-msgstr "Unicode"
-
-#. FIXME GEOSTD8 ?
-#: tepl/tepl-encoding.c:117 tepl/tepl-encoding.c:129 tepl/tepl-encoding.c:157
-#: tepl/tepl-encoding.c:180
-msgid "Western"
-msgstr "Occidental"
-
-#: tepl/tepl-encoding.c:118 tepl/tepl-encoding.c:158 tepl/tepl-encoding.c:178
-msgid "Central European"
-msgstr "Europa central"
-
-#: tepl/tepl-encoding.c:119
-msgid "South European"
-msgstr "Europa del sur"
-
-#: tepl/tepl-encoding.c:120 tepl/tepl-encoding.c:127 tepl/tepl-encoding.c:185
-msgid "Baltic"
-msgstr "Báltico"
-
-#: tepl/tepl-encoding.c:121 tepl/tepl-encoding.c:159 tepl/tepl-encoding.c:166
-#: tepl/tepl-encoding.c:168 tepl/tepl-encoding.c:169 tepl/tepl-encoding.c:179
-msgid "Cyrillic"
-msgstr "Cirílico"
-
-#: tepl/tepl-encoding.c:122 tepl/tepl-encoding.c:162 tepl/tepl-encoding.c:184
-msgid "Arabic"
-msgstr "Árabe"
-
-#: tepl/tepl-encoding.c:123 tepl/tepl-encoding.c:181
-msgid "Greek"
-msgstr "Griego"
-
-#: tepl/tepl-encoding.c:124
-msgid "Hebrew Visual"
-msgstr "Hebreo visual"
-
-#: tepl/tepl-encoding.c:125 tepl/tepl-encoding.c:160 tepl/tepl-encoding.c:182
-msgid "Turkish"
-msgstr "Turco"
-
-#: tepl/tepl-encoding.c:126
-msgid "Nordic"
-msgstr "Nórdico"
-
-#: tepl/tepl-encoding.c:128
-msgid "Celtic"
-msgstr "Celta"
-
-#: tepl/tepl-encoding.c:130
-msgid "Romanian"
-msgstr "Rumano"
-
-#: tepl/tepl-encoding.c:140
-msgid "Armenian"
-msgstr "Armenio"
-
-#: tepl/tepl-encoding.c:141 tepl/tepl-encoding.c:142 tepl/tepl-encoding.c:150
-msgid "Chinese Traditional"
-msgstr "Chino tradicional"
-
-#: tepl/tepl-encoding.c:143
-msgid "Cyrillic/Russian"
-msgstr "Cirílico/Ruso"
-
-#: tepl/tepl-encoding.c:145 tepl/tepl-encoding.c:146 tepl/tepl-encoding.c:147
-#: tepl/tepl-encoding.c:164 tepl/tepl-encoding.c:172
-msgid "Japanese"
-msgstr "Japones"
-
-#: tepl/tepl-encoding.c:149 tepl/tepl-encoding.c:165 tepl/tepl-encoding.c:167
-#: tepl/tepl-encoding.c:175
-msgid "Korean"
-msgstr "Coreano"
-
-#: tepl/tepl-encoding.c:152 tepl/tepl-encoding.c:153 tepl/tepl-encoding.c:154
-msgid "Chinese Simplified"
-msgstr "Chino simplificado"
-
-#: tepl/tepl-encoding.c:155
-msgid "Georgian"
-msgstr "Georgiano"
-
-#: tepl/tepl-encoding.c:161 tepl/tepl-encoding.c:183
-msgid "Hebrew"
-msgstr "Hebreo"
-
-#: tepl/tepl-encoding.c:170
-msgid "Cyrillic/Ukrainian"
-msgstr "Cirílico/Ucraniano"
-
-#: tepl/tepl-encoding.c:173 tepl/tepl-encoding.c:176 tepl/tepl-encoding.c:186
-msgid "Vietnamese"
-msgstr "Vietnamita"
-
-#: tepl/tepl-encoding.c:174
-msgid "Thai"
-msgstr "Tailandés"
-
-#: tepl/tepl-encoding.c:370
-msgid "Unknown"
-msgstr "Desconocido"
-
-#. Translators: This is the sorted list of encodings used by Tepl for
-#. * automatic detection of the file encoding. You may want to customize
-#. * it adding encodings that are common in your country, for instance the
-#. * GB18030 encoding for the Chinese translation. You may also want to
-#. * remove the ISO-8859-15 encoding (covering English and most Western
-#. * European languages) if you think people in your country will rarely
-#. * use it. 'CURRENT' is a magic value used by Tepl and it represents
-#. * the encoding for the current locale, so please don't translate the
-#. * 'CURRENT' term. Keep the same format: square brackets, single quotes,
-#. * commas.
-#.
-#: tepl/tepl-encoding.c:695
-msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
-msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
-
-#: tepl/tepl-encoding-converter.c:305
-#, c-format
-msgid "Conversion from character set “%s” to “%s” is not supported."
-msgstr ""
-"La conversión desde el conjunto de caracteres «%s» a «%s» no está soportada."
-
-#: tepl/tepl-encoding-converter.c:314
-#, c-format
-msgid "Could not open converter from “%s” to “%s”: %s"
-msgstr "No se pudo abrir el conversor de «%s» a «%s»: %s"
-
-#: tepl/tepl-encoding-converter.c:374
-msgid "The input data contains an invalid sequence."
-msgstr "Los datos de entrada contienen una secuencia no válida."
-
-#: tepl/tepl-encoding-converter.c:383
-#, c-format
-msgid "Error when converting data: %s"
-msgstr "Error al convertir los datos: %s"
-
-#: tepl/tepl-encoding-converter.c:562
-msgid "The input data ends with an incomplete multi-byte sequence."
-msgstr ""
-"Los datos de entrada terminan con una secuencia de varios bytes incompleta."
-
-#: tepl/tepl-encoding-converter.c:585
-msgid "The input content ends with incomplete data."
-msgstr "El contenido de la entrada termina con datos incompletos."
-
-#: tepl/tepl-file.c:408
+#: tepl/tepl-file.c:409
 #, c-format
 msgid "Untitled File %d"
 msgstr "Archivo sin título %d"
 
-#: tepl/tepl-file-content-loader.c:336
-#, c-format
-msgid "The file is too big. Maximum %s can be loaded."
-msgstr "El archivo es demasiado grande. Sólo se puede cargar un máximo de %s."
+#: tepl/tepl-file-loader.c:336
+msgid "The content must be encoded with the UTF-8 character encoding."
+msgstr "El contenido se debe codificar con UTF-8."
 
-#: tepl/tepl-file-loader.c:869
-msgid "It is not possible to detect the character encoding automatically."
-msgstr "No es posible detectar la codificación de caracteres automáticamente."
-
-#: tepl/tepl-file-saver.c:781
-msgid "The file is externally modified."
-msgstr "El archivo se ha modificado externamente."
-
-#: tepl/tepl-file-saver.c:1315
-msgid "The buffer contains invalid characters."
-msgstr "El búfer contiene caracteres no válidos."
-
-#: tepl/tepl-goto-line-bar.c:208
+#: tepl/tepl-goto-line-bar.c:235
 msgid "Go to line:"
 msgstr "Ir a la línea:"
 
-#: tepl/tepl-goto-line-bar.c:216
-#| msgid "Close file"
+#: tepl/tepl-goto-line-bar.c:243
 msgid "Close"
 msgstr "Cerrar"
 
-#: tepl/tepl-io-error-info-bars.c:57
+#: tepl/tepl-io-error-info-bars.c:42
 msgid "_Edit Anyway"
 msgstr "_Editar de todas formas"
 
-#: tepl/tepl-io-error-info-bars.c:61
+#: tepl/tepl-io-error-info-bars.c:46
 msgid "_Don’t Edit"
 msgstr "_No editar"
 
-#: tepl/tepl-io-error-info-bars.c:67
+#: tepl/tepl-io-error-info-bars.c:52
 #, c-format
 msgid "This file “%s” is already open in another window."
 msgstr "Este archivo «%s» ya está abierto en otra ventana."
 
-#: tepl/tepl-io-error-info-bars.c:72
+#: tepl/tepl-io-error-info-bars.c:57
 msgid "Do you want to edit it anyway?"
 msgstr "¿Quiere editarlo de todas formas?"
 
-#: tepl/tepl-io-error-info-bars.c:106 tepl/tepl-io-error-info-bars.c:208
+#: tepl/tepl-io-error-info-bars.c:91 tepl/tepl-io-error-info-bars.c:193
 msgid "S_ave Anyway"
 msgstr "Gu_ardar de todos modos"
 
-#: tepl/tepl-io-error-info-bars.c:110 tepl/tepl-io-error-info-bars.c:212
+#: tepl/tepl-io-error-info-bars.c:95 tepl/tepl-io-error-info-bars.c:197
 msgid "_Don’t Save"
 msgstr "_No guardar"
 
-#: tepl/tepl-io-error-info-bars.c:116
+#: tepl/tepl-io-error-info-bars.c:101
 #, c-format
 msgid "Could not create a backup file while saving “%s”"
 msgstr "No se pudo crear un archivo de respaldo al guardar «%s»"
 
-#: tepl/tepl-io-error-info-bars.c:121
+#: tepl/tepl-io-error-info-bars.c:106
 msgid ""
 "Could not back up the old copy of the file before saving the new one. You "
 "can ignore this warning and save the file anyway, but if an error occurs "
@@ -409,30 +228,30 @@ msgstr ""
 "ocurre un error al guardar perderá la copia anterior del archivo. ¿Quiere "
 "guardar de todas formas?"
 
-#: tepl/tepl-io-error-info-bars.c:130
+#: tepl/tepl-io-error-info-bars.c:115
 #, c-format
 msgid "Error message: %s"
 msgstr "Mensaje de error: %s"
 
-#: tepl/tepl-io-error-info-bars.c:167
+#: tepl/tepl-io-error-info-bars.c:152
 #, c-format
 msgid "The file “%s” changed on disk."
 msgstr "El archivo «%s» ha cambiado en el disco."
 
-#: tepl/tepl-io-error-info-bars.c:172
+#: tepl/tepl-io-error-info-bars.c:157
 msgid "Drop Changes and _Reload"
 msgstr "Descartar cambios y _recargar"
 
-#: tepl/tepl-io-error-info-bars.c:172
+#: tepl/tepl-io-error-info-bars.c:157
 msgid "_Reload"
 msgstr "_Recargar"
 
-#: tepl/tepl-io-error-info-bars.c:218
+#: tepl/tepl-io-error-info-bars.c:203
 #, c-format
 msgid "Some invalid characters have been detected while saving “%s”."
 msgstr "Se han detectado algunos caracteres no válidos al guardar «%s»."
 
-#: tepl/tepl-io-error-info-bars.c:223
+#: tepl/tepl-io-error-info-bars.c:208
 msgid ""
 "If you continue saving this file you can corrupt the document. Save anyway?"
 msgstr ""
@@ -440,72 +259,198 @@ msgstr ""
 "guardarlo de todas formas?"
 
 #. Translators: do not translate <metadata>.
-#: tepl/tepl-metadata-parser.c:98
+#: tepl/tepl-metadata-parser.c:83
 #, c-format
 msgid "The XML file must start with a <metadata> element, not “%s”."
 msgstr "El archivo XML debe empezar con un elemento <metadata>, no con «%s»."
 
 #. Translators: do not translate <document>.
-#: tepl/tepl-metadata-parser.c:130
+#: tepl/tepl-metadata-parser.c:115
 #, c-format
 msgid "Expected a <document> element, got “%s” instead."
 msgstr "Se esperaba un elemento <document>, se obtuvo «%s» en su lugar."
 
 #. Translators: do not translate “atime”.
-#: tepl/tepl-metadata-parser.c:156
+#: tepl/tepl-metadata-parser.c:141
 #, c-format
 msgid "Failed to parse the “atime” attribute value “%s”."
 msgstr "Falló al analizar el atributo «atime» del valor «%s»."
 
 #. Translators: do not translate <document>, “uri” and “atime”.
-#: tepl/tepl-metadata-parser.c:171
+#: tepl/tepl-metadata-parser.c:156
 msgid "The <document> element must contain the “uri” and “atime” attributes."
 msgstr "El elemento <document> debe contener los atributos «uri» y «atime»."
 
 #. Translators: do not translate <entry>.
-#: tepl/tepl-metadata-parser.c:200
+#: tepl/tepl-metadata-parser.c:185
 #, c-format
 msgid "Expected an <entry> element, got “%s” instead."
 msgstr "Se esperaba un elemento <entry>, se obtuvo «%s» en su lugar."
 
 #. Translators: do not translate <entry>, “key” and “value”.
-#: tepl/tepl-metadata-parser.c:226
-#| msgid "The <entry> element must contain the “key” and “value” attributes."
+#: tepl/tepl-metadata-parser.c:211
 msgid "The <entry> element is missing the “key” or “value” attribute."
 msgstr "El elemento <entry> debe contener los atributos «key» o «value»."
 
-#: tepl/tepl-panel.c:107
+#: tepl/tepl-panel.c:92
 msgid "Hide panel"
 msgstr "Ocultar panel"
 
 #. Translators: "Ln" is an abbreviation for "Line", Col is an
 #. * abbreviation for "Column". Please, use abbreviations if possible.
 #.
-#: tepl/tepl-statusbar.c:118
+#: tepl/tepl-statusbar.c:103
 #, c-format
 msgid "Ln %d, Col %d"
 msgstr "Ln %d, Col %d"
 
-#: tepl/tepl-tab.c:546
+#: tepl/tepl-tab.c:534
 msgid "Error when loading the file."
 msgstr "Error al cargar el archivo."
 
-#: tepl/tepl-tab.c:760
+#: tepl/tepl-tab.c:747
 msgid "Save File"
 msgstr "Guardar archivo"
 
 #. Translators: location of a file.
-#: tepl/tepl-tab-label.c:272
+#: tepl/tepl-tab-label.c:249
 msgid "Location:"
 msgstr "Ubicación:"
 
-#: tepl/tepl-tab-label.c:341
+#: tepl/tepl-tab-label.c:318
 msgid "Close file"
 msgstr "Cerrar archivo"
 
-#: tepl/tepl-tab-saving.c:62
+#: tepl/tepl-tab-saving.c:47
 msgid "Error when saving the file."
 msgstr "Error al guardar el archivo."
+
+#. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
+#. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
+#. * doesn't have the real path to the file, so it would ruin some
+#. * features for text editors:
+#. * - showing the directory in parentheses in the window title, or in the
+#. *   tab tooltip;
+#. * - opening a recent file.
+#. * Basically everywhere where the directory is shown.
+#.
+#: tepl/tepl-window-actions-file.c:78
+msgid "Open File"
+msgstr "Abrir archivo"
+
+#~ msgid "Unicode"
+#~ msgstr "Unicode"
+
+#~ msgid "Western"
+#~ msgstr "Occidental"
+
+#~ msgid "Central European"
+#~ msgstr "Europa central"
+
+#~ msgid "South European"
+#~ msgstr "Europa del sur"
+
+#~ msgid "Baltic"
+#~ msgstr "Báltico"
+
+#~ msgid "Cyrillic"
+#~ msgstr "Cirílico"
+
+#~ msgid "Arabic"
+#~ msgstr "Árabe"
+
+#~ msgid "Greek"
+#~ msgstr "Griego"
+
+#~ msgid "Hebrew Visual"
+#~ msgstr "Hebreo visual"
+
+#~ msgid "Turkish"
+#~ msgstr "Turco"
+
+#~ msgid "Nordic"
+#~ msgstr "Nórdico"
+
+#~ msgid "Celtic"
+#~ msgstr "Celta"
+
+#~ msgid "Romanian"
+#~ msgstr "Rumano"
+
+#~ msgid "Armenian"
+#~ msgstr "Armenio"
+
+#~ msgid "Chinese Traditional"
+#~ msgstr "Chino tradicional"
+
+#~ msgid "Cyrillic/Russian"
+#~ msgstr "Cirílico/Ruso"
+
+#~ msgid "Japanese"
+#~ msgstr "Japones"
+
+#~ msgid "Korean"
+#~ msgstr "Coreano"
+
+#~ msgid "Chinese Simplified"
+#~ msgstr "Chino simplificado"
+
+#~ msgid "Georgian"
+#~ msgstr "Georgiano"
+
+#~ msgid "Hebrew"
+#~ msgstr "Hebreo"
+
+#~ msgid "Cyrillic/Ukrainian"
+#~ msgstr "Cirílico/Ucraniano"
+
+#~ msgid "Vietnamese"
+#~ msgstr "Vietnamita"
+
+#~ msgid "Thai"
+#~ msgstr "Tailandés"
+
+#~ msgid "Unknown"
+#~ msgstr "Desconocido"
+
+#~ msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
+#~ msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
+
+#~ msgid "Conversion from character set “%s” to “%s” is not supported."
+#~ msgstr ""
+#~ "La conversión desde el conjunto de caracteres «%s» a «%s» no está "
+#~ "soportada."
+
+#~ msgid "Could not open converter from “%s” to “%s”: %s"
+#~ msgstr "No se pudo abrir el conversor de «%s» a «%s»: %s"
+
+#~ msgid "The input data contains an invalid sequence."
+#~ msgstr "Los datos de entrada contienen una secuencia no válida."
+
+#~ msgid "Error when converting data: %s"
+#~ msgstr "Error al convertir los datos: %s"
+
+#~ msgid "The input data ends with an incomplete multi-byte sequence."
+#~ msgstr ""
+#~ "Los datos de entrada terminan con una secuencia de varios bytes "
+#~ "incompleta."
+
+#~ msgid "The input content ends with incomplete data."
+#~ msgstr "El contenido de la entrada termina con datos incompletos."
+
+#~ msgid "The file is too big. Maximum %s can be loaded."
+#~ msgstr ""
+#~ "El archivo es demasiado grande. Sólo se puede cargar un máximo de %s."
+
+#~ msgid "It is not possible to detect the character encoding automatically."
+#~ msgstr ""
+#~ "No es posible detectar la codificación de caracteres automáticamente."
+
+#~ msgid "The file is externally modified."
+#~ msgstr "El archivo se ha modificado externamente."
+
+#~ msgid "The buffer contains invalid characters."
+#~ msgstr "El búfer contiene caracteres no válidos."
 
 #~ msgid "Open “%s”"
 #~ msgstr "Abrir «%s»"

@@ -4,24 +4,7 @@
 
 #include <tepl/tepl.h>
 #include <string.h>
-
-static void
-set_file_content (GFile       *file,
-		  const gchar *content)
-{
-	GError *error = NULL;
-
-	g_file_replace_contents (file,
-				 content,
-				 strlen (content),
-				 NULL,
-				 FALSE,
-				 G_FILE_CREATE_REPLACE_DESTINATION,
-				 NULL,
-				 NULL,
-				 &error);
-	g_assert_no_error (error);
-}
+#include "tepl-test-utils.h"
 
 static GFile *
 get_tmp_location (void)
@@ -175,7 +158,7 @@ test_utf8_file (void)
 
 	location = get_tmp_location ();
 	content = "Valid UTF-8: ÉÈßÇ";
-	set_file_content (location, content);
+	_tepl_test_utils_set_file_content (location, content);
 
 	tepl_file_set_location (file, location);
 	loader = tepl_file_loader_new (buffer, file);

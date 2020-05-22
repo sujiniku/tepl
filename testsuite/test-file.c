@@ -5,6 +5,7 @@
 #include "config.h"
 #include <tepl/tepl.h>
 #include <glib/gi18n-lib.h>
+#include "tepl-test-utils.h"
 
 typedef struct _WaitSignalData WaitSignalData;
 struct _WaitSignalData
@@ -52,24 +53,6 @@ wait_signal (WaitSignalData *data)
 	}
 
 	g_free (data);
-}
-
-static void
-set_file_content (GFile       *file,
-		  const gchar *content)
-{
-	GError *error = NULL;
-
-	g_file_replace_contents (file,
-				 content,
-				 strlen (content),
-				 NULL,
-				 FALSE,
-				 G_FILE_CREATE_REPLACE_DESTINATION,
-				 NULL,
-				 NULL,
-				 &error);
-	g_assert_no_error (error);
 }
 
 static void
@@ -161,7 +144,7 @@ test_short_name (void)
 	g_object_unref (file);
 
 	/* Get the display-name for a local file (so the file must exist). */
-	set_file_content (location, "file content");
+	_tepl_test_utils_set_file_content (location, "file content");
 
 	file = tepl_file_new ();
 	data = wait_signal_setup (G_OBJECT (file), "notify::short-name");

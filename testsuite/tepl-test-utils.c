@@ -49,6 +49,19 @@ _tepl_test_utils_check_file_content (GFile       *file,
 	g_free (received_file_content);
 }
 
+void
+_tepl_test_utils_check_equal_files_content (GFile *file1,
+					    GFile *file2)
+{
+	gchar *file1_content = _tepl_test_utils_get_file_content (file1);
+	gchar *file2_content = _tepl_test_utils_get_file_content (file2);
+
+	g_assert_true (g_str_equal (file1_content, file2_content));
+
+	g_free (file1_content);
+	g_free (file2_content);
+}
+
 struct _TeplWaitSignalData
 {
 	guint signal_received : 1;

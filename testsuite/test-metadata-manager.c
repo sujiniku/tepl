@@ -3,6 +3,7 @@
  */
 
 #include <tepl/tepl.h>
+#include "tepl-test-utils.h"
 
 static void
 check_get (TeplMetadata *metadata,
@@ -23,32 +24,6 @@ get_store_file_for_test_data_filename (const gchar *filename)
 					  "test-metadata-manager-data",
 					  filename,
 					  NULL);
-}
-
-static gchar *
-get_file_content (GFile *file)
-{
-	GError *error = NULL;
-	gchar *file_content = NULL;
-
-	g_file_load_contents (file, NULL, &file_content, NULL, NULL, &error);
-	g_assert_no_error (error);
-	g_assert_true (file_content != NULL);
-
-	return file_content;
-}
-
-static void
-check_equal_file_content (GFile *file1,
-			  GFile *file2)
-{
-	gchar *file1_content = get_file_content (file1);
-	gchar *file2_content = get_file_content (file2);
-
-	g_assert_true (g_str_equal (file1_content, file2_content));
-
-	g_free (file1_content);
-	g_free (file2_content);
 }
 
 static GFile *
@@ -292,7 +267,7 @@ test_trim (void)
 
 	file_after = save_metadata_manager ();
 	expected_file_after = get_store_file_for_test_data_filename ("expected-to-succeed-01-trim-after.xml");
-	check_equal_file_content (file_after, expected_file_after);
+	_tepl_test_utils_check_equal_files_content (file_after, expected_file_after);
 
 	g_object_unref (file_before);
 	g_object_unref (file_after);

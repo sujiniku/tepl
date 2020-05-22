@@ -9,8 +9,16 @@
 
 G_BEGIN_DECLS
 
+typedef struct _TeplWaitSignalData TeplWaitSignalData;
+
 void	_tepl_test_utils_set_file_content	(GFile       *file,
 						 const gchar *content);
+
+TeplWaitSignalData *
+	_tepl_test_utils_wait_signal_setup	(GObject     *object,
+						 const gchar *detailed_signal_name);
+
+void	_tepl_test_utils_wait_signal		(TeplWaitSignalData *data);
 
 G_END_DECLS
 

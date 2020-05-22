@@ -7,54 +7,6 @@
 #include <glib/gi18n-lib.h>
 #include "tepl-test-utils.h"
 
-typedef struct _WaitSignalData WaitSignalData;
-struct _WaitSignalData
-{
-	guint signal_received : 1;
-	guint nested_main_loop : 1;
-};
-
-static void
-wait_signal_cb (WaitSignalData *data)
-{
-	data->signal_received = TRUE;
-
-	if (data->nested_main_loop)
-	{
-		gtk_main_quit ();
-	}
-}
-
-static WaitSignalData *
-wait_signal_setup (GObject     *object,
-		   const gchar *detailed_signal_name)
-{
-	WaitSignalData *data;
-
-	data = g_new0 (WaitSignalData, 1);
-	data->signal_received = FALSE;
-	data->nested_main_loop = FALSE;
-
-	g_signal_connect_swapped (object,
-				  detailed_signal_name,
-				  G_CALLBACK (wait_signal_cb),
-				  data);
-
-	return data;
-}
-
-static void
-wait_signal (WaitSignalData *data)
-{
-	if (!data->signal_received)
-	{
-		data->nested_main_loop = TRUE;
-		gtk_main ();
-	}
-
-	g_free (data);
-}
-
 static void
 check_short_name (TeplFile    *file,
 		  const gchar *expected_short_name)
@@ -123,7 +75,7 @@ test_short_name (void)
 {
 	TeplFile *file;
 	GFile *location;
-	WaitSignalData *data;
+	TeplWaitSignalData *data;
 	GError *error = NULL;
 
 	location = g_file_new_build_filename (g_get_tmp_dir (), "tepl-test-file", NULL);
@@ -137,9 +89,9 @@ test_short_name (void)
 	g_assert_no_error (error);
 
 	file = tepl_file_new ();
-	data = wait_signal_setup (G_OBJECT (file), "notify::short-name");
+	data = _tepl_test_utils_wait_signal_setup (G_OBJECT (file), "notify::short-name");
 	tepl_file_set_location (file, location);
-	wait_signal (data);
+	_tepl_test_utils_wait_signal (data);
 	check_short_name (file, "tepl-test-file");
 	g_object_unref (file);
 
@@ -147,9 +99,9 @@ test_short_name (void)
 	_tepl_test_utils_set_file_content (location, "file content");
 
 	file = tepl_file_new ();
-	data = wait_signal_setup (G_OBJECT (file), "notify::short-name");
+	data = _tepl_test_utils_wait_signal_setup (G_OBJECT (file), "notify::short-name");
 	tepl_file_set_location (file, location);
-	wait_signal (data);
+	_tepl_test_utils_wait_signal (data);
 	check_short_name (file, "tepl-test-file");
 	g_object_unref (file);
 	g_object_unref (location);
@@ -157,9 +109,9 @@ test_short_name (void)
 	/* Test the special case for a remote location that has no parent GFile. */
 	location = g_file_new_for_uri ("https://swilmet.be");
 	file = tepl_file_new ();
-	data = wait_signal_setup (G_OBJECT (file), "notify::short-name");
+	data = _tepl_test_utils_wait_signal_setup (G_OBJECT (file), "notify::short-name");
 	tepl_file_set_location (file, location);
-	wait_signal (data);
+	_tepl_test_utils_wait_signal (data);
 	check_short_name (file, "https://swilmet.be");
 	g_object_unref (file);
 	g_object_unref (location);
@@ -169,9 +121,9 @@ test_short_name (void)
 	// have the https://swilmet.be prefix, with an optional trailing slash.
 	location = g_file_new_for_uri ("https://swilmet.be/");
 	file = tepl_file_new ();
-	data = wait_signal_setup (G_OBJECT (file), "notify::short-name");
+	data = _tepl_test_utils_wait_signal_setup (G_OBJECT (file), "notify::short-name");
 	tepl_file_set_location (file, location);
-	wait_signal (data);
+	_tepl_test_utils_wait_signal (data);
 	check_short_name (file, "https://swilmet.be/");
 	g_object_unref (file);
 	g_object_unref (location);

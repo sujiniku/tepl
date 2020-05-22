@@ -16,6 +16,9 @@ void	_tepl_test_utils_set_file_content	(GFile       *file,
 
 gchar *	_tepl_test_utils_get_file_content	(GFile *file);
 
+void	_tepl_test_utils_check_file_content	(GFile       *file,
+						 const gchar *expected_file_content);
+
 TeplWaitSignalData *
 	_tepl_test_utils_wait_signal_setup	(GObject     *object,
 						 const gchar *detailed_signal_name);

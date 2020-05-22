@@ -38,6 +38,17 @@ _tepl_test_utils_get_file_content (GFile *file)
 	return file_content;
 }
 
+void
+_tepl_test_utils_check_file_content (GFile       *file,
+				     const gchar *expected_file_content)
+{
+	gchar *received_file_content;
+
+	received_file_content = _tepl_test_utils_get_file_content (file);
+	g_assert_true (g_str_equal (received_file_content, expected_file_content));
+	g_free (received_file_content);
+}
+
 struct _TeplWaitSignalData
 {
 	guint signal_received : 1;

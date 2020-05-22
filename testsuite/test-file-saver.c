@@ -5,17 +5,6 @@
 #include <tepl/tepl.h>
 #include "tepl-test-utils.h"
 
-static void
-check_equal_content (GFile       *file,
-		     const gchar *content)
-{
-	gchar *file_content;
-
-	file_content = _tepl_test_utils_get_file_content (file);
-	g_assert_true (g_str_equal (file_content, content));
-	g_free (file_content);
-}
-
 static GFile *
 get_tmp_location (void)
 {
@@ -71,7 +60,7 @@ check_save_content (const gchar *content)
 	saver = tepl_file_saver_new_with_target (buffer, file, location);
 
 	save_sync (saver);
-	check_equal_content (location, content);
+	_tepl_test_utils_check_file_content (location, content);
 
 	g_object_unref (buffer);
 	g_object_unref (file);
@@ -106,7 +95,7 @@ test_backup (void)
 
 	saver = tepl_file_saver_new_with_target (buffer, file, location);
 	save_sync (saver);
-	check_equal_content (location, "contentA");
+	_tepl_test_utils_check_file_content (location, "contentA");
 	g_object_unref (saver);
 
 	gtk_text_buffer_set_text (GTK_TEXT_BUFFER (buffer), "contentB", -1);
@@ -114,11 +103,11 @@ test_backup (void)
 	saver = tepl_file_saver_new_with_target (buffer, file, location);
 	tepl_file_saver_set_flags (saver, TEPL_FILE_SAVER_FLAGS_CREATE_BACKUP);
 	save_sync (saver);
-	check_equal_content (location, "contentB");
+	_tepl_test_utils_check_file_content (location, "contentB");
 	g_object_unref (saver);
 
 	backup_location = get_tmp_backup_location ();
-	check_equal_content (backup_location, "contentA");
+	_tepl_test_utils_check_file_content (backup_location, "contentA");
 
 	g_object_unref (buffer);
 	g_object_unref (file);

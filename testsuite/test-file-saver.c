@@ -3,19 +3,7 @@
  */
 
 #include <tepl/tepl.h>
-
-static gchar *
-get_file_content (GFile *file)
-{
-	GError *error = NULL;
-	gchar *file_content = NULL;
-
-	g_file_load_contents (file, NULL, &file_content, NULL, NULL, &error);
-	g_assert_no_error (error);
-	g_assert_true (file_content != NULL);
-
-	return file_content;
-}
+#include "tepl-test-utils.h"
 
 static void
 check_equal_content (GFile       *file,
@@ -23,7 +11,7 @@ check_equal_content (GFile       *file,
 {
 	gchar *file_content;
 
-	file_content = get_file_content (file);
+	file_content = _tepl_test_utils_get_file_content (file);
 	g_assert_true (g_str_equal (file_content, content));
 	g_free (file_content);
 }

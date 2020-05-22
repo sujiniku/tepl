@@ -14,6 +14,8 @@ typedef struct _TeplWaitSignalData TeplWaitSignalData;
 void	_tepl_test_utils_set_file_content	(GFile       *file,
 						 const gchar *content);
 
+gchar *	_tepl_test_utils_get_file_content	(GFile *file);
+
 TeplWaitSignalData *
 	_tepl_test_utils_wait_signal_setup	(GObject     *object,
 						 const gchar *detailed_signal_name);

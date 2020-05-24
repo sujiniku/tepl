@@ -6,6 +6,7 @@
 #include "tepl-tab-saving.h"
 #include <glib/gi18n-lib.h>
 #include "tepl-file.h"
+#include "tepl-file-saver.h"
 #include "tepl-info-bar.h"
 #include "tepl-utils.h"
 
@@ -81,11 +82,11 @@ launch_saver (GTask *task)
 				    task);
 }
 
-void
-_tepl_tab_saving_save_async (TeplTab             *tab,
-			     TeplFileSaver       *saver,
-			     GAsyncReadyCallback  callback,
-			     gpointer             user_data)
+static void
+launch_saver_async (TeplTab             *tab,
+		    TeplFileSaver       *saver,
+		    GAsyncReadyCallback  callback,
+		    gpointer             user_data)
 {
 	GTask *task;
 
@@ -100,9 +101,9 @@ _tepl_tab_saving_save_async (TeplTab             *tab,
 	launch_saver (task);
 }
 
-gboolean
-_tepl_tab_saving_save_finish (TeplTab      *tab,
-			      GAsyncResult *result)
+static gboolean
+launch_saver_finish (TeplTab      *tab,
+		     GAsyncResult *result)
 {
 	g_return_val_if_fail (TEPL_IS_TAB (tab), FALSE);
 	g_return_val_if_fail (g_task_is_valid (result, tab), FALSE);
@@ -142,7 +143,7 @@ tepl_tab_save_async (TeplTab             *tab,
 	g_return_if_fail (location != NULL);
 
 	saver = tepl_file_saver_new (buffer, file);
-	_tepl_tab_saving_save_async (tab, saver, callback, user_data);
+	launch_saver_async (tab, saver, callback, user_data);
 	g_object_unref (saver);
 }
 
@@ -160,7 +161,7 @@ gboolean
 tepl_tab_save_finish (TeplTab      *tab,
 		      GAsyncResult *result)
 {
-	return _tepl_tab_saving_save_finish (tab, result);
+	return launch_saver_finish (tab, result);
 }
 
 static void
@@ -206,7 +207,7 @@ save_as_cb (GObject      *source_object,
 	GTask *task = G_TASK (user_data);
 	gboolean ok;
 
-	ok = _tepl_tab_saving_save_finish (tab, result);
+	ok = launch_saver_finish (tab, result);
 
 	g_task_return_boolean (task, ok);
 	g_object_unref (task);
@@ -234,7 +235,7 @@ save_file_chooser_response_cb (GtkFileChooserDialog *file_chooser_dialog,
 		saver = tepl_file_saver_new_with_target (buffer, file, location);
 		g_object_unref (location);
 
-		_tepl_tab_saving_save_async (tab, saver, save_as_cb, task);
+		launch_saver_async (tab, saver, save_as_cb, task);
 		g_object_unref (saver);
 	}
 	else

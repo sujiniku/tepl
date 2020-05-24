@@ -10,19 +10,8 @@
 #endif
 
 #include <tepl/tepl-tab.h>
-#include <tepl/tepl-file-saver.h>
 
 G_BEGIN_DECLS
-
-G_GNUC_INTERNAL
-void		_tepl_tab_saving_save_async		(TeplTab             *tab,
-							 TeplFileSaver       *saver,
-							 GAsyncReadyCallback  callback,
-							 gpointer             user_data);
-
-G_GNUC_INTERNAL
-gboolean	_tepl_tab_saving_save_finish		(TeplTab      *tab,
-							 GAsyncResult *result);
 
 _TEPL_EXTERN
 void		tepl_tab_save_async		(TeplTab             *tab,

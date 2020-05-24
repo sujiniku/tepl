@@ -43,10 +43,8 @@ struct _TeplTab
  *   #GtkScrolledWindow and the #GtkScrolledWindow is added to the #TeplTab with
  *   gtk_container_add().
  * @pack_info_bar: Virtual function pointer to add a #GtkInfoBar in the #TeplTab
- *   container. By default the #GtkInfoBar is inserted above the first
- *   non-#GtkInfoBar child widget of #TeplTab (so by default it is inserted
- *   below other #GtkInfoBar's, but above the #GtkScrolledWindow containing the
- *   #TeplView).
+ *   container. By default the #GtkInfoBar is inserted just above the
+ *   #GtkScrolledWindow containing the #TeplView.
  * @pack_goto_line_bar: Virtual function pointer to add a #TeplGotoLineBar in
  *   the #TeplTab container. By default the #TeplGotoLineBar is added at the
  *   bottom.

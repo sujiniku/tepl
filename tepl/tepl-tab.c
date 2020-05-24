@@ -124,24 +124,12 @@ static void
 tepl_tab_pack_info_bar_default (TeplTab    *tab,
 				GtkInfoBar *info_bar)
 {
-	GList *children;
-	GList *l;
 	GtkWidget *sibling = NULL;
 
-	children = gtk_container_get_children (GTK_CONTAINER (tab));
-
-	for (l = children; l != NULL; l = l->next)
+	if (tab->priv->scrolled_window != NULL)
 	{
-		GtkWidget *child = l->data;
-
-		if (!GTK_IS_INFO_BAR (child))
-		{
-			sibling = child;
-			break;
-		}
+		sibling = GTK_WIDGET (tab->priv->scrolled_window);
 	}
-
-	g_list_free (children);
 
 	if (sibling != NULL)
 	{

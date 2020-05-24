@@ -102,6 +102,7 @@ create_dialog (GTask *task)
 	GFile *location;
 	gchar *file_short_name;
 	GtkWidget *dialog;
+	GtkWidget *close_button;
 
 	tab = g_task_get_source_object (task);
 	buffer = tepl_tab_get_buffer (tab);
@@ -120,10 +121,15 @@ create_dialog (GTask *task)
 	g_free (file_short_name);
 	file_short_name = NULL;
 
-	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
-				_("Close _without Saving"), GTK_RESPONSE_CLOSE,
-				_("_Cancel"), GTK_RESPONSE_CANCEL,
-				NULL);
+	close_button = gtk_dialog_add_button (GTK_DIALOG (dialog),
+					      _("Close _without Saving"),
+					      GTK_RESPONSE_CLOSE);
+	gtk_style_context_add_class (gtk_widget_get_style_context (close_button),
+				     GTK_STYLE_CLASS_DESTRUCTIVE_ACTION);
+
+	gtk_dialog_add_button (GTK_DIALOG (dialog),
+			       _("_Cancel"),
+			       GTK_RESPONSE_CANCEL);
 
 	if (location != NULL)
 	{

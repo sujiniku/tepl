@@ -98,10 +98,6 @@ void		tepl_tab_add_info_bar		(TeplTab    *tab,
 						 GtkInfoBar *info_bar);
 
 _TEPL_EXTERN
-void		tepl_tab_load_file		(TeplTab *tab,
-						 GFile   *location);
-
-_TEPL_EXTERN
 void		tepl_tab_save_async		(TeplTab             *tab,
 						 GAsyncReadyCallback  callback,
 						 gpointer             user_data);

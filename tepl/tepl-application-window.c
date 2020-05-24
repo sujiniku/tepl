@@ -8,6 +8,7 @@
 #include "tepl-abstract-factory.h"
 #include "tepl-buffer.h"
 #include "tepl-signal-group.h"
+#include "tepl-tab-loading.h"
 #include "tepl-window-actions-file.h"
 #include "tepl-window-actions-edit.h"
 #include "tepl-window-actions-search.h"

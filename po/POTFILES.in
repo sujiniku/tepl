@@ -25,6 +25,7 @@ tepl/tepl-style-scheme-chooser-widget.c
 tepl/tepl-tab.c
 tepl/tepl-tab-group.c
 tepl/tepl-tab-label.c
+tepl/tepl-tab-loading.c
 tepl/tepl-tab-saving.c
 tepl/tepl-utils.c
 tepl/tepl-view.c

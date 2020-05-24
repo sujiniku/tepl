@@ -25,6 +25,7 @@ tepl_public_headers = [
   'tepl-tab.h',
   'tepl-tab-group.h',
   'tepl-tab-label.h',
+  'tepl-tab-loading.h',
   'tepl-utils.h',
   'tepl-view.h'
 ]
@@ -54,6 +55,7 @@ tepl_public_c_files = [
   'tepl-tab.c',
   'tepl-tab-group.c',
   'tepl-tab-label.c',
+  'tepl-tab-loading.c',
   'tepl-utils.c',
   'tepl-view.c'
 ]

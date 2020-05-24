@@ -46,6 +46,7 @@
 
 struct _TeplTabPrivate
 {
+	GtkScrolledWindow *scrolled_window;
 	TeplView *view;
 	TeplGotoLineBar *goto_line_bar;
 };
@@ -103,15 +104,20 @@ static void
 tepl_tab_pack_view_default (TeplTab  *tab,
 			    TeplView *view)
 {
-	GtkScrolledWindow *scrolled_window;
+	if (tab->priv->scrolled_window != NULL)
+	{
+		g_warning ("The TeplTab::pack_view virtual function can be called only once.");
+		return;
+	}
 
-	scrolled_window = create_scrolled_window ();
+	tab->priv->scrolled_window = create_scrolled_window ();
+	g_object_ref_sink (tab->priv->scrolled_window);
 
-	gtk_container_add (GTK_CONTAINER (scrolled_window),
+	gtk_container_add (GTK_CONTAINER (tab->priv->scrolled_window),
 			   GTK_WIDGET (view));
 
 	gtk_container_add (GTK_CONTAINER (tab),
-			   GTK_WIDGET (scrolled_window));
+			   GTK_WIDGET (tab->priv->scrolled_window));
 }
 
 static void
@@ -277,6 +283,7 @@ tepl_tab_dispose (GObject *object)
 {
 	TeplTab *tab = TEPL_TAB (object);
 
+	g_clear_object (&tab->priv->scrolled_window);
 	g_clear_object (&tab->priv->view);
 	g_clear_object (&tab->priv->goto_line_bar);
 

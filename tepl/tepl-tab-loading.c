@@ -9,9 +9,9 @@
 #include "tepl-info-bar.h"
 
 static void
-load_file_content_cb (GObject      *source_object,
-		      GAsyncResult *result,
-		      gpointer      user_data)
+load_file_cb (GObject      *source_object,
+	      GAsyncResult *result,
+	      gpointer      user_data)
 {
 	TeplFileLoader *loader = TEPL_FILE_LOADER (source_object);
 	TeplTab *tab = TEPL_TAB (user_data);
@@ -78,6 +78,6 @@ tepl_tab_load_file (TeplTab *tab,
 	tepl_file_loader_load_async (loader,
 				     G_PRIORITY_DEFAULT,
 				     NULL, /* cancellable */
-				     load_file_content_cb,
+				     load_file_cb,
 				     g_object_ref (tab));
 }

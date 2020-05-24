@@ -11,6 +11,7 @@
 #include "tepl-file.h"
 #include "tepl-tab.h"
 #include "tepl-tab-group.h"
+#include "tepl-tab-saving.h"
 
 /* TeplApplicationWindow GActions for the File menu. */
 

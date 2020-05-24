@@ -26,6 +26,7 @@ tepl_public_headers = [
   'tepl-tab-group.h',
   'tepl-tab-label.h',
   'tepl-tab-loading.h',
+  'tepl-tab-saving.h',
   'tepl-utils.h',
   'tepl-view.h'
 ]
@@ -56,6 +57,7 @@ tepl_public_c_files = [
   'tepl-tab-group.c',
   'tepl-tab-label.c',
   'tepl-tab-loading.c',
+  'tepl-tab-saving.c',
   'tepl-utils.c',
   'tepl-view.c'
 ]
@@ -67,7 +69,6 @@ TEPL_PRIVATE_HEADERS = [
   'tepl-metadata-parser.h',
   'tepl-progress-info-bar.h',
   'tepl-signal-group.h',
-  'tepl-tab-saving.h',
   'tepl-window-actions-edit.h',
   'tepl-window-actions-file.h',
   'tepl-window-actions-search.h'
@@ -80,7 +81,6 @@ tepl_private_c_files = [
   'tepl-metadata-parser.c',
   'tepl-progress-info-bar.c',
   'tepl-signal-group.c',
-  'tepl-tab-saving.c',
   'tepl-window-actions-edit.c',
   'tepl-window-actions-file.c',
   'tepl-window-actions-search.c'

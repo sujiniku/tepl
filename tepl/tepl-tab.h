@@ -97,30 +97,6 @@ _TEPL_EXTERN
 void		tepl_tab_add_info_bar		(TeplTab    *tab,
 						 GtkInfoBar *info_bar);
 
-_TEPL_EXTERN
-void		tepl_tab_save_async		(TeplTab             *tab,
-						 GAsyncReadyCallback  callback,
-						 gpointer             user_data);
-
-_TEPL_EXTERN
-gboolean	tepl_tab_save_finish		(TeplTab      *tab,
-						 GAsyncResult *result);
-
-_TEPL_EXTERN
-void		tepl_tab_save_async_simple	(TeplTab *tab);
-
-_TEPL_EXTERN
-void		tepl_tab_save_as_async		(TeplTab             *tab,
-						 GAsyncReadyCallback  callback,
-						 gpointer             user_data);
-
-_TEPL_EXTERN
-gboolean	tepl_tab_save_as_finish		(TeplTab      *tab,
-						 GAsyncResult *result);
-
-_TEPL_EXTERN
-void		tepl_tab_save_as_async_simple	(TeplTab *tab);
-
 G_END_DECLS
 
 #endif /* TEPL_TAB_H */

@@ -37,6 +37,7 @@
 #include <tepl/tepl-tab-group.h>
 #include <tepl/tepl-tab-label.h>
 #include <tepl/tepl-tab-loading.h>
+#include <tepl/tepl-tab-saving.h>
 #include <tepl/tepl-utils.h>
 #include <tepl/tepl-view.h>
 

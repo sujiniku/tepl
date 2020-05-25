@@ -27,7 +27,8 @@ load_file_cb (GObject      *source_object,
 		tepl_file_add_uri_to_recent_manager (file);
 	}
 
-	if (error != NULL)
+	if (error != NULL &&
+	    !g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
 	{
 		TeplInfoBar *info_bar;
 
@@ -37,10 +38,9 @@ load_file_cb (GObject      *source_object,
 
 		tepl_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
 		gtk_widget_show (GTK_WIDGET (info_bar));
-
-		g_clear_error (&error);
 	}
 
+	g_clear_error (&error);
 	g_object_unref (loader);
 	g_object_unref (tab);
 }
@@ -65,6 +65,7 @@ tepl_tab_load_file (TeplTab *tab,
 	TeplBuffer *buffer;
 	TeplFile *file;
 	TeplFileLoader *loader;
+	GCancellable *cancellable;
 
 	g_return_if_fail (TEPL_IS_TAB (tab));
 	g_return_if_fail (G_IS_FILE (location));
@@ -75,9 +76,23 @@ tepl_tab_load_file (TeplTab *tab,
 	tepl_file_set_location (file, location);
 	loader = tepl_file_loader_new (buffer, file);
 
+	cancellable = g_cancellable_new ();
+
+	/* If there is a request to destroy the tab, it's pointless to continue
+	 * loading the file. So, cancel the operation when the tab is destroyed,
+	 * to free up resources for other operations.
+	 */
+	g_signal_connect_object (tab,
+				 "destroy",
+				 G_CALLBACK (g_cancellable_cancel),
+				 cancellable,
+				 G_CONNECT_SWAPPED);
+
 	tepl_file_loader_load_async (loader,
 				     G_PRIORITY_DEFAULT,
-				     NULL, /* cancellable */
+				     cancellable,
 				     load_file_cb,
 				     g_object_ref (tab));
+
+	g_object_unref (cancellable);
 }

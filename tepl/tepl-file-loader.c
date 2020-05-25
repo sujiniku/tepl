@@ -29,6 +29,11 @@
  * gtk_text_buffer_set_modified() is called with %FALSE.
  */
 
+/* To simulate for example loading a big remote file with a slow network
+ * connection.
+ */
+#define SIMULATE_LONG_FILE_LOADING FALSE
+
 struct _TeplFileLoaderPrivate
 {
 	/* Weak ref to the TeplBuffer. A strong ref could create a reference
@@ -356,6 +361,31 @@ out:
 	g_free (content);
 }
 
+static void
+start_load_contents (GTask *task)
+{
+	TeplFileLoader *loader = g_task_get_source_object (task);
+
+	g_file_load_contents_async (loader->priv->location,
+				    g_task_get_cancellable (task),
+				    load_contents_cb,
+				    task);
+}
+
+#if SIMULATE_LONG_FILE_LOADING
+static gboolean
+simulate_long_file_loading_timeout_cb (gpointer user_data)
+{
+	GTask *task = G_TASK (user_data);
+
+	g_message ("%s()", G_STRFUNC);
+
+	start_load_contents (task);
+
+	return G_SOURCE_REMOVE;
+}
+#endif
+
 /**
  * tepl_file_loader_load_async:
  * @loader: a #TeplFileLoader.
@@ -403,10 +433,13 @@ tepl_file_loader_load_async (TeplFileLoader      *loader,
 	gtk_text_buffer_set_text (GTK_TEXT_BUFFER (loader->priv->buffer), "", -1);
 	gtk_text_buffer_set_modified (GTK_TEXT_BUFFER (loader->priv->buffer), FALSE);
 
-	g_file_load_contents_async (loader->priv->location,
-				    cancellable,
-				    load_contents_cb,
-				    task);
+#if SIMULATE_LONG_FILE_LOADING
+	g_timeout_add_seconds (5,
+			       simulate_long_file_loading_timeout_cb,
+			       task);
+#else
+	start_load_contents (task);
+#endif
 }
 
 /**

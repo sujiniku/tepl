@@ -39,36 +39,27 @@ Tasks:
 - Keep only the TeplMetadataManager for storing metadata on disk, and
   re-implement it to no longer depend on the libxml2.
 
-A complete overhaul of the file loading and saving toolkit
-----------------------------------------------------------
+A complete overhaul of the file loading and saving
+--------------------------------------------------
 
 - Status: **in progress**
 
 Tasks:
-- New and hopefully simpler implementation, the API will still be mostly the
-  same.
+- New and hopefully simpler implementation, the API is still mostly the same.
+- Implement both the backend and the frontend, incrementally. For the frontend
+  (the high-level API), handle all errors by showing TeplInfoBar's etc.
 - Use the [libicu](http://site.icu-project.org/) for character encoding
   _conversion_, not iconv.
 - Use the libicu for character encoding _auto-detection_, not
   [uchardet](https://www.freedesktop.org/wiki/Software/uchardet/).
-- Almost have a feature parity with the GtkSourceView file loading and saving
-  API, drop gzip compression support and progress callbacks.
-- Replace the few functions that do sync I/O with async I/O.
-
-High-level file loading and saving API: separate it from the core framework
----------------------------------------------------------------------------
-
-- Status: **todo**
-
-The purpose is to have a more minimal core framework, and have the file loading
-and saving high-level API in separate sub-namespace(s).
-
-Continue high-level file loading and saving implementation
-----------------------------------------------------------
-
-- Status: **todo**
-
-All the errors would be handled by Tepl, showing TeplInfoBars etc.
+- Replace the few functions in TeplFile that do sync I/O with async I/O.
+- Compared to the GtkSourceView file loading and saving:
+	- Drop gzip compression support and progress callbacks.
+	- Add more important features: preventing loading files that are not
+	  well supported by GtkTextView (very big file sizes, or very long
+	  lines). Ideally proposing solutions to load the files, for example to
+	  split very long lines (and then showing a warning when saving the
+	  file).
 
 File browser widget
 -------------------

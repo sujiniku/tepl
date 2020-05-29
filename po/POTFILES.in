@@ -8,6 +8,7 @@ tepl/tepl-file.c
 tepl/tepl-file-loader.c
 tepl/tepl-file-saver.c
 tepl/tepl-goto-line-bar.c
+tepl/tepl-icu.c
 tepl/tepl-info-bar.c
 tepl/tepl-init.c
 tepl/tepl-io-error-info-bars.c

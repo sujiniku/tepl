@@ -3,6 +3,7 @@ unit_tests = [
   'test-file-loader',
   'test-file-saver',
   'test-fold-region',
+  'test-icu',
   'test-info-bar',
   'test-metadata',
   'test-metadata-manager',

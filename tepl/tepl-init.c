@@ -7,6 +7,7 @@
 #include <glib/gi18n-lib.h>
 #include <amtk/amtk.h>
 #include <gtksourceview/gtksource.h>
+#include <unicode/uclean.h>
 #include "tepl-abstract-factory.h"
 #include "tepl-metadata-manager.h"
 
@@ -104,6 +105,7 @@ tepl_finalize (void)
 		 */
 		gtk_source_finalize ();
 		amtk_finalize ();
+		u_cleanup ();
 
 		done = TRUE;
 	}

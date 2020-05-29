@@ -246,7 +246,9 @@ test_value_round_trip (void)
 	check_value_round_trip (",");
 	check_value_round_trip (";");
 	check_value_round_trip (" ");
-	//check_value_round_trip ("\t"); // FIXME: fails.
+	check_value_round_trip ("\t");
+	check_value_round_trip ("  \t\t \t\noh");
+	check_value_round_trip ("123ASCIIabc.,;/_-:");
 }
 
 static void

@@ -3,6 +3,7 @@
  */
 
 #include "tepl-metadata-attic.h"
+#include "tepl-utils.h"
 
 /* Some metadata put into the attic. */
 
@@ -131,7 +132,7 @@ append_entries_to_string (TeplMetadataAttic *metadata,
 
 		/* No need to escape the key. */
 
-		value_escaped = g_markup_escape_text (value, -1);
+		value_escaped = tepl_utils_markup_escape_text (value);
 
 		g_string_append_printf (string,
 					"  <entry key=\"%s\" value=\"%s\"/>\n",
@@ -160,7 +161,7 @@ _tepl_metadata_attic_append_xml_to_string (TeplMetadataAttic *metadata,
 	}
 
 	uri = g_file_get_uri (location);
-	uri_escaped = g_markup_escape_text (uri, -1);
+	uri_escaped = tepl_utils_markup_escape_text (uri);
 
 	g_string_append_printf (string,
 				" <document uri=\"%s\" atime=\"%" G_GINT64_FORMAT "\">\n",

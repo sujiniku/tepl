@@ -1,4 +1,4 @@
-News in 4.99.2, 2020-xx-yy (not yet released)
+News in 4.99.2, 2020-05-29
 --------------------------
 * License:
  - Update the license from LGPLv2.1+ to LGPLv3+.
@@ -6,8 +6,9 @@ News in 4.99.2, 2020-xx-yy (not yet released)
    with SPDX tags: https://reuse.software/
 
 * API changes:
- - The beginning of a complete overhaul of the TeplFileSaver implementation.
+ - The beginning of a complete overhaul of the file loading and saving.
    This changes a little the API.
+   The uchardet dependency is no longer needed.
 
 * New API:
  - 'Go to line' horizontal bar feature.

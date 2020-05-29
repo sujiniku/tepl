@@ -29,6 +29,9 @@ gchar *		tepl_utils_str_replace				(const gchar *string,
 								 const gchar *search,
 								 const gchar *replacement);
 
+_TEPL_EXTERN
+gchar *		tepl_utils_markup_escape_text			(const gchar *src);
+
 /* File utilities */
 
 _TEPL_EXTERN

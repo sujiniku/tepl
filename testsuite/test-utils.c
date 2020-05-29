@@ -52,6 +52,40 @@ test_str_replace (void)
 }
 
 static void
+check_markup_escape_text (const gchar *src,
+			  const gchar *expected_dest)
+{
+	gchar *received_dest;
+
+	received_dest = tepl_utils_markup_escape_text (src);
+	g_assert_cmpstr (received_dest, ==, expected_dest);
+	g_free (received_dest);
+}
+
+static void
+test_markup_escape_text (void)
+{
+	check_markup_escape_text ("", "");
+	check_markup_escape_text ("123ASCIIabc.,;/_-:", "123ASCIIabc.,;/_-:");
+	check_markup_escape_text ("é", "&#xE9;");
+	check_markup_escape_text ("\t", "&#x9;");
+	check_markup_escape_text ("ẞ", "&#x1E9E;"); // multi-byte UTF-8 char.
+
+	{
+		gchar *dest;
+
+		/* If this changes in the future, maybe g_markup_escape_text()
+		 * has been modified to fully support round-trip integrity, in
+		 * which case tepl_utils_markup_escape_text() is no longer
+		 * useful.
+		 */
+		dest = g_markup_escape_text ("\t", -1);
+		g_assert_cmpstr (dest, ==, "\t");
+		g_free (dest);
+	}
+}
+
+static void
 test_get_file_extension (void)
 {
 	gchar *extension;
@@ -191,6 +225,7 @@ main (int    argc,
 	g_test_add_func ("/utils/str-middle-truncate", test_str_middle_truncate);
 	g_test_add_func ("/utils/str-end-truncate", test_str_end_truncate);
 	g_test_add_func ("/utils/str-replace", test_str_replace);
+	g_test_add_func ("/utils/markup-escape-text", test_markup_escape_text);
 	g_test_add_func ("/utils/get-file-extension", test_get_file_extension);
 	g_test_add_func ("/utils/get-file-shortname", test_get_file_shortname);
 	g_test_add_func ("/utils/replace-home-dir-with-tilde", test_replace_home_dir_with_tilde);

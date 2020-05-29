@@ -10,6 +10,7 @@
 #include "tepl-utils.h"
 #include <string.h>
 #include "tepl-application-window.h"
+#include "tepl-icu.h"
 
 /**
  * SECTION:utils
@@ -157,6 +158,73 @@ tepl_utils_str_replace (const gchar *string,
 
 	g_strfreev (chunks);
 	return ret;
+}
+
+/**
+ * tepl_utils_markup_escape_text:
+ * @src: a nul-terminated UTF-8 string.
+ *
+ * The same as g_markup_escape_text(), but with an implementation that fully
+ * supports round-trip integrity. I.e. when #GMarkupParser or any other XML
+ * parser will decode/unescape the string, the exact same string as @src will be
+ * brought back. As long as @src is a valid UTF-8 string.
+ *
+ * The other difference with g_markup_escape_text() is that the @length
+ * parameter is not present for tepl_utils_markup_escape_text().
+ *
+ * # g_markup_escape_text() doesn't fully support round-trip integrity
+ *
+ * In fact, g_markup_escape_text() doesn't escape the tabstop, newline and
+ * carriage return characters. And the #GMarkupParser correctly processes
+ * whitespace and line endings according to the [XML rules for normalization of
+ * line endings and attribute values](https://www.w3.org/TR/xml/#AVNormalize).
+ *
+ * For example `"\t"` (a tab) after a round-trip through g_markup_escape_text()
+ * and #GMarkupParser becomes a simple space.
+ *
+ * Returns: (transfer full) (nullable): a newly allocated string with the
+ * escaped text, or %NULL if @src is not a valid UTF-8 string. Free with
+ * g_free() when no longer needed.
+ * Since: 5.0
+ */
+gchar *
+tepl_utils_markup_escape_text (const gchar *src)
+{
+	UChar *src_uchars;
+	UTransliterator *trans;
+	UChar *dest_uchars = NULL;
+	gchar *dest = NULL;
+
+	src_uchars = _tepl_icu_strFromUTF8Simple (src);
+	if (src_uchars == NULL)
+	{
+		return NULL;
+	}
+
+	trans = _tepl_icu_trans_open_xml_escape ();
+	if (trans == NULL)
+	{
+		goto out;
+	}
+
+	dest_uchars = _tepl_icu_trans_transUCharsSimple (trans, src_uchars);
+	if (dest_uchars == NULL)
+	{
+		goto out;
+	}
+
+	dest = _tepl_icu_strToUTF8Simple (dest_uchars);
+
+out:
+	g_free (src_uchars);
+	g_free (dest_uchars);
+
+	if (trans != NULL)
+	{
+		utrans_close (trans);
+	}
+
+	return dest;
 }
 
 static gint

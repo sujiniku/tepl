@@ -4,6 +4,8 @@
 
 #include "tepl-metadata-attic.h"
 
+/* Some metadata put into the attic. */
+
 struct _TeplMetadataAtticPrivate
 {
 	/* Keys: not nullable gchar *

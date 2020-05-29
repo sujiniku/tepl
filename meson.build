@@ -47,7 +47,11 @@ TEPL_PUBLIC_DEPS = [
   dependency('gtksourceview-4', version: '>= 4.0'),
   dependency('amtk-5', version: '>= 5.0')
 ]
-TEPL_DEPS = [TEPL_PUBLIC_DEPS]
+tepl_private_deps = [
+  dependency('icu-uc'),
+  dependency('icu-i18n'),
+]
+TEPL_DEPS = [TEPL_PUBLIC_DEPS, tepl_private_deps]
 
 # config.h
 

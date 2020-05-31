@@ -25,7 +25,7 @@ Build system: Autotools -> Meson
 A complete overhaul of file metadata
 ------------------------------------
 
-- Status: **mostly done**
+- Status: **done**
 - Target release: Tepl 5.0 (GNOME 3.38)
 
 Tasks:

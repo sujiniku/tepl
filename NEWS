@@ -1,3 +1,8 @@
+News in 4.99.3, 2020-07-03
+--------------------------
+* Start to leverage the ICU library: http://site.icu-project.org/
+  It's currently used by TeplMetadataManager.
+
 News in 4.99.2, 2020-05-29
 --------------------------
 * License:

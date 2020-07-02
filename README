@@ -25,6 +25,7 @@ Dependencies
 - GTK >= 3.22
 - GtkSourceView >= 4.0
 - Amtk >= 5.0 - https://wiki.gnome.org/Projects/Amtk
+- ICU - http://site.icu-project.org/
 
 Installation
 ------------

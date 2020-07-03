@@ -5,6 +5,7 @@ tepl/tepl-application-window.c
 tepl/tepl-buffer.c
 tepl/tepl-close-confirm-dialog-single.c
 tepl/tepl-file.c
+tepl/tepl-file-chooser.c
 tepl/tepl-file-loader.c
 tepl/tepl-file-saver.c
 tepl/tepl-goto-line-bar.c

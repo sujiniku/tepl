@@ -129,6 +129,13 @@ tepl_newline_type_get_type
 </SECTION>
 
 <SECTION>
+<FILE>file-chooser</FILE>
+tepl_file_chooser_set_modal
+tepl_file_chooser_set_parent
+tepl_file_chooser_show
+</SECTION>
+
+<SECTION>
 <FILE>file-loader</FILE>
 TeplFileLoader
 <SUBSECTION>

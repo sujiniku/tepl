@@ -46,6 +46,7 @@
       <xi:include href="xml/file-loader.xml"/>
       <xi:include href="xml/file-saver.xml"/>
       <xi:include href="xml/io-error-info-bars.xml"/>
+      <xi:include href="xml/file-chooser.xml"/>
     </chapter>
 
     <chapter id="file-metadata">

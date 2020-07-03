@@ -17,6 +17,7 @@
 #include <tepl/tepl-application-window.h>
 #include <tepl/tepl-buffer.h>
 #include <tepl/tepl-file.h>
+#include <tepl/tepl-file-chooser.h>
 #include <tepl/tepl-file-loader.h>
 #include <tepl/tepl-file-saver.h>
 #include <tepl/tepl-fold-region.h>

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-04-21 18:26+0000\n"
-"PO-Revision-Date: 2020-04-24 22:12+0200\n"
+"POT-Creation-Date: 2020-05-29 12:28+0000\n"
+"PO-Revision-Date: 2020-07-30 13:39+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.3.1\n"
 
 #. action, icon, label, accel, tooltip
 #. File menu
@@ -26,119 +26,303 @@ msgstr ""
 #. document. For example a LaTeX document can be composed of
 #. several _files_. Or for source code we do not really create a
 #. new "document".
-#: tepl/tepl-application.c:94
+#: tepl/tepl-application.c:79
 msgid "_New"
 msgstr "_Ny"
 
-#: tepl/tepl-application.c:95
+#: tepl/tepl-application.c:80
 msgid "New file"
 msgstr "Ny fil"
 
-#: tepl/tepl-application.c:97
+#: tepl/tepl-application.c:82
 msgid "New _Window"
 msgstr "Nytt _fönster"
 
-#: tepl/tepl-application.c:98
+#: tepl/tepl-application.c:83
 msgid "Create a new window"
 msgstr "Skapa ett nytt fönster"
 
-#: tepl/tepl-application.c:100 tepl/tepl-application-window.c:177
+#: tepl/tepl-application.c:85 tepl/tepl-window-actions-file.c:83
 msgid "_Open"
 msgstr "Ö_ppna"
 
-#: tepl/tepl-application.c:101
+#: tepl/tepl-application.c:86
 msgid "Open a file"
 msgstr "Öppna en fil"
 
-#: tepl/tepl-application.c:103 tepl/tepl-close-confirm-dialog-single.c:143
-#: tepl/tepl-tab.c:724
+#: tepl/tepl-application.c:88 tepl/tepl-close-confirm-dialog-single.c:137
+#: tepl/tepl-tab-saving.c:281
 msgid "_Save"
 msgstr "_Spara"
 
-#: tepl/tepl-application.c:104
+#: tepl/tepl-application.c:89
 msgid "Save the current file"
 msgstr "Spara aktuell fil"
 
-#: tepl/tepl-application.c:106
+#: tepl/tepl-application.c:91
 msgid "Save _As"
 msgstr "S_para som"
 
-#: tepl/tepl-application.c:107
+#: tepl/tepl-application.c:92
 msgid "Save the current file to a different location"
 msgstr "Spara den aktuella filen till en annan plats"
 
 #. Edit menu
-#: tepl/tepl-application.c:111
+#: tepl/tepl-application.c:96
 msgid "_Undo"
 msgstr "Å_ngra"
 
-#: tepl/tepl-application.c:112
+#: tepl/tepl-application.c:97
 msgid "Undo the last action"
 msgstr "Ångra den senaste åtgärden"
 
-#: tepl/tepl-application.c:114
+#: tepl/tepl-application.c:99
 msgid "_Redo"
 msgstr "_Gör om"
 
-#: tepl/tepl-application.c:115
+#: tepl/tepl-application.c:100
 msgid "Redo the last undone action"
 msgstr "Gör om senaste ångrade åtgärden"
 
-#: tepl/tepl-application.c:117
+#: tepl/tepl-application.c:102
 msgid "Cu_t"
 msgstr "Klipp _ut"
 
-#: tepl/tepl-application.c:118
+#: tepl/tepl-application.c:103
 msgid "Cut the selection"
 msgstr "Klipp ut markering"
 
-#: tepl/tepl-application.c:120
+#: tepl/tepl-application.c:105
 msgid "_Copy"
 msgstr "_Kopiera"
 
-#: tepl/tepl-application.c:121
+#: tepl/tepl-application.c:106
 msgid "Copy the selection"
 msgstr "Kopiera markeringen"
 
-#: tepl/tepl-application.c:123
+#: tepl/tepl-application.c:108
 msgid "_Paste"
 msgstr "K_listra in"
 
-#: tepl/tepl-application.c:124
+#: tepl/tepl-application.c:109
 msgid "Paste the clipboard"
 msgstr "Klistra in urklipp"
 
-#: tepl/tepl-application.c:126
+#: tepl/tepl-application.c:111
 msgid "_Delete"
 msgstr "_Ta bort"
 
-#: tepl/tepl-application.c:127
+#: tepl/tepl-application.c:112
 msgid "Delete the selected text"
 msgstr "Ta bort den markerade texten"
 
-#: tepl/tepl-application.c:129
+#: tepl/tepl-application.c:114
 msgid "Select _All"
 msgstr "Markera _allt"
 
-#: tepl/tepl-application.c:130
+#: tepl/tepl-application.c:115
 msgid "Select all the text"
 msgstr "Markera all text"
 
-#: tepl/tepl-application.c:132
+#: tepl/tepl-application.c:117
 msgid "_Indent"
 msgstr "_Indentera"
 
-#: tepl/tepl-application.c:133
+#: tepl/tepl-application.c:118
 msgid "Indent the selected lines"
 msgstr "Indentera de markerade raderna"
 
-#: tepl/tepl-application.c:135
+#: tepl/tepl-application.c:120
 msgid "_Unindent"
 msgstr "_Avindentera"
 
-#: tepl/tepl-application.c:136
+#: tepl/tepl-application.c:121
 msgid "Unindent the selected lines"
 msgstr "Avindentera de markerade raderna"
+
+#. Search menu
+#: tepl/tepl-application.c:125
+msgid "_Go to Line…"
+msgstr "_Gå till rad…"
+
+#: tepl/tepl-application.c:126
+msgid "Go to a specific line"
+msgstr "Gå till en specifik rad"
+
+#: tepl/tepl-application-window.c:156
+msgid "Read-Only"
+msgstr "Skrivskyddad"
+
+#: tepl/tepl-close-confirm-dialog-single.c:119
+#, c-format
+msgid "Save changes to file “%s” before closing?"
+msgstr "Spara ändringar till filen ”%s” innan du stänger?"
+
+#: tepl/tepl-close-confirm-dialog-single.c:125
+msgid "Close _without Saving"
+msgstr "Stäng _utan att spara"
+
+#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
+#: tepl/tepl-window-actions-file.c:82
+msgid "_Cancel"
+msgstr "A_vbryt"
+
+#: tepl/tepl-close-confirm-dialog-single.c:143
+msgid "_Save As…"
+msgstr "_Spara som…"
+
+#: tepl/tepl-file.c:426
+#, c-format
+msgid "Untitled File %d"
+msgstr "Namnlös fil %d"
+
+#: tepl/tepl-file-loader.c:341
+msgid "The content must be encoded with the UTF-8 character encoding."
+msgstr "Innehållet måste vara kodat med teckenkodningen UTF-8."
+
+#: tepl/tepl-goto-line-bar.c:235
+msgid "Go to line:"
+msgstr "Gå till rad:"
+
+#: tepl/tepl-goto-line-bar.c:243
+msgid "Close"
+msgstr "Stäng"
+
+#: tepl/tepl-io-error-info-bars.c:42
+msgid "_Edit Anyway"
+msgstr "R_edigera ändå"
+
+#: tepl/tepl-io-error-info-bars.c:46
+msgid "_Don’t Edit"
+msgstr "Redigera _inte"
+
+#: tepl/tepl-io-error-info-bars.c:52
+#, c-format
+msgid "This file “%s” is already open in another window."
+msgstr "Denna fil ”%s” är redan öppnad i ett annat fönster."
+
+#: tepl/tepl-io-error-info-bars.c:57
+msgid "Do you want to edit it anyway?"
+msgstr "Vill du redigera den ändå?"
+
+#: tepl/tepl-io-error-info-bars.c:91 tepl/tepl-io-error-info-bars.c:193
+msgid "S_ave Anyway"
+msgstr "Sp_ara ändå"
+
+#: tepl/tepl-io-error-info-bars.c:95 tepl/tepl-io-error-info-bars.c:197
+msgid "_Don’t Save"
+msgstr "Spara _inte"
+
+#: tepl/tepl-io-error-info-bars.c:101
+#, c-format
+msgid "Could not create a backup file while saving “%s”"
+msgstr "Kunde inte skapa en säkerhetskopia när ”%s” sparades"
+
+#: tepl/tepl-io-error-info-bars.c:106
+msgid ""
+"Could not back up the old copy of the file before saving the new one. You "
+"can ignore this warning and save the file anyway, but if an error occurs "
+"while saving, you could lose the old copy of the file. Save anyway?"
+msgstr ""
+"Kunde inte säkerhetskopiera den gamla kopian av filen före den nya sparas. "
+"Du kan ignorera denna varning och spara filen ändå, men om ett fel inträffar "
+"när den sparas så kan du förlora den gamla kopian av filen. Spara ändå?"
+
+#: tepl/tepl-io-error-info-bars.c:115
+#, c-format
+msgid "Error message: %s"
+msgstr "Felmeddelande: %s"
+
+#: tepl/tepl-io-error-info-bars.c:152
+#, c-format
+msgid "The file “%s” changed on disk."
+msgstr "Filen ”%s” har ändrats på disken."
+
+#: tepl/tepl-io-error-info-bars.c:157
+msgid "Drop Changes and _Reload"
+msgstr "Förkasta ändringar och _läs om"
+
+#: tepl/tepl-io-error-info-bars.c:157
+msgid "_Reload"
+msgstr "_Läs om"
+
+#: tepl/tepl-io-error-info-bars.c:203
+#, c-format
+msgid "Some invalid characters have been detected while saving “%s”."
+msgstr "Några ogiltiga tecken har upptäckts under sparning av ”%s”."
+
+#: tepl/tepl-io-error-info-bars.c:208
+msgid ""
+"If you continue saving this file you can corrupt the document. Save anyway?"
+msgstr ""
+"Om du fortsätter med att spara denna fil kan du skada dokumentet. Spara ändå?"
+
+#. Translators: do not translate <metadata>.
+#: tepl/tepl-metadata-parser.c:83
+#, c-format
+msgid "The XML file must start with a <metadata> element, not “%s”."
+msgstr "XML-filen måste starta med elementet <metadata>, inte ”%s”."
+
+#. Translators: do not translate <document>.
+#: tepl/tepl-metadata-parser.c:115
+#, c-format
+msgid "Expected a <document> element, got “%s” instead."
+msgstr "Förväntade elementet <document>, hittade ”%s” istället."
+
+#. Translators: do not translate “atime”.
+#: tepl/tepl-metadata-parser.c:141
+#, c-format
+msgid "Failed to parse the “atime” attribute value “%s”."
+msgstr "Misslyckades med att tolka attributvärdet ”%s” för ”atime”."
+
+#. Translators: do not translate <document>, “uri” and “atime”.
+#: tepl/tepl-metadata-parser.c:156
+msgid "The <document> element must contain the “uri” and “atime” attributes."
+msgstr "Elementet <document> måste innehålla attributen ”uri” och ”atime”."
+
+#. Translators: do not translate <entry>.
+#: tepl/tepl-metadata-parser.c:185
+#, c-format
+msgid "Expected an <entry> element, got “%s” instead."
+msgstr "Förväntade elementet <entry>, hittade ”%s” istället."
+
+#. Translators: do not translate <entry>, “key” and “value”.
+#: tepl/tepl-metadata-parser.c:211
+msgid "The <entry> element is missing the “key” or “value” attribute."
+msgstr "Elementet <entry> saknar attributet ”key” eller ”value”."
+
+#: tepl/tepl-panel.c:92
+msgid "Hide panel"
+msgstr "Dölj panel"
+
+#. Translators: "Ln" is an abbreviation for "Line", Col is an
+#. * abbreviation for "Column". Please, use abbreviations if possible.
+#.
+#: tepl/tepl-statusbar.c:103
+#, c-format
+msgid "Ln %d, Col %d"
+msgstr "Rad %d, Kol %d"
+
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:249
+msgid "Location:"
+msgstr "Plats:"
+
+#: tepl/tepl-tab-label.c:318
+msgid "Close file"
+msgstr "Stäng fil"
+
+#: tepl/tepl-tab-loading.c:36
+msgid "Error when loading the file."
+msgstr "Fel vid inläsning av filen."
+
+#: tepl/tepl-tab-saving.c:49
+msgid "Error when saving the file."
+msgstr "Fel vid sparande av filen."
+
+#: tepl/tepl-tab-saving.c:277
+msgid "Save File"
+msgstr "Spara fil"
 
 #. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
 #. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
@@ -149,341 +333,117 @@ msgstr "Avindentera de markerade raderna"
 #. * - opening a recent file.
 #. * Basically everywhere where the directory is shown.
 #.
-#: tepl/tepl-application-window.c:173
+#: tepl/tepl-window-actions-file.c:79
 msgid "Open File"
 msgstr "Öppna fil"
 
-#: tepl/tepl-application-window.c:176
-#: tepl/tepl-close-confirm-dialog-single.c:137 tepl/tepl-tab.c:723
-msgid "_Cancel"
-msgstr "A_vbryt"
-
-#: tepl/tepl-application-window.c:707
-msgid "Read-Only"
-msgstr "Skrivskyddad"
-
-#: tepl/tepl-close-confirm-dialog-single.c:132
-#, c-format
-msgid "Save changes to file “%s” before closing?"
-msgstr "Spara ändringar till filen ”%s” innan du stänger?"
-
-#: tepl/tepl-close-confirm-dialog-single.c:136
-msgid "Close _without Saving"
-msgstr "Stäng _utan att spara"
-
-#: tepl/tepl-close-confirm-dialog-single.c:149
-msgid "_Save As…"
-msgstr "_Spara som…"
-
-#. UTF-8 first, so that it's the first encoding returned by
-#. * tepl_encoding_get_all().
-#.
-#: tepl/tepl-encoding.c:115 tepl/tepl-encoding.c:132 tepl/tepl-encoding.c:133
-#: tepl/tepl-encoding.c:134 tepl/tepl-encoding.c:135 tepl/tepl-encoding.c:136
-#: tepl/tepl-encoding.c:137 tepl/tepl-encoding.c:138
-msgid "Unicode"
-msgstr "Unicode"
-
-#. FIXME GEOSTD8 ?
-#: tepl/tepl-encoding.c:117 tepl/tepl-encoding.c:129 tepl/tepl-encoding.c:157
-#: tepl/tepl-encoding.c:180
-msgid "Western"
-msgstr "Västerländsk"
-
-#: tepl/tepl-encoding.c:118 tepl/tepl-encoding.c:158 tepl/tepl-encoding.c:178
-msgid "Central European"
-msgstr "Centraleuropeisk"
-
-#: tepl/tepl-encoding.c:119
-msgid "South European"
-msgstr "Sydeuropeisk"
-
-#: tepl/tepl-encoding.c:120 tepl/tepl-encoding.c:127 tepl/tepl-encoding.c:185
-msgid "Baltic"
-msgstr "Baltisk"
-
-#: tepl/tepl-encoding.c:121 tepl/tepl-encoding.c:159 tepl/tepl-encoding.c:166
-#: tepl/tepl-encoding.c:168 tepl/tepl-encoding.c:169 tepl/tepl-encoding.c:179
-msgid "Cyrillic"
-msgstr "Kyrillisk"
-
-#: tepl/tepl-encoding.c:122 tepl/tepl-encoding.c:162 tepl/tepl-encoding.c:184
-msgid "Arabic"
-msgstr "Arabisk"
-
-#: tepl/tepl-encoding.c:123 tepl/tepl-encoding.c:181
-msgid "Greek"
-msgstr "Grekisk"
-
-#: tepl/tepl-encoding.c:124
-msgid "Hebrew Visual"
-msgstr "Hebreisk visuell"
-
-#: tepl/tepl-encoding.c:125 tepl/tepl-encoding.c:160 tepl/tepl-encoding.c:182
-msgid "Turkish"
-msgstr "Turkisk"
-
-#: tepl/tepl-encoding.c:126
-msgid "Nordic"
-msgstr "Nordisk"
-
-#: tepl/tepl-encoding.c:128
-msgid "Celtic"
-msgstr "Keltisk"
-
-#: tepl/tepl-encoding.c:130
-msgid "Romanian"
-msgstr "Rumänsk"
-
-#: tepl/tepl-encoding.c:140
-msgid "Armenian"
-msgstr "Armenisk"
-
-#: tepl/tepl-encoding.c:141 tepl/tepl-encoding.c:142 tepl/tepl-encoding.c:150
-msgid "Chinese Traditional"
-msgstr "Kinesisk (traditionell)"
-
-#: tepl/tepl-encoding.c:143
-msgid "Cyrillic/Russian"
-msgstr "Kyrillisk/Rysk"
-
-#: tepl/tepl-encoding.c:145 tepl/tepl-encoding.c:146 tepl/tepl-encoding.c:147
-#: tepl/tepl-encoding.c:164 tepl/tepl-encoding.c:172
-msgid "Japanese"
-msgstr "Japansk"
-
-#: tepl/tepl-encoding.c:149 tepl/tepl-encoding.c:165 tepl/tepl-encoding.c:167
-#: tepl/tepl-encoding.c:175
-msgid "Korean"
-msgstr "Koreansk"
-
-#: tepl/tepl-encoding.c:152 tepl/tepl-encoding.c:153 tepl/tepl-encoding.c:154
-msgid "Chinese Simplified"
-msgstr "Kinesisk (förenklad)"
-
-#: tepl/tepl-encoding.c:155
-msgid "Georgian"
-msgstr "Georgisk"
-
-#: tepl/tepl-encoding.c:161 tepl/tepl-encoding.c:183
-msgid "Hebrew"
-msgstr "Hebreisk"
-
-#: tepl/tepl-encoding.c:170
-msgid "Cyrillic/Ukrainian"
-msgstr "Kyrillisk/Ukrainsk"
-
-#: tepl/tepl-encoding.c:173 tepl/tepl-encoding.c:176 tepl/tepl-encoding.c:186
-msgid "Vietnamese"
-msgstr "Vietnamesisk"
-
-#: tepl/tepl-encoding.c:174
-msgid "Thai"
-msgstr "Thailändsk"
-
-#: tepl/tepl-encoding.c:370
-msgid "Unknown"
-msgstr "Okänd"
-
-#. Translators: This is the sorted list of encodings used by Tepl for
-#. * automatic detection of the file encoding. You may want to customize
-#. * it adding encodings that are common in your country, for instance the
-#. * GB18030 encoding for the Chinese translation. You may also want to
-#. * remove the ISO-8859-15 encoding (covering English and most Western
-#. * European languages) if you think people in your country will rarely
-#. * use it. 'CURRENT' is a magic value used by Tepl and it represents
-#. * the encoding for the current locale, so please don't translate the
-#. * 'CURRENT' term. Keep the same format: square brackets, single quotes,
-#. * commas.
-#.
-#: tepl/tepl-encoding.c:695
-msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
-msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
-
-#: tepl/tepl-encoding-converter.c:305
-#, c-format
-msgid "Conversion from character set “%s” to “%s” is not supported."
-msgstr "Konvertering från teckentabellen ”%s” till ”%s” stöds inte."
-
-#: tepl/tepl-encoding-converter.c:314
-#, c-format
-msgid "Could not open converter from “%s” to “%s”: %s"
-msgstr "Kunde inte öppna konverteraren från ”%s” till ”%s”: %s"
-
-#: tepl/tepl-encoding-converter.c:374
-msgid "The input data contains an invalid sequence."
-msgstr "Indata innehåller en ogiltig sekvens."
-
-#: tepl/tepl-encoding-converter.c:383
-#, c-format
-msgid "Error when converting data: %s"
-msgstr "Fel vid konvertering av data: %s"
-
-#: tepl/tepl-encoding-converter.c:562
-msgid "The input data ends with an incomplete multi-byte sequence."
-msgstr "Indata avslutas med en ofullständig flerbytesekvens."
-
-#: tepl/tepl-encoding-converter.c:585
-msgid "The input content ends with incomplete data."
-msgstr "Inmatningsinnehållet avslutas med ofullständiga data."
-
-#: tepl/tepl-file.c:408
-#, c-format
-msgid "Untitled File %d"
-msgstr "Namnlös fil %d"
-
-#: tepl/tepl-file-content-loader.c:336
-#, c-format
-msgid "The file is too big. Maximum %s can be loaded."
-msgstr "Filen är för stor. Högst %s kan läsas in."
-
-#: tepl/tepl-file-loader.c:869
-msgid "It is not possible to detect the character encoding automatically."
-msgstr "Det går inte att identifiera teckenkodningen automatiskt."
-
-#: tepl/tepl-file-saver.c:781
-msgid "The file is externally modified."
-msgstr "Filen har ändrats externt."
-
-#: tepl/tepl-file-saver.c:1315
-msgid "The buffer contains invalid characters."
-msgstr "Bufferten innehåller ogiltiga tecken."
-
-#: tepl/tepl-io-error-info-bars.c:57
-msgid "_Edit Anyway"
-msgstr "R_edigera ändå"
-
-#: tepl/tepl-io-error-info-bars.c:61
-msgid "_Don’t Edit"
-msgstr "Redigera _inte"
-
-#: tepl/tepl-io-error-info-bars.c:67
-#, c-format
-msgid "This file “%s” is already open in another window."
-msgstr "Denna fil ”%s” är redan öppnad i ett annat fönster."
-
-#: tepl/tepl-io-error-info-bars.c:72
-msgid "Do you want to edit it anyway?"
-msgstr "Vill du redigera den ändå?"
-
-#: tepl/tepl-io-error-info-bars.c:106 tepl/tepl-io-error-info-bars.c:208
-msgid "S_ave Anyway"
-msgstr "Sp_ara ändå"
-
-#: tepl/tepl-io-error-info-bars.c:110 tepl/tepl-io-error-info-bars.c:212
-msgid "_Don’t Save"
-msgstr "Spara _inte"
-
-#: tepl/tepl-io-error-info-bars.c:116
-#, c-format
-msgid "Could not create a backup file while saving “%s”"
-msgstr "Kunde inte skapa en säkerhetskopia när ”%s” sparades"
-
-#: tepl/tepl-io-error-info-bars.c:121
-msgid ""
-"Could not back up the old copy of the file before saving the new one. You "
-"can ignore this warning and save the file anyway, but if an error occurs "
-"while saving, you could lose the old copy of the file. Save anyway?"
-msgstr ""
-"Kunde inte säkerhetskopiera den gamla kopian av filen före den nya sparas. "
-"Du kan ignorera denna varning och spara filen ändå, men om ett fel inträffar "
-"när den sparas så kan du förlora den gamla kopian av filen. Spara ändå?"
-
-#: tepl/tepl-io-error-info-bars.c:130
-#, c-format
-msgid "Error message: %s"
-msgstr "Felmeddelande: %s"
-
-#: tepl/tepl-io-error-info-bars.c:167
-#, c-format
-msgid "The file “%s” changed on disk."
-msgstr "Filen ”%s” har ändrats på disken."
-
-#: tepl/tepl-io-error-info-bars.c:172
-msgid "Drop Changes and _Reload"
-msgstr "Förkasta ändringar och _läs om"
-
-#: tepl/tepl-io-error-info-bars.c:172
-msgid "_Reload"
-msgstr "_Läs om"
-
-#: tepl/tepl-io-error-info-bars.c:218
-#, c-format
-msgid "Some invalid characters have been detected while saving “%s”."
-msgstr "Några ogiltiga tecken har upptäckts under sparning av ”%s”."
-
-#: tepl/tepl-io-error-info-bars.c:223
-msgid ""
-"If you continue saving this file you can corrupt the document. Save anyway?"
-msgstr ""
-"Om du fortsätter med att spara denna fil kan du skada dokumentet. Spara ändå?"
-
-#. Translators: do not translate <metadata>.
-#: tepl/tepl-metadata-parser.c:98
-#, c-format
-msgid "The XML file must start with a <metadata> element, not “%s”."
-msgstr "XML-filen måste starta med elementet <metadata>, inte ”%s”."
-
-#. Translators: do not translate <document>.
-#: tepl/tepl-metadata-parser.c:130
-#, c-format
-msgid "Expected a <document> element, got “%s” instead."
-msgstr "Förväntade elementet <document>, hittade ”%s” istället."
-
-#. Translators: do not translate “atime”.
-#: tepl/tepl-metadata-parser.c:156
-#, c-format
-msgid "Failed to parse the “atime” attribute value “%s”."
-msgstr "Misslyckades med att tolka attributvärdet ”%s” för ”atime”."
-
-#. Translators: do not translate <document>, “uri” and “atime”.
-#: tepl/tepl-metadata-parser.c:171
-msgid "The <document> element must contain the “uri” and “atime” attributes."
-msgstr "Elementet <document> måste innehålla attributen ”uri” och ”atime”."
-
-#. Translators: do not translate <entry>.
-#: tepl/tepl-metadata-parser.c:200
-#, c-format
-msgid "Expected an <entry> element, got “%s” instead."
-msgstr "Förväntade elementet <entry>, hittade ”%s” istället."
-
-#. Translators: do not translate <entry>, “key” and “value”.
-#: tepl/tepl-metadata-parser.c:226
-msgid "The <entry> element is missing the “key” or “value” attribute."
-msgstr "Elementet <entry> saknar attributet ”key” eller ”value”."
-
-#: tepl/tepl-panel.c:107
-msgid "Hide panel"
-msgstr "Dölj panel"
-
-#. Translators: "Ln" is an abbreviation for "Line", Col is an
-#. * abbreviation for "Column". Please, use abbreviations if possible.
-#.
-#: tepl/tepl-statusbar.c:118
-#, c-format
-msgid "Ln %d, Col %d"
-msgstr "Rad %d, Kol %d"
-
-#: tepl/tepl-tab.c:506
-msgid "Error when loading the file."
-msgstr "Fel vid inläsning av filen."
-
-#: tepl/tepl-tab.c:720
-msgid "Save File"
-msgstr "Spara fil"
-
-#. Translators: location of a file.
-#: tepl/tepl-tab-label.c:272
-msgid "Location:"
-msgstr "Plats:"
-
-#: tepl/tepl-tab-label.c:341
-msgid "Close file"
-msgstr "Stäng fil"
-
-#: tepl/tepl-tab-saving.c:62
-msgid "Error when saving the file."
-msgstr "Fel vid sparande av filen."
+#~ msgid "Unicode"
+#~ msgstr "Unicode"
+
+#~ msgid "Western"
+#~ msgstr "Västerländsk"
+
+#~ msgid "Central European"
+#~ msgstr "Centraleuropeisk"
+
+#~ msgid "South European"
+#~ msgstr "Sydeuropeisk"
+
+#~ msgid "Baltic"
+#~ msgstr "Baltisk"
+
+#~ msgid "Cyrillic"
+#~ msgstr "Kyrillisk"
+
+#~ msgid "Arabic"
+#~ msgstr "Arabisk"
+
+#~ msgid "Greek"
+#~ msgstr "Grekisk"
+
+#~ msgid "Hebrew Visual"
+#~ msgstr "Hebreisk visuell"
+
+#~ msgid "Turkish"
+#~ msgstr "Turkisk"
+
+#~ msgid "Nordic"
+#~ msgstr "Nordisk"
+
+#~ msgid "Celtic"
+#~ msgstr "Keltisk"
+
+#~ msgid "Romanian"
+#~ msgstr "Rumänsk"
+
+#~ msgid "Armenian"
+#~ msgstr "Armenisk"
+
+#~ msgid "Chinese Traditional"
+#~ msgstr "Kinesisk (traditionell)"
+
+#~ msgid "Cyrillic/Russian"
+#~ msgstr "Kyrillisk/Rysk"
+
+#~ msgid "Japanese"
+#~ msgstr "Japansk"
+
+#~ msgid "Korean"
+#~ msgstr "Koreansk"
+
+#~ msgid "Chinese Simplified"
+#~ msgstr "Kinesisk (förenklad)"
+
+#~ msgid "Georgian"
+#~ msgstr "Georgisk"
+
+#~ msgid "Hebrew"
+#~ msgstr "Hebreisk"
+
+#~ msgid "Cyrillic/Ukrainian"
+#~ msgstr "Kyrillisk/Ukrainsk"
+
+#~ msgid "Vietnamese"
+#~ msgstr "Vietnamesisk"
+
+#~ msgid "Thai"
+#~ msgstr "Thailändsk"
+
+#~ msgid "Unknown"
+#~ msgstr "Okänd"
+
+#~ msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
+#~ msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
+
+#~ msgid "Conversion from character set “%s” to “%s” is not supported."
+#~ msgstr "Konvertering från teckentabellen ”%s” till ”%s” stöds inte."
+
+#~ msgid "Could not open converter from “%s” to “%s”: %s"
+#~ msgstr "Kunde inte öppna konverteraren från ”%s” till ”%s”: %s"
+
+#~ msgid "The input data contains an invalid sequence."
+#~ msgstr "Indata innehåller en ogiltig sekvens."
+
+#~ msgid "Error when converting data: %s"
+#~ msgstr "Fel vid konvertering av data: %s"
+
+#~ msgid "The input data ends with an incomplete multi-byte sequence."
+#~ msgstr "Indata avslutas med en ofullständig flerbytesekvens."
+
+#~ msgid "The input content ends with incomplete data."
+#~ msgstr "Inmatningsinnehållet avslutas med ofullständiga data."
+
+#~ msgid "The file is too big. Maximum %s can be loaded."
+#~ msgstr "Filen är för stor. Högst %s kan läsas in."
+
+#~ msgid "It is not possible to detect the character encoding automatically."
+#~ msgstr "Det går inte att identifiera teckenkodningen automatiskt."
+
+#~ msgid "The file is externally modified."
+#~ msgstr "Filen har ändrats externt."
+
+#~ msgid "The buffer contains invalid characters."
+#~ msgstr "Bufferten innehåller ogiltiga tecken."
 
 #~ msgid "Open “%s”"
 #~ msgstr "Öppna ”%s”"

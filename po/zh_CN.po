@@ -1,0 +1,334 @@
+# Chinese (China) translation for tepl.
+# Copyright (C) 2020 tepl's COPYRIGHT HOLDER
+# This file is distributed under the same license as the tepl package.
+# Damned <damnedlies@163.com>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tepl master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
+"POT-Creation-Date: 2020-09-04 11:29+0000\n"
+"PO-Revision-Date: 2020-09-09 10:03-0400\n"
+"Last-Translator: \n"
+"Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+
+#. action, icon, label, accel, tooltip
+#. File menu
+#. Why "file" and not "document"? "Document" is not the best
+#. word because the action is not always to create a new
+#. document. For example a LaTeX document can be composed of
+#. several _files_. Or for source code we do not really create a
+#. new "document".
+#: tepl/tepl-application.c:79
+msgid "_New"
+msgstr "新建(_N)"
+
+#: tepl/tepl-application.c:80
+msgid "New file"
+msgstr "新建文件"
+
+#: tepl/tepl-application.c:82
+msgid "New _Window"
+msgstr "新建窗口(_W)"
+
+#: tepl/tepl-application.c:83
+msgid "Create a new window"
+msgstr "创建新窗口"
+
+#: tepl/tepl-application.c:85 tepl/tepl-window-actions-file.c:83
+msgid "_Open"
+msgstr "打开(_O)"
+
+#: tepl/tepl-application.c:86
+msgid "Open a file"
+msgstr "打开文件"
+
+#: tepl/tepl-application.c:88 tepl/tepl-close-confirm-dialog-single.c:137
+#: tepl/tepl-tab-saving.c:281
+msgid "_Save"
+msgstr "保存(_S)"
+
+#: tepl/tepl-application.c:89
+msgid "Save the current file"
+msgstr "保存当前文件"
+
+#: tepl/tepl-application.c:91
+msgid "Save _As"
+msgstr "另存为(_A)"
+
+#: tepl/tepl-application.c:92
+msgid "Save the current file to a different location"
+msgstr "将当前文件保存到不同的位置"
+
+#. Edit menu
+#: tepl/tepl-application.c:96
+msgid "_Undo"
+msgstr "撤销(_U)"
+
+#: tepl/tepl-application.c:97
+msgid "Undo the last action"
+msgstr "撤销上一个动作"
+
+#: tepl/tepl-application.c:99
+msgid "_Redo"
+msgstr "重做(_R)"
+
+#: tepl/tepl-application.c:100
+msgid "Redo the last undone action"
+msgstr "重做上一次撤销的动作"
+
+#: tepl/tepl-application.c:102
+msgid "Cu_t"
+msgstr "剪切(_T)"
+
+#: tepl/tepl-application.c:103
+msgid "Cut the selection"
+msgstr "剪切选中的内容"
+
+#: tepl/tepl-application.c:105
+msgid "_Copy"
+msgstr "复制(_C)"
+
+#: tepl/tepl-application.c:106
+msgid "Copy the selection"
+msgstr "复制选中的内容"
+
+#: tepl/tepl-application.c:108
+msgid "_Paste"
+msgstr "粘贴(_P)"
+
+#: tepl/tepl-application.c:109
+msgid "Paste the clipboard"
+msgstr "粘贴剪贴板"
+
+#: tepl/tepl-application.c:111
+msgid "_Delete"
+msgstr "删除(_D)"
+
+#: tepl/tepl-application.c:112
+msgid "Delete the selected text"
+msgstr "删除选中的文本"
+
+#: tepl/tepl-application.c:114
+msgid "Select _All"
+msgstr "全选(_A)"
+
+#: tepl/tepl-application.c:115
+msgid "Select all the text"
+msgstr "选择全部文本"
+
+#: tepl/tepl-application.c:117
+msgid "_Indent"
+msgstr "缩进(_I)"
+
+#: tepl/tepl-application.c:118
+msgid "Indent the selected lines"
+msgstr "缩进选中的行"
+
+#: tepl/tepl-application.c:120
+msgid "_Unindent"
+msgstr "取消缩进(_U)"
+
+#: tepl/tepl-application.c:121
+msgid "Unindent the selected lines"
+msgstr "取消缩进选中的行"
+
+#. Search menu
+#: tepl/tepl-application.c:125
+msgid "_Go to Line…"
+msgstr "转到行(_G)…"
+
+#: tepl/tepl-application.c:126
+msgid "Go to a specific line"
+msgstr "转到指定的行"
+
+#: tepl/tepl-application-window.c:156
+msgid "Read-Only"
+msgstr "只读"
+
+#: tepl/tepl-close-confirm-dialog-single.c:119
+#, c-format
+msgid "Save changes to file “%s” before closing?"
+msgstr "在关闭文件“%s”之前保存更改？"
+
+#: tepl/tepl-close-confirm-dialog-single.c:125
+msgid "Close _without Saving"
+msgstr "不保存而关闭(_W)"
+
+#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
+#: tepl/tepl-window-actions-file.c:82
+msgid "_Cancel"
+msgstr "取消(_C)"
+
+#: tepl/tepl-close-confirm-dialog-single.c:143
+msgid "_Save As…"
+msgstr "另存为(_S)…"
+
+#: tepl/tepl-file.c:426
+#, c-format
+msgid "Untitled File %d"
+msgstr "无标题文件 %d"
+
+#: tepl/tepl-file-loader.c:341
+msgid "The content must be encoded with the UTF-8 character encoding."
+msgstr "内容必须使用 UTF-8 字符编码进行编码。"
+
+#: tepl/tepl-goto-line-bar.c:235
+msgid "Go to line:"
+msgstr "转到行："
+
+#: tepl/tepl-goto-line-bar.c:243
+msgid "Close"
+msgstr "关闭"
+
+#: tepl/tepl-io-error-info-bars.c:42
+msgid "_Edit Anyway"
+msgstr "仍要编辑(_E)"
+
+#: tepl/tepl-io-error-info-bars.c:46
+msgid "_Don’t Edit"
+msgstr "不编辑(_D)"
+
+#: tepl/tepl-io-error-info-bars.c:52
+#, c-format
+msgid "This file “%s” is already open in another window."
+msgstr "该文件“%s”已在另一个窗口中打开。"
+
+#: tepl/tepl-io-error-info-bars.c:57
+msgid "Do you want to edit it anyway?"
+msgstr "您是否仍要编辑该文件？"
+
+#: tepl/tepl-io-error-info-bars.c:91 tepl/tepl-io-error-info-bars.c:193
+msgid "S_ave Anyway"
+msgstr "仍要保存(_A)"
+
+#: tepl/tepl-io-error-info-bars.c:95 tepl/tepl-io-error-info-bars.c:197
+msgid "_Don’t Save"
+msgstr "不保存(_D)"
+
+#: tepl/tepl-io-error-info-bars.c:101
+#, c-format
+msgid "Could not create a backup file while saving “%s”"
+msgstr "在保存“%s”时无法创建备份文件。"
+
+#: tepl/tepl-io-error-info-bars.c:106
+msgid ""
+"Could not back up the old copy of the file before saving the new one. You "
+"can ignore this warning and save the file anyway, but if an error occurs "
+"while saving, you could lose the old copy of the file. Save anyway?"
+msgstr ""
+"在保存新文件之前无法备份该文件的旧副本。您可以忽略此警告并仍然保存该文件，"
+"但如果在保存时发生错误，您可能会丢失该文件的旧副本。仍要保存吗？"
+
+#: tepl/tepl-io-error-info-bars.c:115
+#, c-format
+msgid "Error message: %s"
+msgstr "错误消息：%s"
+
+#: tepl/tepl-io-error-info-bars.c:152
+#, c-format
+msgid "The file “%s” changed on disk."
+msgstr "文件“%s”已在磁盘上更改。"
+
+#: tepl/tepl-io-error-info-bars.c:157
+msgid "Drop Changes and _Reload"
+msgstr "丢弃更改并重新载入(_R)"
+
+#: tepl/tepl-io-error-info-bars.c:157
+msgid "_Reload"
+msgstr "重新载入(_R)"
+
+#: tepl/tepl-io-error-info-bars.c:203
+#, c-format
+msgid "Some invalid characters have been detected while saving “%s”."
+msgstr "在保存“%s”时检测到了一些无效字符。"
+
+#: tepl/tepl-io-error-info-bars.c:208
+msgid ""
+"If you continue saving this file you can corrupt the document. Save anyway?"
+msgstr "如果您继续保存此文件，您可能会损坏此文档。仍要保存吗？"
+
+#. Translators: do not translate <metadata>.
+#: tepl/tepl-metadata-parser.c:83
+#, c-format
+msgid "The XML file must start with a <metadata> element, not “%s”."
+msgstr "XML 文件必须以 <metadata> 元素而不是“%s”开始。"
+
+#. Translators: do not translate <document>.
+#: tepl/tepl-metadata-parser.c:115
+#, c-format
+msgid "Expected a <document> element, got “%s” instead."
+msgstr "应为 <document> 元素，但读取到的是“%s”。"
+
+#. Translators: do not translate “atime”.
+#: tepl/tepl-metadata-parser.c:141
+#, c-format
+msgid "Failed to parse the “atime” attribute value “%s”."
+msgstr "无法解析“atime”属性的值“%s”。"
+
+#. Translators: do not translate <document>, “uri” and “atime”.
+#: tepl/tepl-metadata-parser.c:156
+msgid "The <document> element must contain the “uri” and “atime” attributes."
+msgstr "<document> 元素必须包含“uri”和“atime”属性。"
+
+#. Translators: do not translate <entry>.
+#: tepl/tepl-metadata-parser.c:185
+#, c-format
+msgid "Expected an <entry> element, got “%s” instead."
+msgstr "应为 <entry> 元素，但读取到的是“%s”。"
+
+#. Translators: do not translate <entry>, “key” and “value”.
+#: tepl/tepl-metadata-parser.c:211
+msgid "The <entry> element is missing the “key” or “value” attribute."
+msgstr "<entry> 元素缺少“key”或“value”属性。"
+
+#: tepl/tepl-panel.c:92
+msgid "Hide panel"
+msgstr "隐藏面板"
+
+#. Translators: "Ln" is an abbreviation for "Line", Col is an
+#. * abbreviation for "Column". Please, use abbreviations if possible.
+#.
+#: tepl/tepl-statusbar.c:103
+#, c-format
+msgid "Ln %d, Col %d"
+msgstr "第 %d 行，第 %d 列"
+
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:249
+msgid "Location:"
+msgstr "位置："
+
+#: tepl/tepl-tab-label.c:318
+msgid "Close file"
+msgstr "关闭文件"
+
+#: tepl/tepl-tab-loading.c:36
+msgid "Error when loading the file."
+msgstr "载入文件时出错。"
+
+#: tepl/tepl-tab-saving.c:49
+msgid "Error when saving the file."
+msgstr "保存文件时出错。"
+
+#: tepl/tepl-tab-saving.c:277
+msgid "Save File"
+msgstr "保存文件"
+
+#. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
+#. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
+#. * doesn't have the real path to the file, so it would ruin some
+#. * features for text editors:
+#. * - showing the directory in parentheses in the window title, or in the
+#. *   tab tooltip;
+#. * - opening a recent file.
+#. * Basically everywhere where the directory is shown.
+#.
+#: tepl/tepl-window-actions-file.c:79
+msgid "Open File"
+msgstr "打开文件"

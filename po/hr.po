@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
 "POT-Creation-Date: 2020-09-11 00:26+0000\n"
-"PO-Revision-Date: 2020-09-19 17:19+0200\n"
+"PO-Revision-Date: 2020-09-19 17:23+0200\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -245,7 +245,7 @@ msgstr "Odbaci promjene i _učitaj ponovno"
 
 #: tepl/tepl-io-error-info-bars.c:157
 msgid "_Reload"
-msgstr "_Učitaj ponovo"
+msgstr "_Učitaj ponovno"
 
 #: tepl/tepl-io-error-info-bars.c:203
 #, c-format
@@ -263,13 +263,13 @@ msgstr ""
 #: tepl/tepl-metadata-parser.c:83
 #, c-format
 msgid "The XML file must start with a <metadata> element, not “%s”."
-msgstr "XML datoteka mora započeti s <metadata> element, not “%s”."
+msgstr "XML datoteka mora započeti s <metadata> elementom, a ne “%s”."
 
 #. Translators: do not translate <document>.
 #: tepl/tepl-metadata-parser.c:115
 #, c-format
 msgid "Expected a <document> element, got “%s” instead."
-msgstr "Očekivano je <document> element, got “%s” umjesto."
+msgstr "Očekivan je <document> element, umjesto je dobiven “%s”."
 
 #. Translators: do not translate “atime”.
 #: tepl/tepl-metadata-parser.c:141
@@ -286,7 +286,7 @@ msgstr "<document> element mora sadržavati “uri” i “atime” svojstva."
 #: tepl/tepl-metadata-parser.c:185
 #, c-format
 msgid "Expected an <entry> element, got “%s” instead."
-msgstr "Očekivano je <entry> element, got “%s” umjesto."
+msgstr "Očekivan je <entry> element, umjesto je dobiven “%s”."
 
 #. Translators: do not translate <entry>, “key” and “value”.
 #: tepl/tepl-metadata-parser.c:211

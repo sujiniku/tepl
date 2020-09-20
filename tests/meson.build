@@ -1,6 +1,7 @@
 interactive_tests = [
   # executable name, sources
   ['test-fold-region', 'test-fold-region.c'],
+  ['test-space-drawer-prefs', 'test-space-drawer-prefs.c'],
   ['test-tab', 'test-tab.c'],
 
   ['test-gutter-renderer-folds',

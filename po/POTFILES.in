@@ -22,6 +22,7 @@ tepl/tepl-metadata-parser.c
 tepl/tepl-notebook.c
 tepl/tepl-panel.c
 tepl/tepl-signal-group.c
+tepl/tepl-space-drawer-prefs.c
 tepl/tepl-statusbar.c
 tepl/tepl-style-scheme-chooser-widget.c
 tepl/tepl-tab.c

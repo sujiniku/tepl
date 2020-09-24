@@ -169,7 +169,7 @@ create_check_button (TeplSpaceDrawerPrefs *prefs,
 	GtkCheckButton *check_button;
 
 	check_button = GTK_CHECK_BUTTON (gtk_check_button_new_with_label (label));
-	gtk_widget_set_margin_start (GTK_WIDGET (check_button), 6);
+	gtk_widget_set_margin_start (GTK_WIDGET (check_button), 12);
 
 	g_signal_connect (check_button,
 			  "toggled",

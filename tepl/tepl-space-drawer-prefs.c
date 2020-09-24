@@ -23,6 +23,7 @@ struct _TeplSpaceDrawerPrefsPrivate
 	/* Owned */
 	GtkSourceSpaceDrawer *space_drawer;
 
+	/* First column */
 	GtkCheckButton *check_button_leading_tabs;
 	GtkCheckButton *check_button_leading_spaces;
 	GtkCheckButton *check_button_inside_text_tabs;
@@ -30,6 +31,9 @@ struct _TeplSpaceDrawerPrefsPrivate
 	GtkCheckButton *check_button_trailing_tabs;
 	GtkCheckButton *check_button_trailing_spaces;
 	GtkCheckButton *check_button_newlines;
+
+	/* Second column */
+	GtkGrid *second_column_vgrid;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (TeplSpaceDrawerPrefs, tepl_space_drawer_prefs, GTK_TYPE_GRID)
@@ -249,13 +253,65 @@ matrix_notify_cb (GtkSourceSpaceDrawer *space_drawer,
 	set_check_buttons_state_according_to_matrix (prefs);
 }
 
+static gchar *
+result_viewer_get_buffer_content (void)
+{
+	const gchar *tab_desc = _("Tab");
+	const gchar *space_desc = _("Space");
+	const gchar *nbsp_desc = _("No-Break Space");
+	const gchar *narrow_nbsp_desc = _("Narrow No-Break Space");
+
+	return g_strconcat ("\t", tab_desc, "\t", tab_desc, "\t\n",
+			    " ", space_desc, " ", space_desc, " \n",
+			    "\xC2\xA0", nbsp_desc, "\xC2\xA0", nbsp_desc, "\xC2\xA0\n",
+			    "\xE2\x80\xAF", narrow_nbsp_desc, "\xE2\x80\xAF", narrow_nbsp_desc, "\xE2\x80\xAF",
+			    NULL);
+}
+
+static void
+add_result_viewer (TeplSpaceDrawerPrefs *prefs)
+{
+	GtkSourceView *view;
+	GtkTextBuffer *buffer;
+	gchar *buffer_content;
+	GtkSourceSpaceDrawer *space_drawer;
+	GtkWidget *scrolled_window;
+
+	gtk_container_add (GTK_CONTAINER (prefs->priv->second_column_vgrid),
+			   create_subtitle_label (_("Result")));
+
+	view = GTK_SOURCE_VIEW (gtk_source_view_new ());
+	gtk_source_view_set_show_line_numbers (view, TRUE);
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (view), FALSE);
+	gtk_text_view_set_monospace (GTK_TEXT_VIEW (view), TRUE);
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+	buffer_content = result_viewer_get_buffer_content ();
+	gtk_text_buffer_set_text (buffer, buffer_content, -1);
+	g_free (buffer_content);
+
+	space_drawer = gtk_source_view_get_space_drawer (view);
+	gtk_source_space_drawer_set_enable_matrix (space_drawer, TRUE);
+	g_object_bind_property (prefs->priv->space_drawer, "matrix",
+				space_drawer, "matrix",
+				G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+
+	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_widget_set_size_request (scrolled_window, 500, 120);
+	gtk_widget_set_margin_start (scrolled_window, 12);
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window), GTK_SHADOW_IN);
+	gtk_scrolled_window_set_overlay_scrolling (GTK_SCROLLED_WINDOW (scrolled_window), FALSE);
+	gtk_container_add (GTK_CONTAINER (scrolled_window), GTK_WIDGET (view));
+	gtk_container_add (GTK_CONTAINER (prefs->priv->second_column_vgrid), scrolled_window);
+}
+
 static void
 tepl_space_drawer_prefs_init (TeplSpaceDrawerPrefs *prefs)
 {
 	prefs->priv = tepl_space_drawer_prefs_get_instance_private (prefs);
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (prefs), GTK_ORIENTATION_HORIZONTAL);
-	gtk_grid_set_column_spacing (GTK_GRID (prefs), 12);
+	gtk_grid_set_column_spacing (GTK_GRID (prefs), 24);
 
 	g_object_set (prefs,
 		      "margin", 6,
@@ -275,6 +331,14 @@ tepl_space_drawer_prefs_init (TeplSpaceDrawerPrefs *prefs)
 				 G_CALLBACK (matrix_notify_cb),
 				 prefs,
 				 0);
+
+	prefs->priv->second_column_vgrid = GTK_GRID (gtk_grid_new ());
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (prefs->priv->second_column_vgrid),
+					GTK_ORIENTATION_VERTICAL);
+	gtk_grid_set_row_spacing (prefs->priv->second_column_vgrid, 6);
+	gtk_container_add (GTK_CONTAINER (prefs), GTK_WIDGET (prefs->priv->second_column_vgrid));
+	add_result_viewer (prefs);
+	gtk_widget_show_all (GTK_WIDGET (prefs->priv->second_column_vgrid));
 }
 
 /**

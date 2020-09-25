@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-09-24 06:15+0000\n"
-"PO-Revision-Date: 2020-09-24 20:56+0300\n"
+"POT-Creation-Date: 2020-09-24 22:53+0000\n"
+"PO-Revision-Date: 2020-09-25 15:24+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -295,31 +295,51 @@ msgstr "Елемент <entry> не містити атрибута «key» аб
 msgid "Hide panel"
 msgstr "Сховати панель"
 
-#: tepl/tepl-space-drawer-prefs.c:185 tepl/tepl-space-drawer-prefs.c:187
-#: tepl/tepl-space-drawer-prefs.c:189
+#: tepl/tepl-space-drawer-prefs.c:189 tepl/tepl-space-drawer-prefs.c:191
+#: tepl/tepl-space-drawer-prefs.c:193
 msgid "Draw tabs"
 msgstr "Візуалізація табуляцій"
 
-#: tepl/tepl-space-drawer-prefs.c:186 tepl/tepl-space-drawer-prefs.c:188
-#: tepl/tepl-space-drawer-prefs.c:190
+#: tepl/tepl-space-drawer-prefs.c:190 tepl/tepl-space-drawer-prefs.c:192
+#: tepl/tepl-space-drawer-prefs.c:194
 msgid "Draw spaces"
 msgstr "Візуалізація пробілів"
 
-#: tepl/tepl-space-drawer-prefs.c:191
+#: tepl/tepl-space-drawer-prefs.c:195
 msgid "Draw new lines"
 msgstr "Візуалізація розривів рядків"
 
-#: tepl/tepl-space-drawer-prefs.c:227
+#: tepl/tepl-space-drawer-prefs.c:231
 msgid "Leading Spaces"
 msgstr "Початкові пробіли"
 
-#: tepl/tepl-space-drawer-prefs.c:231
+#: tepl/tepl-space-drawer-prefs.c:235
 msgid "Spaces Inside Text"
 msgstr "Пропуск всередині тексту"
 
-#: tepl/tepl-space-drawer-prefs.c:235
+#: tepl/tepl-space-drawer-prefs.c:239
 msgid "Trailing Spaces"
 msgstr "Кінцеві пробіли"
+
+#: tepl/tepl-space-drawer-prefs.c:259
+msgid "Tab"
+msgstr "Табуляція"
+
+#: tepl/tepl-space-drawer-prefs.c:260
+msgid "Space"
+msgstr "Пробіл"
+
+#: tepl/tepl-space-drawer-prefs.c:261
+msgid "No-Break Space"
+msgstr "Нерозривний пробіл"
+
+#: tepl/tepl-space-drawer-prefs.c:262
+msgid "Narrow No-Break Space"
+msgstr "Вузький нерозривний пробіл"
+
+#: tepl/tepl-space-drawer-prefs.c:281
+msgid "Result"
+msgstr "Результат"
 
 #. Translators: "Ln" is an abbreviation for "Line", Col is an
 #. * abbreviation for "Column". Please, use abbreviations if possible.

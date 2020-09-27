@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-05-19 00:52+0000\n"
-"PO-Revision-Date: 2020-05-24 13:02+0200\n"
+"POT-Creation-Date: 2020-09-24 22:53+0000\n"
+"PO-Revision-Date: 2020-09-27 13:05+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -42,7 +42,7 @@ msgstr "No_we okno"
 msgid "Create a new window"
 msgstr "Otwiera nowe okno"
 
-#: tepl/tepl-application.c:85 tepl/tepl-window-actions-file.c:82
+#: tepl/tepl-application.c:85 tepl/tepl-window-actions-file.c:83
 msgid "_Open"
 msgstr "_Otwórz"
 
@@ -50,8 +50,8 @@ msgstr "_Otwórz"
 msgid "Open a file"
 msgstr "Otwiera plik"
 
-#: tepl/tepl-application.c:88 tepl/tepl-close-confirm-dialog-single.c:130
-#: tepl/tepl-tab.c:751
+#: tepl/tepl-application.c:88 tepl/tepl-close-confirm-dialog-single.c:137
+#: tepl/tepl-tab-saving.c:281
 msgid "_Save"
 msgstr "_Zapisz"
 
@@ -149,34 +149,34 @@ msgstr "_Przejdź do wiersza…"
 msgid "Go to a specific line"
 msgstr "Przechodzi do podanego wiersza"
 
-#: tepl/tepl-application-window.c:155
+#: tepl/tepl-application-window.c:156
 msgid "Read-Only"
 msgstr "Tylko do odczytu"
 
-#: tepl/tepl-close-confirm-dialog-single.c:117
+#: tepl/tepl-close-confirm-dialog-single.c:119
 #, c-format
 msgid "Save changes to file “%s” before closing?"
 msgstr "Zapisać zmiany przed zamknięciem pliku „%s”?"
 
-#: tepl/tepl-close-confirm-dialog-single.c:123
+#: tepl/tepl-close-confirm-dialog-single.c:125
 msgid "Close _without Saving"
 msgstr "Zamknij _bez zapisywania"
 
-#: tepl/tepl-close-confirm-dialog-single.c:124 tepl/tepl-tab.c:750
-#: tepl/tepl-window-actions-file.c:81
+#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
+#: tepl/tepl-window-actions-file.c:82
 msgid "_Cancel"
 msgstr "_Anuluj"
 
-#: tepl/tepl-close-confirm-dialog-single.c:136
+#: tepl/tepl-close-confirm-dialog-single.c:143
 msgid "_Save As…"
 msgstr "Zapi_sz jako…"
 
-#: tepl/tepl-file.c:409
+#: tepl/tepl-file.c:426
 #, c-format
 msgid "Untitled File %d"
 msgstr "Plik bez tytułu %d"
 
-#: tepl/tepl-file-loader.c:336
+#: tepl/tepl-file-loader.c:341
 msgid "The content must be encoded with the UTF-8 character encoding."
 msgstr "Treść musi być zapisana za pomocą kodowania znaków UTF-8."
 
@@ -297,6 +297,52 @@ msgstr "Element <entry> nie ma atrybutu „key” lub „value”."
 msgid "Hide panel"
 msgstr "Ukrywa panel"
 
+#: tepl/tepl-space-drawer-prefs.c:189 tepl/tepl-space-drawer-prefs.c:191
+#: tepl/tepl-space-drawer-prefs.c:193
+msgid "Draw tabs"
+msgstr "Wyświetlanie tabulacji"
+
+#: tepl/tepl-space-drawer-prefs.c:190 tepl/tepl-space-drawer-prefs.c:192
+#: tepl/tepl-space-drawer-prefs.c:194
+msgid "Draw spaces"
+msgstr "Wyświetlanie spacji"
+
+#: tepl/tepl-space-drawer-prefs.c:195
+msgid "Draw new lines"
+msgstr "Wyświetlanie nowych wierszy"
+
+#: tepl/tepl-space-drawer-prefs.c:231
+msgid "Leading Spaces"
+msgstr "Spacje na początku wierszy"
+
+#: tepl/tepl-space-drawer-prefs.c:235
+msgid "Spaces Inside Text"
+msgstr "Spacje w tekście"
+
+#: tepl/tepl-space-drawer-prefs.c:239
+msgid "Trailing Spaces"
+msgstr "Spacje na końcach wierszy"
+
+#: tepl/tepl-space-drawer-prefs.c:259
+msgid "Tab"
+msgstr "Tabulacja"
+
+#: tepl/tepl-space-drawer-prefs.c:260
+msgid "Space"
+msgstr "Spacja"
+
+#: tepl/tepl-space-drawer-prefs.c:261
+msgid "No-Break Space"
+msgstr "Niełamliwa spacja"
+
+#: tepl/tepl-space-drawer-prefs.c:262
+msgid "Narrow No-Break Space"
+msgstr "Wąska niełamliwa spacja"
+
+#: tepl/tepl-space-drawer-prefs.c:281
+msgid "Result"
+msgstr "Wynik"
+
 #. Translators: "Ln" is an abbreviation for "Line", Col is an
 #. * abbreviation for "Column". Please, use abbreviations if possible.
 #.
@@ -304,14 +350,6 @@ msgstr "Ukrywa panel"
 #, c-format
 msgid "Ln %d, Col %d"
 msgstr "Wrsz %d, kol %d"
-
-#: tepl/tepl-tab.c:534
-msgid "Error when loading the file."
-msgstr "Błąd podczas wczytywania pliku."
-
-#: tepl/tepl-tab.c:747
-msgid "Save File"
-msgstr "Zapis pliku"
 
 #. Translators: location of a file.
 #: tepl/tepl-tab-label.c:249
@@ -322,9 +360,17 @@ msgstr "Położenie:"
 msgid "Close file"
 msgstr "Zamyka plik"
 
-#: tepl/tepl-tab-saving.c:47
+#: tepl/tepl-tab-loading.c:36
+msgid "Error when loading the file."
+msgstr "Błąd podczas wczytywania pliku."
+
+#: tepl/tepl-tab-saving.c:49
 msgid "Error when saving the file."
 msgstr "Błąd podczas zapisywania pliku."
+
+#: tepl/tepl-tab-saving.c:277
+msgid "Save File"
+msgstr "Zapis pliku"
 
 #. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
 #. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
@@ -335,6 +381,6 @@ msgstr "Błąd podczas zapisywania pliku."
 #. * - opening a recent file.
 #. * Basically everywhere where the directory is shown.
 #.
-#: tepl/tepl-window-actions-file.c:78
+#: tepl/tepl-window-actions-file.c:79
 msgid "Open File"
 msgstr "Otwarcie pliku"

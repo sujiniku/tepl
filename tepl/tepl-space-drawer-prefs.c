@@ -306,6 +306,26 @@ add_result_viewer (TeplSpaceDrawerPrefs *prefs)
 }
 
 static void
+add_information (TeplSpaceDrawerPrefs *prefs)
+{
+	GtkLabel *label;
+
+	gtk_container_add (GTK_CONTAINER (prefs->priv->second_column_vgrid),
+			   create_subtitle_label (_("Information")));
+
+	label = GTK_LABEL (gtk_label_new (_("When white space drawing is enabled, then non-breaking "
+					    "spaces are always drawn at all locations, to distinguish "
+					    "them from normal spaces.")));
+	gtk_widget_set_margin_start (GTK_WIDGET (label), 12);
+	gtk_widget_set_halign (GTK_WIDGET (label), GTK_ALIGN_START);
+	gtk_label_set_xalign (label, 0.0);
+	gtk_label_set_line_wrap (label, TRUE);
+	gtk_label_set_selectable (label, TRUE);
+	gtk_label_set_max_width_chars (label, 60);
+	gtk_container_add (GTK_CONTAINER (prefs->priv->second_column_vgrid), GTK_WIDGET (label));
+}
+
+static void
 tepl_space_drawer_prefs_init (TeplSpaceDrawerPrefs *prefs)
 {
 	prefs->priv = tepl_space_drawer_prefs_get_instance_private (prefs);
@@ -338,6 +358,7 @@ tepl_space_drawer_prefs_init (TeplSpaceDrawerPrefs *prefs)
 	gtk_grid_set_row_spacing (prefs->priv->second_column_vgrid, 6);
 	gtk_container_add (GTK_CONTAINER (prefs), GTK_WIDGET (prefs->priv->second_column_vgrid));
 	add_result_viewer (prefs);
+	add_information (prefs);
 	gtk_widget_show_all (GTK_WIDGET (prefs->priv->second_column_vgrid));
 }
 

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-05-19 00:52+0000\n"
-"PO-Revision-Date: 2020-05-20 12:12+0200\n"
+"POT-Creation-Date: 2020-09-28 15:57+0000\n"
+"PO-Revision-Date: 2020-09-30 16:00+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 3.36.0\n"
+"X-Generator: Gtranslator 3.38.0\n"
 
 #. action, icon, label, accel, tooltip
 #. File menu
@@ -41,7 +41,7 @@ msgstr "_Ventana nueva"
 msgid "Create a new window"
 msgstr "Crear una ventana nueva"
 
-#: tepl/tepl-application.c:85 tepl/tepl-window-actions-file.c:82
+#: tepl/tepl-application.c:85 tepl/tepl-window-actions-file.c:83
 msgid "_Open"
 msgstr "Ab_rir"
 
@@ -49,8 +49,8 @@ msgstr "Ab_rir"
 msgid "Open a file"
 msgstr "Abrir un archivo"
 
-#: tepl/tepl-application.c:88 tepl/tepl-close-confirm-dialog-single.c:130
-#: tepl/tepl-tab.c:751
+#: tepl/tepl-application.c:88 tepl/tepl-close-confirm-dialog-single.c:137
+#: tepl/tepl-tab-saving.c:281
 msgid "_Save"
 msgstr "_Guardar"
 
@@ -148,34 +148,34 @@ msgstr "_Ir a la línea…"
 msgid "Go to a specific line"
 msgstr "Ir a una línea específica"
 
-#: tepl/tepl-application-window.c:155
+#: tepl/tepl-application-window.c:156
 msgid "Read-Only"
 msgstr "Sólo lectura"
 
-#: tepl/tepl-close-confirm-dialog-single.c:117
+#: tepl/tepl-close-confirm-dialog-single.c:119
 #, c-format
 msgid "Save changes to file “%s” before closing?"
 msgstr "¿Quiere guardar los cambios en el archivo «%s» antes de cerrar?"
 
-#: tepl/tepl-close-confirm-dialog-single.c:123
+#: tepl/tepl-close-confirm-dialog-single.c:125
 msgid "Close _without Saving"
 msgstr "Cerrar _sin guardar"
 
-#: tepl/tepl-close-confirm-dialog-single.c:124 tepl/tepl-tab.c:750
-#: tepl/tepl-window-actions-file.c:81
+#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
+#: tepl/tepl-window-actions-file.c:82
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: tepl/tepl-close-confirm-dialog-single.c:136
+#: tepl/tepl-close-confirm-dialog-single.c:143
 msgid "_Save As…"
 msgstr "Guardar _como…"
 
-#: tepl/tepl-file.c:409
+#: tepl/tepl-file.c:426
 #, c-format
 msgid "Untitled File %d"
 msgstr "Archivo sin título %d"
 
-#: tepl/tepl-file-loader.c:336
+#: tepl/tepl-file-loader.c:341
 msgid "The content must be encoded with the UTF-8 character encoding."
 msgstr "El contenido se debe codificar con UTF-8."
 
@@ -296,6 +296,66 @@ msgstr "El elemento <entry> debe contener los atributos «key» o «value»."
 msgid "Hide panel"
 msgstr "Ocultar panel"
 
+#: tepl/tepl-space-drawer-prefs.c:189 tepl/tepl-space-drawer-prefs.c:191
+#: tepl/tepl-space-drawer-prefs.c:193
+msgid "Draw tabs"
+msgstr "Dibujar tabulaciones"
+
+#: tepl/tepl-space-drawer-prefs.c:190 tepl/tepl-space-drawer-prefs.c:192
+#: tepl/tepl-space-drawer-prefs.c:194
+msgid "Draw spaces"
+msgstr "Dibujar espacios"
+
+#: tepl/tepl-space-drawer-prefs.c:195
+msgid "Draw new lines"
+msgstr "Dibujar líneas nuevas"
+
+#: tepl/tepl-space-drawer-prefs.c:231
+msgid "Leading Spaces"
+msgstr "Espacios al principio"
+
+#: tepl/tepl-space-drawer-prefs.c:235
+msgid "Spaces Inside Text"
+msgstr "Espacios en el texto"
+
+#: tepl/tepl-space-drawer-prefs.c:239
+msgid "Trailing Spaces"
+msgstr "Espacios al final"
+
+#: tepl/tepl-space-drawer-prefs.c:259
+msgid "Tab"
+msgstr "Tabulación"
+
+#: tepl/tepl-space-drawer-prefs.c:260
+msgid "Space"
+msgstr "Espacio"
+
+#: tepl/tepl-space-drawer-prefs.c:261
+msgid "No-Break Space"
+msgstr "Espacio no disruptivo"
+
+#: tepl/tepl-space-drawer-prefs.c:262
+msgid "Narrow No-Break Space"
+msgstr "Espacio no disruptivo estrecho"
+
+#: tepl/tepl-space-drawer-prefs.c:281
+msgid "Result"
+msgstr "Resultado"
+
+#: tepl/tepl-space-drawer-prefs.c:314
+#| msgid "Location:"
+msgid "Information"
+msgstr "Información"
+
+#: tepl/tepl-space-drawer-prefs.c:316
+msgid ""
+"When white space drawing is enabled, then non-breaking spaces are always "
+"drawn at all locations, to distinguish them from normal spaces."
+msgstr ""
+"Cuando el dibujado de espacios en blanco está activado, los espacios no "
+"disruptivos se dibujan siempre en todas las ubicaciones, para distinguirlos "
+"de los espacios normales."
+
 #. Translators: "Ln" is an abbreviation for "Line", Col is an
 #. * abbreviation for "Column". Please, use abbreviations if possible.
 #.
@@ -303,14 +363,6 @@ msgstr "Ocultar panel"
 #, c-format
 msgid "Ln %d, Col %d"
 msgstr "Ln %d, Col %d"
-
-#: tepl/tepl-tab.c:534
-msgid "Error when loading the file."
-msgstr "Error al cargar el archivo."
-
-#: tepl/tepl-tab.c:747
-msgid "Save File"
-msgstr "Guardar archivo"
 
 #. Translators: location of a file.
 #: tepl/tepl-tab-label.c:249
@@ -321,9 +373,17 @@ msgstr "Ubicación:"
 msgid "Close file"
 msgstr "Cerrar archivo"
 
-#: tepl/tepl-tab-saving.c:47
+#: tepl/tepl-tab-loading.c:36
+msgid "Error when loading the file."
+msgstr "Error al cargar el archivo."
+
+#: tepl/tepl-tab-saving.c:49
 msgid "Error when saving the file."
 msgstr "Error al guardar el archivo."
+
+#: tepl/tepl-tab-saving.c:277
+msgid "Save File"
+msgstr "Guardar archivo"
 
 #. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
 #. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
@@ -334,7 +394,7 @@ msgstr "Error al guardar el archivo."
 #. * - opening a recent file.
 #. * Basically everywhere where the directory is shown.
 #.
-#: tepl/tepl-window-actions-file.c:78
+#: tepl/tepl-window-actions-file.c:79
 msgid "Open File"
 msgstr "Abrir archivo"
 

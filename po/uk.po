@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-09-24 22:53+0000\n"
-"PO-Revision-Date: 2020-09-25 15:24+0300\n"
+"POT-Creation-Date: 2020-09-28 15:57+0000\n"
+"PO-Revision-Date: 2020-09-30 14:31+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -340,6 +340,19 @@ msgstr "Вузький нерозривний пробіл"
 #: tepl/tepl-space-drawer-prefs.c:281
 msgid "Result"
 msgstr "Результат"
+
+#: tepl/tepl-space-drawer-prefs.c:314
+#| msgid "Location:"
+msgid "Information"
+msgstr "Відомості"
+
+#: tepl/tepl-space-drawer-prefs.c:316
+msgid ""
+"When white space drawing is enabled, then non-breaking spaces are always "
+"drawn at all locations, to distinguish them from normal spaces."
+msgstr ""
+"Якщо увімкнено візуалізацію пробілів, нерозривні пробіли буде візуалізовано"
+" всюди, щоб ви могли відрізнити їх від звичайних пробілів."
 
 #. Translators: "Ln" is an abbreviation for "Line", Col is an
 #. * abbreviation for "Column". Please, use abbreviations if possible.

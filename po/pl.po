@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-09-24 22:53+0000\n"
-"PO-Revision-Date: 2020-09-27 13:05+0200\n"
+"POT-Creation-Date: 2020-09-28 15:57+0000\n"
+"PO-Revision-Date: 2020-10-04 13:30+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -342,6 +342,18 @@ msgstr "Wąska niełamliwa spacja"
 #: tepl/tepl-space-drawer-prefs.c:281
 msgid "Result"
 msgstr "Wynik"
+
+#: tepl/tepl-space-drawer-prefs.c:314
+msgid "Information"
+msgstr "Informacja"
+
+#: tepl/tepl-space-drawer-prefs.c:316
+msgid ""
+"When white space drawing is enabled, then non-breaking spaces are always "
+"drawn at all locations, to distinguish them from normal spaces."
+msgstr ""
+"Włączenie wyświetlania białych znaków powoduje, że niełamliwe spacje są "
+"zawsze wyświetlane w każdym miejscu, aby rozróżnić je od zwykłych spacji."
 
 #. Translators: "Ln" is an abbreviation for "Line", Col is an
 #. * abbreviation for "Column". Please, use abbreviations if possible.

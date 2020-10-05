@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-05-29 12:28+0000\n"
-"PO-Revision-Date: 2020-08-17 21:56+0700\n"
+"POT-Creation-Date: 2020-09-28 15:57+0000\n"
+"PO-Revision-Date: 2020-10-05 09:05+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
@@ -295,6 +295,64 @@ msgstr "Elemen <entry> harus mengandung atribut \"key\" dan \"value\"."
 msgid "Hide panel"
 msgstr "Sembunyikan panel"
 
+#: tepl/tepl-space-drawer-prefs.c:189 tepl/tepl-space-drawer-prefs.c:191
+#: tepl/tepl-space-drawer-prefs.c:193
+msgid "Draw tabs"
+msgstr "Menggambar tab"
+
+#: tepl/tepl-space-drawer-prefs.c:190 tepl/tepl-space-drawer-prefs.c:192
+#: tepl/tepl-space-drawer-prefs.c:194
+msgid "Draw spaces"
+msgstr "Menggambar spasi"
+
+#: tepl/tepl-space-drawer-prefs.c:195
+msgid "Draw new lines"
+msgstr "Menggambar baris baru"
+
+#: tepl/tepl-space-drawer-prefs.c:231
+msgid "Leading Spaces"
+msgstr "Spasi Terdepan"
+
+#: tepl/tepl-space-drawer-prefs.c:235
+msgid "Spaces Inside Text"
+msgstr "Spasi di Dalam Teks"
+
+#: tepl/tepl-space-drawer-prefs.c:239
+msgid "Trailing Spaces"
+msgstr "Spasi di Belakang"
+
+#: tepl/tepl-space-drawer-prefs.c:259
+msgid "Tab"
+msgstr "Tab"
+
+#: tepl/tepl-space-drawer-prefs.c:260
+msgid "Space"
+msgstr "Spasi"
+
+#: tepl/tepl-space-drawer-prefs.c:261
+msgid "No-Break Space"
+msgstr "Spasi Tak Putus"
+
+#: tepl/tepl-space-drawer-prefs.c:262
+msgid "Narrow No-Break Space"
+msgstr "Spasi Tak Putus Sempit"
+
+#: tepl/tepl-space-drawer-prefs.c:281
+msgid "Result"
+msgstr "Hasil"
+
+#: tepl/tepl-space-drawer-prefs.c:314
+msgid "Information"
+msgstr "Informasi"
+
+#: tepl/tepl-space-drawer-prefs.c:316
+msgid ""
+"When white space drawing is enabled, then non-breaking spaces are always "
+"drawn at all locations, to distinguish them from normal spaces."
+msgstr ""
+"Saat menggambar spasi putih diaktifkan, maka spasi tak putus selalu digambar "
+"di semua lokasi, untuk membedakannya dari ruang normal."
+
 #. Translators: "Ln" is an abbreviation for "Line", Col is an
 #. * abbreviation for "Column". Please, use abbreviations if possible.
 #.
@@ -336,206 +394,3 @@ msgstr "Simpan Berkas"
 #: tepl/tepl-window-actions-file.c:79
 msgid "Open File"
 msgstr "Buka Berkas"
-
-#~ msgid "Unicode"
-#~ msgstr "Unikode"
-
-#~ msgid "Western"
-#~ msgstr "Barat"
-
-#~ msgid "Central European"
-#~ msgstr "Eropa Tengah"
-
-#~ msgid "South European"
-#~ msgstr "Eropa Selatan"
-
-#~ msgid "Baltic"
-#~ msgstr "Baltik"
-
-#~ msgid "Cyrillic"
-#~ msgstr "Sirilik"
-
-#~ msgid "Arabic"
-#~ msgstr "Arab"
-
-#~ msgid "Greek"
-#~ msgstr "Yunani"
-
-#~ msgid "Hebrew Visual"
-#~ msgstr "Ibrani Visual"
-
-#~ msgid "Turkish"
-#~ msgstr "Turki"
-
-#~ msgid "Nordic"
-#~ msgstr "Nordik"
-
-#~ msgid "Celtic"
-#~ msgstr "Seltik"
-
-#~ msgid "Romanian"
-#~ msgstr "Rumania"
-
-#~ msgid "Armenian"
-#~ msgstr "Armenia"
-
-#~ msgid "Chinese Traditional"
-#~ msgstr "Cina Tradisional"
-
-#~ msgid "Cyrillic/Russian"
-#~ msgstr "Sirilik/Rusia"
-
-#~ msgid "Japanese"
-#~ msgstr "Jepang"
-
-#~ msgid "Korean"
-#~ msgstr "Korea"
-
-#~ msgid "Chinese Simplified"
-#~ msgstr "Cina Sederhana"
-
-#~ msgid "Georgian"
-#~ msgstr "Georgia"
-
-#~ msgid "Hebrew"
-#~ msgstr "Ibrani"
-
-#~ msgid "Cyrillic/Ukrainian"
-#~ msgstr "Sirilik/Ukraina"
-
-#~ msgid "Vietnamese"
-#~ msgstr "Vietnam"
-
-#~ msgid "Thai"
-#~ msgstr "Thai"
-
-#~ msgid "Unknown"
-#~ msgstr "Tidak Dikenal"
-
-#~ msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
-#~ msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
-
-#~ msgid "Conversion from character set “%s” to “%s” is not supported."
-#~ msgstr "Konversi dari gugus karakter \"%s\" ke \"%s\" tak didukung."
-
-#~ msgid "Could not open converter from “%s” to “%s”: %s"
-#~ msgstr "Tidak dapat membuka pengubah dari \"%s\" menjadi \"%s\": %s"
-
-#~ msgid "The input data contains an invalid sequence."
-#~ msgstr "Data masukan memuat suatu urutan yang tidak valid."
-
-#~ msgid "Error when converting data: %s"
-#~ msgstr "Galat saat mengonversi data: %s"
-
-#~ msgid "The input data ends with an incomplete multi-byte sequence."
-#~ msgstr "Data masukan diakhiri dengan urutan multi-byte yang tidak lengkap."
-
-#~ msgid "The input content ends with incomplete data."
-#~ msgstr "Isi masukan berakhir dengan data yang tidak lengkap."
-
-#~ msgid "The file is too big. Maximum %s can be loaded."
-#~ msgstr "Berkas telalu besar. Maksimum %s dapat dimuat."
-
-#~ msgid "It is not possible to detect the character encoding automatically."
-#~ msgstr "Tak mungkin mendeteksi pengkodean karakter secara otomatis."
-
-#~ msgid "The file is externally modified."
-#~ msgstr "Berkas telah diubah secara eksternal."
-
-#~ msgid "The buffer contains invalid characters."
-#~ msgstr "Penyangga mengandung karakter tak valid."
-
-#~ msgid "Open “%s”"
-#~ msgstr "Membuka \"%s\""
-
-#~ msgid "Open _Recent"
-#~ msgstr "Buka Te_rkini"
-
-#~ msgid "Open a file recently used with %s"
-#~ msgstr "Membuka dokumen yang baru-baru ini dipakai dengan %s"
-
-#~ msgid "Could not find the file “%s”."
-#~ msgstr "Tak bisa temukan berkas \"%s\"."
-
-#~ msgid "Please check that you typed the location correctly and try again."
-#~ msgstr ""
-#~ "Silakan periksa apakah lokasi yang Anda ketikkan benar dan coba lagi."
-
-#~ msgid "Unable to handle “%s:” locations."
-#~ msgstr "Tak bisa menangani lokasi \"%s:\"."
-
-#~ msgid "The location of the file cannot be accessed."
-#~ msgstr "Lokasi berkas tak dapat diakses."
-
-#~ msgid "“%s” is a directory."
-#~ msgstr "\"%s\" adalah direktori."
-
-#~ msgid "“%s” is not a valid location."
-#~ msgstr "\"%s\" bukan lokasi yang sah."
-
-#~ msgid ""
-#~ "Host “%s” could not be found. Please check that your proxy settings are "
-#~ "correct and try again."
-#~ msgstr ""
-#~ "Host \"%s\" tidak dapat ditemukan. Silakan periksa apakah tatanan proksi "
-#~ "Anda sudah benar dan coba lagi."
-
-#~ msgid ""
-#~ "Hostname was invalid. Please check that you typed the location correctly "
-#~ "and try again."
-#~ msgstr ""
-#~ "Nama host tidak valid. Silakan periksa lokasi yg Anda tik dan coba lagi."
-
-#~ msgid "“%s” is not a regular file."
-#~ msgstr "\"%s\" bukan berkas reguler."
-
-#~ msgid "Connection timed out. Please try again."
-#~ msgstr "Koneksi melewati waktu tunggu. Silakan coba lagi."
-
-#~ msgid "Unexpected error: %s"
-#~ msgstr "Kesalahan yang tidak diduga: %s"
-
-#~ msgid "_Retry"
-#~ msgstr "_Ulangi"
-
-#~ msgid ""
-#~ "The number of followed links is limited and the actual file could not be "
-#~ "found within this limit."
-#~ msgstr ""
-#~ "Cacah taut yang diikuti terbatas dan berkas sesungguhnya tak ditemukan "
-#~ "dalam batas ini."
-
-#~ msgid "You do not have the permissions necessary to open the file."
-#~ msgstr "Anda tidak memiliki izin yang diperlukan untuk membuka berkas."
-
-#~ msgid ""
-#~ "Unable to detect the character encoding.\n"
-#~ "Please check that you are not trying to open a binary file.\n"
-#~ "Select a character encoding from the menu and try again."
-#~ msgstr ""
-#~ "Tidak bisa mendeteksi pengkodean karakter.\n"
-#~ "Harap periksa bahwa Anda tidak mencoba membuka suatu berkas biner.\n"
-#~ "Pilih suatu pengkodean karakter dari menu dan cobalah lagi."
-
-#~ msgid "There was a problem opening the file “%s”."
-#~ msgstr "Ada masalah ketika membuka berkas \"%s\"."
-
-#~ msgid ""
-#~ "The file you opened has some invalid characters. If you continue editing "
-#~ "this file you could corrupt it.\n"
-#~ "You can also choose another character encoding and try again."
-#~ msgstr ""
-#~ "Berkas yang Anda buka memiliki beberapa karakter yang tidak valid. Bila "
-#~ "Anda melanjutkan menyunting berkas ini Anda bisa merusaknya.\n"
-#~ "Anda juga dapat memilih pengkodean karakter yang lain dan mencoba lagi."
-
-#~ msgid "Could not open the file “%s” using the “%s” character encoding."
-#~ msgstr ""
-#~ "Tak dapat membuka berkas \"%s\" menggunakan pengkodean karakter \"%s\"."
-
-#~ msgid ""
-#~ "Please check that you are not trying to open a binary file.\n"
-#~ "Select a different character encoding from the menu and try again."
-#~ msgstr ""
-#~ "Harap periksa bahwa Anda tidak mencoba membuka suatu berkas biner.\n"
-#~ "Pilih suatu pengkodean karakter lain dari menu dan cobalah lagi."

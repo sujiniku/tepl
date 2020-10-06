@@ -4,7 +4,6 @@ Tepl roadmap - done tasks
 New small features in Tepl 5.0 (GNOME 3.38)
 -------------------------------------------
 
-- Status: **done**
 - Goto line UI: see the TeplGotoLineBar class and "win.tepl-goto-line" GAction.
 - TeplPanel: side/bottom panel container.
 - TeplStatusbar.
@@ -14,14 +13,12 @@ New small features in Tepl 5.0 (GNOME 3.38)
 Build system: Autotools -> Meson
 --------------------------------
 
-- Status: **done**
 - Release: Tepl 5.0 (GNOME 3.38)
 
 A complete overhaul of file metadata
 ------------------------------------
 
-- Status: **done**
-- Target release: Tepl 5.0 (GNOME 3.38)
+- Release: Tepl 5.0 (GNOME 3.38)
 
 Tasks:
 - Make the metadata API independent of TeplFile, to better isolate toolkit

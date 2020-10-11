@@ -3,6 +3,7 @@
  */
 
 #include <gio/gio.h>
+#include <stdlib.h>
 
 int
 main (int    argc,

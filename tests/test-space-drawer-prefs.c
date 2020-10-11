@@ -3,6 +3,7 @@
  */
 
 #include <tepl/tepl.h>
+#include <stdlib.h>
 
 typedef struct
 {

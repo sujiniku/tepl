@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-05-29 12:28+0000\n"
+"POT-Creation-Date: 2020-09-28 15:57+0000\n"
 "PO-Revision-Date: 2020-07-11 23:07+0200\n"
 "Last-Translator: Jordi Mas <jmas@softcatala.org>\n"
 "Language-Team: \n"
@@ -298,6 +298,65 @@ msgstr "L'element <entry> ha de contenir els atributs «key» o «value»."
 msgid "Hide panel"
 msgstr "Amaga el quadre"
 
+#: tepl/tepl-space-drawer-prefs.c:189 tepl/tepl-space-drawer-prefs.c:191
+#: tepl/tepl-space-drawer-prefs.c:193
+msgid "Draw tabs"
+msgstr "Dibuixa tabuladors"
+
+#: tepl/tepl-space-drawer-prefs.c:190 tepl/tepl-space-drawer-prefs.c:192
+#: tepl/tepl-space-drawer-prefs.c:194
+msgid "Draw spaces"
+msgstr "Dibuixa els espais"
+
+#: tepl/tepl-space-drawer-prefs.c:195
+msgid "Draw new lines"
+msgstr "Dibuixa línies noves"
+
+#: tepl/tepl-space-drawer-prefs.c:231
+msgid "Leading Spaces"
+msgstr "Espais inicials"
+
+#: tepl/tepl-space-drawer-prefs.c:235
+msgid "Spaces Inside Text"
+msgstr "Espais dins del text"
+
+#: tepl/tepl-space-drawer-prefs.c:239
+msgid "Trailing Spaces"
+msgstr "Espais al final"
+
+#: tepl/tepl-space-drawer-prefs.c:259
+msgid "Tab"
+msgstr "Tabulador"
+
+#: tepl/tepl-space-drawer-prefs.c:260
+msgid "Space"
+msgstr "Espai"
+
+#: tepl/tepl-space-drawer-prefs.c:261
+msgid "No-Break Space"
+msgstr "Espai no divisible"
+
+#: tepl/tepl-space-drawer-prefs.c:262
+msgid "Narrow No-Break Space"
+msgstr "Espai estret no divisible"
+
+#: tepl/tepl-space-drawer-prefs.c:281
+msgid "Result"
+msgstr "Resultat"
+
+#: tepl/tepl-space-drawer-prefs.c:314
+msgid "Information"
+msgstr "Informació"
+
+#: tepl/tepl-space-drawer-prefs.c:316
+msgid ""
+"When white space drawing is enabled, then non-breaking spaces are always "
+"drawn at all locations, to distinguish them from normal spaces."
+msgstr ""
+"Quan el dibuix d'espais en blanc està activat, els espais no divisibles "
+"sempre es dibuixen en totes les ubicacions, per distingir-los dels espais "
+"normals."
+
 #. Translators: "Ln" is an abbreviation for "Line", Col is an
 #. * abbreviation for "Column". Please, use abbreviations if possible.
 #: tepl/tepl-statusbar.c:103
@@ -337,4 +396,3 @@ msgstr "Desa el fitxer"
 #: tepl/tepl-window-actions-file.c:79
 msgid "Open File"
 msgstr "Obre fitxer"
-

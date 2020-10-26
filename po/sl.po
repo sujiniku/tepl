@@ -1,217 +1,398 @@
-# Slovenian translation for tepl.
-# Copyright (C) 2017 tepl's COPYRIGHT HOLDER
-# This file is distributed under the same license as the tepl package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 #
-# Matej Urbančič <mateju@svn.gnome.org>, 2017.
+# Matej Urbančič <mateju@svn.gnome.org>, 2020–.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: tepl master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=tepl&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-05-07 16:45+0000\n"
-"PO-Revision-Date: 2017-05-09 17:32+0200\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
+"POT-Creation-Date: 2020-10-13 18:59+0000\n"
+"PO-Revision-Date: 2020-10-22 22:00+0200\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
-"Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups."
-"com>\n"
+"Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 "
-"|| n%100==4 ? 3 : 0);\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 2.0.1\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 2.4.1\n"
 
-#. Translators: %s is a filename.
-#: tepl/tepl-application-window.c:356
-#, fuzzy, c-format
-msgid "Open “%s”"
-msgstr "Odpri %s"
+#. action, icon, label, accel, tooltip
+#. File menu
+#. Why "file" and not "document"? "Document" is not the best
+#. word because the action is not always to create a new
+#. document. For example a LaTeX document can be composed of
+#. several _files_. Or for source code we do not really create a
+#. new "document".
+#: tepl/tepl-application.c:79
+msgid "_New"
+msgstr "_Nova"
 
-#: tepl/tepl-application-window.c:575
-msgid "Open _Recent"
-msgstr "Odpri _nedavno"
+#: tepl/tepl-application.c:80
+msgid "New file"
+msgstr "Nova datoteka"
 
-#. Translators: %s is the application name.
-#: tepl/tepl-application-window.c:578
-#, fuzzy, c-format
-msgid "Open a file recently used with %s"
-msgstr "Nobenih nedavno uporabljenih virov ni najdenih z URI '%s'"
+#: tepl/tepl-application.c:82
+msgid "New _Window"
+msgstr "Novo _okno"
 
-#. UTF-8 first, so that it's the first encoding returned by
-#. * tepl_encoding_get_all().
-#.
-#: tepl/tepl-encoding.c:115 tepl/tepl-encoding.c:132 tepl/tepl-encoding.c:133
-#: tepl/tepl-encoding.c:134 tepl/tepl-encoding.c:135 tepl/tepl-encoding.c:136
-#: tepl/tepl-encoding.c:137 tepl/tepl-encoding.c:138
-msgid "Unicode"
-msgstr "Unicode"
+#: tepl/tepl-application.c:83
+msgid "Create a new window"
+msgstr "Ustvari novo okno"
 
-#. FIXME GEOSTD8 ?
-#: tepl/tepl-encoding.c:117 tepl/tepl-encoding.c:129 tepl/tepl-encoding.c:157
-#: tepl/tepl-encoding.c:180
-msgid "Western"
-msgstr "Zahodnjaški"
+#: tepl/tepl-application.c:85 tepl/tepl-window-actions-file.c:83
+msgid "_Open"
+msgstr "_Odpri"
 
-#: tepl/tepl-encoding.c:118 tepl/tepl-encoding.c:158 tepl/tepl-encoding.c:178
-msgid "Central European"
-msgstr "Srednjeevropski"
+#: tepl/tepl-application.c:86
+msgid "Open a file"
+msgstr "Odpri datoteko"
 
-#: tepl/tepl-encoding.c:119
-msgid "South European"
-msgstr "Južnoevropski"
+#: tepl/tepl-application.c:88 tepl/tepl-close-confirm-dialog-single.c:137
+#: tepl/tepl-tab-saving.c:281
+msgid "_Save"
+msgstr "_Shrani"
 
-#: tepl/tepl-encoding.c:120 tepl/tepl-encoding.c:127 tepl/tepl-encoding.c:185
-msgid "Baltic"
-msgstr "Baltski"
+#: tepl/tepl-application.c:89
+msgid "Save the current file"
+msgstr "Shrani trenutno datoteko"
 
-#: tepl/tepl-encoding.c:121 tepl/tepl-encoding.c:159 tepl/tepl-encoding.c:166
-#: tepl/tepl-encoding.c:168 tepl/tepl-encoding.c:169 tepl/tepl-encoding.c:179
-msgid "Cyrillic"
-msgstr "Cirilično"
+#: tepl/tepl-application.c:91
+msgid "Save _As"
+msgstr "Shrani _kot"
 
-#: tepl/tepl-encoding.c:122 tepl/tepl-encoding.c:162 tepl/tepl-encoding.c:184
-msgid "Arabic"
-msgstr "Arabski"
-
-#: tepl/tepl-encoding.c:123 tepl/tepl-encoding.c:181
-msgid "Greek"
-msgstr "Grški"
-
-#: tepl/tepl-encoding.c:124
-msgid "Hebrew Visual"
-msgstr "Hebrejski predočeni"
-
-#: tepl/tepl-encoding.c:125 tepl/tepl-encoding.c:160 tepl/tepl-encoding.c:182
-msgid "Turkish"
-msgstr "Turški"
-
-#: tepl/tepl-encoding.c:126
-msgid "Nordic"
-msgstr "Nordijski"
-
-#: tepl/tepl-encoding.c:128
-msgid "Celtic"
-msgstr "Keltski"
-
-#: tepl/tepl-encoding.c:130
-msgid "Romanian"
-msgstr "Romunski"
-
-#: tepl/tepl-encoding.c:140
-msgid "Armenian"
-msgstr "Armenski"
-
-#: tepl/tepl-encoding.c:141 tepl/tepl-encoding.c:142 tepl/tepl-encoding.c:150
-msgid "Chinese Traditional"
-msgstr "Kitajski tradicionalen"
-
-#: tepl/tepl-encoding.c:143
-msgid "Cyrillic/Russian"
-msgstr "Cirilica/Ruski"
-
-#: tepl/tepl-encoding.c:145 tepl/tepl-encoding.c:146 tepl/tepl-encoding.c:147
-#: tepl/tepl-encoding.c:164 tepl/tepl-encoding.c:172
-msgid "Japanese"
-msgstr "Japonski"
-
-#: tepl/tepl-encoding.c:149 tepl/tepl-encoding.c:165 tepl/tepl-encoding.c:167
-#: tepl/tepl-encoding.c:175
-msgid "Korean"
-msgstr "Korejski"
-
-#: tepl/tepl-encoding.c:152 tepl/tepl-encoding.c:153 tepl/tepl-encoding.c:154
-msgid "Chinese Simplified"
-msgstr "Kitajski poenostavljen"
-
-#: tepl/tepl-encoding.c:155
-msgid "Georgian"
-msgstr "Gruzijski"
-
-#: tepl/tepl-encoding.c:161 tepl/tepl-encoding.c:183
-msgid "Hebrew"
-msgstr "Hebrejski"
-
-#: tepl/tepl-encoding.c:170
-msgid "Cyrillic/Ukrainian"
-msgstr "Cirilica/Ukrajinski"
-
-#: tepl/tepl-encoding.c:173 tepl/tepl-encoding.c:176 tepl/tepl-encoding.c:186
-msgid "Vietnamese"
-msgstr "Vietnamski"
-
-#: tepl/tepl-encoding.c:174
-msgid "Thai"
-msgstr "Tajski"
-
-#: tepl/tepl-encoding.c:365
-msgid "Unknown"
-msgstr "Neznano"
-
-#. Translators: This is the sorted list of encodings used by Tepl for
-#. * automatic detection of the file encoding. You may want to customize
-#. * it adding encodings that are common in your country, for instance the
-#. * GB18030 encoding for the Chinese translation. You may also want to
-#. * remove the ISO-8859-15 encoding (covering English and most Western
-#. * European languages) if you think people in your country will rarely
-#. * use it. 'CURRENT' is a magic value used by Tepl and it represents
-#. * the encoding for the current locale, so please don't translate the
-#. * 'CURRENT' term. Keep the same format: square brackets, single quotes,
-#. * commas.
-#.
-#: tepl/tepl-encoding.c:640
-msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
-msgstr "['UTF-8', 'TRENUTNI', 'ISO-8859-15', 'UTF-16']"
-
-#: tepl/tepl-encoding-converter.c:302
-#, fuzzy, c-format
-msgid "Conversion from character set “%s” to “%s” is not supported."
-msgstr "Pretvorba iz nabora znakov '%s' v '%s' ni podprta"
-
-#: tepl/tepl-encoding-converter.c:311
-#, fuzzy, c-format
-msgid "Could not open converter from “%s” to “%s”: %s"
-msgstr "Ni mogoče odpreti pretvornika iz '%s' v '%s': %s"
-
-#: tepl/tepl-encoding-converter.c:368
-#, fuzzy
-msgid "The input data contains an invalid sequence."
-msgstr "Neveljavno zaporedje bajtov na vhodu pretvorbe"
-
-#: tepl/tepl-encoding-converter.c:377
-#, fuzzy, c-format
-msgid "Error when converting data: %s"
-msgstr ""
-"Napaka (%s) pretvarjanja podatkov za podrejeni predmet; ukaz je izpuščen."
-
-#: tepl/tepl-encoding-converter.c:556
-msgid "The input data ends with an incomplete multi-byte sequence."
+#: tepl/tepl-application.c:92
+msgid "Save the current file to a different location"
 msgstr ""
 
-#: tepl/tepl-encoding-converter.c:579
-msgid "The input content ends with incomplete data."
+#. Edit menu
+#: tepl/tepl-application.c:96
+msgid "_Undo"
+msgstr "_Razveljavi"
+
+#: tepl/tepl-application.c:97
+msgid "Undo the last action"
+msgstr "Razveljavi zadnje dejanje"
+
+#: tepl/tepl-application.c:99
+msgid "_Redo"
+msgstr "_Ponovno uveljavi"
+
+#: tepl/tepl-application.c:100
+msgid "Redo the last undone action"
+msgstr "Ponovno uveljavi zadnje razveljavljeno dejanje"
+
+#: tepl/tepl-application.c:102
+msgid "Cu_t"
+msgstr "I_zreži"
+
+#: tepl/tepl-application.c:103
+msgid "Cut the selection"
+msgstr "Izreže izbor"
+
+#: tepl/tepl-application.c:105
+msgid "_Copy"
+msgstr "_Kopiraj"
+
+#: tepl/tepl-application.c:106
+msgid "Copy the selection"
+msgstr "Kopira izbor"
+
+#: tepl/tepl-application.c:108
+msgid "_Paste"
+msgstr "Pr_ilepi"
+
+#: tepl/tepl-application.c:109
+msgid "Paste the clipboard"
+msgstr "Prilepi iz odložišča"
+
+#: tepl/tepl-application.c:111
+msgid "_Delete"
+msgstr "_Izbriši"
+
+#: tepl/tepl-application.c:112
+msgid "Delete the selected text"
 msgstr ""
 
-#: tepl/tepl-file.c:413
-#, fuzzy, c-format
-msgid "Untitled File %d"
-msgstr "Nenaslovljen dokument %d"
+#: tepl/tepl-application.c:114
+msgid "Select _All"
+msgstr "Izberi _vse"
 
-#: tepl/tepl-file-content-loader.c:334
+#: tepl/tepl-application.c:115
+msgid "Select all the text"
+msgstr ""
+
+#: tepl/tepl-application.c:117
+msgid "_Indent"
+msgstr ""
+
+#: tepl/tepl-application.c:118
+msgid "Indent the selected lines"
+msgstr ""
+
+#: tepl/tepl-application.c:120
+msgid "_Unindent"
+msgstr ""
+
+#: tepl/tepl-application.c:121
+msgid "Unindent the selected lines"
+msgstr ""
+
+#. Search menu
+#: tepl/tepl-application.c:125
+msgid "_Go to Line…"
+msgstr "_Pojdi v vrstico …"
+
+#: tepl/tepl-application.c:126
+msgid "Go to a specific line"
+msgstr ""
+
+#: tepl/tepl-application-window.c:156
+msgid "Read-Only"
+msgstr "Le za branje"
+
+#: tepl/tepl-close-confirm-dialog-single.c:119
 #, c-format
-msgid "The file is too big. Maximum %s can be loaded."
+msgid "Save changes to file “%s” before closing?"
 msgstr ""
 
-#: tepl/tepl-file-loader.c:925
-#, fuzzy
-msgid "It is not possible to detect the character encoding automatically."
-msgstr "Ni mogoče določiti nabora znakov v datoteki."
+#: tepl/tepl-close-confirm-dialog-single.c:125
+msgid "Close _without Saving"
+msgstr "Zapri _brez shranjevanja"
 
-#: tepl/tepl-file-saver.c:784
-msgid "The file is externally modified."
-msgstr "Datoteka je močno spremenjena."
+#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
+#: tepl/tepl-window-actions-file.c:82
+msgid "_Cancel"
+msgstr "_Prekliči"
 
-#: tepl/tepl-file-saver.c:1318
-msgid "The buffer contains invalid characters."
-msgstr "Medpomnilnik vsebuje neveljavne znake."
+#: tepl/tepl-close-confirm-dialog-single.c:143
+msgid "_Save As…"
+msgstr "Shrani kot …"
+
+#: tepl/tepl-file.c:426
+#, c-format
+msgid "Untitled File %d"
+msgstr "Neimenovana datoteka %d"
+
+#: tepl/tepl-file-loader.c:341
+msgid "The content must be encoded with the UTF-8 character encoding."
+msgstr ""
+
+#: tepl/tepl-goto-line-bar.c:235
+msgid "Go to line:"
+msgstr "Skoči na vrstico:"
+
+#: tepl/tepl-goto-line-bar.c:243
+msgid "Close"
+msgstr "Zapri"
+
+#: tepl/tepl-io-error-info-bars.c:42
+msgid "_Edit Anyway"
+msgstr "_Vseeno urejaj"
+
+#: tepl/tepl-io-error-info-bars.c:46
+msgid "_Don’t Edit"
+msgstr "_Ne urejaj"
+
+#: tepl/tepl-io-error-info-bars.c:52
+#, c-format
+msgid "This file “%s” is already open in another window."
+msgstr "Datoteka »%s« je že odprta v drugem oknu programa."
+
+#: tepl/tepl-io-error-info-bars.c:57
+msgid "Do you want to edit it anyway?"
+msgstr "Ali datoteko vseeno želite urejati?"
+
+#: tepl/tepl-io-error-info-bars.c:91 tepl/tepl-io-error-info-bars.c:193
+msgid "S_ave Anyway"
+msgstr "_Vseeno shrani"
+
+#: tepl/tepl-io-error-info-bars.c:95 tepl/tepl-io-error-info-bars.c:197
+msgid "_Don’t Save"
+msgstr "_Ne shrani"
+
+#: tepl/tepl-io-error-info-bars.c:101
+#, c-format
+msgid "Could not create a backup file while saving “%s”"
+msgstr ""
+"Ni mogoče ustvariti začasne varnostne kopije datoteke med shranjevanjem "
+"»%s«."
+
+#: tepl/tepl-io-error-info-bars.c:106
+msgid ""
+"Could not back up the old copy of the file before saving the new one. You "
+"can ignore this warning and save the file anyway, but if an error occurs "
+"while saving, you could lose the old copy of the file. Save anyway?"
+msgstr ""
+"Ni mogoče narediti varnostne kopije stare datoteke pred shranjevanjem "
+"nove. Opozorila ni priporočljivo prezreti, saj lahko med shranjevanjem "
+"pride do napake, pri kateri bo izgubljena tudi stara kopija datoteke. Ali "
+"želite datoteko vseeno shraniti?"
+
+#: tepl/tepl-io-error-info-bars.c:115
+#, c-format
+msgid "Error message: %s"
+msgstr ""
+
+#: tepl/tepl-io-error-info-bars.c:152
+#, c-format
+msgid "The file “%s” changed on disk."
+msgstr "Datoteka »%s« je bila spremenjena na disku."
+
+#: tepl/tepl-io-error-info-bars.c:157
+msgid "Drop Changes and _Reload"
+msgstr "Zavrzi spremembe in _ponovno naloži"
+
+#: tepl/tepl-io-error-info-bars.c:157
+msgid "_Reload"
+msgstr "_Ponovno naloži"
+
+#: tepl/tepl-io-error-info-bars.c:203
+#, c-format
+msgid "Some invalid characters have been detected while saving “%s”."
+msgstr ""
+
+#: tepl/tepl-io-error-info-bars.c:208
+msgid ""
+"If you continue saving this file you can corrupt the document. Save anyway?"
+msgstr ""
+
+#. Translators: do not translate <metadata>.
+#: tepl/tepl-metadata-parser.c:83
+#, c-format
+msgid "The XML file must start with a <metadata> element, not “%s”."
+msgstr ""
+
+#. Translators: do not translate <document>.
+#: tepl/tepl-metadata-parser.c:115
+#, c-format
+msgid "Expected a <document> element, got “%s” instead."
+msgstr ""
+
+#. Translators: do not translate “atime”.
+#: tepl/tepl-metadata-parser.c:141
+#, c-format
+msgid "Failed to parse the “atime” attribute value “%s”."
+msgstr ""
+
+#. Translators: do not translate <document>, “uri” and “atime”.
+#: tepl/tepl-metadata-parser.c:156
+msgid "The <document> element must contain the “uri” and “atime” attributes."
+msgstr ""
+
+#. Translators: do not translate <entry>.
+#: tepl/tepl-metadata-parser.c:185
+#, c-format
+msgid "Expected an <entry> element, got “%s” instead."
+msgstr ""
+
+#. Translators: do not translate <entry>, “key” and “value”.
+#: tepl/tepl-metadata-parser.c:211
+msgid "The <entry> element is missing the “key” or “value” attribute."
+msgstr ""
+
+#: tepl/tepl-panel.c:92
+msgid "Hide panel"
+msgstr "Skrij pult"
+
+#: tepl/tepl-space-drawer-prefs.c:189 tepl/tepl-space-drawer-prefs.c:191
+#: tepl/tepl-space-drawer-prefs.c:193
+msgid "Draw tabs"
+msgstr ""
+
+#: tepl/tepl-space-drawer-prefs.c:190 tepl/tepl-space-drawer-prefs.c:192
+#: tepl/tepl-space-drawer-prefs.c:194
+msgid "Draw spaces"
+msgstr "Izriši presledne znake"
+
+#: tepl/tepl-space-drawer-prefs.c:195
+msgid "Draw new lines"
+msgstr ""
+
+#: tepl/tepl-space-drawer-prefs.c:231
+msgid "Leading Spaces"
+msgstr ""
+
+#: tepl/tepl-space-drawer-prefs.c:235
+msgid "Spaces Inside Text"
+msgstr ""
+
+#: tepl/tepl-space-drawer-prefs.c:239
+msgid "Trailing Spaces"
+msgstr ""
+
+#: tepl/tepl-space-drawer-prefs.c:259
+msgid "Tab"
+msgstr "Tabulator"
+
+#: tepl/tepl-space-drawer-prefs.c:260
+msgid "Space"
+msgstr "Presledek"
+
+#: tepl/tepl-space-drawer-prefs.c:261
+msgid "No-Break Space"
+msgstr ""
+
+#: tepl/tepl-space-drawer-prefs.c:262
+msgid "Narrow No-Break Space"
+msgstr ""
+
+#: tepl/tepl-space-drawer-prefs.c:281
+msgid "Result"
+msgstr "Rezultat"
+
+#: tepl/tepl-space-drawer-prefs.c:314
+msgid "Information"
+msgstr "Podrobnosti"
+
+#: tepl/tepl-space-drawer-prefs.c:316
+msgid ""
+"When white space drawing is enabled, then non-breaking spaces are always "
+"drawn at all locations, to distinguish them from normal spaces."
+msgstr ""
+
+#. Translators: "Ln" is an abbreviation for "Line", Col is an
+#. * abbreviation for "Column". Please, use abbreviations if possible.
+#.
+#: tepl/tepl-statusbar.c:103
+#, c-format
+msgid "Ln %d, Col %d"
+msgstr "  Vr. %d, St. %d"
+
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:249
+msgid "Location:"
+msgstr "Mesto:"
+
+#: tepl/tepl-tab-label.c:318
+msgid "Close file"
+msgstr "Zapri datoteko"
+
+#: tepl/tepl-tab-loading.c:36
+msgid "Error when loading the file."
+msgstr ""
+
+#: tepl/tepl-tab-saving.c:49
+msgid "Error when saving the file."
+msgstr ""
+
+#: tepl/tepl-tab-saving.c:277
+msgid "Save File"
+msgstr "Shrani datoteko"
+
+#. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
+#. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
+#. * doesn't have the real path to the file, so it would ruin some
+#. * features for text editors:
+#. * - showing the directory in parentheses in the window title, or in the
+#. *   tab tooltip;
+#. * - opening a recent file.
+#. * Basically everywhere where the directory is shown.
+#.
+#: tepl/tepl-window-actions-file.c:79
+msgid "Open File"
+msgstr "Odpri datoteko"

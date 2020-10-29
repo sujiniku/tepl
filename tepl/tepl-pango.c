@@ -92,6 +92,8 @@ tepl_pango_font_description_to_css (const PangoFontDescription *desc)
   GString *s;
   PangoFontMask set;
 
+  g_return_val_if_fail (desc != NULL, NULL);
+
   s = g_string_new ("");
 
   set = pango_font_description_get_set_fields (desc);

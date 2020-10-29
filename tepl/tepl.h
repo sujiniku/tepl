@@ -32,6 +32,7 @@
 #include <tepl/tepl-metadata-manager.h>
 #include <tepl/tepl-notebook.h>
 #include <tepl/tepl-panel.h>
+#include <tepl/tepl-pango.h>
 #include <tepl/tepl-space-drawer-prefs.h>
 #include <tepl/tepl-statusbar.h>
 #include <tepl/tepl-style-scheme-chooser-widget.h>

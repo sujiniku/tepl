@@ -329,6 +329,11 @@ tepl_panel_get_type
 </SECTION>
 
 <SECTION>
+<FILE>pango</FILE>
+tepl_pango_font_description_to_css
+</SECTION>
+
+<SECTION>
 <FILE>space-drawer-prefs</FILE>
 TeplSpaceDrawerPrefs
 tepl_space_drawer_prefs_new

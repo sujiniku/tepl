@@ -233,6 +233,22 @@ tepl_gutter_renderer_folds_state_get_type
 </SECTION>
 
 <SECTION>
+<FILE>highlight-mode-selector</FILE>
+TeplHighlightModeSelector
+tepl_highlight_mode_selector_new
+<SUBSECTION Standard>
+TEPL_HIGHLIGHT_MODE_SELECTOR
+TEPL_HIGHLIGHT_MODE_SELECTOR_CLASS
+TEPL_HIGHLIGHT_MODE_SELECTOR_GET_CLASS
+TEPL_IS_HIGHLIGHT_MODE_SELECTOR
+TEPL_IS_HIGHLIGHT_MODE_SELECTOR_CLASS
+TEPL_TYPE_HIGHLIGHT_MODE_SELECTOR
+TeplHighlightModeSelectorClass
+TeplHighlightModeSelectorPrivate
+tepl_highlight_mode_selector_get_type
+</SECTION>
+
+<SECTION>
 <FILE>info-bar</FILE>
 TeplInfoBar
 tepl_info_bar_new

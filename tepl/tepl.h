@@ -23,6 +23,7 @@
 #include <tepl/tepl-fold-region.h>
 #include <tepl/tepl-goto-line-bar.h>
 #include <tepl/tepl-gutter-renderer-folds.h>
+#include <tepl/tepl-highlight-mode-selector.h>
 #include <tepl/tepl-info-bar.h>
 #include <tepl/tepl-init.h>
 #include <tepl/tepl-io-error-info-bars.h>

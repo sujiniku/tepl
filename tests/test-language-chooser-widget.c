@@ -6,9 +6,9 @@
 #include <stdlib.h>
 
 static void
-language_selected_cb (TeplLanguageChooserWidget *chooser_widget,
-		      GtkSourceLanguage         *language,
-		      gpointer                   user_data)
+language_activated_cb (TeplLanguageChooser *chooser,
+		       GtkSourceLanguage   *language,
+		       gpointer             user_data)
 {
 	g_message ("Language selected: %s", gtk_source_language_get_id (language));
 }
@@ -30,8 +30,8 @@ main (int    argc,
 	gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (chooser_widget));
 
 	g_signal_connect (chooser_widget,
-			  "language-selected",
-			  G_CALLBACK (language_selected_cb),
+			  "language-activated",
+			  G_CALLBACK (language_activated_cb),
 			  NULL);
 
 	gtk_widget_show_all (window);

@@ -3,6 +3,7 @@
  */
 
 #include "tepl-language-chooser-widget.h"
+#include "tepl-language-chooser.h"
 
 /**
  * SECTION:language-chooser-widget
@@ -16,17 +17,17 @@ struct _TeplLanguageChooserWidgetPrivate
 	GtkListBox *list_box;
 };
 
-enum
-{
-	SIGNAL_LANGUAGE_SELECTED,
-	N_SIGNALS
-};
-
-static guint signals[N_SIGNALS];
-
 #define LIST_BOX_ROW_LANGUAGE_KEY "language-key"
 
-G_DEFINE_TYPE_WITH_PRIVATE (TeplLanguageChooserWidget, tepl_language_chooser_widget, GTK_TYPE_GRID)
+static void tepl_language_chooser_interface_init (gpointer g_iface,
+						  gpointer iface_data);
+
+G_DEFINE_TYPE_WITH_CODE (TeplLanguageChooserWidget,
+			 tepl_language_chooser_widget,
+			 GTK_TYPE_GRID,
+			 G_ADD_PRIVATE (TeplLanguageChooserWidget)
+			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_LANGUAGE_CHOOSER,
+						tepl_language_chooser_interface_init))
 
 static void
 list_box_row_set_language (GtkListBoxRow     *list_box_row,
@@ -62,22 +63,22 @@ tepl_language_chooser_widget_class_init (TeplLanguageChooserWidgetClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	object_class->dispose = tepl_language_chooser_widget_dispose;
+}
 
-	/**
-	 * TeplLanguageChooserWidget::language-selected:
-	 * @chooser_widget: the #TeplLanguageChooserWidget emitting the signal.
-	 * @language: the #GtkSourceLanguage object that has been selected,
-	 *   guaranteed to be non-%NULL.
-	 *
-	 * Since: 5.2
-	 */
-	signals[SIGNAL_LANGUAGE_SELECTED] =
-		g_signal_new ("language-selected",
-			      G_TYPE_FROM_CLASS (klass),
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (TeplLanguageChooserWidgetClass, language_selected),
-			      NULL, NULL, NULL,
-			      G_TYPE_NONE, 1, GTK_SOURCE_TYPE_LANGUAGE);
+static void
+tepl_language_chooser_widget_select_language (TeplLanguageChooser *chooser,
+					      GtkSourceLanguage   *language)
+{
+	/* TODO */
+}
+
+static void
+tepl_language_chooser_interface_init (gpointer g_iface,
+				      gpointer iface_data)
+{
+	TeplLanguageChooserInterface *interface = g_iface;
+
+	interface->select_language = tepl_language_chooser_widget_select_language;
 }
 
 static void
@@ -190,7 +191,7 @@ list_box_row_activated_cb (GtkListBox                *list_box,
 	g_return_if_fail (language != NULL);
 
 	g_object_ref (language);
-	g_signal_emit (chooser_widget, signals[SIGNAL_LANGUAGE_SELECTED], 0, language);
+	g_signal_emit_by_name (chooser_widget, "language-activated", language);
 	g_object_unref (language);
 }
 

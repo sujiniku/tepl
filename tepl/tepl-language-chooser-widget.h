@@ -36,10 +36,6 @@ struct _TeplLanguageChooserWidgetClass
 {
 	GtkGridClass parent_class;
 
-	/* Signals */
-	void (* language_selected)	(TeplLanguageChooserWidget *chooser_widget,
-					 GtkSourceLanguage         *language);
-
 	gpointer padding[12];
 };
 

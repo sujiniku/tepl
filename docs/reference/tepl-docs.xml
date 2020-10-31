@@ -61,10 +61,15 @@
       <xi:include href="xml/gutter-renderer-folds.xml"/>
     </chapter>
 
+    <chapter id="language-choosers">
+      <title>Language Choosers</title>
+      <xi:include href="xml/language-chooser.xml"/>
+      <xi:include href="xml/highlight-mode-selector.xml"/>
+    </chapter>
+
     <chapter id="misc">
       <title>Misc</title>
       <xi:include href="xml/goto-line-bar.xml"/>
-      <xi:include href="xml/highlight-mode-selector.xml"/>
       <xi:include href="xml/info-bar.xml"/>
       <xi:include href="xml/iter.xml"/>
       <xi:include href="xml/panel.xml"/>

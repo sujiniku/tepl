@@ -28,6 +28,7 @@
 #include <tepl/tepl-init.h>
 #include <tepl/tepl-io-error-info-bars.h>
 #include <tepl/tepl-iter.h>
+#include <tepl/tepl-language-chooser.h>
 #include <tepl/tepl-menu-shell.h>
 #include <tepl/tepl-metadata.h>
 #include <tepl/tepl-metadata-manager.h>

@@ -279,6 +279,19 @@ tepl_iter_get_line_indentation
 </SECTION>
 
 <SECTION>
+<FILE>language-chooser</FILE>
+TeplLanguageChooser
+TeplLanguageChooserInterface
+tepl_language_chooser_select_language
+<SUBSECTION Standard>
+TEPL_IS_LANGUAGE_CHOOSER
+TEPL_LANGUAGE_CHOOSER
+TEPL_LANGUAGE_CHOOSER_GET_INTERFACE
+TEPL_TYPE_LANGUAGE_CHOOSER
+tepl_language_chooser_get_type
+</SECTION>
+
+<SECTION>
 <FILE>menu-shell</FILE>
 tepl_menu_shell_append_edit_actions
 </SECTION>

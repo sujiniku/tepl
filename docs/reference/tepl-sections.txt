@@ -233,22 +233,6 @@ tepl_gutter_renderer_folds_state_get_type
 </SECTION>
 
 <SECTION>
-<FILE>highlight-mode-selector</FILE>
-TeplHighlightModeSelector
-tepl_highlight_mode_selector_new
-<SUBSECTION Standard>
-TEPL_HIGHLIGHT_MODE_SELECTOR
-TEPL_HIGHLIGHT_MODE_SELECTOR_CLASS
-TEPL_HIGHLIGHT_MODE_SELECTOR_GET_CLASS
-TEPL_IS_HIGHLIGHT_MODE_SELECTOR
-TEPL_IS_HIGHLIGHT_MODE_SELECTOR_CLASS
-TEPL_TYPE_HIGHLIGHT_MODE_SELECTOR
-TeplHighlightModeSelectorClass
-TeplHighlightModeSelectorPrivate
-tepl_highlight_mode_selector_get_type
-</SECTION>
-
-<SECTION>
 <FILE>info-bar</FILE>
 TeplInfoBar
 tepl_info_bar_new
@@ -289,6 +273,22 @@ TEPL_LANGUAGE_CHOOSER
 TEPL_LANGUAGE_CHOOSER_GET_INTERFACE
 TEPL_TYPE_LANGUAGE_CHOOSER
 tepl_language_chooser_get_type
+</SECTION>
+
+<SECTION>
+<FILE>language-chooser-widget</FILE>
+TeplLanguageChooserWidget
+tepl_language_chooser_widget_new
+<SUBSECTION Standard>
+TEPL_LANGUAGE_CHOOSER_WIDGET
+TEPL_LANGUAGE_CHOOSER_WIDGET_CLASS
+TEPL_LANGUAGE_CHOOSER_WIDGET_GET_CLASS
+TEPL_IS_LANGUAGE_CHOOSER_WIDGET
+TEPL_IS_LANGUAGE_CHOOSER_WIDGET_CLASS
+TEPL_TYPE_LANGUAGE_CHOOSER_WIDGET
+TeplLanguageChooserWidgetClass
+TeplLanguageChooserWidgetPrivate
+tepl_language_chooser_widget_get_type
 </SECTION>
 
 <SECTION>

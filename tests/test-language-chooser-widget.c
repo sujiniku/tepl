@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 static void
-language_selected_cb (TeplHighlightModeSelector *selector,
+language_selected_cb (TeplLanguageChooserWidget *chooser_widget,
 		      GtkSourceLanguage         *language,
 		      gpointer                   user_data)
 {
@@ -18,7 +18,7 @@ main (int    argc,
       char **argv)
 {
 	GtkWidget *window;
-	TeplHighlightModeSelector *selector;
+	TeplLanguageChooserWidget *chooser_widget;
 
 	gtk_init (&argc, &argv);
 
@@ -26,10 +26,10 @@ main (int    argc,
 	gtk_window_set_default_size (GTK_WINDOW (window), 500, 500);
 	g_signal_connect (window, "destroy", gtk_main_quit, NULL);
 
-	selector = tepl_highlight_mode_selector_new ();
-	gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (selector));
+	chooser_widget = tepl_language_chooser_widget_new ();
+	gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (chooser_widget));
 
-	g_signal_connect (selector,
+	g_signal_connect (chooser_widget,
 			  "language-selected",
 			  G_CALLBACK (language_selected_cb),
 			  NULL);

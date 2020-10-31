@@ -9,13 +9,13 @@ tepl/tepl-file-chooser.c
 tepl/tepl-file-loader.c
 tepl/tepl-file-saver.c
 tepl/tepl-goto-line-bar.c
-tepl/tepl-highlight-mode-selector.c
 tepl/tepl-icu.c
 tepl/tepl-info-bar.c
 tepl/tepl-init.c
 tepl/tepl-io-error-info-bars.c
 tepl/tepl-iter.c
 tepl/tepl-language-chooser.c
+tepl/tepl-language-chooser-widget.c
 tepl/tepl-menu-shell.c
 tepl/tepl-metadata-attic.c
 tepl/tepl-metadata.c

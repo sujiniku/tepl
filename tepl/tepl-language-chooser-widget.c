@@ -2,15 +2,15 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include "tepl-highlight-mode-selector.h"
+#include "tepl-language-chooser-widget.h"
 
 /**
- * SECTION:highlight-mode-selector
- * @Title: TeplHighlightModeSelector
- * @Short_description: A widget for selecting a #GtkSourceLanguage
+ * SECTION:language-chooser-widget
+ * @Title: TeplLanguageChooserWidget
+ * @Short_description: A widget for choosing a #GtkSourceLanguage
  */
 
-struct _TeplHighlightModeSelectorPrivate
+struct _TeplLanguageChooserWidgetPrivate
 {
 	GtkSearchEntry *search_entry;
 	GtkListBox *list_box;
@@ -26,7 +26,7 @@ static guint signals[N_SIGNALS];
 
 #define LIST_BOX_ROW_LANGUAGE_KEY "language-key"
 
-G_DEFINE_TYPE_WITH_PRIVATE (TeplHighlightModeSelector, tepl_highlight_mode_selector, GTK_TYPE_GRID)
+G_DEFINE_TYPE_WITH_PRIVATE (TeplLanguageChooserWidget, tepl_language_chooser_widget, GTK_TYPE_GRID)
 
 static void
 list_box_row_set_language (GtkListBoxRow     *list_box_row,
@@ -46,26 +46,26 @@ list_box_row_get_language (GtkListBoxRow *list_box_row)
 }
 
 static void
-tepl_highlight_mode_selector_dispose (GObject *object)
+tepl_language_chooser_widget_dispose (GObject *object)
 {
-	TeplHighlightModeSelector *selector = TEPL_HIGHLIGHT_MODE_SELECTOR (object);
+	TeplLanguageChooserWidget *chooser_widget = TEPL_LANGUAGE_CHOOSER_WIDGET (object);
 
-	selector->priv->search_entry = NULL;
-	selector->priv->list_box = NULL;
+	chooser_widget->priv->search_entry = NULL;
+	chooser_widget->priv->list_box = NULL;
 
-	G_OBJECT_CLASS (tepl_highlight_mode_selector_parent_class)->dispose (object);
+	G_OBJECT_CLASS (tepl_language_chooser_widget_parent_class)->dispose (object);
 }
 
 static void
-tepl_highlight_mode_selector_class_init (TeplHighlightModeSelectorClass *klass)
+tepl_language_chooser_widget_class_init (TeplLanguageChooserWidgetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->dispose = tepl_highlight_mode_selector_dispose;
+	object_class->dispose = tepl_language_chooser_widget_dispose;
 
 	/**
-	 * TeplHighlightModeSelector::language-selected:
-	 * @selector: the #TeplHighlightModeSelector emitting the signal.
+	 * TeplLanguageChooserWidget::language-selected:
+	 * @chooser_widget: the #TeplLanguageChooserWidget emitting the signal.
 	 * @language: the #GtkSourceLanguage object that has been selected,
 	 *   guaranteed to be non-%NULL.
 	 *
@@ -75,13 +75,13 @@ tepl_highlight_mode_selector_class_init (TeplHighlightModeSelectorClass *klass)
 		g_signal_new ("language-selected",
 			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (TeplHighlightModeSelectorClass, language_selected),
+			      G_STRUCT_OFFSET (TeplLanguageChooserWidgetClass, language_selected),
 			      NULL, NULL, NULL,
 			      G_TYPE_NONE, 1, GTK_SOURCE_TYPE_LANGUAGE);
 }
 
 static void
-populate_list_box (TeplHighlightModeSelector *selector)
+populate_list_box (TeplLanguageChooserWidget *chooser_widget)
 {
 	GtkSourceLanguageManager *language_manager;
 	const gchar * const *language_ids;
@@ -114,7 +114,7 @@ populate_list_box (TeplHighlightModeSelector *selector)
 		list_box_row = GTK_LIST_BOX_ROW (gtk_list_box_row_new ());
 		list_box_row_set_language (list_box_row, language);
 		gtk_container_add (GTK_CONTAINER (list_box_row), GTK_WIDGET (label));
-		gtk_container_add (GTK_CONTAINER (selector->priv->list_box), GTK_WIDGET (list_box_row));
+		gtk_container_add (GTK_CONTAINER (chooser_widget->priv->list_box), GTK_WIDGET (list_box_row));
 	}
 }
 
@@ -122,7 +122,7 @@ static gboolean
 filter_cb (GtkListBoxRow *list_box_row,
 	   gpointer       user_data)
 {
-	TeplHighlightModeSelector *selector = user_data;
+	TeplLanguageChooserWidget *chooser_widget = user_data;
 	const gchar *search_text;
 	GtkSourceLanguage *language;
 	const gchar *language_name;
@@ -132,7 +132,7 @@ filter_cb (GtkListBoxRow *list_box_row,
 	gchar *search_text_casefolded;
 	gboolean visible;
 
-	search_text = gtk_entry_get_text (GTK_ENTRY (selector->priv->search_entry));
+	search_text = gtk_entry_get_text (GTK_ENTRY (chooser_widget->priv->search_entry));
 	if (search_text == NULL || search_text[0] == '\0')
 	{
 		return TRUE;
@@ -174,15 +174,15 @@ filter_cb (GtkListBoxRow *list_box_row,
 
 static void
 search_changed_cb (GtkSearchEntry            *search_entry,
-		   TeplHighlightModeSelector *selector)
+		   TeplLanguageChooserWidget *chooser_widget)
 {
-	gtk_list_box_invalidate_filter (selector->priv->list_box);
+	gtk_list_box_invalidate_filter (chooser_widget->priv->list_box);
 }
 
 static void
 list_box_row_activated_cb (GtkListBox                *list_box,
 			   GtkListBoxRow             *list_box_row,
-			   TeplHighlightModeSelector *selector)
+			   TeplLanguageChooserWidget *chooser_widget)
 {
 	GtkSourceLanguage *language;
 
@@ -190,58 +190,58 @@ list_box_row_activated_cb (GtkListBox                *list_box,
 	g_return_if_fail (language != NULL);
 
 	g_object_ref (language);
-	g_signal_emit (selector, signals[SIGNAL_LANGUAGE_SELECTED], 0, language);
+	g_signal_emit (chooser_widget, signals[SIGNAL_LANGUAGE_SELECTED], 0, language);
 	g_object_unref (language);
 }
 
 static void
-tepl_highlight_mode_selector_init (TeplHighlightModeSelector *selector)
+tepl_language_chooser_widget_init (TeplLanguageChooserWidget *chooser_widget)
 {
 	GtkWidget *scrolled_window;
 
-	selector->priv = tepl_highlight_mode_selector_get_instance_private (selector);
+	chooser_widget->priv = tepl_language_chooser_widget_get_instance_private (chooser_widget);
 
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (selector), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (chooser_widget), GTK_ORIENTATION_VERTICAL);
 
-	selector->priv->search_entry = GTK_SEARCH_ENTRY (gtk_search_entry_new ());
-	gtk_widget_show (GTK_WIDGET (selector->priv->search_entry));
-	gtk_container_add (GTK_CONTAINER (selector), GTK_WIDGET (selector->priv->search_entry));
+	chooser_widget->priv->search_entry = GTK_SEARCH_ENTRY (gtk_search_entry_new ());
+	gtk_widget_show (GTK_WIDGET (chooser_widget->priv->search_entry));
+	gtk_container_add (GTK_CONTAINER (chooser_widget), GTK_WIDGET (chooser_widget->priv->search_entry));
 
-	selector->priv->list_box = GTK_LIST_BOX (gtk_list_box_new ());
-	gtk_list_box_set_activate_on_single_click (selector->priv->list_box, FALSE);
-	populate_list_box (selector);
-	gtk_widget_set_hexpand (GTK_WIDGET (selector->priv->list_box), TRUE);
-	gtk_widget_set_vexpand (GTK_WIDGET (selector->priv->list_box), TRUE);
+	chooser_widget->priv->list_box = GTK_LIST_BOX (gtk_list_box_new ());
+	gtk_list_box_set_activate_on_single_click (chooser_widget->priv->list_box, FALSE);
+	populate_list_box (chooser_widget);
+	gtk_widget_set_hexpand (GTK_WIDGET (chooser_widget->priv->list_box), TRUE);
+	gtk_widget_set_vexpand (GTK_WIDGET (chooser_widget->priv->list_box), TRUE);
 
 	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-	gtk_container_add (GTK_CONTAINER (scrolled_window), GTK_WIDGET (selector->priv->list_box));
+	gtk_container_add (GTK_CONTAINER (scrolled_window), GTK_WIDGET (chooser_widget->priv->list_box));
 	gtk_widget_show_all (scrolled_window);
-	gtk_container_add (GTK_CONTAINER (selector), scrolled_window);
+	gtk_container_add (GTK_CONTAINER (chooser_widget), scrolled_window);
 
-	gtk_list_box_set_filter_func (selector->priv->list_box,
+	gtk_list_box_set_filter_func (chooser_widget->priv->list_box,
 				      filter_cb,
-				      selector,
+				      chooser_widget,
 				      NULL);
 
-	g_signal_connect (selector->priv->search_entry,
+	g_signal_connect (chooser_widget->priv->search_entry,
 			  "search-changed",
 			  G_CALLBACK (search_changed_cb),
-			  selector);
+			  chooser_widget);
 
-	g_signal_connect (selector->priv->list_box,
+	g_signal_connect (chooser_widget->priv->list_box,
 			  "row-activated",
 			  G_CALLBACK (list_box_row_activated_cb),
-			  selector);
+			  chooser_widget);
 }
 
 /**
- * tepl_highlight_mode_selector_new:
+ * tepl_language_chooser_widget_new:
  *
- * Returns: (transfer floating): a new #TeplHighlightModeSelector widget.
+ * Returns: (transfer floating): a new #TeplLanguageChooserWidget.
  * Since: 5.2
  */
-TeplHighlightModeSelector *
-tepl_highlight_mode_selector_new (void)
+TeplLanguageChooserWidget *
+tepl_language_chooser_widget_new (void)
 {
-	return g_object_new (TEPL_TYPE_HIGHLIGHT_MODE_SELECTOR, NULL);
+	return g_object_new (TEPL_TYPE_LANGUAGE_CHOOSER_WIDGET, NULL);
 }

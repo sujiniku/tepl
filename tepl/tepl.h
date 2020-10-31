@@ -23,12 +23,12 @@
 #include <tepl/tepl-fold-region.h>
 #include <tepl/tepl-goto-line-bar.h>
 #include <tepl/tepl-gutter-renderer-folds.h>
-#include <tepl/tepl-highlight-mode-selector.h>
 #include <tepl/tepl-info-bar.h>
 #include <tepl/tepl-init.h>
 #include <tepl/tepl-io-error-info-bars.h>
 #include <tepl/tepl-iter.h>
 #include <tepl/tepl-language-chooser.h>
+#include <tepl/tepl-language-chooser-widget.h>
 #include <tepl/tepl-menu-shell.h>
 #include <tepl/tepl-metadata.h>
 #include <tepl/tepl-metadata-manager.h>

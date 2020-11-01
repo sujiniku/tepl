@@ -10,6 +10,17 @@
  * @Short_description: Interface implemented by widgets for choosing a #GtkSourceLanguage
  */
 
+/* API design:
+ * Consistency with GtkSourceStyleSchemeChooser:
+ * - The name, but applied for GtkSourceLanguage.
+ * - The fact to have an interface with different implementations.
+ *
+ * Previous names, in gedit: GeditHighlightModeSelector for the widget,
+ * GeditHighlightModeDialog for the dialog. Without an interface, the Selector
+ * object (used by composition) was exposed in the API of the Dialog, to avoid
+ * repeating the API.
+ */
+
 enum
 {
 	SIGNAL_LANGUAGE_ACTIVATED,
@@ -40,6 +51,9 @@ tepl_language_chooser_default_init (TeplLanguageChooserInterface *interface)
 	 * @language: the #GtkSourceLanguage object that has been selected.
 	 *
 	 * Since: 5.2
+	 */
+	/* Note about the signal name, it's to be consistent with
+	 * ::row-activated.
 	 */
 	signals[SIGNAL_LANGUAGE_ACTIVATED] =
 		g_signal_new ("language-activated",

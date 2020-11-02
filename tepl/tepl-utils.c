@@ -824,9 +824,40 @@ tepl_utils_list_box_clear (GtkListBox *list_box)
 }
 
 /**
+ * tepl_utils_list_box_setup_scrolling:
+ * @list_box: a #GtkListBox.
+ * @scrolled_window: a #GtkScrolledWindow.
+ *
+ * Setup vertical scrolling between @list_box and @scrolled_window, to be able
+ * to use tepl_utils_list_box_scroll_to_row() afterwards.
+ *
+ * This function is intended to be called only once per #GtkListBox, when
+ * initializing the @list_box and @scrolled_window widgets.
+ *
+ * Since: 5.2
+ */
+void
+tepl_utils_list_box_setup_scrolling (GtkListBox        *list_box,
+				     GtkScrolledWindow *scrolled_window)
+{
+	GtkAdjustment *vadjustment;
+
+	g_return_if_fail (GTK_IS_LIST_BOX (list_box));
+	g_return_if_fail (GTK_IS_SCROLLED_WINDOW (scrolled_window));
+
+	vadjustment = gtk_scrolled_window_get_vadjustment (scrolled_window);
+	gtk_container_set_focus_vadjustment (GTK_CONTAINER (list_box), vadjustment);
+}
+
+/**
  * tepl_utils_list_box_scroll_to_row:
  * @list_box: a #GtkListBox.
  * @row: a #GtkListBoxRow.
+ *
+ * Scrolls to a specific #GtkListBoxRow.
+ *
+ * Before using this function, tepl_utils_list_box_setup_scrolling() must have
+ * been called.
  *
  * Since: 5.2
  */
@@ -837,7 +868,6 @@ tepl_utils_list_box_scroll_to_row (GtkListBox    *list_box,
 	g_return_if_fail (GTK_IS_LIST_BOX (list_box));
 	g_return_if_fail (GTK_IS_LIST_BOX_ROW (row));
 
-	/* gtk_container_set_focus_vadjustment() must also be called beforehand. */
 	gtk_container_set_focus_child (GTK_CONTAINER (list_box), GTK_WIDGET (row));
 }
 
@@ -848,6 +878,9 @@ tepl_utils_list_box_scroll_to_row (GtkListBox    *list_box,
  * Calls tepl_utils_list_box_scroll_to_row() on the row returned by
  * gtk_list_box_get_selected_row(). This function assumes that there is either
  * zero or one selected row.
+ *
+ * Before using this function, tepl_utils_list_box_setup_scrolling() must have
+ * been called.
  *
  * Since: 5.2
  */

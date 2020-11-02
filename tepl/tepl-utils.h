@@ -87,6 +87,10 @@ _TEPL_EXTERN
 void		tepl_utils_list_box_clear			(GtkListBox *list_box);
 
 _TEPL_EXTERN
+void		tepl_utils_list_box_setup_scrolling		(GtkListBox        *list_box,
+								 GtkScrolledWindow *scrolled_window);
+
+_TEPL_EXTERN
 void		tepl_utils_list_box_scroll_to_row		(GtkListBox    *list_box,
 								 GtkListBoxRow *row);
 

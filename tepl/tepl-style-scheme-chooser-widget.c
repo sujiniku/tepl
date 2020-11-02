@@ -377,7 +377,6 @@ static void
 tepl_style_scheme_chooser_widget_init (TeplStyleSchemeChooserWidget *chooser)
 {
 	GtkWidget *scrolled_window;
-	GtkAdjustment *vadjustment;
 
 	chooser->priv = tepl_style_scheme_chooser_widget_get_instance_private (chooser);
 
@@ -399,8 +398,8 @@ tepl_style_scheme_chooser_widget_init (TeplStyleSchemeChooserWidget *chooser)
 	gtk_widget_show_all (scrolled_window);
 	gtk_container_add (GTK_CONTAINER (chooser), scrolled_window);
 
-	vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
-	gtk_container_set_focus_vadjustment (GTK_CONTAINER (chooser->priv->list_box), vadjustment);
+	tepl_utils_list_box_setup_scrolling (chooser->priv->list_box,
+					     GTK_SCROLLED_WINDOW (scrolled_window));
 
 	g_signal_connect (chooser->priv->list_box,
 			  "selected-rows-changed",

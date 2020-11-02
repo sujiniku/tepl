@@ -10,7 +10,14 @@ language_activated_cb (TeplLanguageChooser *chooser,
 		       GtkSourceLanguage   *language,
 		       gpointer             user_data)
 {
-	g_message ("Language activated: %s", gtk_source_language_get_id (language));
+	if (language != NULL)
+	{
+		g_message ("Language activated: %s", gtk_source_language_get_id (language));
+	}
+	else
+	{
+		g_message ("Plain Text activated.");
+	}
 }
 
 int

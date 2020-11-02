@@ -31,6 +31,17 @@ G_DEFINE_TYPE_WITH_CODE (TeplLanguageChooserWidget,
 			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_LANGUAGE_CHOOSER,
 						tepl_language_chooser_interface_init))
 
+static const gchar *
+get_language_name (GtkSourceLanguage *language)
+{
+	if (language == NULL)
+	{
+		return _("Plain Text");
+	}
+
+	return gtk_source_language_get_name (language);
+}
+
 static void
 list_box_row_set_language (GtkListBoxRow     *list_box_row,
 			   GtkSourceLanguage *language)
@@ -83,12 +94,52 @@ tepl_language_chooser_interface_init (gpointer g_iface,
 	interface->select_language = tepl_language_chooser_widget_select_language;
 }
 
+static GtkListBoxRow *
+create_list_box_row (const gchar *label_text)
+{
+	GtkWidget *label;
+	GtkListBoxRow *list_box_row;
+
+	label = gtk_label_new (label_text);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+
+	list_box_row = GTK_LIST_BOX_ROW (gtk_list_box_row_new ());
+	gtk_container_add (GTK_CONTAINER (list_box_row), label);
+
+	return list_box_row;
+}
+
+static void
+append_plain_text_item_to_list_box (TeplLanguageChooserWidget *chooser_widget)
+{
+	/* NULL GtkSourceLanguage. */
+	gtk_container_add (GTK_CONTAINER (chooser_widget->priv->list_box),
+			   GTK_WIDGET (create_list_box_row (get_language_name (NULL))));
+}
+
+static void
+append_language_to_list_box (TeplLanguageChooserWidget *chooser_widget,
+			     GtkSourceLanguage         *language)
+{
+	GtkListBoxRow *list_box_row;
+
+	g_return_if_fail (GTK_SOURCE_IS_LANGUAGE (language));
+
+	list_box_row = create_list_box_row (gtk_source_language_get_name (language));
+	list_box_row_set_language (list_box_row, language);
+	gtk_container_add (GTK_CONTAINER (chooser_widget->priv->list_box),
+			   GTK_WIDGET (list_box_row));
+}
+
 static void
 populate_list_box (TeplLanguageChooserWidget *chooser_widget)
 {
 	GtkSourceLanguageManager *language_manager;
 	const gchar * const *language_ids;
 	gint i;
+
+	// First item
+	append_plain_text_item_to_list_box (chooser_widget);
 
 	language_manager = gtk_source_language_manager_get_default ();
 	language_ids = gtk_source_language_manager_get_language_ids (language_manager);
@@ -102,22 +153,12 @@ populate_list_box (TeplLanguageChooserWidget *chooser_widget)
 	{
 		const gchar *cur_language_id = language_ids[i];
 		GtkSourceLanguage *language;
-		GtkLabel *label;
-		GtkListBoxRow *list_box_row;
 
 		language = gtk_source_language_manager_get_language (language_manager, cur_language_id);
-		if (gtk_source_language_get_hidden (language))
+		if (!gtk_source_language_get_hidden (language))
 		{
-			continue;
+			append_language_to_list_box (chooser_widget, language);
 		}
-
-		label = GTK_LABEL (gtk_label_new (gtk_source_language_get_name (language)));
-		gtk_label_set_xalign (label, 0.0);
-
-		list_box_row = GTK_LIST_BOX_ROW (gtk_list_box_row_new ());
-		list_box_row_set_language (list_box_row, language);
-		gtk_container_add (GTK_CONTAINER (list_box_row), GTK_WIDGET (label));
-		gtk_container_add (GTK_CONTAINER (chooser_widget->priv->list_box), GTK_WIDGET (list_box_row));
 	}
 }
 
@@ -128,12 +169,12 @@ filter_cb (GtkListBoxRow *list_box_row,
 	TeplLanguageChooserWidget *chooser_widget = user_data;
 	const gchar *search_text;
 	GtkSourceLanguage *language;
-	const gchar *language_name;
-	gchar *language_name_normalized;
-	gchar *language_name_casefolded;
+	const gchar *item_name;
+	gchar *item_name_normalized;
+	gchar *item_name_casefolded;
 	gchar *search_text_normalized;
 	gchar *search_text_casefolded;
-	gboolean visible;
+	gboolean visible = FALSE;
 
 	search_text = gtk_entry_get_text (GTK_ENTRY (chooser_widget->priv->search_entry));
 	if (search_text == NULL || search_text[0] == '\0')
@@ -142,24 +183,20 @@ filter_cb (GtkListBoxRow *list_box_row,
 	}
 
 	language = list_box_row_get_language (list_box_row);
-	g_return_val_if_fail (language != NULL, FALSE);
+	item_name = get_language_name (language);
+	g_return_val_if_fail (item_name != NULL, FALSE);
 
-	language_name = gtk_source_language_get_name (language);
-	g_return_val_if_fail (language_name != NULL, FALSE);
+	/* Safer to check... (item_name can come from a *.lang file). */
+	g_return_val_if_fail (g_utf8_validate (search_text, -1, NULL), FALSE);
+	g_return_val_if_fail (g_utf8_validate (item_name, -1, NULL), FALSE);
 
-	/* search_text is guaranteed to be UTF-8 (it comes from a GTK widget).
-	 * language_name is not really, it can come from foreign input (*.lang
-	 * file), so it's safer to check.
-	 */
-	g_return_val_if_fail (g_utf8_validate (language_name, -1, NULL), FALSE);
-
-	language_name_normalized = g_utf8_normalize (language_name, -1, G_NORMALIZE_ALL);
-	language_name_casefolded = g_utf8_casefold (language_name_normalized, -1);
-	g_free (language_name_normalized);
+	item_name_normalized = g_utf8_normalize (item_name, -1, G_NORMALIZE_ALL);
+	item_name_casefolded = g_utf8_casefold (item_name_normalized, -1);
+	g_free (item_name_normalized);
 
 	/* Note: we do not apply g_strstrip() on the search text, because a
 	 * trailing space (or - to a less extent - a leading space) can
-	 * differentiate several GtkSourceLanguages, for example:
+	 * differentiate several items, for example:
 	 * - "ERB"
 	 * - "ERB (HTML)"
 	 * - "ERB (JavaScript)"
@@ -168,9 +205,12 @@ filter_cb (GtkListBoxRow *list_box_row,
 	search_text_casefolded = g_utf8_casefold (search_text_normalized, -1);
 	g_free (search_text_normalized);
 
-	visible = strstr (language_name_casefolded, search_text_casefolded) != NULL;
+	if (item_name_casefolded != NULL && search_text_casefolded != NULL)
+	{
+		visible = strstr (item_name_casefolded, search_text_casefolded) != NULL;
+	}
 
-	g_free (language_name_casefolded);
+	g_free (item_name_casefolded);
 	g_free (search_text_casefolded);
 	return visible;
 }
@@ -190,11 +230,18 @@ list_box_row_activated_cb (GtkListBox                *list_box,
 	GtkSourceLanguage *language;
 
 	language = list_box_row_get_language (list_box_row);
-	g_return_if_fail (language != NULL);
 
-	g_object_ref (language);
+	if (language != NULL)
+	{
+		g_object_ref (language);
+	}
+
 	g_signal_emit_by_name (chooser_widget, "language-activated", language);
-	g_object_unref (language);
+
+	if (language != NULL)
+	{
+		g_object_unref (language);
+	}
 }
 
 static void

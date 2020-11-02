@@ -162,6 +162,15 @@ populate_list_box (TeplLanguageChooserWidget *chooser_widget)
 	}
 }
 
+static void
+select_first_item (TeplLanguageChooserWidget *chooser_widget)
+{
+	GtkListBoxRow *row;
+
+	row = gtk_list_box_get_row_at_index (chooser_widget->priv->list_box, 0);
+	gtk_list_box_select_row (chooser_widget->priv->list_box, row);
+}
+
 static gboolean
 filter_cb (GtkListBoxRow *list_box_row,
 	   gpointer       user_data)
@@ -264,9 +273,10 @@ tepl_language_chooser_widget_init (TeplLanguageChooserWidget *chooser_widget)
 
 	chooser_widget->priv->list_box = GTK_LIST_BOX (gtk_list_box_new ());
 	gtk_list_box_set_activate_on_single_click (chooser_widget->priv->list_box, FALSE);
-	populate_list_box (chooser_widget);
 	gtk_widget_set_hexpand (GTK_WIDGET (chooser_widget->priv->list_box), TRUE);
 	gtk_widget_set_vexpand (GTK_WIDGET (chooser_widget->priv->list_box), TRUE);
+	populate_list_box (chooser_widget);
+	select_first_item (chooser_widget);
 
 	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window), GTK_SHADOW_IN);

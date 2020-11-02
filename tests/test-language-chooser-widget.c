@@ -10,7 +10,7 @@ language_activated_cb (TeplLanguageChooser *chooser,
 		       GtkSourceLanguage   *language,
 		       gpointer             user_data)
 {
-	g_message ("Language selected: %s", gtk_source_language_get_id (language));
+	g_message ("Language activated: %s", gtk_source_language_get_id (language));
 }
 
 int
@@ -23,7 +23,6 @@ main (int    argc,
 	gtk_init (&argc, &argv);
 
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_default_size (GTK_WINDOW (window), 500, 500);
 	g_signal_connect (window, "destroy", gtk_main_quit, NULL);
 
 	chooser_widget = tepl_language_chooser_widget_new ();

@@ -2,7 +2,9 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
+#include "config.h"
 #include "tepl-language-chooser-widget.h"
+#include <glib/gi18n-lib.h>
 #include "tepl-language-chooser.h"
 
 /**
@@ -203,8 +205,13 @@ tepl_language_chooser_widget_init (TeplLanguageChooserWidget *chooser_widget)
 	chooser_widget->priv = tepl_language_chooser_widget_get_instance_private (chooser_widget);
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (chooser_widget), GTK_ORIENTATION_VERTICAL);
+	gtk_widget_set_size_request (GTK_WIDGET (chooser_widget), 300, 400);
+	gtk_grid_set_row_spacing (GTK_GRID (chooser_widget), 3);
+	gtk_container_set_border_width (GTK_CONTAINER (chooser_widget), 6);
 
 	chooser_widget->priv->search_entry = GTK_SEARCH_ENTRY (gtk_search_entry_new ());
+	gtk_entry_set_placeholder_text (GTK_ENTRY (chooser_widget->priv->search_entry),
+					_("Search highlight mode…"));
 	gtk_widget_show (GTK_WIDGET (chooser_widget->priv->search_entry));
 	gtk_container_add (GTK_CONTAINER (chooser_widget), GTK_WIDGET (chooser_widget->priv->search_entry));
 
@@ -215,6 +222,7 @@ tepl_language_chooser_widget_init (TeplLanguageChooserWidget *chooser_widget)
 	gtk_widget_set_vexpand (GTK_WIDGET (chooser_widget->priv->list_box), TRUE);
 
 	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window), GTK_SHADOW_IN);
 	gtk_container_add (GTK_CONTAINER (scrolled_window), GTK_WIDGET (chooser_widget->priv->list_box));
 	gtk_widget_show_all (scrolled_window);
 	gtk_container_add (GTK_CONTAINER (chooser_widget), scrolled_window);

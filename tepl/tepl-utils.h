@@ -83,6 +83,9 @@ void		tepl_utils_show_warning_dialog			(GtkWindow   *parent,
 								 const gchar *format,
 								 ...) G_GNUC_PRINTF(2, 3);
 
+_TEPL_EXTERN
+void		tepl_utils_list_box_clear			(GtkListBox *list_box);
+
 /* Other */
 
 _TEPL_EXTERN

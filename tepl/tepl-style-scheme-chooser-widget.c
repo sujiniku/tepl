@@ -4,6 +4,7 @@
 
 #include "tepl-style-scheme-chooser-widget.h"
 #include <gtksourceview/gtksource.h>
+#include "tepl-utils.h"
 
 /**
  * SECTION:style-scheme-chooser-widget
@@ -44,21 +45,6 @@ G_DEFINE_TYPE_WITH_CODE (TeplStyleSchemeChooserWidget,
 			 G_ADD_PRIVATE (TeplStyleSchemeChooserWidget)
 			 G_IMPLEMENT_INTERFACE (GTK_SOURCE_TYPE_STYLE_SCHEME_CHOOSER,
 						gtk_source_style_scheme_chooser_interface_init))
-
-static void
-clear_list_box_foreach_cb (GtkWidget *child,
-			   gpointer   user_data)
-{
-	gtk_widget_destroy (child);
-}
-
-static void
-clear_list_box (GtkListBox *list_box)
-{
-	gtk_container_foreach (GTK_CONTAINER (list_box),
-			       clear_list_box_foreach_cb,
-			       NULL);
-}
 
 static void
 list_box_row_set_style_scheme (GtkListBoxRow        *list_box_row,
@@ -372,7 +358,7 @@ style_scheme_manager_notify_scheme_ids_cb (GtkSourceStyleSchemeManager  *manager
 
 	style_scheme_id = tepl_style_scheme_chooser_widget_get_style_scheme_id (chooser);
 
-	clear_list_box (chooser->priv->list_box);
+	tepl_utils_list_box_clear (chooser->priv->list_box);
 	populate_list_box (chooser);
 
 	/* Note that the style_scheme_id may no longer exist, in which case no

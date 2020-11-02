@@ -798,6 +798,31 @@ tepl_utils_show_warning_dialog (GtkWindow   *parent,
 	gtk_widget_show (dialog);
 }
 
+static void
+list_box_clear_foreach_cb (GtkWidget *child,
+			   gpointer   user_data)
+{
+	gtk_widget_destroy (child);
+}
+
+/**
+ * tepl_utils_list_box_clear:
+ * @list_box: a #GtkListBox.
+ *
+ * Removes all rows of @list_box, to obtain an empty #GtkListBox.
+ *
+ * Since: 5.2
+ */
+void
+tepl_utils_list_box_clear (GtkListBox *list_box)
+{
+	g_return_if_fail (GTK_IS_LIST_BOX (list_box));
+
+	gtk_container_foreach (GTK_CONTAINER (list_box),
+			       list_box_clear_foreach_cb,
+			       NULL);
+}
+
 /**
  * tepl_utils_binding_transform_func_smart_bool:
  * @binding: a #GBinding.

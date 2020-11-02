@@ -824,6 +824,48 @@ tepl_utils_list_box_clear (GtkListBox *list_box)
 }
 
 /**
+ * tepl_utils_list_box_scroll_to_row:
+ * @list_box: a #GtkListBox.
+ * @row: a #GtkListBoxRow.
+ *
+ * Since: 5.2
+ */
+void
+tepl_utils_list_box_scroll_to_row (GtkListBox    *list_box,
+				   GtkListBoxRow *row)
+{
+	g_return_if_fail (GTK_IS_LIST_BOX (list_box));
+	g_return_if_fail (GTK_IS_LIST_BOX_ROW (row));
+
+	/* gtk_container_set_focus_vadjustment() must also be called beforehand. */
+	gtk_container_set_focus_child (GTK_CONTAINER (list_box), GTK_WIDGET (row));
+}
+
+/**
+ * tepl_utils_list_box_scroll_to_selected_row:
+ * @list_box: a #GtkListBox.
+ *
+ * Calls tepl_utils_list_box_scroll_to_row() on the row returned by
+ * gtk_list_box_get_selected_row(). This function assumes that there is either
+ * zero or one selected row.
+ *
+ * Since: 5.2
+ */
+void
+tepl_utils_list_box_scroll_to_selected_row (GtkListBox *list_box)
+{
+	GtkListBoxRow *selected_row;
+
+	g_return_if_fail (GTK_IS_LIST_BOX (list_box));
+
+	selected_row = gtk_list_box_get_selected_row (list_box);
+	if (selected_row != NULL)
+	{
+		tepl_utils_list_box_scroll_to_row (list_box, selected_row);
+	}
+}
+
+/**
  * tepl_utils_binding_transform_func_smart_bool:
  * @binding: a #GBinding.
  * @from_value: the #GValue containing the value to transform.

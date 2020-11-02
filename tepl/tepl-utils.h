@@ -86,6 +86,13 @@ void		tepl_utils_show_warning_dialog			(GtkWindow   *parent,
 _TEPL_EXTERN
 void		tepl_utils_list_box_clear			(GtkListBox *list_box);
 
+_TEPL_EXTERN
+void		tepl_utils_list_box_scroll_to_row		(GtkListBox    *list_box,
+								 GtkListBoxRow *row);
+
+_TEPL_EXTERN
+void		tepl_utils_list_box_scroll_to_selected_row	(GtkListBox *list_box);
+
 /* Other */
 
 _TEPL_EXTERN

@@ -263,9 +263,8 @@ search_changed_cb (GtkSearchEntry            *search_entry,
 }
 
 static void
-list_box_row_activated_cb (GtkListBox                *list_box,
-			   GtkListBoxRow             *list_box_row,
-			   TeplLanguageChooserWidget *chooser_widget)
+emit_language_activated_for_row (TeplLanguageChooserWidget *chooser_widget,
+				 GtkListBoxRow             *list_box_row)
 {
 	GtkSourceLanguage *language;
 
@@ -282,6 +281,27 @@ list_box_row_activated_cb (GtkListBox                *list_box,
 	{
 		g_object_unref (language);
 	}
+}
+
+static void
+search_entry_activate_cb (GtkEntry                  *entry,
+			  TeplLanguageChooserWidget *chooser_widget)
+{
+	GtkListBoxRow *selected_row;
+
+	selected_row = gtk_list_box_get_selected_row (chooser_widget->priv->list_box);
+	if (selected_row != NULL)
+	{
+		emit_language_activated_for_row (chooser_widget, selected_row);
+	}
+}
+
+static void
+list_box_row_activated_cb (GtkListBox                *list_box,
+			   GtkListBoxRow             *list_box_row,
+			   TeplLanguageChooserWidget *chooser_widget)
+{
+	emit_language_activated_for_row (chooser_widget, list_box_row);
 }
 
 static void
@@ -322,6 +342,11 @@ tepl_language_chooser_widget_init (TeplLanguageChooserWidget *chooser_widget)
 	g_signal_connect (chooser_widget->priv->search_entry,
 			  "search-changed",
 			  G_CALLBACK (search_changed_cb),
+			  chooser_widget);
+
+	g_signal_connect (chooser_widget->priv->search_entry,
+			  "activate",
+			  G_CALLBACK (search_entry_activate_cb),
 			  chooser_widget);
 
 	g_signal_connect (chooser_widget->priv->list_box,

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-09-28 15:57+0000\n"
-"PO-Revision-Date: 2020-09-30 14:31+0300\n"
+"POT-Creation-Date: 2020-11-02 19:21+0000\n"
+"PO-Revision-Date: 2020-11-03 09:09+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -257,6 +257,14 @@ msgid ""
 msgstr ""
 "Ви зіпсуєте цей документ, якщо продовжите зберігання. Зберегти попри це?"
 
+#: tepl/tepl-language-chooser-widget.c:39
+msgid "Plain Text"
+msgstr "Звичайний текст"
+
+#: tepl/tepl-language-chooser-widget.c:261
+msgid "Search highlight mode…"
+msgstr "Пошук підкреслення синтаксису…"
+
 #. Translators: do not translate <metadata>.
 #: tepl/tepl-metadata-parser.c:83
 #, c-format
@@ -342,7 +350,6 @@ msgid "Result"
 msgstr "Результат"
 
 #: tepl/tepl-space-drawer-prefs.c:314
-#| msgid "Location:"
 msgid "Information"
 msgstr "Відомості"
 
@@ -351,8 +358,8 @@ msgid ""
 "When white space drawing is enabled, then non-breaking spaces are always "
 "drawn at all locations, to distinguish them from normal spaces."
 msgstr ""
-"Якщо увімкнено візуалізацію пробілів, нерозривні пробіли буде візуалізовано"
-" всюди, щоб ви могли відрізнити їх від звичайних пробілів."
+"Якщо увімкнено візуалізацію пробілів, нерозривні пробіли буде візуалізовано "
+"всюди, щоб ви могли відрізнити їх від звичайних пробілів."
 
 #. Translators: "Ln" is an abbreviation for "Line", Col is an
 #. * abbreviation for "Column". Please, use abbreviations if possible.

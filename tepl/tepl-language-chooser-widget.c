@@ -31,6 +31,45 @@ G_DEFINE_TYPE_WITH_CODE (TeplLanguageChooserWidget,
 			 G_IMPLEMENT_INTERFACE (TEPL_TYPE_LANGUAGE_CHOOSER,
 						tepl_language_chooser_interface_init))
 
+static gboolean filter_cb (GtkListBoxRow *list_box_row,
+			   gpointer       user_data);
+
+/* Could be moved to tepl-utils, but it would require to make it more general,
+ * for all GtkListBox scenarios ideally (with headers etc). Or document the
+ * limitations.
+ */
+static void
+list_box_select_first_row (GtkListBox           *list_box,
+			   GtkListBoxFilterFunc  filter_func,
+			   gpointer              user_data)
+{
+	GList *all_rows;
+	GList *l;
+
+	all_rows = gtk_container_get_children (GTK_CONTAINER (list_box));
+
+	for (l = all_rows; l != NULL; l = l->next)
+	{
+		GtkListBoxRow *cur_row = GTK_LIST_BOX_ROW (l->data);
+
+		if (filter_func (cur_row, user_data))
+		{
+			gtk_list_box_select_row (list_box, cur_row);
+			break;
+		}
+	}
+
+	g_list_free (all_rows);
+}
+
+static void
+select_first_row (TeplLanguageChooserWidget *chooser_widget)
+{
+	list_box_select_first_row (chooser_widget->priv->list_box,
+				   filter_cb,
+				   chooser_widget);
+}
+
 static const gchar *
 get_language_name (GtkSourceLanguage *language)
 {
@@ -162,15 +201,6 @@ populate_list_box (TeplLanguageChooserWidget *chooser_widget)
 	}
 }
 
-static void
-select_first_item (TeplLanguageChooserWidget *chooser_widget)
-{
-	GtkListBoxRow *row;
-
-	row = gtk_list_box_get_row_at_index (chooser_widget->priv->list_box, 0);
-	gtk_list_box_select_row (chooser_widget->priv->list_box, row);
-}
-
 static gboolean
 filter_cb (GtkListBoxRow *list_box_row,
 	   gpointer       user_data)
@@ -276,7 +306,6 @@ tepl_language_chooser_widget_init (TeplLanguageChooserWidget *chooser_widget)
 	gtk_widget_set_hexpand (GTK_WIDGET (chooser_widget->priv->list_box), TRUE);
 	gtk_widget_set_vexpand (GTK_WIDGET (chooser_widget->priv->list_box), TRUE);
 	populate_list_box (chooser_widget);
-	select_first_item (chooser_widget);
 
 	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window), GTK_SHADOW_IN);
@@ -298,6 +327,8 @@ tepl_language_chooser_widget_init (TeplLanguageChooserWidget *chooser_widget)
 			  "row-activated",
 			  G_CALLBACK (list_box_row_activated_cb),
 			  chooser_widget);
+
+	select_first_row (chooser_widget);
 }
 
 /**

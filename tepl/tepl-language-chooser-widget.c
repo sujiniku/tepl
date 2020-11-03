@@ -293,6 +293,92 @@ list_box_row_activated_cb (GtkListBox                *list_box,
 }
 
 static void
+move_selection (TeplLanguageChooserWidget *chooser_widget,
+		gint                       how_many)
+{
+	GtkListBoxRow *selected_row;
+	GtkListBoxRow **filtered_children = NULL;
+	gint n_filtered_children;
+	gint pos;
+	gint selected_row_pos = 0;
+	gboolean found = FALSE;
+	gint new_row_to_select_pos;
+	GtkListBoxRow *new_row_to_select;
+
+	selected_row = gtk_list_box_get_selected_row (chooser_widget->priv->list_box);
+	if (selected_row == NULL || !filter_cb (selected_row, chooser_widget))
+	{
+		select_first_row (chooser_widget);
+		return;
+	}
+
+	filtered_children = tepl_utils_list_box_get_filtered_children (chooser_widget->priv->list_box,
+								       filter_cb,
+								       chooser_widget,
+								       &n_filtered_children);
+
+	if (filtered_children == NULL)
+	{
+		goto out;
+	}
+
+	for (pos = 0; filtered_children[pos] != NULL; pos++)
+	{
+		GtkListBoxRow *cur_row = filtered_children[pos];
+
+		if (cur_row == selected_row)
+		{
+			selected_row_pos = pos;
+			found = TRUE;
+			break;
+		}
+	}
+
+	if (!found)
+	{
+		g_warn_if_reached ();
+		goto out;
+	}
+
+	new_row_to_select_pos = selected_row_pos + how_many;
+	new_row_to_select_pos = CLAMP (new_row_to_select_pos, 0, n_filtered_children - 1);
+	new_row_to_select = filtered_children[new_row_to_select_pos];
+	gtk_list_box_select_row (chooser_widget->priv->list_box, new_row_to_select);
+
+out:
+	g_free (filtered_children);
+}
+
+static gboolean
+search_entry_key_press_event_cb (GtkWidget                 *search_entry,
+				 GdkEventKey               *event,
+				 TeplLanguageChooserWidget *chooser_widget)
+{
+	if (event->keyval == GDK_KEY_Down)
+	{
+		move_selection (chooser_widget, 1);
+		return GDK_EVENT_STOP;
+	}
+	else if (event->keyval == GDK_KEY_Up)
+	{
+		move_selection (chooser_widget, -1);
+		return GDK_EVENT_STOP;
+	}
+	else if (event->keyval == GDK_KEY_Page_Down)
+	{
+		move_selection (chooser_widget, 5);
+		return GDK_EVENT_STOP;
+	}
+	else if (event->keyval == GDK_KEY_Page_Up)
+	{
+		move_selection (chooser_widget, -5);
+		return GDK_EVENT_STOP;
+	}
+
+	return GDK_EVENT_PROPAGATE;
+}
+
+static void
 tepl_language_chooser_widget_init (TeplLanguageChooserWidget *chooser_widget)
 {
 	GtkWidget *scrolled_window;
@@ -335,6 +421,11 @@ tepl_language_chooser_widget_init (TeplLanguageChooserWidget *chooser_widget)
 	g_signal_connect (chooser_widget->priv->search_entry,
 			  "activate",
 			  G_CALLBACK (search_entry_activate_cb),
+			  chooser_widget);
+
+	g_signal_connect (chooser_widget->priv->search_entry,
+			  "key-press-event",
+			  G_CALLBACK (search_entry_key_press_event_cb),
 			  chooser_widget);
 
 	g_signal_connect (chooser_widget->priv->list_box,

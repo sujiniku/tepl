@@ -259,6 +259,7 @@ search_changed_cb (GtkSearchEntry            *search_entry,
 		   TeplLanguageChooserWidget *chooser_widget)
 {
 	gtk_list_box_invalidate_filter (chooser_widget->priv->list_box);
+	select_first_row (chooser_widget);
 }
 
 static void

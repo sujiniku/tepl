@@ -20,6 +20,19 @@ language_activated_cb (TeplLanguageChooser *chooser,
 	}
 }
 
+static void
+select_random_language (TeplLanguageChooserWidget *chooser_widget)
+{
+	GtkSourceLanguageManager *manager;
+	GtkSourceLanguage *language;
+
+	manager = gtk_source_language_manager_get_default ();
+	// html has been picked at random.
+	language = gtk_source_language_manager_get_language (manager, "html");
+
+	tepl_language_chooser_select_language (TEPL_LANGUAGE_CHOOSER (chooser_widget), language);
+}
+
 int
 main (int    argc,
       char **argv)
@@ -33,6 +46,7 @@ main (int    argc,
 	g_signal_connect (window, "destroy", gtk_main_quit, NULL);
 
 	chooser_widget = tepl_language_chooser_widget_new ();
+	select_random_language (chooser_widget);
 	gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (chooser_widget));
 
 	g_signal_connect (chooser_widget,

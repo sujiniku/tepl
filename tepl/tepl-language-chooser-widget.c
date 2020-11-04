@@ -109,7 +109,26 @@ static void
 tepl_language_chooser_widget_select_language (TeplLanguageChooser *chooser,
 					      GtkSourceLanguage   *language)
 {
-	/* TODO */
+	TeplLanguageChooserWidget *chooser_widget = TEPL_LANGUAGE_CHOOSER_WIDGET (chooser);
+	GList *all_rows;
+	GList *l;
+
+	all_rows = gtk_container_get_children (GTK_CONTAINER (chooser_widget->priv->list_box));
+
+	for (l = all_rows; l != NULL; l = l->next)
+	{
+		GtkListBoxRow *cur_row = GTK_LIST_BOX_ROW (l->data);
+		GtkSourceLanguage *cur_language;
+
+		cur_language = list_box_row_get_language (cur_row);
+		if (cur_language == language)
+		{
+			gtk_list_box_select_row (chooser_widget->priv->list_box, cur_row);
+			break;
+		}
+	}
+
+	g_list_free (all_rows);
 }
 
 static void

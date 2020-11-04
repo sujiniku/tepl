@@ -48,6 +48,11 @@ list_box_select_first_row (GtkListBox           *list_box,
 
 	row = tepl_utils_list_box_get_row_at_index_with_filter (list_box, 0, filter_func, user_data);
 	gtk_list_box_select_row (list_box, row);
+
+	if (row != NULL)
+	{
+		tepl_utils_list_box_scroll_to_row (list_box, row);
+	}
 }
 
 static void
@@ -98,11 +103,27 @@ tepl_language_chooser_widget_dispose (GObject *object)
 }
 
 static void
+tepl_language_chooser_widget_map (GtkWidget *widget)
+{
+	TeplLanguageChooserWidget *chooser_widget = TEPL_LANGUAGE_CHOOSER_WIDGET (widget);
+
+	if (GTK_WIDGET_CLASS (tepl_language_chooser_widget_parent_class)->map != NULL)
+	{
+		GTK_WIDGET_CLASS (tepl_language_chooser_widget_parent_class)->map (widget);
+	}
+
+	tepl_utils_list_box_scroll_to_selected_row (chooser_widget->priv->list_box);
+}
+
+static void
 tepl_language_chooser_widget_class_init (TeplLanguageChooserWidgetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
 	object_class->dispose = tepl_language_chooser_widget_dispose;
+
+	widget_class->map = tepl_language_chooser_widget_map;
 }
 
 static void
@@ -124,6 +145,7 @@ tepl_language_chooser_widget_select_language (TeplLanguageChooser *chooser,
 		if (cur_language == language)
 		{
 			gtk_list_box_select_row (chooser_widget->priv->list_box, cur_row);
+			tepl_utils_list_box_scroll_to_row (chooser_widget->priv->list_box, cur_row);
 			break;
 		}
 	}
@@ -363,6 +385,7 @@ move_selection (TeplLanguageChooserWidget *chooser_widget,
 	new_row_to_select_pos = CLAMP (new_row_to_select_pos, 0, n_filtered_children - 1);
 	new_row_to_select = filtered_children[new_row_to_select_pos];
 	gtk_list_box_select_row (chooser_widget->priv->list_box, new_row_to_select);
+	tepl_utils_list_box_scroll_to_row (chooser_widget->priv->list_box, new_row_to_select);
 
 out:
 	g_free (filtered_children);
@@ -400,32 +423,39 @@ search_entry_key_press_event_cb (GtkWidget                 *search_entry,
 static void
 tepl_language_chooser_widget_init (TeplLanguageChooserWidget *chooser_widget)
 {
-	GtkWidget *scrolled_window;
+	GtkScrolledWindow *scrolled_window;
 
 	chooser_widget->priv = tepl_language_chooser_widget_get_instance_private (chooser_widget);
 
+	/* chooser_widget config */
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (chooser_widget), GTK_ORIENTATION_VERTICAL);
 	gtk_widget_set_size_request (GTK_WIDGET (chooser_widget), 300, 400);
 	gtk_grid_set_row_spacing (GTK_GRID (chooser_widget), 3);
 	gtk_container_set_border_width (GTK_CONTAINER (chooser_widget), 6);
 
+	/* GtkSearchEntry */
 	chooser_widget->priv->search_entry = GTK_SEARCH_ENTRY (gtk_search_entry_new ());
 	gtk_entry_set_placeholder_text (GTK_ENTRY (chooser_widget->priv->search_entry),
 					_("Search highlight mode…"));
 	gtk_widget_show (GTK_WIDGET (chooser_widget->priv->search_entry));
 	gtk_container_add (GTK_CONTAINER (chooser_widget), GTK_WIDGET (chooser_widget->priv->search_entry));
 
+	/* GtkListBox */
 	chooser_widget->priv->list_box = GTK_LIST_BOX (gtk_list_box_new ());
 	gtk_list_box_set_activate_on_single_click (chooser_widget->priv->list_box, FALSE);
 	gtk_widget_set_hexpand (GTK_WIDGET (chooser_widget->priv->list_box), TRUE);
 	gtk_widget_set_vexpand (GTK_WIDGET (chooser_widget->priv->list_box), TRUE);
 	populate_list_box (chooser_widget);
 
-	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window), GTK_SHADOW_IN);
+	/* GtkScrolledWindow */
+	scrolled_window = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (NULL, NULL));
+	gtk_scrolled_window_set_shadow_type (scrolled_window, GTK_SHADOW_IN);
+
 	gtk_container_add (GTK_CONTAINER (scrolled_window), GTK_WIDGET (chooser_widget->priv->list_box));
-	gtk_widget_show_all (scrolled_window);
-	gtk_container_add (GTK_CONTAINER (chooser_widget), scrolled_window);
+	gtk_widget_show_all (GTK_WIDGET (scrolled_window));
+	gtk_container_add (GTK_CONTAINER (chooser_widget), GTK_WIDGET (scrolled_window));
+
+	tepl_utils_list_box_setup_scrolling (chooser_widget->priv->list_box, scrolled_window);
 
 	gtk_list_box_set_filter_func (chooser_widget->priv->list_box,
 				      filter_cb,

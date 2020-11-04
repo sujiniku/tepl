@@ -899,6 +899,60 @@ tepl_utils_list_box_scroll_to_selected_row (GtkListBox *list_box)
 }
 
 /**
+ * tepl_utils_list_box_get_row_at_index_with_filter:
+ * @list_box: a #GtkListBox.
+ * @index: the index of the row.
+ * @filter_func: (scope call): non-%NULL callback function.
+ * @user_data: user data passed to @filter_func.
+ *
+ * This function has the same semantics as gtk_list_box_get_row_at_index(), but
+ * it takes into account only the rows for which @filter_func returns %TRUE.
+ *
+ * Returns: (transfer none) (nullable): the child #GtkListBoxRow or %NULL.
+ * Since: 5.2
+ */
+GtkListBoxRow *
+tepl_utils_list_box_get_row_at_index_with_filter (GtkListBox           *list_box,
+						  gint                  index,
+						  GtkListBoxFilterFunc  filter_func,
+						  gpointer              user_data)
+{
+	GList *all_rows;
+	GList *l;
+	gint remaining_rows_to_find = index + 1;
+	GtkListBoxRow *ret = NULL;
+
+	g_return_val_if_fail (GTK_IS_LIST_BOX (list_box), NULL);
+	g_return_val_if_fail (filter_func != NULL, NULL);
+
+	if (index < 0)
+	{
+		return NULL;
+	}
+
+	all_rows = gtk_container_get_children (GTK_CONTAINER (list_box));
+
+	for (l = all_rows; l != NULL; l = l->next)
+	{
+		GtkListBoxRow *cur_row = GTK_LIST_BOX_ROW (l->data);
+
+		if (filter_func (cur_row, user_data))
+		{
+			remaining_rows_to_find--;
+
+			if (remaining_rows_to_find == 0)
+			{
+				ret = cur_row;
+				break;
+			}
+		}
+	}
+
+	g_list_free (all_rows);
+	return ret;
+}
+
+/**
  * tepl_utils_binding_transform_func_smart_bool:
  * @binding: a #GBinding.
  * @from_value: the #GValue containing the value to transform.

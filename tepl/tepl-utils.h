@@ -97,6 +97,12 @@ void		tepl_utils_list_box_scroll_to_row		(GtkListBox    *list_box,
 _TEPL_EXTERN
 void		tepl_utils_list_box_scroll_to_selected_row	(GtkListBox *list_box);
 
+_TEPL_EXTERN
+GtkListBoxRow *	tepl_utils_list_box_get_row_at_index_with_filter (GtkListBox           *list_box,
+								  gint                  index,
+								  GtkListBoxFilterFunc  filter_func,
+								  gpointer              user_data);
+
 /* Other */
 
 _TEPL_EXTERN

@@ -6,6 +6,7 @@
 #include "tepl-language-chooser-widget.h"
 #include <glib/gi18n-lib.h>
 #include "tepl-language-chooser.h"
+#include "tepl-utils.h"
 
 /**
  * SECTION:language-chooser-widget
@@ -35,31 +36,18 @@ static gboolean filter_cb (GtkListBoxRow *list_box_row,
 			   gpointer       user_data);
 
 /* Could be moved to tepl-utils, but it would require to make it more general,
- * for all GtkListBox scenarios ideally (with headers etc). Or document the
- * limitations.
+ * for all GtkListBox scenarios ideally (with non-selectable rows, headers,
+ * etc). Or by documenting the limitations.
  */
 static void
 list_box_select_first_row (GtkListBox           *list_box,
 			   GtkListBoxFilterFunc  filter_func,
 			   gpointer              user_data)
 {
-	GList *all_rows;
-	GList *l;
+	GtkListBoxRow *row;
 
-	all_rows = gtk_container_get_children (GTK_CONTAINER (list_box));
-
-	for (l = all_rows; l != NULL; l = l->next)
-	{
-		GtkListBoxRow *cur_row = GTK_LIST_BOX_ROW (l->data);
-
-		if (filter_func (cur_row, user_data))
-		{
-			gtk_list_box_select_row (list_box, cur_row);
-			break;
-		}
-	}
-
-	g_list_free (all_rows);
+	row = tepl_utils_list_box_get_row_at_index_with_filter (list_box, 0, filter_func, user_data);
+	gtk_list_box_select_row (list_box, row);
 }
 
 static void

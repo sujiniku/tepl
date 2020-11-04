@@ -103,6 +103,12 @@ GtkListBoxRow *	tepl_utils_list_box_get_row_at_index_with_filter (GtkListBox    
 								  GtkListBoxFilterFunc  filter_func,
 								  gpointer              user_data);
 
+_TEPL_EXTERN
+GtkListBoxRow **tepl_utils_list_box_get_filtered_children	(GtkListBox           *list_box,
+								 GtkListBoxFilterFunc  filter_func,
+								 gpointer              user_data,
+								 gint                 *n_filtered_children);
+
 /* Other */
 
 _TEPL_EXTERN

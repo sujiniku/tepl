@@ -953,6 +953,65 @@ tepl_utils_list_box_get_row_at_index_with_filter (GtkListBox           *list_box
 }
 
 /**
+ * tepl_utils_list_box_get_filtered_children:
+ * @list_box: a #GtkListBox.
+ * @filter_func: (scope call): non-%NULL callback function.
+ * @user_data: user data passed to @filter_func.
+ * @n_filtered_children: (out) (optional): location to store the number of
+ *   #GtkListBoxRow's present in the returned array, without counting the
+ *   terminating %NULL.
+ *
+ * Gets an array of all the #GtkListBoxRow childen of @list_box for which
+ * @filter_func returns %TRUE. The elements in the array are sorted by
+ * increasing index order (as returned by gtk_list_box_row_get_index()).
+ *
+ * Returns: (array zero-terminated=1) (element-type GtkListBoxRow) (transfer container) (nullable):
+ *   a %NULL-terminated array of #GtkListBoxRow objects, or %NULL. Free with
+ *   g_free() when no longer needed.
+ * Since: 5.2
+ */
+GtkListBoxRow **
+tepl_utils_list_box_get_filtered_children (GtkListBox           *list_box,
+					   GtkListBoxFilterFunc  filter_func,
+					   gpointer              user_data,
+					   gint                 *n_filtered_children)
+{
+	GPtrArray *filtered_rows;
+	GList *all_rows;
+	GList *l;
+
+	g_return_val_if_fail (GTK_IS_LIST_BOX (list_box), NULL);
+	g_return_val_if_fail (filter_func != NULL, NULL);
+
+	filtered_rows = g_ptr_array_new ();
+	all_rows = gtk_container_get_children (GTK_CONTAINER (list_box));
+
+	for (l = all_rows; l != NULL; l = l->next)
+	{
+		GtkListBoxRow *cur_row = GTK_LIST_BOX_ROW (l->data);
+
+		if (filter_func (cur_row, user_data))
+		{
+			g_ptr_array_add (filtered_rows, cur_row);
+		}
+	}
+
+	g_list_free (all_rows);
+
+	if (n_filtered_children != NULL)
+	{
+		*n_filtered_children = filtered_rows->len;
+	}
+
+	/* NULL-terminate the array, must be done *after* setting
+	 * *n_filtered_children, of course.
+	 */
+	g_ptr_array_add (filtered_rows, NULL);
+
+	return (GtkListBoxRow **) g_ptr_array_free (filtered_rows, FALSE);
+}
+
+/**
  * tepl_utils_binding_transform_func_smart_bool:
  * @binding: a #GBinding.
  * @from_value: the #GValue containing the value to transform.

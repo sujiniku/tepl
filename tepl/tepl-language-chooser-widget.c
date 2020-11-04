@@ -284,9 +284,17 @@ filter_cb (GtkListBoxRow *list_box_row,
 }
 
 static void
-search_changed_cb (GtkSearchEntry            *search_entry,
-		   TeplLanguageChooserWidget *chooser_widget)
+search_entry_changed_cb (GtkEditable               *search_entry,
+			 TeplLanguageChooserWidget *chooser_widget)
 {
+	/* Invalidate the filter directly, not in the
+	 * GtkSearchEntry::search-changed signal because ::search-changed is
+	 * emitted after a small delay, and the filter_cb() function is used
+	 * elsewhere in the code. To avoid inconsistencies.
+	 *
+	 * The delay is anyway not necessary because the list is small and is
+	 * updated quickly enough, after a quick test.
+	 */
 	gtk_list_box_invalidate_filter (chooser_widget->priv->list_box);
 	select_first_row (chooser_widget);
 }
@@ -463,8 +471,8 @@ tepl_language_chooser_widget_init (TeplLanguageChooserWidget *chooser_widget)
 				      NULL);
 
 	g_signal_connect (chooser_widget->priv->search_entry,
-			  "search-changed",
-			  G_CALLBACK (search_changed_cb),
+			  "changed",
+			  G_CALLBACK (search_entry_changed_cb),
 			  chooser_widget);
 
 	g_signal_connect (chooser_widget->priv->search_entry,

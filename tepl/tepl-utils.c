@@ -901,12 +901,16 @@ tepl_utils_list_box_scroll_to_selected_row (GtkListBox *list_box)
 /**
  * tepl_utils_list_box_get_row_at_index_with_filter:
  * @list_box: a #GtkListBox.
- * @index: the index of the row.
+ * @index: the index of the row, starting at 0. The index is among the filtered
+ *   rows only.
  * @filter_func: (scope call): non-%NULL callback function.
  * @user_data: user data passed to @filter_func.
  *
  * This function has the same semantics as gtk_list_box_get_row_at_index(), but
  * it takes into account only the rows for which @filter_func returns %TRUE.
+ *
+ * As an example, if @index is 0, it returns the first #GtkListBoxRow for which
+ * @filter_func returns %TRUE.
  *
  * Returns: (transfer none) (nullable): the child #GtkListBoxRow or %NULL.
  * Since: 5.2

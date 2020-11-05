@@ -42,9 +42,6 @@ tepl_language_chooser_default_init (TeplLanguageChooserInterface *interface)
 {
 	interface->select_language = tepl_language_chooser_select_language_default;
 
-	/* FIXME: do like in GtkSourceCompletionProposal, have an initialized
-	 * gboolean variable? To ensure to init the signal only once.
-	 */
 	/**
 	 * TeplLanguageChooser::language-activated:
 	 * @chooser: the #TeplLanguageChooser emitting the signal.

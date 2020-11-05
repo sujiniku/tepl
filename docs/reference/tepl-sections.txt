@@ -276,6 +276,22 @@ tepl_language_chooser_get_type
 </SECTION>
 
 <SECTION>
+<FILE>language-chooser-dialog</FILE>
+TeplLanguageChooserDialog
+tepl_language_chooser_dialog_new
+<SUBSECTION Standard>
+TEPL_IS_LANGUAGE_CHOOSER_DIALOG
+TEPL_IS_LANGUAGE_CHOOSER_DIALOG_CLASS
+TEPL_LANGUAGE_CHOOSER_DIALOG
+TEPL_LANGUAGE_CHOOSER_DIALOG_CLASS
+TEPL_LANGUAGE_CHOOSER_DIALOG_GET_CLASS
+TEPL_TYPE_LANGUAGE_CHOOSER_DIALOG
+TeplLanguageChooserDialogClass
+TeplLanguageChooserDialogPrivate
+tepl_language_chooser_dialog_get_type
+</SECTION>
+
+<SECTION>
 <FILE>language-chooser-widget</FILE>
 TeplLanguageChooserWidget
 tepl_language_chooser_widget_new

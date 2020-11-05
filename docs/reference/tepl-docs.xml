@@ -64,6 +64,7 @@
     <chapter id="language-choosers">
       <title>Language Choosers</title>
       <xi:include href="xml/language-chooser.xml"/>
+      <xi:include href="xml/language-chooser-dialog.xml"/>
       <xi:include href="xml/language-chooser-widget.xml"/>
     </chapter>
 

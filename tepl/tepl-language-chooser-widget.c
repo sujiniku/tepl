@@ -324,13 +324,7 @@ static void
 search_entry_activate_cb (GtkEntry                  *entry,
 			  TeplLanguageChooserWidget *chooser_widget)
 {
-	GtkListBoxRow *selected_row;
-
-	selected_row = gtk_list_box_get_selected_row (chooser_widget->priv->list_box);
-	if (selected_row != NULL)
-	{
-		emit_language_activated_for_row (chooser_widget, selected_row);
-	}
+	_tepl_language_chooser_widget_activate_selected_language (chooser_widget);
 }
 
 static void
@@ -503,4 +497,18 @@ TeplLanguageChooserWidget *
 tepl_language_chooser_widget_new (void)
 {
 	return g_object_new (TEPL_TYPE_LANGUAGE_CHOOSER_WIDGET, NULL);
+}
+
+void
+_tepl_language_chooser_widget_activate_selected_language (TeplLanguageChooserWidget *chooser_widget)
+{
+	GtkListBoxRow *selected_row;
+
+	g_return_if_fail (TEPL_IS_LANGUAGE_CHOOSER_WIDGET (chooser_widget));
+
+	selected_row = gtk_list_box_get_selected_row (chooser_widget->priv->list_box);
+	if (selected_row != NULL)
+	{
+		emit_language_activated_for_row (chooser_widget, selected_row);
+	}
 }

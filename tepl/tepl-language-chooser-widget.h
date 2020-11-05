@@ -40,11 +40,14 @@ struct _TeplLanguageChooserWidgetClass
 };
 
 _TEPL_EXTERN
-GType		tepl_language_chooser_widget_get_type	(void);
+GType		tepl_language_chooser_widget_get_type				(void);
 
 _TEPL_EXTERN
 TeplLanguageChooserWidget *
-		tepl_language_chooser_widget_new	(void);
+		tepl_language_chooser_widget_new				(void);
+
+G_GNUC_INTERNAL
+void		_tepl_language_chooser_widget_activate_selected_language	(TeplLanguageChooserWidget *chooser_widget);
 
 G_END_DECLS
 

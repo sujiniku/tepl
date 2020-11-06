@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-11-02 19:21+0000\n"
-"PO-Revision-Date: 2020-11-03 09:09+0200\n"
+"POT-Creation-Date: 2020-11-05 22:45+0000\n"
+"PO-Revision-Date: 2020-11-06 09:16+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -162,7 +162,8 @@ msgstr "Зберегти зміни до файла «%s» до закриття
 msgid "Close _without Saving"
 msgstr "_Не зберігати"
 
-#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
+#: tepl/tepl-close-confirm-dialog-single.c:131
+#: tepl/tepl-language-chooser-dialog.c:120 tepl/tepl-tab-saving.c:280
 #: tepl/tepl-window-actions-file.c:82
 msgid "_Cancel"
 msgstr "_Скасувати"
@@ -257,11 +258,22 @@ msgid ""
 msgstr ""
 "Ви зіпсуєте цей документ, якщо продовжите зберігання. Зберегти попри це?"
 
-#: tepl/tepl-language-chooser-widget.c:39
+#. chooser_dialog config
+#: tepl/tepl-language-chooser-dialog.c:115
+#| msgid "Search highlight mode…"
+msgid "Highlight Mode"
+msgstr "Підкреслення синтаксису"
+
+#: tepl/tepl-language-chooser-dialog.c:121
+#| msgid "Select _All"
+msgid "_Select"
+msgstr "_Вибрати"
+
+#: tepl/tepl-language-chooser-widget.c:71
 msgid "Plain Text"
 msgstr "Звичайний текст"
 
-#: tepl/tepl-language-chooser-widget.c:261
+#: tepl/tepl-language-chooser-widget.c:441
 msgid "Search highlight mode…"
 msgstr "Пошук підкреслення синтаксису…"
 

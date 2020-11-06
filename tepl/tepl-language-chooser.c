@@ -8,6 +8,18 @@
  * SECTION:language-chooser
  * @Title: TeplLanguageChooser
  * @Short_description: Interface implemented by widgets for choosing a #GtkSourceLanguage
+ *
+ * A #TeplLanguageChooser widget shows a list of available #GtkSourceLanguage's,
+ * as returned by gtk_source_language_manager_get_default(). The list contains a
+ * "Plain Text" item for the %NULL language.
+ *
+ * The typical workflow when using a #TeplLanguageChooser widget in an
+ * application is:
+ * 1. Create a #TeplLanguageChooser widget.
+ * 2. Call tepl_language_chooser_select_language() with the value of the
+ *    #GtkSourceBuffer:language property.
+ * 3. Wait for the #TeplLanguageChooser::language-activated signal to be emitted
+ *    and/or destroy the #TeplLanguageChooser widget.
  */
 
 /* API design:
@@ -45,7 +57,10 @@ tepl_language_chooser_default_init (TeplLanguageChooserInterface *interface)
 	/**
 	 * TeplLanguageChooser::language-activated:
 	 * @chooser: the #TeplLanguageChooser emitting the signal.
-	 * @language: the #GtkSourceLanguage object that has been selected.
+	 * @language: (nullable): the #GtkSourceLanguage object that has been
+	 *   selected, or %NULL if "Plain Text" has been selected.
+	 *
+	 * This signal is emitted when the user has chosen a language.
 	 *
 	 * Since: 5.2
 	 */
@@ -64,7 +79,9 @@ tepl_language_chooser_default_init (TeplLanguageChooserInterface *interface)
 /**
  * tepl_language_chooser_select_language:
  * @chooser: a #TeplLanguageChooser.
- * @language: (nullable): a #GtkSourceLanguage, or %NULL.
+ * @language: (nullable): a #GtkSourceLanguage, or %NULL for "Plain Text".
+ *
+ * Selects @language in the list of available languages.
  *
  * Since: 5.2
  */

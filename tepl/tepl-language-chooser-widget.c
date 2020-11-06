@@ -12,6 +12,11 @@
  * SECTION:language-chooser-widget
  * @Title: TeplLanguageChooserWidget
  * @Short_description: A widget for choosing a #GtkSourceLanguage
+ *
+ * #TeplLanguageChooserWidget is a #GtkWidget to choose a #GtkSourceLanguage.
+ * #TeplLanguageChooserWidget implements the #TeplLanguageChooser interface.
+ *
+ * In addition to the list, it contains a #GtkSearchEntry to search the list.
  */
 
 struct _TeplLanguageChooserWidgetPrivate

@@ -12,6 +12,9 @@
  * SECTION:language-chooser-dialog
  * @Title: TeplLanguageChooserDialog
  * @Short_description: A dialog for choosing a #GtkSourceLanguage
+ *
+ * #TeplLanguageChooserDialog is a #GtkDialog to choose a #GtkSourceLanguage.
+ * #TeplLanguageChooserDialog implements the #TeplLanguageChooser interface.
  */
 
 struct _TeplLanguageChooserDialogPrivate

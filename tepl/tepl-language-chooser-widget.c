@@ -490,6 +490,7 @@ tepl_language_chooser_widget_init (TeplLanguageChooserWidget *chooser_widget)
 			  chooser_widget);
 
 	select_first_row (chooser_widget);
+	gtk_widget_grab_focus (GTK_WIDGET (chooser_widget->priv->search_entry));
 }
 
 /**

@@ -6,21 +6,6 @@
 #include <stdlib.h>
 
 static void
-language_activated_cb (TeplLanguageChooser *chooser,
-		       GtkSourceLanguage   *language,
-		       gpointer             user_data)
-{
-	if (language != NULL)
-	{
-		g_message ("Language activated: %s", gtk_source_language_get_id (language));
-	}
-	else
-	{
-		g_message ("Plain Text activated.");
-	}
-}
-
-static void
 select_random_language (TeplLanguageChooserDialog *dialog)
 {
 	GtkSourceLanguageManager *manager;
@@ -34,11 +19,28 @@ select_random_language (TeplLanguageChooserDialog *dialog)
 }
 
 static void
-dialog_response_cb (GtkDialog *dialog,
-		    gint       response_id,
-		    gpointer   user_data)
+language_activated_cb (TeplLanguageChooserDialog *dialog,
+		       GtkSourceLanguage         *language,
+		       gpointer                   user_data)
 {
-	gtk_main_quit ();
+	if (language != NULL)
+	{
+		g_message ("Language activated: %s", gtk_source_language_get_id (language));
+	}
+	else
+	{
+		g_message ("Plain Text activated.");
+	}
+
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+static void
+dialog_response_after_cb (GtkDialog *dialog,
+			  gint       response_id,
+			  gpointer   user_data)
+{
+	gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
 int
@@ -53,13 +55,18 @@ main (int    argc,
 	select_random_language (dialog);
 
 	g_signal_connect (dialog,
-			  "response",
-			  G_CALLBACK (dialog_response_cb),
-			  NULL);
-
-	g_signal_connect (dialog,
 			  "language-activated",
 			  G_CALLBACK (language_activated_cb),
+			  NULL);
+
+	g_signal_connect_after (dialog,
+				"response",
+				G_CALLBACK (dialog_response_after_cb),
+				NULL);
+
+	g_signal_connect (dialog,
+			  "destroy",
+			  gtk_main_quit,
 			  NULL);
 
 	gtk_widget_show (GTK_WIDGET (dialog));

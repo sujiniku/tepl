@@ -1,9 +1,8 @@
-/* SPDX-FileCopyrightText: 2016 - Sébastien Wilmet <swilmet@gnome.org>
+/* SPDX-FileCopyrightText: 2016, 2020 - Sébastien Wilmet <swilmet@gnome.org>
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
 #include <tepl/tepl.h>
-#include "tepl/tepl-progress-info-bar.h"
 #include "tepl/tepl-io-error-info-bar.h"
 #include <stdlib.h>
 
@@ -42,13 +41,13 @@ progress_cb (GtkButton *button,
 {
 	TeplProgressInfoBar *info_bar;
 
-	info_bar = _tepl_progress_info_bar_new ("File loading... The full and very long path is: "
-						"/home/seb/a/very/long/path/like/this/is/beautiful"
-						"/but/is/it/correctly/wrapped/in/the/info/bar/that"
-						"/is/the/question",
-						TRUE);
+	info_bar = tepl_progress_info_bar_new ("File loading... The full and very long path is: "
+					       "/home/seb/a/very/long/path/like/this/is/beautiful"
+					       "/but/is/it/correctly/wrapped/in/the/info/bar/that"
+					       "/is/the/question",
+					       TRUE);
 
-	_tepl_progress_info_bar_set_fraction (info_bar, 0.3);
+	tepl_progress_info_bar_set_fraction (info_bar, 0.3);
 
 	g_signal_connect (info_bar,
 			  "response",

@@ -14,11 +14,23 @@
 
 G_BEGIN_DECLS
 
-#define TEPL_TYPE_INFO_BAR (tepl_info_bar_get_type ())
-_TEPL_EXTERN
-G_DECLARE_DERIVABLE_TYPE (TeplInfoBar, tepl_info_bar,
-			  TEPL, INFO_BAR,
-			  GtkInfoBar)
+#define TEPL_TYPE_INFO_BAR             (tepl_info_bar_get_type ())
+#define TEPL_INFO_BAR(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), TEPL_TYPE_INFO_BAR, TeplInfoBar))
+#define TEPL_INFO_BAR_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), TEPL_TYPE_INFO_BAR, TeplInfoBarClass))
+#define TEPL_IS_INFO_BAR(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TEPL_TYPE_INFO_BAR))
+#define TEPL_IS_INFO_BAR_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), TEPL_TYPE_INFO_BAR))
+#define TEPL_INFO_BAR_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), TEPL_TYPE_INFO_BAR, TeplInfoBarClass))
+
+typedef struct _TeplInfoBar         TeplInfoBar;
+typedef struct _TeplInfoBarClass    TeplInfoBarClass;
+typedef struct _TeplInfoBarPrivate  TeplInfoBarPrivate;
+
+struct _TeplInfoBar
+{
+	GtkInfoBar parent;
+
+	TeplInfoBarPrivate *priv;
+};
 
 struct _TeplInfoBarClass
 {
@@ -26,6 +38,9 @@ struct _TeplInfoBarClass
 
 	gpointer padding[12];
 };
+
+_TEPL_EXTERN
+GType			tepl_info_bar_get_type				(void);
 
 _TEPL_EXTERN
 TeplInfoBar *		tepl_info_bar_new				(void);

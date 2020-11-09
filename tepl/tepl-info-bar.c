@@ -6,14 +6,12 @@
 
 /**
  * SECTION:info-bar
- * @Short_description: Subclass of GtkInfoBar
  * @Title: TeplInfoBar
+ * @Short_description: Subclass of #GtkInfoBar
  *
  * #TeplInfoBar is a subclass of #GtkInfoBar with functions to ease the creation
  * of info bars.
  */
-
-typedef struct _TeplInfoBarPrivate TeplInfoBarPrivate;
 
 struct _TeplInfoBarPrivate
 {
@@ -33,10 +31,9 @@ tepl_info_bar_response (GtkInfoBar *gtk_info_bar,
 			gint        response_id)
 {
 	TeplInfoBar *info_bar = TEPL_INFO_BAR (gtk_info_bar);
-	TeplInfoBarPrivate *priv = tepl_info_bar_get_instance_private (info_bar);
 
 	if (response_id == GTK_RESPONSE_CLOSE &&
-	    priv->close_button_added)
+	    info_bar->priv->close_button_added)
 	{
 		gtk_widget_destroy (GTK_WIDGET (info_bar));
 
@@ -62,35 +59,34 @@ tepl_info_bar_class_init (TeplInfoBarClass *klass)
 static void
 tepl_info_bar_init (TeplInfoBar *info_bar)
 {
-	TeplInfoBarPrivate *priv;
 	GtkWidget *content_area;
 
-	priv = tepl_info_bar_get_instance_private (info_bar);
+	info_bar->priv = tepl_info_bar_get_instance_private (info_bar);
 
 	_tepl_info_bar_set_size_request (GTK_INFO_BAR (info_bar));
 	tepl_info_bar_set_buttons_orientation (GTK_INFO_BAR (info_bar),
 					       GTK_ORIENTATION_VERTICAL);
 
 	/* hgrid */
-	priv->content_hgrid = GTK_GRID (gtk_grid_new ());
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (priv->content_hgrid),
+	info_bar->priv->content_hgrid = GTK_GRID (gtk_grid_new ());
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (info_bar->priv->content_hgrid),
 					GTK_ORIENTATION_HORIZONTAL);
-	gtk_grid_set_column_spacing (priv->content_hgrid, 16);
-	gtk_widget_show (GTK_WIDGET (priv->content_hgrid));
+	gtk_grid_set_column_spacing (info_bar->priv->content_hgrid, 16);
+	gtk_widget_show (GTK_WIDGET (info_bar->priv->content_hgrid));
 
 	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar));
 	gtk_container_add (GTK_CONTAINER (content_area),
-			   GTK_WIDGET (priv->content_hgrid));
+			   GTK_WIDGET (info_bar->priv->content_hgrid));
 
 	/* vgrid */
-	priv->content_vgrid = GTK_GRID (gtk_grid_new ());
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (priv->content_vgrid),
+	info_bar->priv->content_vgrid = GTK_GRID (gtk_grid_new ());
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (info_bar->priv->content_vgrid),
 					GTK_ORIENTATION_VERTICAL);
-	gtk_grid_set_row_spacing (priv->content_vgrid, 6);
-	gtk_widget_show (GTK_WIDGET (priv->content_vgrid));
+	gtk_grid_set_row_spacing (info_bar->priv->content_vgrid, 6);
+	gtk_widget_show (GTK_WIDGET (info_bar->priv->content_vgrid));
 
-	gtk_container_add (GTK_CONTAINER (priv->content_hgrid),
-			   GTK_WIDGET (priv->content_vgrid));
+	gtk_container_add (GTK_CONTAINER (info_bar->priv->content_hgrid),
+			   GTK_WIDGET (info_bar->priv->content_vgrid));
 }
 
 /**
@@ -185,13 +181,10 @@ get_icon_name (TeplInfoBar *info_bar)
 void
 tepl_info_bar_add_icon (TeplInfoBar *info_bar)
 {
-	TeplInfoBarPrivate *priv;
 	const gchar *icon_name;
 	GtkWidget *image;
 
 	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
-
-	priv = tepl_info_bar_get_instance_private (info_bar);
 
 	icon_name = get_icon_name (info_bar);
 	if (icon_name == NULL)
@@ -203,9 +196,9 @@ tepl_info_bar_add_icon (TeplInfoBar *info_bar)
 	gtk_widget_set_valign (image, GTK_ALIGN_START);
 	gtk_widget_show (image);
 
-	gtk_grid_attach_next_to (priv->content_hgrid,
+	gtk_grid_attach_next_to (info_bar->priv->content_hgrid,
 				 image,
-				 GTK_WIDGET (priv->content_vgrid),
+				 GTK_WIDGET (info_bar->priv->content_vgrid),
 				 GTK_POS_LEFT,
 				 1,
 				 1);
@@ -223,15 +216,12 @@ void
 tepl_info_bar_add_primary_message (TeplInfoBar *info_bar,
 				   const gchar *primary_msg)
 {
-	TeplInfoBarPrivate *priv;
 	gchar *primary_msg_escaped;
 	gchar *primary_markup;
 	GtkLabel *primary_label;
 
 	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 	g_return_if_fail (primary_msg != NULL);
-
-	priv = tepl_info_bar_get_instance_private (info_bar);
 
 	primary_msg_escaped = g_markup_escape_text (primary_msg, -1);
 	primary_markup = g_strdup_printf ("<b>%s</b>", primary_msg_escaped);
@@ -241,7 +231,7 @@ tepl_info_bar_add_primary_message (TeplInfoBar *info_bar,
 	g_free (primary_msg_escaped);
 
 	gtk_widget_show (GTK_WIDGET (primary_label));
-	gtk_container_add (GTK_CONTAINER (priv->content_vgrid),
+	gtk_container_add (GTK_CONTAINER (info_bar->priv->content_vgrid),
 			   GTK_WIDGET (primary_label));
 }
 
@@ -257,15 +247,12 @@ void
 tepl_info_bar_add_secondary_message (TeplInfoBar *info_bar,
 				     const gchar *secondary_msg)
 {
-	TeplInfoBarPrivate *priv;
 	gchar *secondary_msg_escaped;
 	gchar *secondary_markup;
 	GtkLabel *secondary_label;
 
 	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 	g_return_if_fail (secondary_msg != NULL);
-
-	priv = tepl_info_bar_get_instance_private (info_bar);
 
 	secondary_msg_escaped = g_markup_escape_text (secondary_msg, -1);
 	secondary_markup = g_strdup_printf ("<small>%s</small>", secondary_msg_escaped);
@@ -275,7 +262,7 @@ tepl_info_bar_add_secondary_message (TeplInfoBar *info_bar,
 	g_free (secondary_msg_escaped);
 
 	gtk_widget_show (GTK_WIDGET (secondary_label));
-	gtk_container_add (GTK_CONTAINER (priv->content_vgrid),
+	gtk_container_add (GTK_CONTAINER (info_bar->priv->content_vgrid),
 			   GTK_WIDGET (secondary_label));
 }
 
@@ -298,14 +285,10 @@ void
 tepl_info_bar_add_content_widget (TeplInfoBar *info_bar,
 				  GtkWidget   *content)
 {
-	TeplInfoBarPrivate *priv;
-
 	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 	g_return_if_fail (GTK_IS_WIDGET (content));
 
-	priv = tepl_info_bar_get_instance_private (info_bar);
-
-	gtk_container_add (GTK_CONTAINER (priv->content_vgrid), content);
+	gtk_container_add (GTK_CONTAINER (info_bar->priv->content_vgrid), content);
 }
 
 /**
@@ -321,15 +304,10 @@ tepl_info_bar_add_content_widget (TeplInfoBar *info_bar,
 void
 tepl_info_bar_add_close_button (TeplInfoBar *info_bar)
 {
-	TeplInfoBarPrivate *priv;
-
 	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 
-	priv = tepl_info_bar_get_instance_private (info_bar);
-
 	gtk_info_bar_set_show_close_button (GTK_INFO_BAR (info_bar), TRUE);
-
-	priv->close_button_added = TRUE;
+	info_bar->priv->close_button_added = TRUE;
 }
 
 /**
@@ -366,7 +344,7 @@ tepl_info_bar_set_buttons_orientation (GtkInfoBar     *info_bar,
 	}
 	else
 	{
-		g_warning ("Failed to set vertical orientation to the GtkInfoBar action area.");
+		g_warning ("Failed to set the orientation for the GtkInfoBar action area.");
 	}
 }
 

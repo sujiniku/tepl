@@ -245,8 +245,15 @@ tepl_info_bar_add_close_button
 tepl_info_bar_set_buttons_orientation
 tepl_info_bar_create_label
 <SUBSECTION Standard>
+TEPL_INFO_BAR
+TEPL_INFO_BAR_CLASS
+TEPL_INFO_BAR_GET_CLASS
+TEPL_IS_INFO_BAR
+TEPL_IS_INFO_BAR_CLASS
 TEPL_TYPE_INFO_BAR
 TeplInfoBarClass
+TeplInfoBarPrivate
+tepl_info_bar_get_type
 </SECTION>
 
 <SECTION>

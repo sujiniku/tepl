@@ -68,7 +68,8 @@ tepl_info_bar_init (TeplInfoBar *info_bar)
 	priv = tepl_info_bar_get_instance_private (info_bar);
 
 	_tepl_info_bar_set_size_request (GTK_INFO_BAR (info_bar));
-	tepl_info_bar_set_buttons_orientation (info_bar, GTK_ORIENTATION_VERTICAL);
+	tepl_info_bar_set_buttons_orientation (GTK_INFO_BAR (info_bar),
+					       GTK_ORIENTATION_VERTICAL);
 
 	/* hgrid */
 	priv->content_hgrid = GTK_GRID (gtk_grid_new ());
@@ -333,7 +334,7 @@ tepl_info_bar_add_close_button (TeplInfoBar *info_bar)
 
 /**
  * tepl_info_bar_set_buttons_orientation:
- * @info_bar: a #TeplInfoBar.
+ * @info_bar: a #GtkInfoBar.
  * @buttons_orientation: the desired orientation.
  *
  * Sets the desired orientation (horizontal or vertical) for the action area as
@@ -347,17 +348,17 @@ tepl_info_bar_add_close_button (TeplInfoBar *info_bar)
  * are packed vertically, there is usually no problem. A vertical action area
  * also follows the original design of #GtkInfoBar.
  *
- * Since: 5.0
+ * Since: 6.0
  */
 void
-tepl_info_bar_set_buttons_orientation (TeplInfoBar    *info_bar,
+tepl_info_bar_set_buttons_orientation (GtkInfoBar     *info_bar,
 				       GtkOrientation  buttons_orientation)
 {
 	GtkWidget *action_area;
 
-	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
+	g_return_if_fail (GTK_IS_INFO_BAR (info_bar));
 
-	action_area = gtk_info_bar_get_action_area (GTK_INFO_BAR (info_bar));
+	action_area = gtk_info_bar_get_action_area (info_bar);
 	if (GTK_IS_ORIENTABLE (action_area))
 	{
 		gtk_orientable_set_orientation (GTK_ORIENTABLE (action_area),

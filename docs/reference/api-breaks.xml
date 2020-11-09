@@ -159,4 +159,18 @@
       </listitem>
     </itemizedlist>
   </chapter>
+
+  <chapter id="api-breaks-5-to-6-tepl">
+    <title>Tepl 5 -> Tepl 6</title>
+
+    <itemizedlist>
+      <listitem>
+        <para>
+          The <link linkend="tepl-info-bar-set-buttons-orientation">tepl_info_bar_set_buttons_orientation()</link>
+          now takes a <link linkend="GtkInfoBar">GtkInfoBar</link> parameter,
+          not a <link linkend="TeplInfoBar">TeplInfoBar</link>.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </chapter>
 </part>

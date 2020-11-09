@@ -54,7 +54,7 @@ _TEPL_EXTERN
 void			tepl_info_bar_add_close_button			(TeplInfoBar *info_bar);
 
 _TEPL_EXTERN
-void			tepl_info_bar_set_buttons_orientation		(TeplInfoBar    *info_bar,
+void			tepl_info_bar_set_buttons_orientation		(GtkInfoBar     *info_bar,
 									 GtkOrientation  buttons_orientation);
 
 _TEPL_EXTERN

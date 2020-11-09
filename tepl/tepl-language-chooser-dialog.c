@@ -152,7 +152,7 @@ tepl_language_chooser_dialog_init (TeplLanguageChooserDialog *chooser_dialog)
  * @parent: (nullable): transient parent of the dialog, or %NULL.
  *
  * Returns: a new #TeplLanguageChooserDialog widget.
- * Since: 5.2
+ * Since: 6.0
  */
 TeplLanguageChooserDialog *
 tepl_language_chooser_dialog_new (GtkWindow *parent)

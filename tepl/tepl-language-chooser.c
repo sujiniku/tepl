@@ -71,7 +71,7 @@ tepl_language_chooser_default_init (TeplLanguageChooserInterface *interface)
 	 *
 	 * This signal is emitted when the user has chosen a language.
 	 *
-	 * Since: 5.2
+	 * Since: 6.0
 	 */
 	/* Note about the signal name, it's to be consistent with
 	 * ::row-activated.
@@ -92,7 +92,7 @@ tepl_language_chooser_default_init (TeplLanguageChooserInterface *interface)
  *
  * Selects @language in the list.
  *
- * Since: 5.2
+ * Since: 6.0
  */
 void
 tepl_language_chooser_select_language (TeplLanguageChooser *chooser,

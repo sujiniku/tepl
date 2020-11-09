@@ -84,7 +84,7 @@ skip:
  *
  * Returns: (transfer full): A newly allocated string containing the CSS
  *   describing the font description. Free with g_free() when no longer needed.
- * Since: 5.2
+ * Since: 6.0
  */
 gchar *
 tepl_pango_font_description_to_css (const PangoFontDescription *desc)

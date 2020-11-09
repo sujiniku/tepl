@@ -32,7 +32,7 @@ typedef struct _TeplLanguageChooserInterface TeplLanguageChooserInterface;
  *
  * The virtual function table for #TeplLanguageChooser.
  *
- * Since: 5.2
+ * Since: 6.0
  */
 struct _TeplLanguageChooserInterface
 {

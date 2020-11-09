@@ -366,7 +366,7 @@ tepl_space_drawer_prefs_init (TeplSpaceDrawerPrefs *prefs)
  * tepl_space_drawer_prefs_new:
  *
  * Returns: (transfer floating): a new #TeplSpaceDrawerPrefs.
- * Since: 5.2
+ * Since: 6.0
  */
 TeplSpaceDrawerPrefs *
 tepl_space_drawer_prefs_new (void)
@@ -383,7 +383,7 @@ tepl_space_drawer_prefs_new (void)
  * #TeplSpaceDrawerPrefs object has a different #GtkSourceSpaceDrawer.
  *
  * Returns: (transfer none): the #GtkSourceSpaceDrawer associated with @prefs.
- * Since: 5.2
+ * Since: 6.0
  */
 GtkSourceSpaceDrawer *
 tepl_space_drawer_prefs_get_space_drawer (TeplSpaceDrawerPrefs *prefs)

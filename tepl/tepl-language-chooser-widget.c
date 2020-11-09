@@ -497,7 +497,7 @@ tepl_language_chooser_widget_init (TeplLanguageChooserWidget *chooser_widget)
  * tepl_language_chooser_widget_new:
  *
  * Returns: (transfer floating): a new #TeplLanguageChooserWidget.
- * Since: 5.2
+ * Since: 6.0
  */
 TeplLanguageChooserWidget *
 tepl_language_chooser_widget_new (void)

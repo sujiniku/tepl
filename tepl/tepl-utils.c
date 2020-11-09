@@ -811,7 +811,7 @@ list_box_clear_foreach_cb (GtkWidget *child,
  *
  * Removes all rows of @list_box, to obtain an empty #GtkListBox.
  *
- * Since: 5.2
+ * Since: 6.0
  */
 void
 tepl_utils_list_box_clear (GtkListBox *list_box)
@@ -834,7 +834,7 @@ tepl_utils_list_box_clear (GtkListBox *list_box)
  * This function is intended to be called only once per #GtkListBox, when
  * initializing the @list_box and @scrolled_window widgets.
  *
- * Since: 5.2
+ * Since: 6.0
  */
 void
 tepl_utils_list_box_setup_scrolling (GtkListBox        *list_box,
@@ -859,7 +859,7 @@ tepl_utils_list_box_setup_scrolling (GtkListBox        *list_box,
  * Before using this function, tepl_utils_list_box_setup_scrolling() must have
  * been called.
  *
- * Since: 5.2
+ * Since: 6.0
  */
 void
 tepl_utils_list_box_scroll_to_row (GtkListBox    *list_box,
@@ -882,7 +882,7 @@ tepl_utils_list_box_scroll_to_row (GtkListBox    *list_box,
  * Before using this function, tepl_utils_list_box_setup_scrolling() must have
  * been called.
  *
- * Since: 5.2
+ * Since: 6.0
  */
 void
 tepl_utils_list_box_scroll_to_selected_row (GtkListBox *list_box)
@@ -913,7 +913,7 @@ tepl_utils_list_box_scroll_to_selected_row (GtkListBox *list_box)
  * @filter_func returns %TRUE.
  *
  * Returns: (transfer none) (nullable): the child #GtkListBoxRow or %NULL.
- * Since: 5.2
+ * Since: 6.0
  */
 GtkListBoxRow *
 tepl_utils_list_box_get_row_at_index_with_filter (GtkListBox           *list_box,
@@ -972,7 +972,7 @@ tepl_utils_list_box_get_row_at_index_with_filter (GtkListBox           *list_box
  * Returns: (array zero-terminated=1) (element-type GtkListBoxRow) (transfer container) (nullable):
  *   a %NULL-terminated array of #GtkListBoxRow objects, or %NULL. Free with
  *   g_free() when no longer needed.
- * Since: 5.2
+ * Since: 6.0
  */
 GtkListBoxRow **
 tepl_utils_list_box_get_filtered_children (GtkListBox           *list_box,

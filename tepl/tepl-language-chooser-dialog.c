@@ -15,6 +15,13 @@
  *
  * #TeplLanguageChooserDialog is a #GtkDialog to choose a #GtkSourceLanguage.
  * #TeplLanguageChooserDialog implements the #TeplLanguageChooser interface.
+ *
+ * The #GtkDialog contains two buttons: Cancel and Select. During the
+ * #GtkDialog::response signal emission, if the user has clicked on the Select
+ * button, then the #TeplLanguageChooser::language-activated signal is emitted.
+ *
+ * You probably want to connect to the #GtkDialog::response signal with the
+ * %G_CONNECT_AFTER flag, to destroy the dialog.
  */
 
 struct _TeplLanguageChooserDialogPrivate

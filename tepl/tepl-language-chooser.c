@@ -81,7 +81,7 @@ tepl_language_chooser_default_init (TeplLanguageChooserInterface *interface)
  * @chooser: a #TeplLanguageChooser.
  * @language: (nullable): a #GtkSourceLanguage, or %NULL for "Plain Text".
  *
- * Selects @language in the list of available languages.
+ * Selects @language in the list.
  *
  * Since: 5.2
  */

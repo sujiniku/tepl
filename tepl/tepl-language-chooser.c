@@ -33,6 +33,15 @@
  * repeating the API.
  */
 
+/* TODO: implement a TeplLanguageChooserButton class.
+ * For TeplLanguageChooserButton, it would probably be more convenient to have
+ * two properties instead of the ::language-activated signal: the :language and
+ * :language-id properties (the :language-id property would be useful to bind it
+ * to a GSettings key).
+ * A TeplLanguageChooserButton would be useful to choose the default language
+ * for new files, by adding the button in a preferences dialog.
+ */
+
 enum
 {
 	SIGNAL_LANGUAGE_ACTIVATED,

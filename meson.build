@@ -6,7 +6,7 @@
 project(
   'tepl', 'c',
   meson_version: '>= 0.53',
-  version: '5.1.2',
+  version: '5.99.0',
   default_options: ['warning_level=2']
 )
 
@@ -39,7 +39,7 @@ lt_age = 0
 TEPL_LT_VERSION = '@0@.@1@.@2@'.format(lt_current, lt_revision, lt_age)
 
 # API version, used for parallel installability.
-TEPL_API_VERSION = '5'
+TEPL_API_VERSION = '6'
 
 TEPL_PUBLIC_DEPS = [
   dependency('gio-2.0', version: '>= 2.64'),

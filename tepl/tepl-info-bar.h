@@ -51,9 +51,6 @@ TeplInfoBar *		tepl_info_bar_new_simple			(GtkMessageType  msg_type,
 									 const gchar    *secondary_msg);
 
 _TEPL_EXTERN
-void			tepl_info_bar_add_icon				(TeplInfoBar *info_bar);
-
-_TEPL_EXTERN
 gboolean		tepl_info_bar_get_icon_from_message_type	(TeplInfoBar *info_bar);
 
 _TEPL_EXTERN

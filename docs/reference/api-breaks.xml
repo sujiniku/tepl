@@ -178,6 +178,12 @@
           <link linkend="tepl-info-bar-setup-close-button">tepl_info_bar_setup_close_button()</link>.
         </para>
       </listitem>
+      <listitem>
+        <para>
+          The <code>tepl_info_bar_add_icon()</code> function has been replaced by
+          <link linkend="tepl-info-bar-set-icon-from-message-type">tepl_info_bar_set_icon_from_message_type()</link>.
+        </para>
+      </listitem>
     </itemizedlist>
   </chapter>
 </part>

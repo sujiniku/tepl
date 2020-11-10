@@ -237,7 +237,6 @@ tepl_gutter_renderer_folds_state_get_type
 TeplInfoBar
 tepl_info_bar_new
 tepl_info_bar_new_simple
-tepl_info_bar_add_icon
 tepl_info_bar_get_icon_from_message_type
 tepl_info_bar_set_icon_from_message_type
 tepl_info_bar_add_primary_message

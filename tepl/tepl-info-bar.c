@@ -244,7 +244,7 @@ tepl_info_bar_new_simple (GtkMessageType  msg_type,
 	info_bar = tepl_info_bar_new ();
 
 	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), msg_type);
-	tepl_info_bar_add_icon (info_bar);
+	tepl_info_bar_set_icon_from_message_type (info_bar, TRUE);
 	tepl_info_bar_add_primary_message (info_bar, primary_msg);
 
 	if (secondary_msg != NULL)
@@ -302,26 +302,6 @@ update_icon_state (TeplInfoBar *info_bar)
 	{
 		gtk_widget_hide (GTK_WIDGET (info_bar->priv->icon));
 	}
-}
-
-/**
- * tepl_info_bar_add_icon:
- * @info_bar: a #TeplInfoBar.
- *
- * Adds an icon on the left, determined by the message type. So before calling
- * this function, gtk_info_bar_set_message_type() must have been called.
- *
- * The icon is not updated when the message type changes. Another #TeplInfoBar
- * must be created in that case.
- *
- * Since: 2.0
- */
-void
-tepl_info_bar_add_icon (TeplInfoBar *info_bar)
-{
-	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
-
-	tepl_info_bar_set_icon_from_message_type (info_bar, TRUE);
 }
 
 /**

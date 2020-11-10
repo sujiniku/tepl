@@ -28,10 +28,9 @@
 
 struct _TeplInfoBarPrivate
 {
-	/* Left: icon. Right: content_vgrid. */
-	GtkGrid *content_hgrid;
+	GtkImage *icon;
 
-	/* Contains primary/secondary messages. */
+	/* Can contain primary/secondary messages plus additional widgets. */
 	GtkGrid *content_vgrid;
 
 	guint handle_close_response : 1;
@@ -145,34 +144,40 @@ tepl_info_bar_class_init (TeplInfoBarClass *klass)
 static void
 tepl_info_bar_init (TeplInfoBar *info_bar)
 {
+	GtkGrid *content_hgrid;
 	GtkWidget *content_area;
 
 	info_bar->priv = tepl_info_bar_get_instance_private (info_bar);
 
+	/* info_bar config */
 	_tepl_info_bar_set_size_request (GTK_INFO_BAR (info_bar));
-	tepl_info_bar_set_buttons_orientation (GTK_INFO_BAR (info_bar),
-					       GTK_ORIENTATION_VERTICAL);
+	tepl_info_bar_set_buttons_orientation (GTK_INFO_BAR (info_bar), GTK_ORIENTATION_VERTICAL);
 
-	/* hgrid */
-	info_bar->priv->content_hgrid = GTK_GRID (gtk_grid_new ());
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (info_bar->priv->content_hgrid),
-					GTK_ORIENTATION_HORIZONTAL);
-	gtk_grid_set_column_spacing (info_bar->priv->content_hgrid, 16);
-	gtk_widget_show (GTK_WIDGET (info_bar->priv->content_hgrid));
+	/* Icon */
+	info_bar->priv->icon = GTK_IMAGE (gtk_image_new ());
+	gtk_widget_set_valign (GTK_WIDGET (info_bar->priv->icon), GTK_ALIGN_START);
+	gtk_widget_set_no_show_all (GTK_WIDGET (info_bar->priv->icon), TRUE);
 
-	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar));
-	gtk_container_add (GTK_CONTAINER (content_area),
-			   GTK_WIDGET (info_bar->priv->content_hgrid));
-
-	/* vgrid */
+	/* priv->content_vgrid: can contain primary/secondary messages plus
+	 * additional widgets.
+	 */
 	info_bar->priv->content_vgrid = GTK_GRID (gtk_grid_new ());
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (info_bar->priv->content_vgrid),
-					GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (info_bar->priv->content_vgrid), GTK_ORIENTATION_VERTICAL);
 	gtk_grid_set_row_spacing (info_bar->priv->content_vgrid, 6);
 	gtk_widget_show (GTK_WIDGET (info_bar->priv->content_vgrid));
 
-	gtk_container_add (GTK_CONTAINER (info_bar->priv->content_hgrid),
-			   GTK_WIDGET (info_bar->priv->content_vgrid));
+	/* content_hgrid: icon on the left, priv->content_vgrid on the right. */
+	content_hgrid = GTK_GRID (gtk_grid_new ());
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (content_hgrid), GTK_ORIENTATION_HORIZONTAL);
+	gtk_grid_set_column_spacing (content_hgrid, 16);
+
+	gtk_container_add (GTK_CONTAINER (content_hgrid), GTK_WIDGET (info_bar->priv->icon));
+	gtk_container_add (GTK_CONTAINER (content_hgrid), GTK_WIDGET (info_bar->priv->content_vgrid));
+	gtk_widget_show (GTK_WIDGET (content_hgrid));
+
+	/* content_area */
+	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar));
+	gtk_container_add (GTK_CONTAINER (content_area), GTK_WIDGET (content_hgrid));
 }
 
 /**
@@ -268,7 +273,6 @@ void
 tepl_info_bar_add_icon (TeplInfoBar *info_bar)
 {
 	const gchar *icon_name;
-	GtkWidget *image;
 
 	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 
@@ -278,16 +282,8 @@ tepl_info_bar_add_icon (TeplInfoBar *info_bar)
 		return;
 	}
 
-	image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_DIALOG);
-	gtk_widget_set_valign (image, GTK_ALIGN_START);
-	gtk_widget_show (image);
-
-	gtk_grid_attach_next_to (info_bar->priv->content_hgrid,
-				 image,
-				 GTK_WIDGET (info_bar->priv->content_vgrid),
-				 GTK_POS_LEFT,
-				 1,
-				 1);
+	gtk_image_set_from_icon_name (info_bar->priv->icon, icon_name, GTK_ICON_SIZE_DIALOG);
+	gtk_widget_show (GTK_WIDGET (info_bar->priv->icon));
 }
 
 /**

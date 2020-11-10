@@ -8,9 +8,14 @@
 #include <glib/gi18n-lib.h>
 #include "tepl-utils.h"
 
+struct _TeplIoErrorInfoBarPrivate
+{
+	gint something;
+};
+
 /* Verbose error reporting for file I/O operations (load, save, etc.). */
 
-G_DEFINE_TYPE (TeplIoErrorInfoBar, _tepl_io_error_info_bar, TEPL_TYPE_INFO_BAR)
+G_DEFINE_TYPE_WITH_PRIVATE (TeplIoErrorInfoBar, _tepl_io_error_info_bar, TEPL_TYPE_INFO_BAR)
 
 static gboolean
 is_recoverable_error (const GError *error)
@@ -206,6 +211,7 @@ _tepl_io_error_info_bar_class_init (TeplIoErrorInfoBarClass *klass)
 static void
 _tepl_io_error_info_bar_init (TeplIoErrorInfoBar *info_bar)
 {
+	info_bar->priv = _tepl_io_error_info_bar_get_instance_private (info_bar);
 }
 
 TeplIoErrorInfoBar *

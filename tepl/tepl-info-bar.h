@@ -66,6 +66,13 @@ void			tepl_info_bar_add_content_widget		(TeplInfoBar *info_bar,
 									 GtkWidget   *content);
 
 _TEPL_EXTERN
+gboolean		tepl_info_bar_get_handle_close_response		(TeplInfoBar *info_bar);
+
+_TEPL_EXTERN
+void			tepl_info_bar_set_handle_close_response		(TeplInfoBar *info_bar,
+									 gboolean     handle_close_response);
+
+_TEPL_EXTERN
 void			tepl_info_bar_add_close_button			(TeplInfoBar *info_bar);
 
 _TEPL_EXTERN

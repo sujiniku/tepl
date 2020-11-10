@@ -37,7 +37,56 @@ struct _TeplInfoBarPrivate
 	guint handle_close_response : 1;
 };
 
+enum
+{
+	PROP_0,
+	PROP_HANDLE_CLOSE_RESPONSE,
+	N_PROPERTIES
+};
+
+static GParamSpec *properties[N_PROPERTIES];
+
 G_DEFINE_TYPE_WITH_PRIVATE (TeplInfoBar, tepl_info_bar, GTK_TYPE_INFO_BAR)
+
+static void
+tepl_info_bar_get_property (GObject    *object,
+                            guint       prop_id,
+                            GValue     *value,
+                            GParamSpec *pspec)
+{
+	TeplInfoBar *info_bar = TEPL_INFO_BAR (object);
+
+	switch (prop_id)
+	{
+		case PROP_HANDLE_CLOSE_RESPONSE:
+			g_value_set_boolean (value, tepl_info_bar_get_handle_close_response (info_bar));
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+			break;
+	}
+}
+
+static void
+tepl_info_bar_set_property (GObject      *object,
+                            guint         prop_id,
+                            const GValue *value,
+                            GParamSpec   *pspec)
+{
+	TeplInfoBar *info_bar = TEPL_INFO_BAR (object);
+
+	switch (prop_id)
+	{
+		case PROP_HANDLE_CLOSE_RESPONSE:
+			tepl_info_bar_set_handle_close_response (info_bar, g_value_get_boolean (value));
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+			break;
+	}
+}
 
 static void
 tepl_info_bar_response (GtkInfoBar *gtk_info_bar,
@@ -64,9 +113,33 @@ tepl_info_bar_response (GtkInfoBar *gtk_info_bar,
 static void
 tepl_info_bar_class_init (TeplInfoBarClass *klass)
 {
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GtkInfoBarClass *info_bar_class = GTK_INFO_BAR_CLASS (klass);
 
+	object_class->get_property = tepl_info_bar_get_property;
+	object_class->set_property = tepl_info_bar_set_property;
+
 	info_bar_class->response = tepl_info_bar_response;
+
+	/**
+	 * TeplInfoBar:handle-close-response:
+	 *
+	 * If this property is %TRUE, then the #TeplInfoBar is destroyed with
+	 * gtk_widget_destroy() when the #GtkInfoBar::response signal is
+	 * received with the @response_id %GTK_RESPONSE_CLOSE.
+	 *
+	 * Since: 6.0
+	 */
+	properties[PROP_HANDLE_CLOSE_RESPONSE] =
+		g_param_spec_boolean ("handle-close-response",
+				      "handle-close-response",
+				      "",
+				      FALSE,
+				      G_PARAM_READWRITE |
+				      G_PARAM_CONSTRUCT |
+				      G_PARAM_STATIC_STRINGS);
+
+	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
 }
 
 static void
@@ -305,12 +378,50 @@ tepl_info_bar_add_content_widget (TeplInfoBar *info_bar,
 }
 
 /**
+ * tepl_info_bar_get_handle_close_response:
+ * @info_bar: a #TeplInfoBar.
+ *
+ * Returns: the value of the #TeplInfoBar:handle-close-response property.
+ * Since: 6.0
+ */
+gboolean
+tepl_info_bar_get_handle_close_response (TeplInfoBar *info_bar)
+{
+	g_return_val_if_fail (TEPL_IS_INFO_BAR (info_bar), FALSE);
+
+	return info_bar->priv->handle_close_response;
+}
+
+/**
+ * tepl_info_bar_set_handle_close_response:
+ * @info_bar: a #TeplInfoBar.
+ * @handle_close_response: the new value.
+ *
+ * Sets a new value to the #TeplInfoBar:handle-close-response property.
+ *
+ * Since: 6.0
+ */
+void
+tepl_info_bar_set_handle_close_response (TeplInfoBar *info_bar,
+					 gboolean     handle_close_response)
+{
+	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
+
+	handle_close_response = handle_close_response != FALSE;
+
+	if (info_bar->priv->handle_close_response != handle_close_response)
+	{
+		info_bar->priv->handle_close_response = handle_close_response;
+		g_object_notify_by_pspec (G_OBJECT (info_bar), properties[PROP_HANDLE_CLOSE_RESPONSE]);
+	}
+}
+
+/**
  * tepl_info_bar_add_close_button:
  * @info_bar: a #TeplInfoBar.
  *
- * Calls gtk_info_bar_set_show_close_button(), and additionnally closes the
- * @info_bar when the #GtkInfoBar::response signal is received with the
- * @response_id %GTK_RESPONSE_CLOSE.
+ * Convenience function to set the #GtkInfoBar:show-close-button and
+ * #TeplInfoBar:handle-close-response properties to %TRUE.
  *
  * Since: 2.0
  */
@@ -320,7 +431,7 @@ tepl_info_bar_add_close_button (TeplInfoBar *info_bar)
 	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 
 	gtk_info_bar_set_show_close_button (GTK_INFO_BAR (info_bar), TRUE);
-	info_bar->priv->handle_close_response = TRUE;
+	tepl_info_bar_set_handle_close_response (info_bar, TRUE);
 }
 
 /**

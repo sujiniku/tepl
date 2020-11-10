@@ -34,7 +34,7 @@ struct _TeplInfoBarPrivate
 	/* Contains primary/secondary messages. */
 	GtkGrid *content_vgrid;
 
-	guint close_button_added : 1;
+	guint handle_close_response : 1;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (TeplInfoBar, tepl_info_bar, GTK_TYPE_INFO_BAR)
@@ -46,7 +46,7 @@ tepl_info_bar_response (GtkInfoBar *gtk_info_bar,
 	TeplInfoBar *info_bar = TEPL_INFO_BAR (gtk_info_bar);
 
 	if (response_id == GTK_RESPONSE_CLOSE &&
-	    info_bar->priv->close_button_added)
+	    info_bar->priv->handle_close_response)
 	{
 		gtk_widget_destroy (GTK_WIDGET (info_bar));
 
@@ -320,7 +320,7 @@ tepl_info_bar_add_close_button (TeplInfoBar *info_bar)
 	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 
 	gtk_info_bar_set_show_close_button (GTK_INFO_BAR (info_bar), TRUE);
-	info_bar->priv->close_button_added = TRUE;
+	info_bar->priv->handle_close_response = TRUE;
 }
 
 /**

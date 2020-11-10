@@ -33,12 +33,14 @@ struct _TeplInfoBarPrivate
 	/* Can contain primary/secondary messages plus additional widgets. */
 	GtkGrid *content_vgrid;
 
+	guint icon_from_message_type : 1;
 	guint handle_close_response : 1;
 };
 
 enum
 {
 	PROP_0,
+	PROP_ICON_FROM_MESSAGE_TYPE,
 	PROP_HANDLE_CLOSE_RESPONSE,
 	N_PROPERTIES
 };
@@ -57,6 +59,10 @@ tepl_info_bar_get_property (GObject    *object,
 
 	switch (prop_id)
 	{
+		case PROP_ICON_FROM_MESSAGE_TYPE:
+			g_value_set_boolean (value, tepl_info_bar_get_icon_from_message_type (info_bar));
+			break;
+
 		case PROP_HANDLE_CLOSE_RESPONSE:
 			g_value_set_boolean (value, tepl_info_bar_get_handle_close_response (info_bar));
 			break;
@@ -77,6 +83,10 @@ tepl_info_bar_set_property (GObject      *object,
 
 	switch (prop_id)
 	{
+		case PROP_ICON_FROM_MESSAGE_TYPE:
+			tepl_info_bar_set_icon_from_message_type (info_bar, g_value_get_boolean (value));
+			break;
+
 		case PROP_HANDLE_CLOSE_RESPONSE:
 			tepl_info_bar_set_handle_close_response (info_bar, g_value_get_boolean (value));
 			break;
@@ -119,6 +129,24 @@ tepl_info_bar_class_init (TeplInfoBarClass *klass)
 	object_class->set_property = tepl_info_bar_set_property;
 
 	info_bar_class->response = tepl_info_bar_response;
+
+	/**
+	 * TeplInfoBar:icon-from-message-type:
+	 *
+	 * If this property is %TRUE, then an icon is shown on the left, based
+	 * on the value of the #GtkInfoBar:message-type property. For
+	 * %GTK_MESSAGE_OTHER no icon is shown.
+	 *
+	 * Since: 6.0
+	 */
+	properties[PROP_ICON_FROM_MESSAGE_TYPE] =
+		g_param_spec_boolean ("icon-from-message-type",
+				      "icon-from-message-type",
+				      "",
+				      FALSE,
+				      G_PARAM_READWRITE |
+				      G_PARAM_CONSTRUCT |
+				      G_PARAM_STATIC_STRINGS);
 
 	/**
 	 * TeplInfoBar:handle-close-response:
@@ -284,6 +312,45 @@ tepl_info_bar_add_icon (TeplInfoBar *info_bar)
 
 	gtk_image_set_from_icon_name (info_bar->priv->icon, icon_name, GTK_ICON_SIZE_DIALOG);
 	gtk_widget_show (GTK_WIDGET (info_bar->priv->icon));
+}
+
+/**
+ * tepl_info_bar_get_icon_from_message_type:
+ * @info_bar: a #TeplInfoBar.
+ *
+ * Returns: the value of the #TeplInfoBar:icon-from-message-type property.
+ * Since: 6.0
+ */
+gboolean
+tepl_info_bar_get_icon_from_message_type (TeplInfoBar *info_bar)
+{
+	g_return_val_if_fail (TEPL_IS_INFO_BAR (info_bar), FALSE);
+
+	return info_bar->priv->icon_from_message_type;
+}
+
+/**
+ * tepl_info_bar_set_icon_from_message_type:
+ * @info_bar: a #TeplInfoBar.
+ * @icon_from_message_type: the new value.
+ *
+ * Sets a new value to the #TeplInfoBar:icon-from-message-type property.
+ *
+ * Since: 6.0
+ */
+void
+tepl_info_bar_set_icon_from_message_type (TeplInfoBar *info_bar,
+					  gboolean     icon_from_message_type)
+{
+	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
+
+	icon_from_message_type = icon_from_message_type != FALSE;
+
+	if (info_bar->priv->icon_from_message_type != icon_from_message_type)
+	{
+		info_bar->priv->icon_from_message_type = icon_from_message_type;
+		g_object_notify_by_pspec (G_OBJECT (info_bar), properties[PROP_ICON_FROM_MESSAGE_TYPE]);
+	}
 }
 
 /**

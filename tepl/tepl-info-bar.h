@@ -54,6 +54,13 @@ _TEPL_EXTERN
 void			tepl_info_bar_add_icon				(TeplInfoBar *info_bar);
 
 _TEPL_EXTERN
+gboolean		tepl_info_bar_get_icon_from_message_type	(TeplInfoBar *info_bar);
+
+_TEPL_EXTERN
+void			tepl_info_bar_set_icon_from_message_type	(TeplInfoBar *info_bar,
+									 gboolean     icon_from_message_type);
+
+_TEPL_EXTERN
 void			tepl_info_bar_add_primary_message		(TeplInfoBar *info_bar,
 									 const gchar *primary_msg);
 

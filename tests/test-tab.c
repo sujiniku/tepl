@@ -31,6 +31,10 @@ basic_cb (GtkButton *button,
 
 	tepl_info_bar_setup_close_button (info_bar);
 
+	// Test changing the :message-type property. Is the icon correctly
+	// updated?
+	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), GTK_MESSAGE_QUESTION);
+
 	tepl_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
 	gtk_widget_show (GTK_WIDGET (info_bar));
 }

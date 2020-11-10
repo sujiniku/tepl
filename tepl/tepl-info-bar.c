@@ -169,92 +169,6 @@ tepl_info_bar_class_init (TeplInfoBarClass *klass)
 	g_object_class_install_properties (object_class, N_PROPERTIES, properties);
 }
 
-static void
-tepl_info_bar_init (TeplInfoBar *info_bar)
-{
-	GtkGrid *content_hgrid;
-	GtkWidget *content_area;
-
-	info_bar->priv = tepl_info_bar_get_instance_private (info_bar);
-
-	/* info_bar config */
-	_tepl_info_bar_set_size_request (GTK_INFO_BAR (info_bar));
-	tepl_info_bar_set_buttons_orientation (GTK_INFO_BAR (info_bar), GTK_ORIENTATION_VERTICAL);
-
-	/* Icon */
-	info_bar->priv->icon = GTK_IMAGE (gtk_image_new ());
-	gtk_widget_set_valign (GTK_WIDGET (info_bar->priv->icon), GTK_ALIGN_START);
-	gtk_widget_set_no_show_all (GTK_WIDGET (info_bar->priv->icon), TRUE);
-
-	/* priv->content_vgrid: can contain primary/secondary messages plus
-	 * additional widgets.
-	 */
-	info_bar->priv->content_vgrid = GTK_GRID (gtk_grid_new ());
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (info_bar->priv->content_vgrid), GTK_ORIENTATION_VERTICAL);
-	gtk_grid_set_row_spacing (info_bar->priv->content_vgrid, 6);
-	gtk_widget_show (GTK_WIDGET (info_bar->priv->content_vgrid));
-
-	/* content_hgrid: icon on the left, priv->content_vgrid on the right. */
-	content_hgrid = GTK_GRID (gtk_grid_new ());
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (content_hgrid), GTK_ORIENTATION_HORIZONTAL);
-	gtk_grid_set_column_spacing (content_hgrid, 16);
-
-	gtk_container_add (GTK_CONTAINER (content_hgrid), GTK_WIDGET (info_bar->priv->icon));
-	gtk_container_add (GTK_CONTAINER (content_hgrid), GTK_WIDGET (info_bar->priv->content_vgrid));
-	gtk_widget_show (GTK_WIDGET (content_hgrid));
-
-	/* content_area */
-	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar));
-	gtk_container_add (GTK_CONTAINER (content_area), GTK_WIDGET (content_hgrid));
-}
-
-/**
- * tepl_info_bar_new:
- *
- * Returns: a new #TeplInfoBar.
- * Since: 1.0
- */
-TeplInfoBar *
-tepl_info_bar_new (void)
-{
-	return g_object_new (TEPL_TYPE_INFO_BAR, NULL);
-}
-
-/**
- * tepl_info_bar_new_simple:
- * @msg_type: the message type.
- * @primary_msg: the primary message.
- * @secondary_msg: (nullable): the secondary message, or %NULL.
- *
- * Creates a new #TeplInfoBar with an icon (depending on @msg_type), a primary
- * message and a secondary message.
- *
- * Returns: a new #TeplInfoBar.
- * Since: 2.0
- */
-TeplInfoBar *
-tepl_info_bar_new_simple (GtkMessageType  msg_type,
-			  const gchar    *primary_msg,
-			  const gchar    *secondary_msg)
-{
-	TeplInfoBar *info_bar;
-
-	g_return_val_if_fail (primary_msg != NULL, NULL);
-
-	info_bar = tepl_info_bar_new ();
-
-	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), msg_type);
-	tepl_info_bar_set_icon_from_message_type (info_bar, TRUE);
-	tepl_info_bar_add_primary_message (info_bar, primary_msg);
-
-	if (secondary_msg != NULL)
-	{
-		tepl_info_bar_add_secondary_message (info_bar, secondary_msg);
-	}
-
-	return info_bar;
-}
-
 static const gchar *
 get_icon_name_for_message_type (TeplInfoBar *info_bar)
 {
@@ -302,6 +216,105 @@ update_icon_state (TeplInfoBar *info_bar)
 	{
 		gtk_widget_hide (GTK_WIDGET (info_bar->priv->icon));
 	}
+}
+
+static void
+message_type_notify_cb (TeplInfoBar *info_bar,
+			GParamSpec  *pspec,
+			gpointer     user_data)
+{
+	update_icon_state (info_bar);
+}
+
+static void
+tepl_info_bar_init (TeplInfoBar *info_bar)
+{
+	GtkGrid *content_hgrid;
+	GtkWidget *content_area;
+
+	info_bar->priv = tepl_info_bar_get_instance_private (info_bar);
+
+	/* info_bar config */
+	_tepl_info_bar_set_size_request (GTK_INFO_BAR (info_bar));
+	tepl_info_bar_set_buttons_orientation (GTK_INFO_BAR (info_bar), GTK_ORIENTATION_VERTICAL);
+
+	/* Icon */
+	info_bar->priv->icon = GTK_IMAGE (gtk_image_new ());
+	gtk_widget_set_valign (GTK_WIDGET (info_bar->priv->icon), GTK_ALIGN_START);
+	gtk_widget_set_no_show_all (GTK_WIDGET (info_bar->priv->icon), TRUE);
+
+	/* priv->content_vgrid: can contain primary/secondary messages plus
+	 * additional widgets.
+	 */
+	info_bar->priv->content_vgrid = GTK_GRID (gtk_grid_new ());
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (info_bar->priv->content_vgrid), GTK_ORIENTATION_VERTICAL);
+	gtk_grid_set_row_spacing (info_bar->priv->content_vgrid, 6);
+	gtk_widget_show (GTK_WIDGET (info_bar->priv->content_vgrid));
+
+	/* content_hgrid: icon on the left, priv->content_vgrid on the right. */
+	content_hgrid = GTK_GRID (gtk_grid_new ());
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (content_hgrid), GTK_ORIENTATION_HORIZONTAL);
+	gtk_grid_set_column_spacing (content_hgrid, 16);
+
+	gtk_container_add (GTK_CONTAINER (content_hgrid), GTK_WIDGET (info_bar->priv->icon));
+	gtk_container_add (GTK_CONTAINER (content_hgrid), GTK_WIDGET (info_bar->priv->content_vgrid));
+	gtk_widget_show (GTK_WIDGET (content_hgrid));
+
+	/* content_area */
+	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar));
+	gtk_container_add (GTK_CONTAINER (content_area), GTK_WIDGET (content_hgrid));
+
+	g_signal_connect (info_bar,
+			  "notify::message-type",
+			  G_CALLBACK (message_type_notify_cb),
+			  NULL);
+}
+
+/**
+ * tepl_info_bar_new:
+ *
+ * Returns: a new #TeplInfoBar.
+ * Since: 1.0
+ */
+TeplInfoBar *
+tepl_info_bar_new (void)
+{
+	return g_object_new (TEPL_TYPE_INFO_BAR, NULL);
+}
+
+/**
+ * tepl_info_bar_new_simple:
+ * @msg_type: the message type.
+ * @primary_msg: the primary message.
+ * @secondary_msg: (nullable): the secondary message, or %NULL.
+ *
+ * Creates a new #TeplInfoBar with an icon (depending on @msg_type), a primary
+ * message and a secondary message.
+ *
+ * Returns: a new #TeplInfoBar.
+ * Since: 2.0
+ */
+TeplInfoBar *
+tepl_info_bar_new_simple (GtkMessageType  msg_type,
+			  const gchar    *primary_msg,
+			  const gchar    *secondary_msg)
+{
+	TeplInfoBar *info_bar;
+
+	g_return_val_if_fail (primary_msg != NULL, NULL);
+
+	info_bar = tepl_info_bar_new ();
+
+	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), msg_type);
+	tepl_info_bar_set_icon_from_message_type (info_bar, TRUE);
+	tepl_info_bar_add_primary_message (info_bar, primary_msg);
+
+	if (secondary_msg != NULL)
+	{
+		tepl_info_bar_add_secondary_message (info_bar, secondary_msg);
+	}
+
+	return info_bar;
 }
 
 /**

@@ -29,7 +29,7 @@ basic_cb (GtkButton *button,
 	gtk_widget_show (entry);
 	tepl_info_bar_add_content_widget (info_bar, entry);
 
-	tepl_info_bar_add_close_button (info_bar);
+	tepl_info_bar_setup_close_button (info_bar);
 
 	tepl_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
 	gtk_widget_show (GTK_WIDGET (info_bar));

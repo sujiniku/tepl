@@ -73,7 +73,7 @@ void			tepl_info_bar_set_handle_close_response		(TeplInfoBar *info_bar,
 									 gboolean     handle_close_response);
 
 _TEPL_EXTERN
-void			tepl_info_bar_add_close_button			(TeplInfoBar *info_bar);
+void			tepl_info_bar_setup_close_button		(TeplInfoBar *info_bar);
 
 _TEPL_EXTERN
 void			tepl_info_bar_set_buttons_orientation		(GtkInfoBar     *info_bar,

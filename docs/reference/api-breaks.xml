@@ -171,6 +171,13 @@
           not a <link linkend="TeplInfoBar">TeplInfoBar</link>.
         </para>
       </listitem>
+      <listitem>
+        <para>
+          The <code>tepl_info_bar_add_close_button()</code> function has been
+          renamed to
+          <link linkend="tepl-info-bar-setup-close-button">tepl_info_bar_setup_close_button()</link>.
+        </para>
+      </listitem>
     </itemizedlist>
   </chapter>
 </part>

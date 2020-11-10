@@ -48,7 +48,7 @@ launch_saver_cb (GObject      *source_object,
 		info_bar = tepl_info_bar_new_simple (GTK_MESSAGE_ERROR,
 						     _("Error when saving the file."),
 						     error->message);
-		tepl_info_bar_add_close_button (info_bar);
+		tepl_info_bar_setup_close_button (info_bar);
 		tepl_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
 		gtk_widget_show (GTK_WIDGET (info_bar));
 

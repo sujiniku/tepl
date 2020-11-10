@@ -417,16 +417,16 @@ tepl_info_bar_set_handle_close_response (TeplInfoBar *info_bar,
 }
 
 /**
- * tepl_info_bar_add_close_button:
+ * tepl_info_bar_setup_close_button:
  * @info_bar: a #TeplInfoBar.
  *
  * Convenience function to set the #GtkInfoBar:show-close-button and
  * #TeplInfoBar:handle-close-response properties to %TRUE.
  *
- * Since: 2.0
+ * Since: 6.0
  */
 void
-tepl_info_bar_add_close_button (TeplInfoBar *info_bar)
+tepl_info_bar_setup_close_button (TeplInfoBar *info_bar)
 {
 	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 

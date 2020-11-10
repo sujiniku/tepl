@@ -36,6 +36,9 @@ GNOME.gtkdoc(
     'api-breaks.xml',
     'intro.xml',
   ],
-  ignore_headers: TEPL_PRIVATE_HEADERS,
+  ignore_headers: [
+    TEPL_PRIVATE_HEADERS,
+    'tepl-progress-info-bar.h',
+  ],
   install: true
 )

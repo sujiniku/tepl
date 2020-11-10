@@ -285,6 +285,25 @@ get_icon_name_for_message_type (TeplInfoBar *info_bar)
 	return NULL;
 }
 
+static void
+update_icon_state (TeplInfoBar *info_bar)
+{
+	const gchar *icon_name;
+
+	icon_name = get_icon_name_for_message_type (info_bar);
+
+	if (info_bar->priv->icon_from_message_type &&
+	    icon_name != NULL)
+	{
+		gtk_image_set_from_icon_name (info_bar->priv->icon, icon_name, GTK_ICON_SIZE_DIALOG);
+		gtk_widget_show (GTK_WIDGET (info_bar->priv->icon));
+	}
+	else
+	{
+		gtk_widget_hide (GTK_WIDGET (info_bar->priv->icon));
+	}
+}
+
 /**
  * tepl_info_bar_add_icon:
  * @info_bar: a #TeplInfoBar.
@@ -300,18 +319,9 @@ get_icon_name_for_message_type (TeplInfoBar *info_bar)
 void
 tepl_info_bar_add_icon (TeplInfoBar *info_bar)
 {
-	const gchar *icon_name;
-
 	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 
-	icon_name = get_icon_name_for_message_type (info_bar);
-	if (icon_name == NULL)
-	{
-		return;
-	}
-
-	gtk_image_set_from_icon_name (info_bar->priv->icon, icon_name, GTK_ICON_SIZE_DIALOG);
-	gtk_widget_show (GTK_WIDGET (info_bar->priv->icon));
+	tepl_info_bar_set_icon_from_message_type (info_bar, TRUE);
 }
 
 /**
@@ -349,6 +359,7 @@ tepl_info_bar_set_icon_from_message_type (TeplInfoBar *info_bar,
 	if (info_bar->priv->icon_from_message_type != icon_from_message_type)
 	{
 		info_bar->priv->icon_from_message_type = icon_from_message_type;
+		update_icon_state (info_bar);
 		g_object_notify_by_pspec (G_OBJECT (info_bar), properties[PROP_ICON_FROM_MESSAGE_TYPE]);
 	}
 }

@@ -258,15 +258,30 @@ get_icon_name_for_message_type (TeplInfoBar *info_bar)
 	return NULL;
 }
 
+static const gchar *
+get_real_icon_name (TeplInfoBar *info_bar)
+{
+	if (info_bar->priv->icon_name != NULL)
+	{
+		return info_bar->priv->icon_name;
+	}
+
+	if (info_bar->priv->icon_from_message_type)
+	{
+		return get_icon_name_for_message_type (info_bar);
+	}
+
+	return NULL;
+}
+
 static void
 update_icon_state (TeplInfoBar *info_bar)
 {
 	const gchar *icon_name;
 
-	icon_name = get_icon_name_for_message_type (info_bar);
+	icon_name = get_real_icon_name (info_bar);
 
-	if (info_bar->priv->icon_from_message_type &&
-	    icon_name != NULL)
+	if (icon_name != NULL)
 	{
 		gtk_image_set_from_icon_name (info_bar->priv->icon, icon_name, GTK_ICON_SIZE_DIALOG);
 		gtk_widget_show (GTK_WIDGET (info_bar->priv->icon));

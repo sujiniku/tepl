@@ -35,6 +35,10 @@ basic_cb (GtkButton *button,
 	// updated?
 	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), GTK_MESSAGE_QUESTION);
 
+	// Test setting the :icon-name property. It should have a higher
+	// priority.
+	tepl_info_bar_set_icon_name (info_bar, "document-print");
+
 	tepl_tab_add_info_bar (tab, GTK_INFO_BAR (info_bar));
 	gtk_widget_show (GTK_WIDGET (info_bar));
 }

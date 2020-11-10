@@ -13,6 +13,19 @@
  * of info bars.
  */
 
+/* To put later in the class description / the goal:
+ *
+ * The content area of a #TeplInfoBar contains a vertical container containing:
+ * - First, an horizontal container containing:
+ *   - A place for an optional icon.
+ *   - A vertical container that can contain: primary/secondary messages plus
+ *     additional widgets, in the order that they are added. So the widgets
+ *     added here are <emphasis>on the right</emphasis> of the icon.
+ * - Possible additional widgets, in the order that they are added. So the
+ *   widgets added here are <emphasis>under</emphasis> the icon (if there is an
+ *   icon).
+ */
+
 struct _TeplInfoBarPrivate
 {
 	/* Left: icon. Right: content_vgrid. */

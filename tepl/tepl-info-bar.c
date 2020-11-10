@@ -29,6 +29,7 @@
 struct _TeplInfoBarPrivate
 {
 	GtkImage *icon;
+	gchar *icon_name;
 
 	/* Can contain primary/secondary messages plus additional widgets. */
 	GtkGrid *content_vgrid;
@@ -41,6 +42,7 @@ enum
 {
 	PROP_0,
 	PROP_ICON_FROM_MESSAGE_TYPE,
+	PROP_ICON_NAME,
 	PROP_HANDLE_CLOSE_RESPONSE,
 	N_PROPERTIES
 };
@@ -61,6 +63,10 @@ tepl_info_bar_get_property (GObject    *object,
 	{
 		case PROP_ICON_FROM_MESSAGE_TYPE:
 			g_value_set_boolean (value, tepl_info_bar_get_icon_from_message_type (info_bar));
+			break;
+
+		case PROP_ICON_NAME:
+			g_value_set_string (value, tepl_info_bar_get_icon_name (info_bar));
 			break;
 
 		case PROP_HANDLE_CLOSE_RESPONSE:
@@ -87,6 +93,10 @@ tepl_info_bar_set_property (GObject      *object,
 			tepl_info_bar_set_icon_from_message_type (info_bar, g_value_get_boolean (value));
 			break;
 
+		case PROP_ICON_NAME:
+			tepl_info_bar_set_icon_name (info_bar, g_value_get_string (value));
+			break;
+
 		case PROP_HANDLE_CLOSE_RESPONSE:
 			tepl_info_bar_set_handle_close_response (info_bar, g_value_get_boolean (value));
 			break;
@@ -95,6 +105,27 @@ tepl_info_bar_set_property (GObject      *object,
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 			break;
 	}
+}
+
+static void
+tepl_info_bar_dispose (GObject *object)
+{
+	TeplInfoBar *info_bar = TEPL_INFO_BAR (object);
+
+	info_bar->priv->icon = NULL;
+	info_bar->priv->content_vgrid = NULL;
+
+	G_OBJECT_CLASS (tepl_info_bar_parent_class)->dispose (object);
+}
+
+static void
+tepl_info_bar_finalize (GObject *object)
+{
+	TeplInfoBar *info_bar = TEPL_INFO_BAR (object);
+
+	g_free (info_bar->priv->icon_name);
+
+	G_OBJECT_CLASS (tepl_info_bar_parent_class)->finalize (object);
 }
 
 static void
@@ -127,6 +158,8 @@ tepl_info_bar_class_init (TeplInfoBarClass *klass)
 
 	object_class->get_property = tepl_info_bar_get_property;
 	object_class->set_property = tepl_info_bar_set_property;
+	object_class->dispose = tepl_info_bar_dispose;
+	object_class->finalize = tepl_info_bar_finalize;
 
 	info_bar_class->response = tepl_info_bar_response;
 
@@ -136,6 +169,12 @@ tepl_info_bar_class_init (TeplInfoBarClass *klass)
 	 * If this property is %TRUE, then an icon is shown on the left, based
 	 * on the value of the #GtkInfoBar:message-type property. For
 	 * %GTK_MESSAGE_OTHER no icon is shown.
+	 *
+	 * If the #TeplInfoBar:icon-name property has a non-%NULL value, then
+	 * this property is not taken into account.
+	 *
+	 * Note that setting this property doesn't change the value of the
+	 * #TeplInfoBar:icon-name property; the two properties are separate.
 	 *
 	 * Since: 6.0
 	 */
@@ -147,6 +186,26 @@ tepl_info_bar_class_init (TeplInfoBarClass *klass)
 				      G_PARAM_READWRITE |
 				      G_PARAM_CONSTRUCT |
 				      G_PARAM_STATIC_STRINGS);
+
+	/**
+	 * TeplInfoBar:icon-name:
+	 *
+	 * If set to a non-%NULL value, then an icon is shown on the left.
+	 *
+	 * If this property has a non-%NULL value, then the
+	 * #TeplInfoBar:icon-from-message-type property is not taken into
+	 * account.
+	 *
+	 * Since: 6.0
+	 */
+	properties[PROP_ICON_NAME] =
+		g_param_spec_string ("icon-name",
+				     "icon-name",
+				     "",
+				     NULL,
+				     G_PARAM_READWRITE |
+				     G_PARAM_CONSTRUCT |
+				     G_PARAM_STATIC_STRINGS);
 
 	/**
 	 * TeplInfoBar:handle-close-response:
@@ -354,6 +413,45 @@ tepl_info_bar_set_icon_from_message_type (TeplInfoBar *info_bar,
 		info_bar->priv->icon_from_message_type = icon_from_message_type;
 		update_icon_state (info_bar);
 		g_object_notify_by_pspec (G_OBJECT (info_bar), properties[PROP_ICON_FROM_MESSAGE_TYPE]);
+	}
+}
+
+/**
+ * tepl_info_bar_get_icon_name:
+ * @info_bar: a #TeplInfoBar.
+ *
+ * Returns: the value of the #TeplInfoBar:icon-name property.
+ * Since: 6.0
+ */
+const gchar *
+tepl_info_bar_get_icon_name (TeplInfoBar *info_bar)
+{
+	g_return_val_if_fail (TEPL_IS_INFO_BAR (info_bar), NULL);
+
+	return info_bar->priv->icon_name;
+}
+
+/**
+ * tepl_info_bar_set_icon_name:
+ * @info_bar: a #TeplInfoBar.
+ * @icon_name: the new value.
+ *
+ * Sets a new value to the #TeplInfoBar:icon-name property.
+ *
+ * Since: 6.0
+ */
+void
+tepl_info_bar_set_icon_name (TeplInfoBar *info_bar,
+			     const gchar *icon_name)
+{
+	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
+
+	if (g_strcmp0 (info_bar->priv->icon_name, icon_name) != 0)
+	{
+		g_free (info_bar->priv->icon_name);
+		info_bar->priv->icon_name = g_strdup (icon_name);
+		update_icon_state (info_bar);
+		g_object_notify_by_pspec (G_OBJECT (info_bar), properties[PROP_ICON_NAME]);
 	}
 }
 

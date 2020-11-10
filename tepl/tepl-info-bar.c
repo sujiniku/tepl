@@ -223,7 +223,7 @@ tepl_info_bar_new_simple (GtkMessageType  msg_type,
 }
 
 static const gchar *
-get_icon_name (TeplInfoBar *info_bar)
+get_icon_name_for_message_type (TeplInfoBar *info_bar)
 {
 	GtkMessageType msg_type;
 
@@ -272,7 +272,7 @@ tepl_info_bar_add_icon (TeplInfoBar *info_bar)
 
 	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 
-	icon_name = get_icon_name (info_bar);
+	icon_name = get_icon_name_for_message_type (info_bar);
 	if (icon_name == NULL)
 	{
 		return;

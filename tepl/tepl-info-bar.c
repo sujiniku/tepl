@@ -9,8 +9,8 @@
  * @Title: TeplInfoBar
  * @Short_description: Subclass of #GtkInfoBar
  *
- * #TeplInfoBar is a subclass of #GtkInfoBar with functions to ease the creation
- * of info bars.
+ * #TeplInfoBar is a subclass of #GtkInfoBar. In most cases it permits to create
+ * #GtkInfoBar's more easily.
  */
 
 /* To put later in the class description / the goal:

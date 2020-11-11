@@ -381,6 +381,7 @@ tepl_info_bar_new_simple (GtkMessageType  msg_type,
 
 	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), msg_type);
 	tepl_info_bar_set_icon_from_message_type (info_bar, TRUE);
+
 	tepl_info_bar_add_primary_message (info_bar, primary_msg);
 
 	if (secondary_msg != NULL)
@@ -465,7 +466,9 @@ tepl_info_bar_set_icon_name (TeplInfoBar *info_bar,
 	{
 		g_free (info_bar->priv->icon_name);
 		info_bar->priv->icon_name = g_strdup (icon_name);
+
 		update_icon_state (info_bar);
+
 		g_object_notify_by_pspec (G_OBJECT (info_bar), properties[PROP_ICON_NAME]);
 	}
 }
@@ -476,6 +479,7 @@ tepl_info_bar_set_icon_name (TeplInfoBar *info_bar,
  * @primary_msg: a primary message.
  *
  * Adds a primary message.
+ *
  * Since: 2.0
  */
 void
@@ -507,6 +511,7 @@ tepl_info_bar_add_primary_message (TeplInfoBar *info_bar,
  * @secondary_msg: a secondary message.
  *
  * Adds a secondary message.
+ *
  * Since: 2.0
  */
 void
@@ -643,8 +648,7 @@ tepl_info_bar_set_buttons_orientation (GtkInfoBar     *info_bar,
 	action_area = gtk_info_bar_get_action_area (info_bar);
 	if (GTK_IS_ORIENTABLE (action_area))
 	{
-		gtk_orientable_set_orientation (GTK_ORIENTABLE (action_area),
-						buttons_orientation);
+		gtk_orientable_set_orientation (GTK_ORIENTABLE (action_area), buttons_orientation);
 	}
 	else
 	{

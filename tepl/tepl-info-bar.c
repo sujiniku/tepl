@@ -21,8 +21,7 @@ struct _TeplInfoBarPrivate
 	GtkImage *icon;
 	gchar *icon_name;
 
-	/* Can contain primary/secondary messages plus additional widgets. */
-	GtkGrid *content_vgrid;
+	GtkGrid *vgrid_alongside_icon;
 
 	guint icon_from_message_type : 1;
 	guint handle_close_response : 1;
@@ -103,7 +102,7 @@ tepl_info_bar_dispose (GObject *object)
 	TeplInfoBar *info_bar = TEPL_INFO_BAR (object);
 
 	info_bar->priv->icon = NULL;
-	info_bar->priv->content_vgrid = NULL;
+	info_bar->priv->vgrid_alongside_icon = NULL;
 
 	G_OBJECT_CLASS (tepl_info_bar_parent_class)->dispose (object);
 }
@@ -307,21 +306,23 @@ tepl_info_bar_init (TeplInfoBar *info_bar)
 	gtk_widget_set_valign (GTK_WIDGET (info_bar->priv->icon), GTK_ALIGN_START);
 	gtk_widget_set_no_show_all (GTK_WIDGET (info_bar->priv->icon), TRUE);
 
-	/* priv->content_vgrid: can contain primary/secondary messages plus
-	 * additional widgets.
+	/* priv->vgrid_alongside_icon: can contain primary/secondary messages
+	 * plus additional widgets.
 	 */
-	info_bar->priv->content_vgrid = GTK_GRID (gtk_grid_new ());
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (info_bar->priv->content_vgrid), GTK_ORIENTATION_VERTICAL);
-	gtk_grid_set_row_spacing (info_bar->priv->content_vgrid, 6);
-	gtk_widget_show (GTK_WIDGET (info_bar->priv->content_vgrid));
+	info_bar->priv->vgrid_alongside_icon = GTK_GRID (gtk_grid_new ());
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (info_bar->priv->vgrid_alongside_icon), GTK_ORIENTATION_VERTICAL);
+	gtk_grid_set_row_spacing (info_bar->priv->vgrid_alongside_icon, 6);
+	gtk_widget_show (GTK_WIDGET (info_bar->priv->vgrid_alongside_icon));
 
-	/* content_hgrid: icon on the left, priv->content_vgrid on the right. */
+	/* content_hgrid: icon on the left, priv->vgrid_alongside_icon on the
+	 * right.
+	 */
 	content_hgrid = GTK_GRID (gtk_grid_new ());
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (content_hgrid), GTK_ORIENTATION_HORIZONTAL);
 	gtk_grid_set_column_spacing (content_hgrid, 16);
 
 	gtk_container_add (GTK_CONTAINER (content_hgrid), GTK_WIDGET (info_bar->priv->icon));
-	gtk_container_add (GTK_CONTAINER (content_hgrid), GTK_WIDGET (info_bar->priv->content_vgrid));
+	gtk_container_add (GTK_CONTAINER (content_hgrid), GTK_WIDGET (info_bar->priv->vgrid_alongside_icon));
 	gtk_widget_show (GTK_WIDGET (content_hgrid));
 
 	/* content_area */
@@ -491,7 +492,7 @@ tepl_info_bar_add_primary_message (TeplInfoBar *info_bar,
 	g_free (primary_msg_escaped);
 
 	gtk_widget_show (GTK_WIDGET (primary_label));
-	gtk_container_add (GTK_CONTAINER (info_bar->priv->content_vgrid),
+	gtk_container_add (GTK_CONTAINER (info_bar->priv->vgrid_alongside_icon),
 			   GTK_WIDGET (primary_label));
 }
 
@@ -523,7 +524,7 @@ tepl_info_bar_add_secondary_message (TeplInfoBar *info_bar,
 	g_free (secondary_msg_escaped);
 
 	gtk_widget_show (GTK_WIDGET (secondary_label));
-	gtk_container_add (GTK_CONTAINER (info_bar->priv->content_vgrid),
+	gtk_container_add (GTK_CONTAINER (info_bar->priv->vgrid_alongside_icon),
 			   GTK_WIDGET (secondary_label));
 }
 
@@ -549,7 +550,7 @@ tepl_info_bar_add_content_widget (TeplInfoBar *info_bar,
 	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
 	g_return_if_fail (GTK_IS_WIDGET (content));
 
-	gtk_container_add (GTK_CONTAINER (info_bar->priv->content_vgrid), content);
+	gtk_container_add (GTK_CONTAINER (info_bar->priv->vgrid_alongside_icon), content);
 }
 
 /**

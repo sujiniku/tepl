@@ -18,6 +18,8 @@
 
 struct _TeplInfoBarPrivate
 {
+	GtkGrid *vgrid_main;
+
 	GtkImage *icon;
 	gchar *icon_name;
 
@@ -101,6 +103,7 @@ tepl_info_bar_dispose (GObject *object)
 {
 	TeplInfoBar *info_bar = TEPL_INFO_BAR (object);
 
+	info_bar->priv->vgrid_main = NULL;
 	info_bar->priv->icon = NULL;
 	info_bar->priv->vgrid_alongside_icon = NULL;
 
@@ -292,7 +295,7 @@ message_type_notify_cb (TeplInfoBar *info_bar,
 static void
 tepl_info_bar_init (TeplInfoBar *info_bar)
 {
-	GtkGrid *content_hgrid;
+	GtkGrid *hgrid;
 	GtkWidget *content_area;
 
 	info_bar->priv = tepl_info_bar_get_instance_private (info_bar);
@@ -312,22 +315,26 @@ tepl_info_bar_init (TeplInfoBar *info_bar)
 	info_bar->priv->vgrid_alongside_icon = GTK_GRID (gtk_grid_new ());
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (info_bar->priv->vgrid_alongside_icon), GTK_ORIENTATION_VERTICAL);
 	gtk_grid_set_row_spacing (info_bar->priv->vgrid_alongside_icon, 6);
-	gtk_widget_show (GTK_WIDGET (info_bar->priv->vgrid_alongside_icon));
 
-	/* content_hgrid: icon on the left, priv->vgrid_alongside_icon on the
-	 * right.
-	 */
-	content_hgrid = GTK_GRID (gtk_grid_new ());
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (content_hgrid), GTK_ORIENTATION_HORIZONTAL);
-	gtk_grid_set_column_spacing (content_hgrid, 16);
+	/* hgrid: icon on the left, priv->vgrid_alongside_icon on the right. */
+	hgrid = GTK_GRID (gtk_grid_new ());
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (hgrid), GTK_ORIENTATION_HORIZONTAL);
+	gtk_grid_set_column_spacing (hgrid, 16);
 
-	gtk_container_add (GTK_CONTAINER (content_hgrid), GTK_WIDGET (info_bar->priv->icon));
-	gtk_container_add (GTK_CONTAINER (content_hgrid), GTK_WIDGET (info_bar->priv->vgrid_alongside_icon));
-	gtk_widget_show (GTK_WIDGET (content_hgrid));
+	gtk_container_add (GTK_CONTAINER (hgrid), GTK_WIDGET (info_bar->priv->icon));
+	gtk_container_add (GTK_CONTAINER (hgrid), GTK_WIDGET (info_bar->priv->vgrid_alongside_icon));
+
+	/* priv->vgrid_main */
+	info_bar->priv->vgrid_main = GTK_GRID (gtk_grid_new ());
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (info_bar->priv->vgrid_main), GTK_ORIENTATION_VERTICAL);
+	gtk_grid_set_row_spacing (info_bar->priv->vgrid_main, 6);
+
+	gtk_container_add (GTK_CONTAINER (info_bar->priv->vgrid_main), GTK_WIDGET (hgrid));
 
 	/* content_area */
 	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar));
-	gtk_container_add (GTK_CONTAINER (content_area), GTK_WIDGET (content_hgrid));
+	gtk_container_add (GTK_CONTAINER (content_area), GTK_WIDGET (info_bar->priv->vgrid_main));
+	gtk_widget_show_all (content_area);
 
 	g_signal_connect (info_bar,
 			  "notify::message-type",

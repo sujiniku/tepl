@@ -5,6 +5,10 @@
 #ifndef TEPL_IO_ERROR_INFO_BARS_H
 #define TEPL_IO_ERROR_INFO_BARS_H
 
+#if !defined (TEPL_H_INSIDE) && !defined (TEPL_COMPILATION)
+#error "Only <tepl/tepl.h> can be included directly."
+#endif
+
 #include <gio/gio.h>
 #include <tepl/tepl-info-bar.h>
 

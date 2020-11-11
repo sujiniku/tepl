@@ -39,6 +39,32 @@ struct _TeplInfoBarClass
 	gpointer padding[12];
 };
 
+/**
+ * TeplInfoBarLocation:
+ * @TEPL_INFO_BAR_LOCATION_ALONGSIDE_ICON: on the right side of the icon.
+ * @TEPL_INFO_BAR_LOCATION_BELOW_ICON: below the icon.
+ *
+ * Location inside the content area.
+ *
+ * The content area of a #TeplInfoBar contains a vertical container containing:
+ * - First, an horizontal container containing:
+ *   - A place for an optional icon.
+ *   - The %TEPL_INFO_BAR_LOCATION_ALONGSIDE_ICON location, which is a vertical
+ *     container that can contain: primary/secondary messages plus additional
+ *     widgets, in the order that they are added.
+ * - The %TEPL_INFO_BAR_LOCATION_BELOW_ICON location, which can contain
+ *   additional widgets, in the order that they are added. So the widgets added
+ *   here are under the icon and under the
+ *   %TEPL_INFO_BAR_LOCATION_ALONGSIDE_ICON location.
+ *
+ * Since: 6.0
+ */
+typedef enum
+{
+	TEPL_INFO_BAR_LOCATION_ALONGSIDE_ICON,
+	TEPL_INFO_BAR_LOCATION_BELOW_ICON
+} TeplInfoBarLocation;
+
 _TEPL_EXTERN
 GType			tepl_info_bar_get_type				(void);
 

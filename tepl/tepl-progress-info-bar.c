@@ -13,6 +13,7 @@ struct _TeplProgressInfoBarPrivate
 {
 	GtkLabel *label;
 	GtkProgressBar *progress_bar;
+	guint has_cancel_button : 1;
 };
 
 enum
@@ -30,6 +31,8 @@ static void
 set_has_cancel_button (TeplProgressInfoBar *info_bar,
 		       gboolean             has_cancel_button)
 {
+	info_bar->priv->has_cancel_button = has_cancel_button != FALSE;
+
 	if (has_cancel_button)
 	{
 		gtk_info_bar_add_button (GTK_INFO_BAR (info_bar),
@@ -44,13 +47,12 @@ tepl_progress_info_bar_get_property (GObject    *object,
                                      GValue     *value,
                                      GParamSpec *pspec)
 {
-	//TeplProgressInfoBar *info_bar = TEPL_PROGRESS_INFO_BAR (object);
+	TeplProgressInfoBar *info_bar = TEPL_PROGRESS_INFO_BAR (object);
 
 	switch (prop_id)
 	{
 		case PROP_HAS_CANCEL_BUTTON:
-			// TODO
-			//g_value_set_boolean (value, [...]);
+			g_value_set_boolean (value, info_bar->priv->has_cancel_button);
 			break;
 
 		default:
@@ -80,19 +82,31 @@ tepl_progress_info_bar_set_property (GObject      *object,
 }
 
 static void
+tepl_progress_info_bar_dispose (GObject *object)
+{
+	TeplProgressInfoBar *info_bar = TEPL_PROGRESS_INFO_BAR (object);
+
+	info_bar->priv->label = NULL;
+	info_bar->priv->progress_bar = NULL;
+
+	G_OBJECT_CLASS (tepl_progress_info_bar_parent_class)->dispose (object);
+}
+
+static void
 tepl_progress_info_bar_class_init (TeplProgressInfoBarClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	object_class->get_property = tepl_progress_info_bar_get_property;
 	object_class->set_property = tepl_progress_info_bar_set_property;
+	object_class->dispose = tepl_progress_info_bar_dispose;
 
 	properties[PROP_HAS_CANCEL_BUTTON] =
 		g_param_spec_boolean ("has-cancel-button",
 				      "has-cancel-button",
 				      "",
 				      TRUE,
-				      G_PARAM_WRITABLE |
+				      G_PARAM_READWRITE |
 				      G_PARAM_CONSTRUCT_ONLY |
 				      G_PARAM_STATIC_STRINGS);
 
@@ -102,29 +116,20 @@ tepl_progress_info_bar_class_init (TeplProgressInfoBarClass *klass)
 static void
 tepl_progress_info_bar_init (TeplProgressInfoBar *info_bar)
 {
-	GtkGrid *vgrid;
-	GtkWidget *content_area;
-
 	info_bar->priv = tepl_progress_info_bar_get_instance_private (info_bar);
 
-	vgrid = GTK_GRID (gtk_grid_new ());
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (vgrid), GTK_ORIENTATION_VERTICAL);
-	gtk_grid_set_row_spacing (vgrid, 6);
-
 	info_bar->priv->label = tepl_info_bar_create_label ();
-	gtk_container_add (GTK_CONTAINER (vgrid),
-			   GTK_WIDGET (info_bar->priv->label));
+	gtk_widget_show (GTK_WIDGET (info_bar->priv->label));
+	tepl_info_bar_add_content_widget (TEPL_INFO_BAR (info_bar),
+					  GTK_WIDGET (info_bar->priv->label),
+					  TEPL_INFO_BAR_LOCATION_ALONGSIDE_ICON);
 
 	info_bar->priv->progress_bar = GTK_PROGRESS_BAR (gtk_progress_bar_new ());
 	gtk_widget_set_hexpand (GTK_WIDGET (info_bar->priv->progress_bar), TRUE);
-	gtk_container_add (GTK_CONTAINER (vgrid),
-			   GTK_WIDGET (info_bar->priv->progress_bar));
-
-	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar));
-	gtk_container_add (GTK_CONTAINER (content_area),
-			   GTK_WIDGET (vgrid));
-
-	gtk_widget_show_all (GTK_WIDGET (vgrid));
+	gtk_widget_show (GTK_WIDGET (info_bar->priv->progress_bar));
+	tepl_info_bar_add_content_widget (TEPL_INFO_BAR (info_bar),
+					  GTK_WIDGET (info_bar->priv->progress_bar),
+					  TEPL_INFO_BAR_LOCATION_BELOW_ICON);
 }
 
 TeplProgressInfoBar *

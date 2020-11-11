@@ -540,26 +540,40 @@ tepl_info_bar_add_secondary_message (TeplInfoBar *info_bar,
 /**
  * tepl_info_bar_add_content_widget:
  * @info_bar: a #TeplInfoBar.
- * @content: a #GtkWidget.
+ * @widget: a #GtkWidget.
+ * @location: a #TeplInfoBarLocation.
  *
- * Adds @content to @info_bar.
+ * Adds @widget to @info_bar at @location.
  *
- * #TeplInfoBar has an internal container, to be able to add the icon and add
- * primary or secondary messages. The internal container is added to the content
- * area, as returned by gtk_info_bar_get_content_area(). So if you use a
- * #TeplInfoBar and you need to add a custom #GtkWidget, it is better to use
- * this function instead of adding the #GtkWidget directly to the content area.
+ * As described in #TeplInfoBarLocation, a #TeplInfoBar has internal containers
+ * for the content area. So if you need to add a custom #GtkWidget, it is better
+ * to use this function instead of adding the #GtkWidget directly to the content
+ * area.
  *
- * Since: 2.0
+ * Since: 6.0
  */
 void
-tepl_info_bar_add_content_widget (TeplInfoBar *info_bar,
-				  GtkWidget   *content)
+tepl_info_bar_add_content_widget (TeplInfoBar         *info_bar,
+				  GtkWidget           *widget,
+				  TeplInfoBarLocation  location)
 {
 	g_return_if_fail (TEPL_IS_INFO_BAR (info_bar));
-	g_return_if_fail (GTK_IS_WIDGET (content));
+	g_return_if_fail (GTK_IS_WIDGET (widget));
 
-	gtk_container_add (GTK_CONTAINER (info_bar->priv->vgrid_alongside_icon), content);
+	switch (location)
+	{
+		case TEPL_INFO_BAR_LOCATION_ALONGSIDE_ICON:
+			gtk_container_add (GTK_CONTAINER (info_bar->priv->vgrid_alongside_icon), widget);
+			break;
+
+		case TEPL_INFO_BAR_LOCATION_BELOW_ICON:
+			gtk_container_add (GTK_CONTAINER (info_bar->priv->vgrid_main), widget);
+			break;
+
+		default:
+			g_warn_if_reached ();
+			break;
+	}
 }
 
 /**

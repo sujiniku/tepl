@@ -99,8 +99,9 @@ void			tepl_info_bar_add_secondary_message		(TeplInfoBar *info_bar,
 									 const gchar *secondary_msg);
 
 _TEPL_EXTERN
-void			tepl_info_bar_add_content_widget		(TeplInfoBar *info_bar,
-									 GtkWidget   *content);
+void			tepl_info_bar_add_content_widget		(TeplInfoBar         *info_bar,
+									 GtkWidget           *widget,
+									 TeplInfoBarLocation  location);
 
 _TEPL_EXTERN
 gboolean		tepl_info_bar_get_handle_close_response		(TeplInfoBar *info_bar);

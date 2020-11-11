@@ -184,6 +184,13 @@
           <link linkend="tepl-info-bar-set-icon-from-message-type">tepl_info_bar_set_icon_from_message_type()</link>.
         </para>
       </listitem>
+      <listitem>
+        <para>
+          A <code>location</code> parameter has been added to the
+          <link linkend="tepl-info-bar-add-content-widget">tepl_info_bar_add_content_widget()</link>
+          function.
+        </para>
+      </listitem>
     </itemizedlist>
   </chapter>
 </part>

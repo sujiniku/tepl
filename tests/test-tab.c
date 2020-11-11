@@ -27,7 +27,8 @@ basic_cb (GtkButton *button,
 
 	entry = gtk_entry_new ();
 	gtk_widget_show (entry);
-	tepl_info_bar_add_content_widget (info_bar, entry);
+	tepl_info_bar_add_content_widget (info_bar, entry, TEPL_INFO_BAR_LOCATION_ALONGSIDE_ICON);
+	//tepl_info_bar_add_content_widget (info_bar, entry, TEPL_INFO_BAR_LOCATION_BELOW_ICON);
 
 	tepl_info_bar_setup_close_button (info_bar);
 

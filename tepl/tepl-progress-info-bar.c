@@ -132,19 +132,31 @@ tepl_progress_info_bar_init (TeplProgressInfoBar *info_bar)
 					  TEPL_INFO_BAR_LOCATION_BELOW_ICON);
 }
 
+/**
+ * tepl_progress_info_bar_new:
+ * @icon_name: (nullable):
+ * @markup: (nullable):
+ * @has_cancel_button:
+ *
+ * Returns: a new #TeplProgressInfoBar.
+ * Since: 6.0
+ */
 TeplProgressInfoBar *
-tepl_progress_info_bar_new (const gchar *markup,
+tepl_progress_info_bar_new (const gchar *icon_name,
+			    const gchar *markup,
 			    gboolean     has_cancel_button)
 {
 	TeplProgressInfoBar *info_bar;
 
-	g_return_val_if_fail (markup != NULL, NULL);
-
 	info_bar = g_object_new (TEPL_TYPE_PROGRESS_INFO_BAR,
+				 "icon-name", icon_name,
 				 "has-cancel-button", has_cancel_button,
 				 NULL);
 
-	tepl_progress_info_bar_set_markup (info_bar, markup);
+	if (markup != NULL)
+	{
+		tepl_progress_info_bar_set_markup (info_bar, markup);
+	}
 
 	return info_bar;
 }

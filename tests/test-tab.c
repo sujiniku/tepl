@@ -50,7 +50,8 @@ progress_cb (GtkButton *button,
 {
 	TeplProgressInfoBar *info_bar;
 
-	info_bar = tepl_progress_info_bar_new ("File loading... The full and very long path is: "
+	info_bar = tepl_progress_info_bar_new ("document-save",
+					       "File loading... The full and very long path is: "
 					       "/home/seb/a/very/long/path/like/this/is/beautiful"
 					       "/but/is/it/correctly/wrapped/in/the/info/bar/that"
 					       "/is/the/question",

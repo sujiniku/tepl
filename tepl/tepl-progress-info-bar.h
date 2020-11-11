@@ -41,26 +41,27 @@ struct _TeplProgressInfoBarClass
 };
 
 _TEPL_EXTERN
-GType			tepl_progress_info_bar_get_type			(void);
+GType			tepl_progress_info_bar_get_type		(void);
 
 _TEPL_EXTERN
-TeplProgressInfoBar *	tepl_progress_info_bar_new			(const gchar *markup,
-									 gboolean     has_cancel_button);
+TeplProgressInfoBar *	tepl_progress_info_bar_new		(const gchar *icon_name,
+								 const gchar *markup,
+								 gboolean     has_cancel_button);
 
 _TEPL_EXTERN
-void			tepl_progress_info_bar_set_markup		(TeplProgressInfoBar *info_bar,
-									 const gchar         *markup);
+void			tepl_progress_info_bar_set_markup	(TeplProgressInfoBar *info_bar,
+								 const gchar         *markup);
 
 _TEPL_EXTERN
-void			tepl_progress_info_bar_set_text			(TeplProgressInfoBar *info_bar,
-									 const gchar         *text);
+void			tepl_progress_info_bar_set_text		(TeplProgressInfoBar *info_bar,
+								 const gchar         *text);
 
 _TEPL_EXTERN
-void			tepl_progress_info_bar_set_fraction		(TeplProgressInfoBar *info_bar,
-									 gdouble              fraction);
+void			tepl_progress_info_bar_set_fraction	(TeplProgressInfoBar *info_bar,
+								 gdouble              fraction);
 
 _TEPL_EXTERN
-void			tepl_progress_info_bar_pulse			(TeplProgressInfoBar *info_bar);
+void			tepl_progress_info_bar_pulse		(TeplProgressInfoBar *info_bar);
 
 G_END_DECLS
 

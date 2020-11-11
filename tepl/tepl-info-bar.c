@@ -469,7 +469,8 @@ tepl_info_bar_set_icon_name (TeplInfoBar *info_bar,
  * @info_bar: a #TeplInfoBar.
  * @primary_msg: a primary message.
  *
- * Adds a primary message.
+ * Adds a primary message to the %TEPL_INFO_BAR_LOCATION_ALONGSIDE_ICON
+ * location.
  *
  * Since: 2.0
  */
@@ -501,7 +502,8 @@ tepl_info_bar_add_primary_message (TeplInfoBar *info_bar,
  * @info_bar: a #TeplInfoBar.
  * @secondary_msg: a secondary message.
  *
- * Adds a secondary message.
+ * Adds a secondary message to the %TEPL_INFO_BAR_LOCATION_ALONGSIDE_ICON
+ * location.
  *
  * Since: 2.0
  */

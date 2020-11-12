@@ -9,6 +9,19 @@
 #include "tepl-progress-info-bar.h"
 #include <glib/gi18n-lib.h>
 
+/**
+ * SECTION:progress-info-bar
+ * @Title: TeplProgressInfoBar
+ * @Short_description: A #TeplInfoBar containing a #GtkProgressBar
+ *
+ * #TeplProgressInfoBar is a #TeplInfoBar containing a #GtkProgressBar and a
+ * #GtkLabel. As every #TeplInfoBar it can also contain an icon, and other
+ * widgets can be added by the application as well.
+ *
+ * The #GtkLabel content can be modified after the #TeplProgressInfoBar has been
+ * created.
+ */
+
 struct _TeplProgressInfoBarPrivate
 {
 	GtkLabel *label;
@@ -101,6 +114,14 @@ tepl_progress_info_bar_class_init (TeplProgressInfoBarClass *klass)
 	object_class->set_property = tepl_progress_info_bar_set_property;
 	object_class->dispose = tepl_progress_info_bar_dispose;
 
+	/**
+	 * TeplProgressInfoBar:has-cancel-button:
+	 *
+	 * Whether to add a Cancel button in the action area of the #GtkInfoBar,
+	 * with the %GTK_RESPONSE_CANCEL response.
+	 *
+	 * Since: 6.0
+	 */
 	properties[PROP_HAS_CANCEL_BUTTON] =
 		g_param_spec_boolean ("has-cancel-button",
 				      "has-cancel-button",
@@ -134,11 +155,14 @@ tepl_progress_info_bar_init (TeplProgressInfoBar *info_bar)
 
 /**
  * tepl_progress_info_bar_new:
- * @icon_name: (nullable):
- * @markup: (nullable):
- * @has_cancel_button:
+ * @icon_name: (nullable): a value for the #TeplInfoBar:icon-name property, or
+ *   %NULL.
+ * @markup: (nullable): if not %NULL, tepl_progress_info_bar_set_markup() is
+ *   called.
+ * @has_cancel_button: a value for the #TeplProgressInfoBar:has-cancel-button
+ *   property.
  *
- * Returns: a new #TeplProgressInfoBar.
+ * Returns: a new #TeplProgressInfoBar widget.
  * Since: 6.0
  */
 TeplProgressInfoBar *
@@ -161,6 +185,15 @@ tepl_progress_info_bar_new (const gchar *icon_name,
 	return info_bar;
 }
 
+/**
+ * tepl_progress_info_bar_set_markup:
+ * @info_bar: a #TeplProgressInfoBar.
+ * @markup: markup text.
+ *
+ * Calls gtk_label_set_markup() on the #GtkLabel contained within the @info_bar.
+ *
+ * Since: 6.0
+ */
 void
 tepl_progress_info_bar_set_markup (TeplProgressInfoBar *info_bar,
 				   const gchar         *markup)
@@ -171,6 +204,15 @@ tepl_progress_info_bar_set_markup (TeplProgressInfoBar *info_bar,
 	gtk_label_set_markup (info_bar->priv->label, markup);
 }
 
+/**
+ * tepl_progress_info_bar_set_text:
+ * @info_bar: a #TeplProgressInfoBar.
+ * @text: text.
+ *
+ * Calls gtk_label_set_text() on the #GtkLabel contained within the @info_bar.
+ *
+ * Since: 6.0
+ */
 void
 tepl_progress_info_bar_set_text (TeplProgressInfoBar *info_bar,
 				 const gchar         *text)
@@ -181,6 +223,16 @@ tepl_progress_info_bar_set_text (TeplProgressInfoBar *info_bar,
 	gtk_label_set_text (info_bar->priv->label, text);
 }
 
+/**
+ * tepl_progress_info_bar_set_fraction:
+ * @info_bar: a #TeplProgressInfoBar.
+ * @fraction: fraction of the task that's been completed.
+ *
+ * Calls gtk_progress_bar_set_fraction() on the #GtkProgressBar contained within
+ * the @info_bar.
+ *
+ * Since: 6.0
+ */
 void
 tepl_progress_info_bar_set_fraction (TeplProgressInfoBar *info_bar,
 				     gdouble              fraction)
@@ -190,6 +242,15 @@ tepl_progress_info_bar_set_fraction (TeplProgressInfoBar *info_bar,
 	gtk_progress_bar_set_fraction (info_bar->priv->progress_bar, fraction);
 }
 
+/**
+ * tepl_progress_info_bar_pulse:
+ * @info_bar: a #TeplProgressInfoBar.
+ *
+ * Calls gtk_progress_bar_pulse() on the #GtkProgressBar contained within the
+ * @info_bar.
+ *
+ * Since: 6.0
+ */
 void
 tepl_progress_info_bar_pulse (TeplProgressInfoBar *info_bar)
 {

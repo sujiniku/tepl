@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-09-28 15:57+0000\n"
-"PO-Revision-Date: 2020-10-10 13:40+0200\n"
+"POT-Creation-Date: 2020-11-05 22:45+0000\n"
+"PO-Revision-Date: 2020-11-15 10:19+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -161,7 +161,8 @@ msgstr "Uložit před zavřením změny do souboru „%s“?"
 msgid "Close _without Saving"
 msgstr "Zavřít _bez uložení"
 
-#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
+#: tepl/tepl-close-confirm-dialog-single.c:131
+#: tepl/tepl-language-chooser-dialog.c:120 tepl/tepl-tab-saving.c:280
 #: tepl/tepl-window-actions-file.c:82
 msgid "_Cancel"
 msgstr "_Zrušit"
@@ -256,6 +257,23 @@ msgid ""
 msgstr ""
 "Pokud budete pokračovat v ukládání, může dojít k porušení dokumentu. Přesto "
 "uložit?"
+
+#. chooser_dialog config
+#: tepl/tepl-language-chooser-dialog.c:115
+msgid "Highlight Mode"
+msgstr "Režim zvýrazňování"
+
+#: tepl/tepl-language-chooser-dialog.c:121
+msgid "_Select"
+msgstr "_Vybrat"
+
+#: tepl/tepl-language-chooser-widget.c:71
+msgid "Plain Text"
+msgstr "Prostý text"
+
+#: tepl/tepl-language-chooser-widget.c:441
+msgid "Search highlight mode…"
+msgstr "hledat režim zvýrazňování…"
 
 #. Translators: do not translate <metadata>.
 #: tepl/tepl-metadata-parser.c:83

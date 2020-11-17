@@ -3,21 +3,22 @@
 # This file is distributed under the same license as the tepl package.
 # Rafael Fontenelle <rafaelff@gnome.org>, 2017-2020.
 # Henrique Machado Campos <henriquecamposrj@gmail.com>, 2020.
+# Enrico Nicoletto <liverig@gmail.com>, 2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-09-24 06:15+0000\n"
-"PO-Revision-Date: 2020-09-24 11:35-0300\n"
-"Last-Translator: Henrique Machado Campos <henriquecamposrj@gmail.com>\n"
+"POT-Creation-Date: 2020-11-10 21:12+0000\n"
+"PO-Revision-Date: 2020-11-17 12:08-0300\n"
+"Last-Translator: Enrico Nicoletto <liverig@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
-"X-Generator: Gtranslator 3.38.0\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.4.2\n"
 "X-Project-Style: gnome\n"
 
 #. action, icon, label, accel, tooltip
@@ -163,8 +164,9 @@ msgstr "Salvar alterações ao arquivo “%s” antes de fechar?"
 msgid "Close _without Saving"
 msgstr "_Fechar sem salvar"
 
-#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
-#: tepl/tepl-window-actions-file.c:82
+#: tepl/tepl-close-confirm-dialog-single.c:131
+#: tepl/tepl-language-chooser-dialog.c:130 tepl/tepl-progress-info-bar.c:36
+#: tepl/tepl-tab-saving.c:280 tepl/tepl-window-actions-file.c:82
 msgid "_Cancel"
 msgstr "_Cancelar"
 
@@ -260,6 +262,23 @@ msgstr ""
 "Se você continuar salvando este arquivo, poderá corromper o documento. "
 "Salvar mesmo assim?"
 
+#. chooser_dialog config
+#: tepl/tepl-language-chooser-dialog.c:125
+msgid "Highlight Mode"
+msgstr "Modo de realce"
+
+#: tepl/tepl-language-chooser-dialog.c:131
+msgid "_Select"
+msgstr "Se_lecionar"
+
+#: tepl/tepl-language-chooser-widget.c:76
+msgid "Plain Text"
+msgstr "Texto simples"
+
+#: tepl/tepl-language-chooser-widget.c:446
+msgid "Search highlight mode…"
+msgstr "Pesquisar modo de realce…"
+
 #. Translators: do not translate <metadata>.
 #: tepl/tepl-metadata-parser.c:83
 #, c-format
@@ -298,31 +317,63 @@ msgstr "O elemento <entry> deve carece dos atributos “key” e “value”."
 msgid "Hide panel"
 msgstr "Ocultar painel"
 
-#: tepl/tepl-space-drawer-prefs.c:185 tepl/tepl-space-drawer-prefs.c:187
-#: tepl/tepl-space-drawer-prefs.c:189
+#: tepl/tepl-space-drawer-prefs.c:189 tepl/tepl-space-drawer-prefs.c:191
+#: tepl/tepl-space-drawer-prefs.c:193
 msgid "Draw tabs"
 msgstr "Desenhar abas"
 
-#: tepl/tepl-space-drawer-prefs.c:186 tepl/tepl-space-drawer-prefs.c:188
-#: tepl/tepl-space-drawer-prefs.c:190
+#: tepl/tepl-space-drawer-prefs.c:190 tepl/tepl-space-drawer-prefs.c:192
+#: tepl/tepl-space-drawer-prefs.c:194
 msgid "Draw spaces"
 msgstr "Desenhar espaços"
 
-#: tepl/tepl-space-drawer-prefs.c:191
+#: tepl/tepl-space-drawer-prefs.c:195
 msgid "Draw new lines"
 msgstr "Desenhar novas linhas"
 
-#: tepl/tepl-space-drawer-prefs.c:227
+#: tepl/tepl-space-drawer-prefs.c:231
 msgid "Leading Spaces"
 msgstr "Espaços ao começo do texto"
 
-#: tepl/tepl-space-drawer-prefs.c:231
+#: tepl/tepl-space-drawer-prefs.c:235
 msgid "Spaces Inside Text"
 msgstr "Espaços dentro do texto"
 
-#: tepl/tepl-space-drawer-prefs.c:235
+#: tepl/tepl-space-drawer-prefs.c:239
 msgid "Trailing Spaces"
 msgstr "Espaços ao final do texto"
+
+#: tepl/tepl-space-drawer-prefs.c:259
+msgid "Tab"
+msgstr "Tabulação"
+
+#: tepl/tepl-space-drawer-prefs.c:260
+msgid "Space"
+msgstr "Espaço"
+
+#: tepl/tepl-space-drawer-prefs.c:261
+msgid "No-Break Space"
+msgstr "Espaço sem quebra"
+
+#: tepl/tepl-space-drawer-prefs.c:262
+msgid "Narrow No-Break Space"
+msgstr "Espaço estreito sem quebra"
+
+#: tepl/tepl-space-drawer-prefs.c:281
+msgid "Result"
+msgstr "Resultado"
+
+#: tepl/tepl-space-drawer-prefs.c:314
+msgid "Information"
+msgstr "Informação"
+
+#: tepl/tepl-space-drawer-prefs.c:316
+msgid ""
+"When white space drawing is enabled, then non-breaking spaces are always "
+"drawn at all locations, to distinguish them from normal spaces."
+msgstr ""
+"Quando o desenho de espaços vazios está habilitado os espaços sem quebra são "
+"sempre desenhados, em todos os locais, para distingui-los de espaços normais."
 
 #. Translators: "Ln" is an abbreviation for "Line", Col is an
 #. * abbreviation for "Column". Please, use abbreviations if possible.
@@ -365,216 +416,3 @@ msgstr "Salvar arquivo"
 #: tepl/tepl-window-actions-file.c:79
 msgid "Open File"
 msgstr "Abrir arquivo"
-
-#~ msgid "Unicode"
-#~ msgstr "Unicode"
-
-#~ msgid "Western"
-#~ msgstr "Ocidental"
-
-#~ msgid "Central European"
-#~ msgstr "Europeu central"
-
-#~ msgid "South European"
-#~ msgstr "Europeu meridional"
-
-#~ msgid "Baltic"
-#~ msgstr "Báltico"
-
-#~ msgid "Cyrillic"
-#~ msgstr "Cirílico"
-
-#~ msgid "Arabic"
-#~ msgstr "Arábico"
-
-#~ msgid "Greek"
-#~ msgstr "Grego"
-
-#~ msgid "Hebrew Visual"
-#~ msgstr "Hebraico visual"
-
-#~ msgid "Turkish"
-#~ msgstr "Turco"
-
-#~ msgid "Nordic"
-#~ msgstr "Nórdico"
-
-#~ msgid "Celtic"
-#~ msgstr "Celta"
-
-#~ msgid "Romanian"
-#~ msgstr "Romeno"
-
-#~ msgid "Armenian"
-#~ msgstr "Armênio"
-
-#~ msgid "Chinese Traditional"
-#~ msgstr "Chinês tradicional"
-
-#~ msgid "Cyrillic/Russian"
-#~ msgstr "Cirílico/Russo"
-
-#~ msgid "Japanese"
-#~ msgstr "Japonês"
-
-#~ msgid "Korean"
-#~ msgstr "Coreano"
-
-#~ msgid "Chinese Simplified"
-#~ msgstr "Chinês simplificado"
-
-#~ msgid "Georgian"
-#~ msgstr "Georgiano"
-
-#~ msgid "Hebrew"
-#~ msgstr "Hebraico"
-
-#~ msgid "Cyrillic/Ukrainian"
-#~ msgstr "Cirílico/Ucraniano"
-
-#~ msgid "Vietnamese"
-#~ msgstr "Vietnamita"
-
-#~ msgid "Thai"
-#~ msgstr "Tailandês"
-
-#~ msgid "Unknown"
-#~ msgstr "Desconhecido"
-
-#~ msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
-#~ msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
-
-#~ msgid "Conversion from character set “%s” to “%s” is not supported."
-#~ msgstr ""
-#~ "Não há suporte a conversão de conjunto de caracteres “%s” para “%s”."
-
-#~ msgid "Could not open converter from “%s” to “%s”: %s"
-#~ msgstr "Não foi possível abrir o conversor de “%s” para “%s”: %s"
-
-#~ msgid "The input data contains an invalid sequence."
-#~ msgstr "Os dados de entrada contêm uma sequência inválida."
-
-#~ msgid "Error when converting data: %s"
-#~ msgstr "Erro ao converter dados: %s"
-
-#~ msgid "The input data ends with an incomplete multi-byte sequence."
-#~ msgstr ""
-#~ "Os dados de entrada terminam com uma sequência multibyte incompleta."
-
-#~ msgid "The input content ends with incomplete data."
-#~ msgstr "O conteúdo de entrada termina com dados incompletos."
-
-#~ msgid "The file is too big. Maximum %s can be loaded."
-#~ msgstr "O arquivo é grande demais. No máximo %s pode ser carregado."
-
-#~ msgid "It is not possible to detect the character encoding automatically."
-#~ msgstr ""
-#~ "Não foi possível detectar a codificação de caracteres automaticamente."
-
-#~ msgid "The file is externally modified."
-#~ msgstr "O arquivo foi modificado externamente."
-
-#~ msgid "The buffer contains invalid characters."
-#~ msgstr "O buffer contém caracteres inválidos."
-
-#~ msgid "Open “%s”"
-#~ msgstr "Abrir “%s”"
-
-#~ msgid "Open _Recent"
-#~ msgstr "Abrir _recente"
-
-#~ msgid "Open a file recently used with %s"
-#~ msgstr "Abre um arquivo recentemente usado com %s"
-
-#~ msgid "Could not find the file “%s”."
-#~ msgstr "Não foi possível localizar o arquivo “%s”."
-
-#~ msgid "Please check that you typed the location correctly and try again."
-#~ msgstr ""
-#~ "Por favor, verifique se você digitou a localização correta e tente "
-#~ "novamente."
-
-#~ msgid "Unable to handle “%s:” locations."
-#~ msgstr "Não é possível tratar de localizações “%s:”."
-
-#~ msgid "The location of the file cannot be accessed."
-#~ msgstr "A localização do arquivo não pode ser acessada."
-
-#~ msgid "“%s” is a directory."
-#~ msgstr "“%s” é um diretório."
-
-#~ msgid "“%s” is not a valid location."
-#~ msgstr "“%s” não é uma localização válida."
-
-#~ msgid ""
-#~ "Host “%s” could not be found. Please check that your proxy settings are "
-#~ "correct and try again."
-#~ msgstr ""
-#~ "O host “%s” não pôde ser localizado. Por favor, verifique suas "
-#~ "configurações de proxy e tente novamente."
-
-#~ msgid ""
-#~ "Hostname was invalid. Please check that you typed the location correctly "
-#~ "and try again."
-#~ msgstr ""
-#~ "Nome de máquina inválido. Por favor, verifique se você digitou a "
-#~ "localização corretamente e tente novamente."
-
-#~ msgid "“%s” is not a regular file."
-#~ msgstr "“%s” não é uma arquivo comum."
-
-#~ msgid "Connection timed out. Please try again."
-#~ msgstr "Tempo expirada. Por favor, tente novamente."
-
-#~ msgid "Unexpected error: %s"
-#~ msgstr "Erro inesperado: %s"
-
-#~ msgid "_Retry"
-#~ msgstr "_Tentar novamente"
-
-#~ msgid ""
-#~ "The number of followed links is limited and the actual file could not be "
-#~ "found within this limit."
-#~ msgstr ""
-#~ "O número de links seguidos é limitado e o arquivo não pôde ser localizado "
-#~ "dentro deste limite."
-
-#~ msgid "You do not have the permissions necessary to open the file."
-#~ msgstr "Você não possui as permissões necessárias para abrir o arquivo."
-
-#~ msgid ""
-#~ "Unable to detect the character encoding.\n"
-#~ "Please check that you are not trying to open a binary file.\n"
-#~ "Select a character encoding from the menu and try again."
-#~ msgstr ""
-#~ "Não foi possível detectar a codificação de caracteres.\n"
-#~ "Por favor, certifique-se de que você não está tentando abrir um arquivo "
-#~ "binário.\n"
-#~ "Selecione uma codificação de caracteres do menu e tente novamente."
-
-#~ msgid "There was a problem opening the file “%s”."
-#~ msgstr "Houve um problema ao abrir o arquivo “%s”."
-
-#~ msgid ""
-#~ "The file you opened has some invalid characters. If you continue editing "
-#~ "this file you could corrupt it.\n"
-#~ "You can also choose another character encoding and try again."
-#~ msgstr ""
-#~ "O arquivo que você abrir possui alguns caracteres inválidos. Se você "
-#~ "continuar a editar esse arquivo, você pode corrompê-lo.\n"
-#~ "Você também pode escolher uma outra codificação de caracteres e tentar "
-#~ "novamente."
-
-#~ msgid "Could not open the file “%s” using the “%s” character encoding."
-#~ msgstr ""
-#~ "Não foi possível abrir o arquivo “%s” usando a codificação de caracteres "
-#~ "“%s”."
-
-#~ msgid ""
-#~ "Please check that you are not trying to open a binary file.\n"
-#~ "Select a different character encoding from the menu and try again."
-#~ msgstr ""
-#~ "Por favor, certifique-se de que você não está tentando abrir um arquivo "
-#~ "binário.\n"
-#~ "Selecione uma codificação de caracteres diferente do menu e tente "
-#~ "novamente."

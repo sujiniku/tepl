@@ -389,6 +389,7 @@ tepl_style_scheme_chooser_widget_init (TeplStyleSchemeChooserWidget *chooser)
 	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_widget_set_hexpand (scrolled_window, TRUE);
 	gtk_widget_set_vexpand (scrolled_window, TRUE);
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window), GTK_SHADOW_IN);
 
 	/* Overlay scrolling gets in the way when trying to select the last row. */
 	gtk_scrolled_window_set_overlay_scrolling (GTK_SCROLLED_WINDOW (scrolled_window), FALSE);

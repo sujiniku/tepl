@@ -1,3 +1,19 @@
+News in 5.99.1, xxxx-yy-zz (not yet released)
+--------------------------
+* API changes:
+ - The TeplInfoBar class has been reworked.
+
+* New API:
+ - tepl_pango_font_description_to_css()
+ - TeplLanguageChooser
+ - TeplLanguageChooserWidget
+ - TeplLanguageChooserDialog
+ - TeplProgressInfoBar
+ - Utility functions: add a few functions.
+
+* Misc:
+ - Translation updates.
+
 News in 5.1.1, 2020-10-11
 -------------------------
 * Add TeplSpaceDrawerPrefs, a preferences widget for GtkSourceSpaceDrawer.

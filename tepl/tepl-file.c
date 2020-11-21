@@ -18,10 +18,17 @@
  *
  * With a #TeplFile, you can create and configure a #TeplFileLoader and
  * #TeplFileSaver which take by default the values of the #TeplFile properties
- * (except for the file loader which auto-detect some properties). On a
+ * (except for the file loader which auto-detects some properties). On a
  * successful load or save operation, the #TeplFile properties are updated. If
  * an operation fails, the #TeplFile properties have still the previous valid
  * values.
+ *
+ * It is possible to use #TeplFile without using #TeplFileLoader and
+ * #TeplFileSaver. #TeplFile alone offers several features useful for a text
+ * editor.
+ *
+ * When using #TeplFile alone, #TeplFile does the I/O operations (if any)
+ * asynchronously.
  */
 
 struct _TeplFilePrivate
@@ -234,7 +241,24 @@ tepl_file_class_init (TeplFileClass *klass)
 	/**
 	 * TeplFile:short-name:
 	 *
-	 * The file short name. See tepl_file_get_short_name().
+	 * The file short name.
+	 *
+	 * When the #TeplFile:location is %NULL, this property contains
+	 * "Untitled File N", with N the Nth untitled file of the application,
+	 * starting at 1. When an untitled file is closed (when the #TeplFile is
+	 * freed) or its #TeplFile:location is set, its untitled number is
+	 * released and can be used by a later file.
+	 *
+	 * When the #TeplFile:location is not %NULL, this property contains the
+	 * display-name (see #G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME). However,
+	 * requesting the display-name can take some time (for example for a
+	 * remote file with a slow network connection). When the
+	 * #TeplFile:location property is set, the display-name is fetched
+	 * asynchronously. When the display-name is available, this property is
+	 * notified. In the meantime – after the #TeplFile:location is set but
+	 * before receiving the display-name – a fallback implementation is used
+	 * that does no blocking I/O (but it may return a different result
+	 * compared to the real display-name).
 	 *
 	 * Since: 1.0
 	 */
@@ -363,7 +387,7 @@ tepl_file_new (void)
  * @file: a #TeplFile.
  * @location: (nullable): the new #GFile, or %NULL.
  *
- * Sets the location.
+ * Sets the #TeplFile:location property.
  *
  * Since: 1.0
  */
@@ -392,7 +416,7 @@ tepl_file_set_location (TeplFile *file,
  * tepl_file_get_location:
  * @file: a #TeplFile.
  *
- * Returns: (transfer none): the #GFile.
+ * Returns: (transfer none): the value of the #TeplFile:location property.
  * Since: 1.0
  */
 GFile *
@@ -407,13 +431,8 @@ tepl_file_get_location (TeplFile *file)
  * tepl_file_get_short_name:
  * @file: a #TeplFile.
  *
- * Gets the @file short name. If the #TeplFile:location isn't %NULL,
- * returns its display-name (see #G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME).
- * Otherwise returns "Untitled File N", with N the Nth untitled file of the
- * application, starting at 1. When an untitled file is closed or its location
- * is set, its untitled number is released and can be used by a later file.
- *
- * Returns: the @file short name. Free with g_free() when no longer needed.
+ * Returns: the value of the #TeplFile:short-name property. Free with g_free()
+ *   when no longer needed.
  * Since: 5.0
  */
 gchar *
@@ -451,7 +470,7 @@ _tepl_file_set_newline_type (TeplFile        *file,
  * tepl_file_get_newline_type:
  * @file: a #TeplFile.
  *
- * Returns: the newline type.
+ * Returns: the value of the #TeplFile:newline-type property.
  * Since: 1.0
  */
 TeplNewlineType

@@ -390,9 +390,8 @@ tepl_utils_decode_uri (const gchar  *uri,
 		       gchar       **path)
 {
 	/* Largely copied from glib/gio/gdummyfile.c: _g_decode_uri().
-	 * This functionality is currently not in GLib/GIO, so for now we
-	 * implement it ourselves. See:
-	 * https://bugzilla.gnome.org/show_bug.cgi?id=555490
+	 * TODO: it's now available in GLib with GUri, so deprecate/remove this
+	 * function.
 	 */
 
 	const char *p, *in, *hier_part_start, *hier_part_end;

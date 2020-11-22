@@ -4,7 +4,15 @@ Tepl roadmap - done tasks
 New small features in Tepl 6.0 (GNOME 40)
 -----------------------------------------
 
+New:
 - TeplSpaceDrawerPrefs: preferences widget for GtkSourceSpaceDrawer.
+- TeplLanguageChooser, TeplLanguageChooserWidget and TeplLanguageChooserDialog:
+  for choosing a language for the syntax highlighting.
+- TeplProgressInfoBar.
+- Plus new functions here and there.
+
+Changes:
+- TeplInfoBar has been reworked.
 
 New small features in Tepl 5.0 (GNOME 3.38)
 -------------------------------------------

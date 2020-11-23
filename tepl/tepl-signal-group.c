@@ -4,10 +4,17 @@
 
 #include "tepl-signal-group.h"
 
-/* Small utility to disconnect signal handlers without the need to keep around
- * the GObject instance where the signals were connected.
+/**
+ * SECTION:signal-group
+ * @Title: TeplSignalGroup
+ * @Short_description: A group of signal handlers
  *
- * It was inspired by DzlSignalGroup from libdazzle. TeplSignalGroup has a much
+ * #TeplSignalGroup is a small utility to disconnect signal handlers without the
+ * need to keep around the #GObject instance that the signal handlers were
+ * connected to.
+ */
+
+/* It was inspired by DzlSignalGroup from libdazzle. TeplSignalGroup has a much
  * simpler implementation, it applies the "worse is better" philosophy.
  */
 
@@ -22,6 +29,17 @@ struct _TeplSignalGroup
 	GArray *handler_ids;
 };
 
+/**
+ * tepl_signal_group_new: (skip)
+ * @object: a #GObject.
+ *
+ * Creates a new #TeplSignalGroup for @object. The #TeplSignalGroup will have a
+ * weak reference to @object.
+ *
+ * Returns: (transfer full): a new #TeplSignalGroup for @object. Free with
+ *   tepl_signal_group_clear() when no longer needed.
+ * Since: 6.0
+ */
 TeplSignalGroup *
 tepl_signal_group_new (GObject *object)
 {
@@ -67,6 +85,20 @@ signal_group_free (TeplSignalGroup *group)
 	g_free (group);
 }
 
+/**
+ * tepl_signal_group_clear: (skip)
+ * @group_pointer: a pointer to a #TeplSignalGroup.
+ *
+ * Like g_clear_object() but for a #TeplSignalGroup.
+ *
+ * If the #GObject instance of the #TeplSignalGroup is still alive, this
+ * function disconnects all the signal handlers that were added with
+ * tepl_signal_group_add().
+ *
+ * The #TeplSignalGroup, if non-%NULL, is freed when calling this function.
+ *
+ * Since: 6.0
+ */
 void
 tepl_signal_group_clear (TeplSignalGroup **group_pointer)
 {
@@ -76,6 +108,17 @@ tepl_signal_group_clear (TeplSignalGroup **group_pointer)
 	*group_pointer = NULL;
 }
 
+/**
+ * tepl_signal_group_add: (skip)
+ * @group: a #TeplSignalGroup.
+ * @signal_handler_id: a signal handler ID.
+ *
+ * Adds a signal handler ID to the #TeplSignalGroup. The signal handler must
+ * have been connected to the same #GObject instance as provided to the
+ * tepl_signal_group_new() function when creating @group.
+ *
+ * Since: 6.0
+ */
 void
 tepl_signal_group_add (TeplSignalGroup *group,
 		       gulong           signal_handler_id)

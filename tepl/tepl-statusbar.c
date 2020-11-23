@@ -31,7 +31,7 @@ tepl_statusbar_dispose (GObject *object)
 	TeplStatusbar *statusbar = TEPL_STATUSBAR (object);
 
 	g_clear_object (&statusbar->priv->tab_group);
-	_tepl_signal_group_clear (&statusbar->priv->buffer_signal_group);
+	tepl_signal_group_clear (&statusbar->priv->buffer_signal_group);
 
 	statusbar->priv->label = NULL;
 
@@ -163,7 +163,7 @@ active_buffer_changed (TeplStatusbar *statusbar)
 {
 	TeplBuffer *active_buffer;
 
-	_tepl_signal_group_clear (&statusbar->priv->buffer_signal_group);
+	tepl_signal_group_clear (&statusbar->priv->buffer_signal_group);
 
 	active_buffer = tepl_tab_group_get_active_buffer (statusbar->priv->tab_group);
 	if (active_buffer == NULL)
@@ -171,13 +171,13 @@ active_buffer_changed (TeplStatusbar *statusbar)
 		goto end;
 	}
 
-	statusbar->priv->buffer_signal_group = _tepl_signal_group_new (G_OBJECT (active_buffer));
+	statusbar->priv->buffer_signal_group = tepl_signal_group_new (G_OBJECT (active_buffer));
 
-	_tepl_signal_group_add (statusbar->priv->buffer_signal_group,
-				g_signal_connect (active_buffer,
-						  "tepl-cursor-moved",
-						  G_CALLBACK (active_buffer_cursor_moved_cb),
-						  statusbar));
+	tepl_signal_group_add (statusbar->priv->buffer_signal_group,
+			       g_signal_connect (active_buffer,
+						 "tepl-cursor-moved",
+						 G_CALLBACK (active_buffer_cursor_moved_cb),
+						 statusbar));
 
 end:
 	update_cursor_position (statusbar);

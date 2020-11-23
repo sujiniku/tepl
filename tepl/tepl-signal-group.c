@@ -23,7 +23,7 @@ struct _TeplSignalGroup
 };
 
 TeplSignalGroup *
-_tepl_signal_group_new (GObject *object)
+tepl_signal_group_new (GObject *object)
 {
 	TeplSignalGroup *group;
 
@@ -39,7 +39,7 @@ _tepl_signal_group_new (GObject *object)
 }
 
 static void
-_tepl_signal_group_free (TeplSignalGroup *group)
+signal_group_free (TeplSignalGroup *group)
 {
 	if (group == NULL)
 	{
@@ -68,17 +68,17 @@ _tepl_signal_group_free (TeplSignalGroup *group)
 }
 
 void
-_tepl_signal_group_clear (TeplSignalGroup **group_pointer)
+tepl_signal_group_clear (TeplSignalGroup **group_pointer)
 {
 	g_return_if_fail (group_pointer != NULL);
 
-	_tepl_signal_group_free (*group_pointer);
+	signal_group_free (*group_pointer);
 	*group_pointer = NULL;
 }
 
 void
-_tepl_signal_group_add (TeplSignalGroup *group,
-			gulong           signal_handler_id)
+tepl_signal_group_add (TeplSignalGroup *group,
+		       gulong           signal_handler_id)
 {
 	g_return_if_fail (group != NULL);
 	g_return_if_fail (signal_handler_id != 0);

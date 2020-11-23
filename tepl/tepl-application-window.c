@@ -267,8 +267,8 @@ tepl_application_window_dispose (GObject *object)
 	g_clear_object (&tepl_window->priv->window_group);
 
 	g_clear_object (&tepl_window->priv->tab_group);
-	_tepl_signal_group_clear (&tepl_window->priv->view_signal_group);
-	_tepl_signal_group_clear (&tepl_window->priv->buffer_signal_group);
+	tepl_signal_group_clear (&tepl_window->priv->view_signal_group);
+	tepl_signal_group_clear (&tepl_window->priv->buffer_signal_group);
 
 	G_OBJECT_CLASS (tepl_application_window_parent_class)->dispose (object);
 }
@@ -470,7 +470,7 @@ active_view_changed (TeplApplicationWindow *tepl_window)
 {
 	TeplView *active_view;
 
-	_tepl_signal_group_clear (&tepl_window->priv->view_signal_group);
+	tepl_signal_group_clear (&tepl_window->priv->view_signal_group);
 
 	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (tepl_window));
 	if (active_view == NULL)
@@ -478,13 +478,13 @@ active_view_changed (TeplApplicationWindow *tepl_window)
 		return;
 	}
 
-	tepl_window->priv->view_signal_group = _tepl_signal_group_new (G_OBJECT (active_view));
+	tepl_window->priv->view_signal_group = tepl_signal_group_new (G_OBJECT (active_view));
 
-	_tepl_signal_group_add (tepl_window->priv->view_signal_group,
-				g_signal_connect (active_view,
-						  "notify::editable",
-						  G_CALLBACK (active_view_editable_notify_cb),
-						  tepl_window));
+	tepl_signal_group_add (tepl_window->priv->view_signal_group,
+			       g_signal_connect (active_view,
+						 "notify::editable",
+						 G_CALLBACK (active_view_editable_notify_cb),
+						 tepl_window));
 }
 
 static void
@@ -500,7 +500,7 @@ active_buffer_changed (TeplApplicationWindow *tepl_window)
 {
 	TeplBuffer *active_buffer;
 
-	_tepl_signal_group_clear (&tepl_window->priv->buffer_signal_group);
+	tepl_signal_group_clear (&tepl_window->priv->buffer_signal_group);
 
 	active_buffer = tepl_tab_group_get_active_buffer (TEPL_TAB_GROUP (tepl_window));
 	if (active_buffer == NULL)
@@ -508,13 +508,13 @@ active_buffer_changed (TeplApplicationWindow *tepl_window)
 		goto end;
 	}
 
-	tepl_window->priv->buffer_signal_group = _tepl_signal_group_new (G_OBJECT (active_buffer));
+	tepl_window->priv->buffer_signal_group = tepl_signal_group_new (G_OBJECT (active_buffer));
 
-	_tepl_signal_group_add (tepl_window->priv->buffer_signal_group,
-				g_signal_connect (active_buffer,
-						  "notify::tepl-full-title",
-						  G_CALLBACK (active_buffer_full_title_notify_cb),
-						  tepl_window));
+	tepl_signal_group_add (tepl_window->priv->buffer_signal_group,
+			       g_signal_connect (active_buffer,
+						 "notify::tepl-full-title",
+						 G_CALLBACK (active_buffer_full_title_notify_cb),
+						 tepl_window));
 
 end:
 	update_title (tepl_window);

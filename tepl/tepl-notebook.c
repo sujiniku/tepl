@@ -100,7 +100,7 @@ tepl_notebook_dispose (GObject *object)
 {
 	TeplNotebook *notebook = TEPL_NOTEBOOK (object);
 
-	_tepl_signal_group_clear (&notebook->priv->view_signal_group);
+	tepl_signal_group_clear (&notebook->priv->view_signal_group);
 
 	G_OBJECT_CLASS (tepl_notebook_parent_class)->dispose (object);
 }
@@ -127,19 +127,19 @@ check_active_tab_changed (TeplNotebook *notebook)
 
 	notebook->priv->active_tab = active_tab;
 
-	_tepl_signal_group_clear (&notebook->priv->view_signal_group);
+	tepl_signal_group_clear (&notebook->priv->view_signal_group);
 
 	active_view = tepl_tab_group_get_active_view (TEPL_TAB_GROUP (notebook));
 
 	if (active_view != NULL)
 	{
-		notebook->priv->view_signal_group = _tepl_signal_group_new (G_OBJECT (active_view));
+		notebook->priv->view_signal_group = tepl_signal_group_new (G_OBJECT (active_view));
 
-		_tepl_signal_group_add (notebook->priv->view_signal_group,
-					g_signal_connect (active_view,
-							  "notify::buffer",
-							  G_CALLBACK (buffer_notify_cb),
-							  notebook));
+		tepl_signal_group_add (notebook->priv->view_signal_group,
+				       g_signal_connect (active_view,
+							 "notify::buffer",
+							 G_CALLBACK (buffer_notify_cb),
+							 notebook));
 	}
 
 	g_object_notify (G_OBJECT (notebook), "active-tab");

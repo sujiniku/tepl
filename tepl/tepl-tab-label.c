@@ -96,8 +96,8 @@ buffer_changed (TeplTabLabel *tab_label)
 	TeplBuffer *buffer;
 	TeplFile *file;
 
-	_tepl_signal_group_clear (&tab_label->priv->buffer_signal_group);
-	_tepl_signal_group_clear (&tab_label->priv->file_signal_group);
+	tepl_signal_group_clear (&tab_label->priv->buffer_signal_group);
+	tepl_signal_group_clear (&tab_label->priv->file_signal_group);
 
 	if (tab_label->priv->tab == NULL)
 	{
@@ -107,26 +107,26 @@ buffer_changed (TeplTabLabel *tab_label)
 	/* Buffer */
 
 	buffer = tepl_tab_get_buffer (tab_label->priv->tab);
-	tab_label->priv->buffer_signal_group = _tepl_signal_group_new (G_OBJECT (buffer));
+	tab_label->priv->buffer_signal_group = tepl_signal_group_new (G_OBJECT (buffer));
 
-	_tepl_signal_group_add (tab_label->priv->buffer_signal_group,
-				g_signal_connect (buffer,
-						  "notify::tepl-short-title",
-						  G_CALLBACK (buffer_short_title_notify_cb),
-						  tab_label));
+	tepl_signal_group_add (tab_label->priv->buffer_signal_group,
+			       g_signal_connect (buffer,
+						 "notify::tepl-short-title",
+						 G_CALLBACK (buffer_short_title_notify_cb),
+						 tab_label));
 
 	update_label (tab_label);
 
 	/* File */
 
 	file = tepl_buffer_get_file (buffer);
-	tab_label->priv->file_signal_group = _tepl_signal_group_new (G_OBJECT (file));
+	tab_label->priv->file_signal_group = tepl_signal_group_new (G_OBJECT (file));
 
-	_tepl_signal_group_add (tab_label->priv->file_signal_group,
-				g_signal_connect (file,
-						  "notify::location",
-						  G_CALLBACK (file_location_notify_cb),
-						  tab_label));
+	tepl_signal_group_add (tab_label->priv->file_signal_group,
+			       g_signal_connect (file,
+						 "notify::location",
+						 G_CALLBACK (file_location_notify_cb),
+						 tab_label));
 
 	tepl_tab_label_update_tooltip (tab_label);
 }
@@ -211,8 +211,8 @@ tepl_tab_label_dispose (GObject *object)
 	TeplTabLabel *tab_label = TEPL_TAB_LABEL (object);
 
 	g_clear_weak_pointer (&tab_label->priv->tab);
-	_tepl_signal_group_clear (&tab_label->priv->buffer_signal_group);
-	_tepl_signal_group_clear (&tab_label->priv->file_signal_group);
+	tepl_signal_group_clear (&tab_label->priv->buffer_signal_group);
+	tepl_signal_group_clear (&tab_label->priv->file_signal_group);
 
 	G_OBJECT_CLASS (tepl_tab_label_parent_class)->dispose (object);
 }

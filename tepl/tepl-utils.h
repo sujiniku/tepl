@@ -109,6 +109,10 @@ GtkListBoxRow **tepl_utils_list_box_get_filtered_children	(GtkListBox           
 								 gpointer              user_data,
 								 gint                 *n_filtered_children);
 
+_TEPL_EXTERN
+void		tepl_utils_override_font			(GtkWidget   *widget,
+								 const gchar *font_str);
+
 /* Other */
 
 _TEPL_EXTERN

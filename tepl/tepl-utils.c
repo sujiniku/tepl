@@ -11,6 +11,7 @@
 #include <string.h>
 #include "tepl-application-window.h"
 #include "tepl-icu.h"
+#include "tepl-pango.h"
 
 /**
  * SECTION:utils
@@ -1012,6 +1013,78 @@ tepl_utils_list_box_get_filtered_children (GtkListBox           *list_box,
 	g_ptr_array_add (filtered_rows, NULL);
 
 	return (GtkListBoxRow **) g_ptr_array_free (filtered_rows, FALSE);
+}
+
+/**
+ * tepl_utils_override_font:
+ * @widget: a #GtkWidget.
+ * @font_str: (nullable): a string representation of a #PangoFontDescription, or
+ *   %NULL to undo the effect of previous calls to this function on @widget.
+ *
+ * A replacement for gtk_widget_override_font(). Because
+ * gtk_widget_override_font() is deprecated but was useful.
+ *
+ * See pango_font_description_from_string() for a description of the format of
+ * the string representation for @font_str.
+ *
+ * This function uses tepl_pango_font_description_to_css() and applies the CSS
+ * to the #GtkStyleContext of @widget.
+ *
+ * Since: 6.0
+ */
+void
+tepl_utils_override_font (GtkWidget   *widget,
+			  const gchar *font_str)
+{
+	GtkStyleContext *style_context;
+	GtkCssProvider *css_provider;
+	PangoFontDescription *font_description;
+	gchar *css_declarations;
+	gchar *css_rule_set;
+
+#define FONT_CSS_PROVIDER_KEY "tepl-utils-override-font-css-provider-key"
+
+	g_return_if_fail (GTK_IS_WIDGET (widget));
+
+	style_context = gtk_widget_get_style_context (widget);
+	css_provider = g_object_get_data (G_OBJECT (widget), FONT_CSS_PROVIDER_KEY);
+
+	if (css_provider != NULL)
+	{
+		gtk_style_context_remove_provider (style_context, GTK_STYLE_PROVIDER (css_provider));
+		g_object_set_data (G_OBJECT (widget), FONT_CSS_PROVIDER_KEY, NULL);
+		css_provider = NULL;
+	}
+
+	if (font_str == NULL)
+	{
+		return;
+	}
+
+	font_description = pango_font_description_from_string (font_str);
+	g_return_if_fail (font_description != NULL);
+
+	css_declarations = tepl_pango_font_description_to_css (font_description);
+	css_rule_set = g_strdup_printf ("* {\n"
+					"    %s\n"
+				        "}\n",
+					css_declarations);
+
+	css_provider = gtk_css_provider_new ();
+	g_object_set_data_full (G_OBJECT (widget),
+				FONT_CSS_PROVIDER_KEY,
+				css_provider,
+				g_object_unref);
+
+	gtk_css_provider_load_from_data (css_provider, css_rule_set, -1, NULL);
+	gtk_style_context_add_provider (style_context,
+					GTK_STYLE_PROVIDER (css_provider),
+					/* Priority "library". */
+					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION - 1);
+
+	pango_font_description_free (font_description);
+	g_free (css_declarations);
+	g_free (css_rule_set);
 }
 
 /**

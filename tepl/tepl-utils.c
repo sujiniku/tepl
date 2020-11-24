@@ -1079,8 +1079,7 @@ tepl_utils_override_font (GtkWidget   *widget,
 	gtk_css_provider_load_from_data (css_provider, css_rule_set, -1, NULL);
 	gtk_style_context_add_provider (style_context,
 					GTK_STYLE_PROVIDER (css_provider),
-					/* Priority "library". */
-					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION - 1);
+					TEPL_UTILS_STYLE_PROVIDER_PRIORITY_LIBRARY);
 
 	pango_font_description_free (font_description);
 	g_free (css_declarations);

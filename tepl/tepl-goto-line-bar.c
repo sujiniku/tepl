@@ -215,8 +215,7 @@ apply_style (TeplGotoLineBar *bar)
 	gtk_css_provider_load_from_data (css_provider, css, -1, NULL);
 	gtk_style_context_add_provider (style_context,
 					GTK_STYLE_PROVIDER (css_provider),
-					/* Priority "library". */
-					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION - 1);
+					TEPL_UTILS_STYLE_PROVIDER_PRIORITY_LIBRARY);
 	g_object_unref (css_provider);
 }
 

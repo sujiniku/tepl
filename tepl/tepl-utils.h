@@ -14,6 +14,23 @@
 
 G_BEGIN_DECLS
 
+/* Macros */
+
+/**
+ * TEPL_UTILS_STYLE_PROVIDER_PRIORITY_LIBRARY:
+ *
+ * A priority that can be used when adding a #GtkStyleProvider for
+ * library-specific style information.
+ *
+ * Has a higher priority than %GTK_STYLE_PROVIDER_PRIORITY_SETTINGS and a lower
+ * priority than %GTK_STYLE_PROVIDER_PRIORITY_APPLICATION.
+ *
+ * The Tepl library uses this priority for its #GtkStyleProvider's.
+ *
+ * Since: 6.0
+ */
+#define TEPL_UTILS_STYLE_PROVIDER_PRIORITY_LIBRARY (GTK_STYLE_PROVIDER_PRIORITY_APPLICATION - 1)
+
 /* String utilities */
 
 _TEPL_EXTERN

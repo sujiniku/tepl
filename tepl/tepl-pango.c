@@ -82,6 +82,8 @@ skip:
  * CSS rule set. So the selector and curly braces are not present. Each
  * declaration, including the last one, ends with a semicolon.
  *
+ * See also tepl_utils_override_font().
+ *
  * Returns: (transfer full): A newly allocated string containing the CSS
  *   describing the font description. Free with g_free() when no longer needed.
  * Since: 6.0

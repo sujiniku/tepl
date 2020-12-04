@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-09-28 15:57+0000\n"
-"PO-Revision-Date: 2020-10-05 09:05+0700\n"
+"POT-Creation-Date: 2020-11-21 14:24+0000\n"
+"PO-Revision-Date: 2020-12-04 15:47+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #. action, icon, label, accel, tooltip
 #. File menu
@@ -160,8 +160,9 @@ msgstr "Simpan perubahan ke berkas \"%s\" sebelum ditutup?"
 msgid "Close _without Saving"
 msgstr "Tutup _tanpa Menyimpan"
 
-#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
-#: tepl/tepl-window-actions-file.c:82
+#: tepl/tepl-close-confirm-dialog-single.c:131
+#: tepl/tepl-language-chooser-dialog.c:130 tepl/tepl-progress-info-bar.c:52
+#: tepl/tepl-tab-saving.c:280 tepl/tepl-window-actions-file.c:82
 msgid "_Cancel"
 msgstr "Ba_tal"
 
@@ -169,7 +170,7 @@ msgstr "Ba_tal"
 msgid "_Save As…"
 msgstr "_Simpan Sebagai…"
 
-#: tepl/tepl-file.c:426
+#: tepl/tepl-file.c:445
 #, c-format
 msgid "Untitled File %d"
 msgstr "Berkas Tanpa Nama %d"
@@ -256,6 +257,23 @@ msgid ""
 msgstr ""
 "Jika Anda terus menyimpan berkas ini, Anda dapat merusak dokumen. Tetap "
 "simpan?"
+
+#. chooser_dialog config
+#: tepl/tepl-language-chooser-dialog.c:125
+msgid "Highlight Mode"
+msgstr "Moda Penyorotan"
+
+#: tepl/tepl-language-chooser-dialog.c:131
+msgid "_Select"
+msgstr "_Pilih"
+
+#: tepl/tepl-language-chooser-widget.c:76
+msgid "Plain Text"
+msgstr "Teks Polos"
+
+#: tepl/tepl-language-chooser-widget.c:446
+msgid "Search highlight mode…"
+msgstr "Mode sorot pencarian…"
 
 #. Translators: do not translate <metadata>.
 #: tepl/tepl-metadata-parser.c:83

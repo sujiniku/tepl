@@ -1,0 +1,417 @@
+# Japanese translation for tepl.
+# Copyright (C) 2020 tepl's COPYRIGHT HOLDER
+# This file is distributed under the same license as the tepl package.
+# Tomo Dote <fu7mu4@gmail.com>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tepl master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
+"POT-Creation-Date: 2020-12-04 08:48+0000\n"
+"PO-Revision-Date: 2020-12-30 17:14+0900\n"
+"Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Last-Translator: Tomo Dote <fu7mu4@gmail.com>\n"
+"X-Generator: Poedit 2.4.2\n"
+
+#. action, icon, label, accel, tooltip
+#. File menu
+#. Why "file" and not "document"? "Document" is not the best
+#. word because the action is not always to create a new
+#. document. For example a LaTeX document can be composed of
+#. several _files_. Or for source code we do not really create a
+#. new "document".
+#: tepl/tepl-application.c:79
+msgid "_New"
+msgstr "新規(_N)"
+
+#: tepl/tepl-application.c:80
+msgid "New file"
+msgstr "新規ファイル"
+
+#: tepl/tepl-application.c:82
+msgid "New _Window"
+msgstr "新規ウィンドウ(_W)"
+
+#: tepl/tepl-application.c:83
+msgid "Create a new window"
+msgstr "新しいウィンドウを作成"
+
+#: tepl/tepl-application.c:85 tepl/tepl-window-actions-file.c:83
+msgid "_Open"
+msgstr "開く(_O)"
+
+#: tepl/tepl-application.c:86
+msgid "Open a file"
+msgstr "ファイルを開く"
+
+#: tepl/tepl-application.c:88 tepl/tepl-close-confirm-dialog-single.c:137
+#: tepl/tepl-tab-saving.c:281
+msgid "_Save"
+msgstr "保存(_S)"
+
+#: tepl/tepl-application.c:89
+msgid "Save the current file"
+msgstr "現在のファイルを保存"
+
+#: tepl/tepl-application.c:91
+msgid "Save _As"
+msgstr "別名で保存(_A)"
+
+#: tepl/tepl-application.c:92
+msgid "Save the current file to a different location"
+msgstr "現在のファイルを別の場所に保存する"
+
+#. Edit menu
+#: tepl/tepl-application.c:96
+msgid "_Undo"
+msgstr "アンドウ(_U)"
+
+#: tepl/tepl-application.c:97
+msgid "Undo the last action"
+msgstr "最後の操作の取り消し"
+
+#: tepl/tepl-application.c:99
+msgid "_Redo"
+msgstr "リドウ(_R)"
+
+#: tepl/tepl-application.c:100
+msgid "Redo the last undone action"
+msgstr "最後のアクションの繰り返し"
+
+#: tepl/tepl-application.c:102
+msgid "Cu_t"
+msgstr "カット(_T)"
+
+#: tepl/tepl-application.c:103
+msgid "Cut the selection"
+msgstr "選択をカット"
+
+#: tepl/tepl-application.c:105
+msgid "_Copy"
+msgstr "コピー(_C)"
+
+#: tepl/tepl-application.c:106
+msgid "Copy the selection"
+msgstr "選択をコピー"
+
+#: tepl/tepl-application.c:108
+msgid "_Paste"
+msgstr "貼り付け(_P)"
+
+#: tepl/tepl-application.c:109
+msgid "Paste the clipboard"
+msgstr "クリップボードを貼り付け"
+
+#: tepl/tepl-application.c:111
+msgid "_Delete"
+msgstr "削除(_D)"
+
+#: tepl/tepl-application.c:112
+msgid "Delete the selected text"
+msgstr "選択部分を削除"
+
+#: tepl/tepl-application.c:114
+msgid "Select _All"
+msgstr "全選択(_A)"
+
+#: tepl/tepl-application.c:115
+msgid "Select all the text"
+msgstr "全テキストを選択"
+
+#: tepl/tepl-application.c:117
+msgid "_Indent"
+msgstr "インデント(_I)"
+
+#: tepl/tepl-application.c:118
+msgid "Indent the selected lines"
+msgstr "選択行をインデント"
+
+#: tepl/tepl-application.c:120
+msgid "_Unindent"
+msgstr "インデント解除(_U)"
+
+#: tepl/tepl-application.c:121
+msgid "Unindent the selected lines"
+msgstr "選択行のインデントを解除"
+
+#. Search menu
+#: tepl/tepl-application.c:125
+msgid "_Go to Line…"
+msgstr "行に移動(_G)…"
+
+#: tepl/tepl-application.c:126
+msgid "Go to a specific line"
+msgstr "指定された行に移動"
+
+#: tepl/tepl-application-window.c:156
+msgid "Read-Only"
+msgstr "読み込み専用"
+
+#: tepl/tepl-close-confirm-dialog-single.c:119
+#, c-format
+msgid "Save changes to file “%s” before closing?"
+msgstr "閉じる前に、ファイル”%s” に変更を保存しますか?"
+
+#: tepl/tepl-close-confirm-dialog-single.c:125
+msgid "Close _without Saving"
+msgstr "保存なしに閉じる(_W)"
+
+#: tepl/tepl-close-confirm-dialog-single.c:131
+#: tepl/tepl-language-chooser-dialog.c:130 tepl/tepl-progress-info-bar.c:52
+#: tepl/tepl-tab-saving.c:280 tepl/tepl-window-actions-file.c:82
+msgid "_Cancel"
+msgstr "キャンセル(_C)"
+
+#: tepl/tepl-close-confirm-dialog-single.c:143
+msgid "_Save As…"
+msgstr "名前をつけて保存(_S)…"
+
+#: tepl/tepl-file.c:445
+#, c-format
+msgid "Untitled File %d"
+msgstr "タイトルのないファイル %d"
+
+#: tepl/tepl-file-loader.c:341
+msgid "The content must be encoded with the UTF-8 character encoding."
+msgstr "ファイルの内容はUTF-8でエンコードされていなければなりません。"
+
+#: tepl/tepl-goto-line-bar.c:234
+msgid "Go to line:"
+msgstr "行番号:"
+
+#: tepl/tepl-goto-line-bar.c:242
+msgid "Close"
+msgstr "閉じる"
+
+#: tepl/tepl-io-error-info-bars.c:42
+msgid "_Edit Anyway"
+msgstr "とにかく編集(_E)"
+
+#: tepl/tepl-io-error-info-bars.c:46
+msgid "_Don’t Edit"
+msgstr "編集しない(_D)"
+
+#: tepl/tepl-io-error-info-bars.c:52
+#, c-format
+msgid "This file “%s” is already open in another window."
+msgstr "このファイル ”%s” はすでに別のウィンドウで開いています。"
+
+#: tepl/tepl-io-error-info-bars.c:57
+msgid "Do you want to edit it anyway?"
+msgstr "とにかく編集したいですか?"
+
+#: tepl/tepl-io-error-info-bars.c:91 tepl/tepl-io-error-info-bars.c:193
+msgid "S_ave Anyway"
+msgstr "とにかく保存(_A)"
+
+#: tepl/tepl-io-error-info-bars.c:95 tepl/tepl-io-error-info-bars.c:197
+msgid "_Don’t Save"
+msgstr "保存しない(_D)"
+
+#: tepl/tepl-io-error-info-bars.c:101
+#, c-format
+msgid "Could not create a backup file while saving “%s”"
+msgstr "“%s”の保存中にバックアップファイルを作成できません"
+
+#: tepl/tepl-io-error-info-bars.c:106
+msgid ""
+"Could not back up the old copy of the file before saving the new one. You "
+"can ignore this warning and save the file anyway, but if an error occurs "
+"while saving, you could lose the old copy of the file. Save anyway?"
+msgstr ""
+"このファイルを保存する前に以前の状態のファイルをバックアップできませんでし"
+"た。あなたはこの警告を無視してファイルをとにかく保存することができます。し"
+"かし保存中にエラーが発生した場合、このファイルの古いバージョンはなくなって"
+"しまいます。続行しますか?"
+
+#: tepl/tepl-io-error-info-bars.c:115
+#, c-format
+msgid "Error message: %s"
+msgstr "エラーメッセージ: %s"
+
+#: tepl/tepl-io-error-info-bars.c:152
+#, c-format
+msgid "The file “%s” changed on disk."
+msgstr "このファイル “%s” はディスク上で編集されました。"
+
+#: tepl/tepl-io-error-info-bars.c:157
+msgid "Drop Changes and _Reload"
+msgstr "変更を破棄して再読み込み(_R)"
+
+#: tepl/tepl-io-error-info-bars.c:157
+msgid "_Reload"
+msgstr "再読み込み(_R)"
+
+#: tepl/tepl-io-error-info-bars.c:203
+#, c-format
+msgid "Some invalid characters have been detected while saving “%s”."
+msgstr "“%s”の保存中に不正な文字を検出しました。"
+
+#: tepl/tepl-io-error-info-bars.c:208
+msgid ""
+"If you continue saving this file you can corrupt the document. Save anyway?"
+msgstr ""
+"もしあなたがこのファイルの保存を続けた場合、このファイルの内容を混乱させて"
+"しまうかもしれません。続行しますか?"
+
+#. chooser_dialog config
+#: tepl/tepl-language-chooser-dialog.c:125
+msgid "Highlight Mode"
+msgstr "ハイライトモード"
+
+#: tepl/tepl-language-chooser-dialog.c:131
+msgid "_Select"
+msgstr "選択(_S)"
+
+#: tepl/tepl-language-chooser-widget.c:76
+msgid "Plain Text"
+msgstr "平文"
+
+#: tepl/tepl-language-chooser-widget.c:446
+msgid "Search highlight mode…"
+msgstr "ハイライトモードを検索…"
+
+#. Translators: do not translate <metadata>.
+#: tepl/tepl-metadata-parser.c:83
+#, c-format
+msgid "The XML file must start with a <metadata> element, not “%s”."
+msgstr ""
+"XMLファイルの先頭は<metadata>要素でなければなりません。しかし現実には”%s”で"
+"す。"
+
+#. Translators: do not translate <document>.
+#: tepl/tepl-metadata-parser.c:115
+#, c-format
+msgid "Expected a <document> element, got “%s” instead."
+msgstr "<document> 要素を期待していましたが、代りに”%s”です。"
+
+#. Translators: do not translate “atime”.
+#: tepl/tepl-metadata-parser.c:141
+#, c-format
+msgid "Failed to parse the “atime” attribute value “%s”."
+msgstr "“atime”属性値 “%s”のパースに失敗。"
+
+#. Translators: do not translate <document>, “uri” and “atime”.
+#: tepl/tepl-metadata-parser.c:156
+msgid "The <document> element must contain the “uri” and “atime” attributes."
+msgstr "<document>要素には、”uri”や”atime”属性がなければなりません。"
+
+#. Translators: do not translate <entry>.
+#: tepl/tepl-metadata-parser.c:185
+#, c-format
+msgid "Expected an <entry> element, got “%s” instead."
+msgstr "<entry>要素を期待していましたが、代りに”%s”でした。"
+
+#. Translators: do not translate <entry>, “key” and “value”.
+#: tepl/tepl-metadata-parser.c:211
+msgid "The <entry> element is missing the “key” or “value” attribute."
+msgstr "この<entry>要素に”key”や”value”属性がありません。"
+
+#: tepl/tepl-panel.c:92
+msgid "Hide panel"
+msgstr "パネルを非表示"
+
+#: tepl/tepl-space-drawer-prefs.c:189 tepl/tepl-space-drawer-prefs.c:191
+#: tepl/tepl-space-drawer-prefs.c:193
+msgid "Draw tabs"
+msgstr "タブ文字の明記"
+
+#: tepl/tepl-space-drawer-prefs.c:190 tepl/tepl-space-drawer-prefs.c:192
+#: tepl/tepl-space-drawer-prefs.c:194
+msgid "Draw spaces"
+msgstr "スペースの明記"
+
+#: tepl/tepl-space-drawer-prefs.c:195
+msgid "Draw new lines"
+msgstr "改行文字の明記"
+
+#: tepl/tepl-space-drawer-prefs.c:231
+msgid "Leading Spaces"
+msgstr "先頭のスペース"
+
+#: tepl/tepl-space-drawer-prefs.c:235
+msgid "Spaces Inside Text"
+msgstr "テキスト内のスペース"
+
+#: tepl/tepl-space-drawer-prefs.c:239
+msgid "Trailing Spaces"
+msgstr "末尾のスペース"
+
+#: tepl/tepl-space-drawer-prefs.c:259
+msgid "Tab"
+msgstr "タブ"
+
+#: tepl/tepl-space-drawer-prefs.c:260
+msgid "Space"
+msgstr "スペース"
+
+#: tepl/tepl-space-drawer-prefs.c:261
+msgid "No-Break Space"
+msgstr "改行禁止スペース"
+
+#: tepl/tepl-space-drawer-prefs.c:262
+msgid "Narrow No-Break Space"
+msgstr "狭い改行禁止スペース"
+
+#: tepl/tepl-space-drawer-prefs.c:281
+msgid "Result"
+msgstr "結果"
+
+#: tepl/tepl-space-drawer-prefs.c:314
+msgid "Information"
+msgstr "情報"
+
+#: tepl/tepl-space-drawer-prefs.c:316
+msgid ""
+"When white space drawing is enabled, then non-breaking spaces are always "
+"drawn at all locations, to distinguish them from normal spaces."
+msgstr ""
+"スペース類の表示を有効にしている場合、改行禁止スペースはどの位置にあっても"
+"明記します。これは通常のスペースと区別するためです。"
+
+#. Translators: "Ln" is an abbreviation for "Line", Col is an
+#. * abbreviation for "Column". Please, use abbreviations if possible.
+#.
+#: tepl/tepl-statusbar.c:103
+#, c-format
+msgid "Ln %d, Col %d"
+msgstr "行 %d 位置 %d"
+
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:249
+msgid "Location:"
+msgstr "場所:"
+
+#: tepl/tepl-tab-label.c:318
+msgid "Close file"
+msgstr "ファイルを閉じる"
+
+#: tepl/tepl-tab-loading.c:36
+msgid "Error when loading the file."
+msgstr "ファイルの読み込みエラー。"
+
+#: tepl/tepl-tab-saving.c:49
+msgid "Error when saving the file."
+msgstr "ファイルの保存エラー。"
+
+#: tepl/tepl-tab-saving.c:277
+msgid "Save File"
+msgstr "ファイルの保存"
+
+#. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
+#. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
+#. * doesn't have the real path to the file, so it would ruin some
+#. * features for text editors:
+#. * - showing the directory in parentheses in the window title, or in the
+#. *   tab tooltip;
+#. * - opening a recent file.
+#. * Basically everywhere where the directory is shown.
+#.
+#: tepl/tepl-window-actions-file.c:79
+msgid "Open File"
+msgstr "ファイルを開く"

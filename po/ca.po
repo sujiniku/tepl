@@ -142,11 +142,11 @@ msgstr "Desfés el sagnat de les línies seleccionades"
 #. Search menu
 #: tepl/tepl-application.c:125
 msgid "_Go to Line…"
-msgstr "_Vés a la línia…"
+msgstr "_Ves a la línia…"
 
 #: tepl/tepl-application.c:126
 msgid "Go to a specific line"
-msgstr "Vés a una línia específica"
+msgstr "Ves a una línia específica"
 
 #: tepl/tepl-application-window.c:156
 msgid "Read-Only"
@@ -183,7 +183,7 @@ msgstr ""
 
 #: tepl/tepl-goto-line-bar.c:235
 msgid "Go to line:"
-msgstr "Vés a la línia:"
+msgstr "Ves a la línia:"
 
 #: tepl/tepl-goto-line-bar.c:243
 msgid "Close"
@@ -228,7 +228,7 @@ msgid ""
 msgstr ""
 "No s'ha pogut fer una còpia de seguretat de la còpia antiga del fitxer abans"
 " de desar-ne la nova. Podeu ignorar aquest avís i desar el fitxer de totes "
-"maneres però si es produeix un error en desar podríeu perdre la còpia antiga"
+"maneres, però si es produeix un error en desar, podríeu perdre la còpia antiga"
 " del fitxer. Voleu desar-ho igualment?"
 
 #: tepl/tepl-io-error-info-bars.c:115
@@ -372,7 +372,7 @@ msgid ""
 "drawn at all locations, to distinguish them from normal spaces."
 msgstr ""
 "Quan el dibuix d'espais en blanc està activat, els espais no divisibles "
-"sempre es dibuixen en totes les ubicacions, per distingir-los dels espais "
+"sempre es dibuixen en totes les ubicacions, per a distingir-los dels espais "
 "normals."
 
 #. Translators: "Ln" is an abbreviation for "Line", Col is an

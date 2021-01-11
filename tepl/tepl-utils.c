@@ -301,6 +301,40 @@ tepl_utils_get_file_shortname (const gchar *filename)
 	return g_strndup (filename, get_extension_position (filename));
 }
 
+static gchar *
+get_home_dir_without_trailing_slash (void)
+{
+	const gchar *home_dir;
+	gchar *utf8_home_dir;
+	gsize length;
+
+	home_dir = g_get_home_dir ();
+	if (home_dir == NULL)
+	{
+		return NULL;
+	}
+
+	utf8_home_dir = g_filename_to_utf8 (home_dir, -1, NULL, NULL, NULL);
+	if (utf8_home_dir == NULL)
+	{
+		return NULL;
+	}
+
+	length = strlen (utf8_home_dir);
+	if (length == 0)
+	{
+		g_free (utf8_home_dir);
+		return NULL;
+	}
+
+	if (utf8_home_dir[length - 1] == '/')
+	{
+		utf8_home_dir[length - 1] = '\0';
+	}
+
+	return utf8_home_dir;
+}
+
 /**
  * tepl_utils_replace_home_dir_with_tilde:
  * @filename: the filename.
@@ -311,48 +345,42 @@ tepl_utils_get_file_shortname (const gchar *filename)
  * Returns: the new filename. Free with g_free().
  * Since: 4.4
  */
-/* This function comes from gedit. */
 gchar *
 tepl_utils_replace_home_dir_with_tilde (const gchar *filename)
 {
-	gchar *tmp;
-	gchar *home;
+	gchar *home_dir_without_trailing_slash;
+	gchar *home_dir_with_trailing_slash;
+	gchar *ret;
 
 	g_return_val_if_fail (filename != NULL, NULL);
 
-	/* Note that g_get_home_dir returns a const string */
-	tmp = (gchar *) g_get_home_dir ();
-
-	if (tmp == NULL)
+	home_dir_without_trailing_slash = get_home_dir_without_trailing_slash ();
+	if (home_dir_without_trailing_slash == NULL)
 	{
 		return g_strdup (filename);
 	}
 
-	home = g_filename_to_utf8 (tmp, -1, NULL, NULL, NULL);
-	if (home == NULL)
+	home_dir_with_trailing_slash = g_strdup_printf ("%s/", home_dir_without_trailing_slash);
+
+	if (g_str_equal (filename, home_dir_without_trailing_slash) ||
+	    g_str_equal (filename, home_dir_with_trailing_slash))
 	{
-		return g_strdup (filename);
+		ret = g_strdup ("~");
+		goto out;
 	}
 
-	if (g_str_equal (filename, home))
+	if (g_str_has_prefix (filename, home_dir_with_trailing_slash))
 	{
-		g_free (home);
-		return g_strdup ("~");
+		ret = g_strdup_printf ("~/%s", filename + strlen (home_dir_with_trailing_slash));
+		goto out;
 	}
 
-	tmp = home;
-	home = g_strdup_printf ("%s/", tmp);
-	g_free (tmp);
+	ret = g_strdup (filename);
 
-	if (g_str_has_prefix (filename, home))
-	{
-		gchar *res = g_strdup_printf ("~/%s", filename + strlen (home));
-		g_free (home);
-		return res;
-	}
-
-	g_free (home);
-	return g_strdup (filename);
+out:
+	g_free (home_dir_without_trailing_slash);
+	g_free (home_dir_with_trailing_slash);
+	return ret;
 }
 
 static void

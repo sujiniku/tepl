@@ -57,6 +57,11 @@ gchar *		tepl_utils_get_file_extension			(const gchar *filename);
 _TEPL_EXTERN
 gchar *		tepl_utils_get_file_shortname			(const gchar *filename);
 
+G_GNUC_INTERNAL
+gchar *		_tepl_utils_replace_home_dir_with_tilde_with_param
+								(const gchar *filename,
+								 const gchar *home_dir);
+
 _TEPL_EXTERN
 gchar *		tepl_utils_replace_home_dir_with_tilde		(const gchar *filename);
 

@@ -302,13 +302,11 @@ tepl_utils_get_file_shortname (const gchar *filename)
 }
 
 static gchar *
-get_home_dir_without_trailing_slash (void)
+get_home_dir_without_trailing_slash (const gchar *home_dir)
 {
-	const gchar *home_dir;
 	gchar *utf8_home_dir;
 	gsize length;
 
-	home_dir = g_get_home_dir ();
 	if (home_dir == NULL)
 	{
 		return NULL;
@@ -335,18 +333,12 @@ get_home_dir_without_trailing_slash (void)
 	return utf8_home_dir;
 }
 
-/**
- * tepl_utils_replace_home_dir_with_tilde:
- * @filename: the filename.
- *
- * Replaces the home directory with a tilde, if the home directory is present in
- * the @filename.
- *
- * Returns: the new filename. Free with g_free().
- * Since: 4.4
+/* Like tepl_utils_replace_home_dir_with_tilde() but with an additional home_dir
+ * parameter, for unit tests.
  */
 gchar *
-tepl_utils_replace_home_dir_with_tilde (const gchar *filename)
+_tepl_utils_replace_home_dir_with_tilde_with_param (const gchar *filename,
+						    const gchar *home_dir)
 {
 	gchar *home_dir_without_trailing_slash;
 	gchar *home_dir_with_trailing_slash;
@@ -354,7 +346,7 @@ tepl_utils_replace_home_dir_with_tilde (const gchar *filename)
 
 	g_return_val_if_fail (filename != NULL, NULL);
 
-	home_dir_without_trailing_slash = get_home_dir_without_trailing_slash ();
+	home_dir_without_trailing_slash = get_home_dir_without_trailing_slash (home_dir);
 	if (home_dir_without_trailing_slash == NULL)
 	{
 		return g_strdup (filename);
@@ -381,6 +373,22 @@ out:
 	g_free (home_dir_without_trailing_slash);
 	g_free (home_dir_with_trailing_slash);
 	return ret;
+}
+
+/**
+ * tepl_utils_replace_home_dir_with_tilde:
+ * @filename: the filename.
+ *
+ * Replaces the home directory with a tilde, if the home directory is present in
+ * the @filename.
+ *
+ * Returns: the new filename. Free with g_free().
+ * Since: 4.4
+ */
+gchar *
+tepl_utils_replace_home_dir_with_tilde (const gchar *filename)
+{
+	return _tepl_utils_replace_home_dir_with_tilde_with_param (filename, g_get_home_dir ());
 }
 
 static void

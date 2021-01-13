@@ -144,25 +144,37 @@ test_get_file_shortname (void)
 }
 
 static void
+check_replace_home_dir_with_tilde (const gchar *home_dir,
+				   const gchar *filename_before,
+				   const gchar *expected_filename_after)
+{
+	gchar *received_filename_after;
+
+	received_filename_after = _tepl_utils_replace_home_dir_with_tilde_with_param (filename_before, home_dir);
+	g_assert_cmpstr (received_filename_after, ==, expected_filename_after);
+	g_free (received_filename_after);
+}
+
+static void
 test_replace_home_dir_with_tilde (void)
 {
-	const gchar *homedir = g_get_home_dir ();
-	gchar *before;
-	gchar *after;
+	check_replace_home_dir_with_tilde ("/home/foo", "/home/foo", "~");
+	check_replace_home_dir_with_tilde ("/home/foo", "/home/foo/", "~");
+	check_replace_home_dir_with_tilde ("/home/foo/", "/home/foo", "~");
+	check_replace_home_dir_with_tilde ("/home/foo/", "/home/foo/", "~");
 
-	before = g_build_filename (homedir, "blah", NULL);
-	after = tepl_utils_replace_home_dir_with_tilde (before);
-	g_assert_cmpstr (after, ==, "~/blah");
-	g_free (before);
-	g_free (after);
+	check_replace_home_dir_with_tilde ("/home/foo", "/home/foo/bar", "~/bar");
+	check_replace_home_dir_with_tilde ("/home/foo/", "/home/foo/bar", "~/bar");
+	check_replace_home_dir_with_tilde ("/home/foo", "/home/foo/bar/", "~/bar/");
+	check_replace_home_dir_with_tilde ("/home/foo/", "/home/foo/bar/", "~/bar/");
 
-	after = tepl_utils_replace_home_dir_with_tilde (homedir);
-	g_assert_cmpstr (after, ==, "~");
-	g_free (after);
+	check_replace_home_dir_with_tilde ("/home/foo", "/blah", "/blah");
+	check_replace_home_dir_with_tilde ("/home/foo/", "/blah", "/blah");
 
-	after = tepl_utils_replace_home_dir_with_tilde ("/blah");
-	g_assert_cmpstr (after, ==, "/blah");
-	g_free (after);
+	check_replace_home_dir_with_tilde (NULL, "/home/foo", "/home/foo");
+	check_replace_home_dir_with_tilde (NULL, "/home/foo/", "/home/foo/");
+	check_replace_home_dir_with_tilde ("", "/home/foo", "/home/foo");
+	check_replace_home_dir_with_tilde ("", "/home/foo/", "/home/foo/");
 }
 
 static void

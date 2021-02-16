@@ -1,14 +1,14 @@
 # Spanish translation for tepl.
 # Copyright (C) 2017 tepl's COPYRIGHT HOLDER
 # This file is distributed under the same license as the tepl package.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2017-2020.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2017-2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-09-28 15:57+0000\n"
-"PO-Revision-Date: 2020-09-30 16:00+0200\n"
+"POT-Creation-Date: 2021-01-13 12:57+0000\n"
+"PO-Revision-Date: 2021-02-16 16:45+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -161,8 +161,9 @@ msgstr "¿Quiere guardar los cambios en el archivo «%s» antes de cerrar?"
 msgid "Close _without Saving"
 msgstr "Cerrar _sin guardar"
 
-#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
-#: tepl/tepl-window-actions-file.c:82
+#: tepl/tepl-close-confirm-dialog-single.c:131
+#: tepl/tepl-language-chooser-dialog.c:130 tepl/tepl-progress-info-bar.c:52
+#: tepl/tepl-tab-saving.c:280 tepl/tepl-window-actions-file.c:82
 msgid "_Cancel"
 msgstr "_Cancelar"
 
@@ -170,7 +171,7 @@ msgstr "_Cancelar"
 msgid "_Save As…"
 msgstr "Guardar _como…"
 
-#: tepl/tepl-file.c:426
+#: tepl/tepl-file.c:445
 #, c-format
 msgid "Untitled File %d"
 msgstr "Archivo sin título %d"
@@ -179,11 +180,11 @@ msgstr "Archivo sin título %d"
 msgid "The content must be encoded with the UTF-8 character encoding."
 msgstr "El contenido se debe codificar con UTF-8."
 
-#: tepl/tepl-goto-line-bar.c:235
+#: tepl/tepl-goto-line-bar.c:234
 msgid "Go to line:"
 msgstr "Ir a la línea:"
 
-#: tepl/tepl-goto-line-bar.c:243
+#: tepl/tepl-goto-line-bar.c:242
 msgid "Close"
 msgstr "Cerrar"
 
@@ -257,6 +258,24 @@ msgid ""
 msgstr ""
 "Si continúa guardando el documento puede que llegue a corromperlo. ¿Quiere "
 "guardarlo de todas formas?"
+
+#. chooser_dialog config
+#: tepl/tepl-language-chooser-dialog.c:125
+msgid "Highlight Mode"
+msgstr "Modo de resaltado"
+
+#: tepl/tepl-language-chooser-dialog.c:131
+#| msgid "Select _All"
+msgid "_Select"
+msgstr "_Seleccionar"
+
+#: tepl/tepl-language-chooser-widget.c:76
+msgid "Plain Text"
+msgstr "Texto plano"
+
+#: tepl/tepl-language-chooser-widget.c:446
+msgid "Search highlight mode…"
+msgstr "Modo de resaltado de la búsqueda…"
 
 #. Translators: do not translate <metadata>.
 #: tepl/tepl-metadata-parser.c:83
@@ -343,7 +362,6 @@ msgid "Result"
 msgstr "Resultado"
 
 #: tepl/tepl-space-drawer-prefs.c:314
-#| msgid "Location:"
 msgid "Information"
 msgstr "Información"
 

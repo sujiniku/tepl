@@ -1,15 +1,16 @@
 # Swedish translation for tepl.
-# Copyright © 2017-2020 tepl's COPYRIGHT HOLDER
+# Copyright © 2017-2021 tepl's COPYRIGHT HOLDER
 # This file is distributed under the same license as the tepl package.
-# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2017, 2018, 2020.
+# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2017, 2018, 2020, 2021.
 # Josef Andersson <l10nl18nsweja@gmail.com>, 2017.
+# Luna Jernberg <droidbittin@gmail.com>, 2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-09-28 15:57+0000\n"
-"PO-Revision-Date: 2020-10-09 23:07+0200\n"
+"POT-Creation-Date: 2020-11-24 01:52+0000\n"
+"PO-Revision-Date: 2021-02-28 19:22+0100\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #. action, icon, label, accel, tooltip
 #. File menu
@@ -162,8 +163,9 @@ msgstr "Spara ändringar till filen ”%s” innan du stänger?"
 msgid "Close _without Saving"
 msgstr "Stäng _utan att spara"
 
-#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
-#: tepl/tepl-window-actions-file.c:82
+#: tepl/tepl-close-confirm-dialog-single.c:131
+#: tepl/tepl-language-chooser-dialog.c:130 tepl/tepl-progress-info-bar.c:52
+#: tepl/tepl-tab-saving.c:280 tepl/tepl-window-actions-file.c:82
 msgid "_Cancel"
 msgstr "A_vbryt"
 
@@ -171,7 +173,7 @@ msgstr "A_vbryt"
 msgid "_Save As…"
 msgstr "_Spara som…"
 
-#: tepl/tepl-file.c:426
+#: tepl/tepl-file.c:445
 #, c-format
 msgid "Untitled File %d"
 msgstr "Namnlös fil %d"
@@ -180,11 +182,11 @@ msgstr "Namnlös fil %d"
 msgid "The content must be encoded with the UTF-8 character encoding."
 msgstr "Innehållet måste vara kodat med teckenkodningen UTF-8."
 
-#: tepl/tepl-goto-line-bar.c:235
+#: tepl/tepl-goto-line-bar.c:234
 msgid "Go to line:"
 msgstr "Gå till rad:"
 
-#: tepl/tepl-goto-line-bar.c:243
+#: tepl/tepl-goto-line-bar.c:242
 msgid "Close"
 msgstr "Stäng"
 
@@ -256,6 +258,23 @@ msgid ""
 "If you continue saving this file you can corrupt the document. Save anyway?"
 msgstr ""
 "Om du fortsätter med att spara denna fil kan du skada dokumentet. Spara ändå?"
+
+#. chooser_dialog config
+#: tepl/tepl-language-chooser-dialog.c:125
+msgid "Highlight Mode"
+msgstr "Färgmarkeringsläge"
+
+#: tepl/tepl-language-chooser-dialog.c:131
+msgid "_Select"
+msgstr "_Markera"
+
+#: tepl/tepl-language-chooser-widget.c:76
+msgid "Plain Text"
+msgstr "Vanlig text"
+
+#: tepl/tepl-language-chooser-widget.c:446
+msgid "Search highlight mode…"
+msgstr "Sök färgmarkeringsläge…"
 
 #. Translators: do not translate <metadata>.
 #: tepl/tepl-metadata-parser.c:83

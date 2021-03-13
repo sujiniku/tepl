@@ -1,14 +1,15 @@
-# Danish translation of tepl.
+# Danish translation for tepl.
 # Copyright (C) 2018 Free Software Foundation, Inc.
 # This file is distributed under the same license as the tepl package.
 # Joe Hansen <joedalton2@yahoo.dk>, 2018.
 # scootergrisen, 2020.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: tepl\n"
+"Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2020-09-28 15:57+0000\n"
-"PO-Revision-Date: 2020-10-10 00:00+0200\n"
+"POT-Creation-Date: 2020-12-04 08:48+0000\n"
+"PO-Revision-Date: 2021-01-14 00:00+0200\n"
 "Last-Translator: scootergrisen\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -68,11 +69,11 @@ msgstr "Gem den nuværende fil til en anden placering"
 #. Edit menu
 #: tepl/tepl-application.c:96
 msgid "_Undo"
-msgstr "_Genskab"
+msgstr "_Fortryd"
 
 #: tepl/tepl-application.c:97
 msgid "Undo the last action"
-msgstr "Genskab den sidste handling"
+msgstr "Fortryd den sidste handling"
 
 #: tepl/tepl-application.c:99
 msgid "_Redo"
@@ -80,7 +81,7 @@ msgstr "_Omgør"
 
 #: tepl/tepl-application.c:100
 msgid "Redo the last undone action"
-msgstr "Omgør den sidste genskab-handling"
+msgstr "Omgør den sidste fortrudte handling"
 
 #: tepl/tepl-application.c:102
 msgid "Cu_t"
@@ -92,11 +93,11 @@ msgstr "Klip markeringen"
 
 #: tepl/tepl-application.c:105
 msgid "_Copy"
-msgstr "_Kopier"
+msgstr "_Kopiér"
 
 #: tepl/tepl-application.c:106
 msgid "Copy the selection"
-msgstr "Kopier markeringen"
+msgstr "Kopiér markeringen"
 
 #: tepl/tepl-application.c:108
 msgid "_Paste"
@@ -116,11 +117,11 @@ msgstr "Slet den markerede tekst"
 
 #: tepl/tepl-application.c:114
 msgid "Select _All"
-msgstr "Vælg _alt"
+msgstr "Markér _alt"
 
 #: tepl/tepl-application.c:115
 msgid "Select all the text"
-msgstr "Vælg al teksten"
+msgstr "Markér al teksten"
 
 #: tepl/tepl-application.c:117
 msgid "_Indent"
@@ -136,7 +137,7 @@ msgstr "_Fjern indryk"
 
 #: tepl/tepl-application.c:121
 msgid "Unindent the selected lines"
-msgstr "Fjern indrykning af de valge linjer"
+msgstr "Fjern indrykning af de markerede linjer"
 
 #. Search menu
 #: tepl/tepl-application.c:125
@@ -154,14 +155,15 @@ msgstr "Skrivebeskyttet"
 #: tepl/tepl-close-confirm-dialog-single.c:119
 #, c-format
 msgid "Save changes to file “%s” before closing?"
-msgstr "Gem ændringer til filen “%s” før lukning?"
+msgstr "Gem ændringer til filen “%s” inden lukning?"
 
 #: tepl/tepl-close-confirm-dialog-single.c:125
 msgid "Close _without Saving"
 msgstr "Luk _uden at gemme"
 
-#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
-#: tepl/tepl-window-actions-file.c:82
+#: tepl/tepl-close-confirm-dialog-single.c:131
+#: tepl/tepl-language-chooser-dialog.c:130 tepl/tepl-progress-info-bar.c:52
+#: tepl/tepl-tab-saving.c:280 tepl/tepl-window-actions-file.c:82
 msgid "_Cancel"
 msgstr "_Annullér"
 
@@ -169,21 +171,20 @@ msgstr "_Annullér"
 msgid "_Save As…"
 msgstr "_Gem som …"
 
-#: tepl/tepl-file.c:426
+#: tepl/tepl-file.c:445
 #, c-format
 msgid "Untitled File %d"
-msgstr "Filen %d er uden titel"
+msgstr "Unavngivet fil %d"
 
 #: tepl/tepl-file-loader.c:341
 msgid "The content must be encoded with the UTF-8 character encoding."
 msgstr "Indholdet skal være kodet med tegnkodningen UTF-8."
 
-#: tepl/tepl-goto-line-bar.c:235
+#: tepl/tepl-goto-line-bar.c:234
 msgid "Go to line:"
 msgstr "Gå til linje:"
 
-#: tepl/tepl-goto-line-bar.c:243
-#| msgid "Close file"
+#: tepl/tepl-goto-line-bar.c:242
 msgid "Close"
 msgstr "Luk"
 
@@ -205,7 +206,6 @@ msgid "Do you want to edit it anyway?"
 msgstr "Vil du redigere den alligevel?"
 
 #: tepl/tepl-io-error-info-bars.c:91 tepl/tepl-io-error-info-bars.c:193
-#| msgid "Save _As"
 msgid "S_ave Anyway"
 msgstr "Gem _alligevel"
 
@@ -224,9 +224,9 @@ msgid ""
 "can ignore this warning and save the file anyway, but if an error occurs "
 "while saving, you could lose the old copy of the file. Save anyway?"
 msgstr ""
-"Kunne ikke sikkerhedskopiere den gamle kopi af filen, inden den nye gemmes. "
-"Du kan ignorere advarslen og gemme filen alligevel, men hvis der opstår en "
-"fejl, mens der gemmes, kan du miste den gamle kopi af filen. Gem "
+"Kunne ikke sikkerhedskopiere den gamle kopi af filen, inden den nye blev "
+"gemt. Du kan ignorere advarslen og gemme filen alligevel, men hvis der "
+"opstår en fejl, mens der gemmes, kan du miste den gamle kopi af filen. Gem "
 "alligevel?"
 
 #: tepl/tepl-io-error-info-bars.c:115
@@ -258,6 +258,23 @@ msgid ""
 msgstr ""
 "Hvis du fortsætter med at gemme filen kan du ødelægge dokumentet. Gem "
 "alligevel?"
+
+#. chooser_dialog config
+#: tepl/tepl-language-chooser-dialog.c:125
+msgid "Highlight Mode"
+msgstr "Fremhævningstilstand"
+
+#: tepl/tepl-language-chooser-dialog.c:131
+msgid "_Select"
+msgstr "_Vælg"
+
+#: tepl/tepl-language-chooser-widget.c:76
+msgid "Plain Text"
+msgstr "Klartekst"
+
+#: tepl/tepl-language-chooser-widget.c:446
+msgid "Search highlight mode…"
+msgstr "Søg efter fremhævningstilstand …"
 
 #. Translators: do not translate <metadata>.
 #: tepl/tepl-metadata-parser.c:83
@@ -344,7 +361,6 @@ msgid "Result"
 msgstr "Resultat"
 
 #: tepl/tepl-space-drawer-prefs.c:314
-#| msgid "Location:"
 msgid "Information"
 msgstr "Information"
 

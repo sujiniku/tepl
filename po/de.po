@@ -11,15 +11,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2021-02-18 20:31+0000\n"
-"PO-Revision-Date: 2021-02-27 15:50+0100\n"
-"Last-Translator: Tim Sabsch <tim@sabsch.com>\n"
+"POT-Creation-Date: 2021-02-27 18:23+0000\n"
+"PO-Revision-Date: 2021-03-18 15:39+0100\n"
+"Last-Translator: Philipp Kiemle <philipp.kiemle@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 2.4.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. action, icon, label, accel, tooltip
@@ -165,8 +165,9 @@ msgstr "Änderungen an der Datei »%s« vor dem Schließen speichern?"
 msgid "Close _without Saving"
 msgstr "Ohne Speichern s_chließen"
 
-#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
-#: tepl/tepl-window-actions-file.c:82
+#: tepl/tepl-close-confirm-dialog-single.c:131
+#: tepl/tepl-language-chooser-dialog.c:130 tepl/tepl-progress-info-bar.c:52
+#: tepl/tepl-tab-saving.c:280 tepl/tepl-window-actions-file.c:82
 msgid "_Cancel"
 msgstr "A_bbrechen"
 
@@ -174,7 +175,7 @@ msgstr "A_bbrechen"
 msgid "_Save As…"
 msgstr "Speichern _unter …"
 
-#: tepl/tepl-file.c:426
+#: tepl/tepl-file.c:445
 #, c-format
 msgid "Untitled File %d"
 msgstr "Unbenannte Datei %d"
@@ -183,11 +184,11 @@ msgstr "Unbenannte Datei %d"
 msgid "The content must be encoded with the UTF-8 character encoding."
 msgstr "Der Inhalt muss mit UTF-8-Zeichenkodierung kodiert sein."
 
-#: tepl/tepl-goto-line-bar.c:235
+#: tepl/tepl-goto-line-bar.c:234
 msgid "Go to line:"
 msgstr "Gehe zu Zeile:"
 
-#: tepl/tepl-goto-line-bar.c:243
+#: tepl/tepl-goto-line-bar.c:242
 msgid "Close"
 msgstr "Schließen"
 
@@ -263,6 +264,23 @@ msgstr ""
 "Wenn Sie diese Datei speichern, könnten Sie das Dokument beschädigen. "
 "Trotzdem speichern?"
 
+#. chooser_dialog config
+#: tepl/tepl-language-chooser-dialog.c:125
+msgid "Highlight Mode"
+msgstr "Hervorhebungsmodus"
+
+#: tepl/tepl-language-chooser-dialog.c:131
+msgid "_Select"
+msgstr "A_uswählen"
+
+#: tepl/tepl-language-chooser-widget.c:76
+msgid "Plain Text"
+msgstr "Reiner Text"
+
+#: tepl/tepl-language-chooser-widget.c:446
+msgid "Search highlight mode…"
+msgstr ""
+
 #. Translators: do not translate <metadata>.
 #: tepl/tepl-metadata-parser.c:83
 #, c-format
@@ -302,6 +320,65 @@ msgstr "Dem »<entry>»-Element fehlt das »key«- oder »value«-Attribut."
 #: tepl/tepl-panel.c:92
 msgid "Hide panel"
 msgstr "Leiste verbergen"
+
+#: tepl/tepl-space-drawer-prefs.c:189 tepl/tepl-space-drawer-prefs.c:191
+#: tepl/tepl-space-drawer-prefs.c:193
+msgid "Draw tabs"
+msgstr "Tabulatoren darstellen"
+
+#: tepl/tepl-space-drawer-prefs.c:190 tepl/tepl-space-drawer-prefs.c:192
+#: tepl/tepl-space-drawer-prefs.c:194
+msgid "Draw spaces"
+msgstr "Leerzeichen darstellen"
+
+#: tepl/tepl-space-drawer-prefs.c:195
+msgid "Draw new lines"
+msgstr "Neue Zeilen darstellen"
+
+#: tepl/tepl-space-drawer-prefs.c:231
+msgid "Leading Spaces"
+msgstr "Führende Leerzeichen"
+
+#: tepl/tepl-space-drawer-prefs.c:235
+msgid "Spaces Inside Text"
+msgstr "Leerzeichen im Text"
+
+#: tepl/tepl-space-drawer-prefs.c:239
+msgid "Trailing Spaces"
+msgstr "Nachlaufende Leerzeichen"
+
+#: tepl/tepl-space-drawer-prefs.c:259
+msgid "Tab"
+msgstr "Tabulator"
+
+#: tepl/tepl-space-drawer-prefs.c:260
+msgid "Space"
+msgstr "Leerzeichen"
+
+#: tepl/tepl-space-drawer-prefs.c:261
+msgid "No-Break Space"
+msgstr "Geschütztes Leerzeichen"
+
+#: tepl/tepl-space-drawer-prefs.c:262
+msgid "Narrow No-Break Space"
+msgstr "Schmales geschütztes Leerzeichen"
+
+#: tepl/tepl-space-drawer-prefs.c:281
+msgid "Result"
+msgstr "Ergebnis"
+
+#: tepl/tepl-space-drawer-prefs.c:314
+msgid "Information"
+msgstr "Information"
+
+#: tepl/tepl-space-drawer-prefs.c:316
+msgid ""
+"When white space drawing is enabled, then non-breaking spaces are always "
+"drawn at all locations, to distinguish them from normal spaces."
+msgstr ""
+"Wenn das Darstellen von Leerzeichen aktiviert ist, werden geschützte "
+"Leerzeichen an jeder Stelle dargestellt, um sie von regulären Leerzeichen zu "
+"unterscheiden."
 
 # Diese Abkürzungen finden sich auch in »gedit«.
 #. Translators: "Ln" is an abbreviation for "Line", Col is an

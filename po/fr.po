@@ -1,0 +1,346 @@
+# French translation for tepl.
+# Copyright (C) 2021 tepl's COPYRIGHT HOLDER
+# This file is distributed under the same license as the tepl package.
+# Thibault Leclair <thibaultleclair@yahoo.com>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tepl tepl-5-0\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
+"POT-Creation-Date: 2021-02-27 18:23+0000\n"
+"PO-Revision-Date: 2021-03-30 18:24+0200\n"
+"Last-Translator: Thibault Leclair <thibaultleclair@yahoo.com>\n"
+"Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Gtranslator 3.38.0\n"
+
+#. action, icon, label, accel, tooltip
+#. File menu
+#. Why "file" and not "document"? "Document" is not the best
+#. word because the action is not always to create a new
+#. document. For example a LaTeX document can be composed of
+#. several _files_. Or for source code we do not really create a
+#. new "document".
+#: tepl/tepl-application.c:79
+msgid "_New"
+msgstr "_Nouveau"
+
+#: tepl/tepl-application.c:80
+msgid "New file"
+msgstr "Nouveau fichier"
+
+#: tepl/tepl-application.c:82
+msgid "New _Window"
+msgstr "Nouvelle _fenêtre"
+
+#: tepl/tepl-application.c:83
+msgid "Create a new window"
+msgstr "Créer une nouvelle fenêtre"
+
+#: tepl/tepl-application.c:85 tepl/tepl-window-actions-file.c:83
+msgid "_Open"
+msgstr "_Ouvrir"
+
+#: tepl/tepl-application.c:86
+msgid "Open a file"
+msgstr "Ouvrir un fichier"
+
+#: tepl/tepl-application.c:88 tepl/tepl-close-confirm-dialog-single.c:137
+#: tepl/tepl-tab-saving.c:281
+msgid "_Save"
+msgstr "_Enregistrer"
+
+#: tepl/tepl-application.c:89
+msgid "Save the current file"
+msgstr "Enregistrer le fichier actuel"
+
+#: tepl/tepl-application.c:91
+msgid "Save _As"
+msgstr "Enregistrer _sous"
+
+#: tepl/tepl-application.c:92
+msgid "Save the current file to a different location"
+msgstr "Enregistrer le fichier actuel dans un emplacement différent"
+
+#. Edit menu
+#: tepl/tepl-application.c:96
+msgid "_Undo"
+msgstr "Ann_uler"
+
+#: tepl/tepl-application.c:97
+msgid "Undo the last action"
+msgstr "Annuler la dernière action"
+
+#: tepl/tepl-application.c:99
+msgid "_Redo"
+msgstr "_Rétablir"
+
+#: tepl/tepl-application.c:100
+msgid "Redo the last undone action"
+msgstr "Rétablir la dernière action annulée"
+
+#: tepl/tepl-application.c:102
+msgid "Cu_t"
+msgstr "Co_uper"
+
+#: tepl/tepl-application.c:103
+msgid "Cut the selection"
+msgstr "Couper la sélection"
+
+#: tepl/tepl-application.c:105
+msgid "_Copy"
+msgstr "_Copier"
+
+#: tepl/tepl-application.c:106
+msgid "Copy the selection"
+msgstr "Copier la sélection"
+
+#: tepl/tepl-application.c:108
+msgid "_Paste"
+msgstr "C_oller"
+
+#: tepl/tepl-application.c:109
+msgid "Paste the clipboard"
+msgstr "Coller le contenu du presse-papiers"
+
+#: tepl/tepl-application.c:111
+msgid "_Delete"
+msgstr "_Supprimer"
+
+#: tepl/tepl-application.c:112
+msgid "Delete the selected text"
+msgstr "Supprimer le texte sélectionné"
+
+#: tepl/tepl-application.c:114
+msgid "Select _All"
+msgstr "Tout _sélectionner"
+
+#: tepl/tepl-application.c:115
+msgid "Select all the text"
+msgstr "Sélectionner tout le texte"
+
+#: tepl/tepl-application.c:117
+msgid "_Indent"
+msgstr "_Indenter"
+
+#: tepl/tepl-application.c:118
+msgid "Indent the selected lines"
+msgstr "Indenter les lignes sélectionnées"
+
+#: tepl/tepl-application.c:120
+msgid "_Unindent"
+msgstr "_Désindenter"
+
+#: tepl/tepl-application.c:121
+msgid "Unindent the selected lines"
+msgstr "Désindenter les lignes sélectionnées"
+
+#. Search menu
+#: tepl/tepl-application.c:125
+msgid "_Go to Line…"
+msgstr "_Aller à la ligne…"
+
+#: tepl/tepl-application.c:126
+msgid "Go to a specific line"
+msgstr "Aller à une ligne spécifiée"
+
+#: tepl/tepl-application-window.c:156
+msgid "Read-Only"
+msgstr "Lecture seule"
+
+#: tepl/tepl-close-confirm-dialog-single.c:119
+#, c-format
+msgid "Save changes to file “%s” before closing?"
+msgstr ""
+"Voulez-vous enregistrer les modifications du fichier « %s » avant de le "
+"fermer ?"
+
+#: tepl/tepl-close-confirm-dialog-single.c:125
+msgid "Close _without Saving"
+msgstr "_Fermer sans enregistrer"
+
+#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
+#: tepl/tepl-window-actions-file.c:82
+msgid "_Cancel"
+msgstr "A_nnuler"
+
+#: tepl/tepl-close-confirm-dialog-single.c:143
+msgid "_Save As…"
+msgstr "Enregistrer _sous…"
+
+#: tepl/tepl-file.c:426
+#, c-format
+msgid "Untitled File %d"
+msgstr "Fichier sans nom %d"
+
+#: tepl/tepl-file-loader.c:341
+msgid "The content must be encoded with the UTF-8 character encoding."
+msgstr "Le contenu doit être codé avec le codage de caractères UTF-8."
+
+#: tepl/tepl-goto-line-bar.c:235
+msgid "Go to line:"
+msgstr "Aller à la ligne :"
+
+#: tepl/tepl-goto-line-bar.c:243
+msgid "Close"
+msgstr "Fermer"
+
+#: tepl/tepl-io-error-info-bars.c:42
+msgid "_Edit Anyway"
+msgstr "_Ouvrir malgré tout"
+
+#: tepl/tepl-io-error-info-bars.c:46
+msgid "_Don’t Edit"
+msgstr "_Ne pas ouvrir"
+
+#: tepl/tepl-io-error-info-bars.c:52
+#, c-format
+msgid "This file “%s” is already open in another window."
+msgstr "Ce fichier « %s » est déjà ouvert dans une autre fenêtre."
+
+#: tepl/tepl-io-error-info-bars.c:57
+msgid "Do you want to edit it anyway?"
+msgstr "Voulez-vous l’ouvrir quand même ?"
+
+#: tepl/tepl-io-error-info-bars.c:91 tepl/tepl-io-error-info-bars.c:193
+msgid "S_ave Anyway"
+msgstr "_Enregistrer quand même"
+
+#: tepl/tepl-io-error-info-bars.c:95 tepl/tepl-io-error-info-bars.c:197
+msgid "_Don’t Save"
+msgstr "_Ne pas enregistrer"
+
+#: tepl/tepl-io-error-info-bars.c:101
+#, c-format
+msgid "Could not create a backup file while saving “%s”"
+msgstr ""
+"Impossible de créer un fichier de sauvegarde lors de l’enregistrement de "
+"« %s »"
+
+#: tepl/tepl-io-error-info-bars.c:106
+msgid ""
+"Could not back up the old copy of the file before saving the new one. You "
+"can ignore this warning and save the file anyway, but if an error occurs "
+"while saving, you could lose the old copy of the file. Save anyway?"
+msgstr ""
+"Impossible de sauvegarder l’ancienne copie du fichier avant d’enregistrer le "
+"nouveau. Vous pouvez ignorer cet avertissement et enregistrer le fichier "
+"malgré tout, mais si une erreur se produit lors de l’enregistrement, vous "
+"pouvez perdre l’ancienne copie du fichier. Enregistrer quand même ?"
+
+#: tepl/tepl-io-error-info-bars.c:115
+#, c-format
+msgid "Error message: %s"
+msgstr "Message d’erreur : %s"
+
+#: tepl/tepl-io-error-info-bars.c:152
+#, c-format
+msgid "The file “%s” changed on disk."
+msgstr "Le fichier « %s » a été modifié sur le disque."
+
+#: tepl/tepl-io-error-info-bars.c:157
+msgid "Drop Changes and _Reload"
+msgstr "Ignorer les _modifications et recharger"
+
+#: tepl/tepl-io-error-info-bars.c:157
+msgid "_Reload"
+msgstr "_Recharger"
+
+#: tepl/tepl-io-error-info-bars.c:203
+#, c-format
+msgid "Some invalid characters have been detected while saving “%s”."
+msgstr ""
+"Des caractères non valides ont été détectés lors de l’enregistrement de "
+"« %s »."
+
+#: tepl/tepl-io-error-info-bars.c:208
+msgid ""
+"If you continue saving this file you can corrupt the document. Save anyway?"
+msgstr ""
+"Si vous continuez à enregistrer ce fichier, vous pouvez endommager le "
+"document. Enregistrer quand même ?"
+
+#. Translators: do not translate <metadata>.
+#: tepl/tepl-metadata-parser.c:83
+#, c-format
+msgid "The XML file must start with a <metadata> element, not “%s”."
+msgstr ""
+"Le fichier XML doit commencer par un élément <metadata> et non par « %s »."
+
+#. Translators: do not translate <document>.
+#: tepl/tepl-metadata-parser.c:115
+#, c-format
+msgid "Expected a <document> element, got “%s” instead."
+msgstr "Un élément <document> était attendu, « %s » obtenu à la place."
+
+#. Translators: do not translate “atime”.
+#: tepl/tepl-metadata-parser.c:141
+#, c-format
+msgid "Failed to parse the “atime” attribute value “%s”."
+msgstr "Échec de l’analyse de la valeur d’attribut « atime » « %s »."
+
+#. Translators: do not translate <document>, “uri” and “atime”.
+#: tepl/tepl-metadata-parser.c:156
+msgid "The <document> element must contain the “uri” and “atime” attributes."
+msgstr "L’élément <document> doit contenir les attributs « uri » et « atime »."
+
+#. Translators: do not translate <entry>.
+#: tepl/tepl-metadata-parser.c:185
+#, c-format
+msgid "Expected an <entry> element, got “%s” instead."
+msgstr "Un élément <entry> était attendu, « %s » obtenu à la place."
+
+#. Translators: do not translate <entry>, “key” and “value”.
+#: tepl/tepl-metadata-parser.c:211
+msgid "The <entry> element is missing the “key” or “value” attribute."
+msgstr "L’élément <entry> ne possède pas l’attribut « key » ou « value »."
+
+#: tepl/tepl-panel.c:92
+msgid "Hide panel"
+msgstr "Masquer le panneau"
+
+#. Translators: "Ln" is an abbreviation for "Line", Col is an
+#. * abbreviation for "Column". Please, use abbreviations if possible.
+#.
+#: tepl/tepl-statusbar.c:103
+#, c-format
+msgid "Ln %d, Col %d"
+msgstr "Lig %d, Col %d"
+
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:249
+msgid "Location:"
+msgstr "Emplacement :"
+
+#: tepl/tepl-tab-label.c:318
+msgid "Close file"
+msgstr "Fermer le fichier"
+
+#: tepl/tepl-tab-loading.c:36
+msgid "Error when loading the file."
+msgstr "Erreur lors du chargement du fichier."
+
+#: tepl/tepl-tab-saving.c:49
+msgid "Error when saving the file."
+msgstr "Erreur lors de l’enregistrement du fichier."
+
+#: tepl/tepl-tab-saving.c:277
+msgid "Save File"
+msgstr "Enregistrer le fichier"
+
+#. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
+#. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
+#. * doesn't have the real path to the file, so it would ruin some
+#. * features for text editors:
+#. * - showing the directory in parentheses in the window title, or in the
+#. *   tab tooltip;
+#. * - opening a recent file.
+#. * Basically everywhere where the directory is shown.
+#.
+#: tepl/tepl-window-actions-file.c:79
+msgid "Open File"
+msgstr "Ouvrir un fichier"

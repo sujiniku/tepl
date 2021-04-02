@@ -1,22 +1,22 @@
 # Dutch translation for tepl.
 # Copyright (C) 2019 tepl's COPYRIGHT HOLDER
 # This file is distributed under the same license as the tepl package.
-# Nathan Follens <nthn@unseen.is>, 2019.
+# Nathan Follens <nthn@unseen.is>, 2019, 2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: tepl master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/tepl/issues\n"
-"POT-Creation-Date: 2018-07-16 10:42+0000\n"
-"PO-Revision-Date: 2019-03-04 16:36+0100\n"
+"POT-Creation-Date: 2020-09-27 11:01+0000\n"
+"PO-Revision-Date: 2021-04-02 13:41+0200\n"
+"Last-Translator: Nathan Follens <nthn@unseen.is>\n"
 "Language-Team: Dutch <gnome-nl-list@gnome.org>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Last-Translator: Nathan Follens <nthn@unseen.is>\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #. action, icon, label, accel, tooltip
 #. File menu
@@ -25,346 +25,423 @@ msgstr ""
 #. document. For example a LaTeX document can be composed of
 #. several _files_. Or for source code we do not really create a
 #. new "document".
-#: tepl/tepl-application.c:92
+#: tepl/tepl-application.c:79
 msgid "_New"
 msgstr "_Nieuw"
 
-#: tepl/tepl-application.c:93
+#: tepl/tepl-application.c:80
 msgid "New file"
 msgstr "Nieuw bestand"
 
-#: tepl/tepl-application.c:95
+#: tepl/tepl-application.c:82
 msgid "New _Window"
 msgstr "Nieu_w venster"
 
-#: tepl/tepl-application.c:96
+#: tepl/tepl-application.c:83
 msgid "Create a new window"
 msgstr "Een nieuw venster aanmaken"
 
-#: tepl/tepl-application.c:98 tepl/tepl-application-window.c:178
+#: tepl/tepl-application.c:85 tepl/tepl-window-actions-file.c:83
 msgid "_Open"
 msgstr "_Openen"
 
-#: tepl/tepl-application.c:99
+#: tepl/tepl-application.c:86
 msgid "Open a file"
 msgstr "Bestand openen"
 
-#: tepl/tepl-application.c:101 tepl/tepl-close-confirm-dialog-single.c:144
-#: tepl/tepl-tab.c:752
+#: tepl/tepl-application.c:88 tepl/tepl-close-confirm-dialog-single.c:137
+#: tepl/tepl-tab-saving.c:281
 msgid "_Save"
 msgstr "Op_slaan"
 
-#: tepl/tepl-application.c:102
+#: tepl/tepl-application.c:89
 msgid "Save the current file"
 msgstr "Het huidige bestand opslaan"
 
-#: tepl/tepl-application.c:104
+#: tepl/tepl-application.c:91
 msgid "Save _As"
 msgstr "Opslaan _als"
 
-#: tepl/tepl-application.c:105
+#: tepl/tepl-application.c:92
 msgid "Save the current file to a different location"
 msgstr "Het huidige bestand opslaan op een andere locatie"
 
 #. Edit menu
-#: tepl/tepl-application.c:109
+#: tepl/tepl-application.c:96
 msgid "_Undo"
 msgstr "_Ongedaan maken"
 
-#: tepl/tepl-application.c:110
+#: tepl/tepl-application.c:97
 msgid "Undo the last action"
 msgstr "Laatste actie ongedaan maken"
 
-#: tepl/tepl-application.c:112
+#: tepl/tepl-application.c:99
 msgid "_Redo"
 msgstr "Op_nieuw"
 
-#: tepl/tepl-application.c:113
+#: tepl/tepl-application.c:100
 msgid "Redo the last undone action"
 msgstr "Laatste ongedaan gemaakte actie opnieuw uitvoeren"
 
-#: tepl/tepl-application.c:115
+#: tepl/tepl-application.c:102
 msgid "Cu_t"
 msgstr "K_nippen"
 
-#: tepl/tepl-application.c:116
+#: tepl/tepl-application.c:103
 msgid "Cut the selection"
 msgstr "Selectie knippen"
 
-#: tepl/tepl-application.c:118
+#: tepl/tepl-application.c:105
 msgid "_Copy"
 msgstr "K_opiëren"
 
-#: tepl/tepl-application.c:119
+#: tepl/tepl-application.c:106
 msgid "Copy the selection"
 msgstr "Selectie kopiëren"
 
-#: tepl/tepl-application.c:121
+#: tepl/tepl-application.c:108
 msgid "_Paste"
 msgstr "_Plakken"
 
-#: tepl/tepl-application.c:122
+#: tepl/tepl-application.c:109
 msgid "Paste the clipboard"
 msgstr "Plakken vanuit klembord"
 
-#: tepl/tepl-application.c:124
+#: tepl/tepl-application.c:111
 msgid "_Delete"
 msgstr "Verwij_deren"
 
-#: tepl/tepl-application.c:125
+#: tepl/tepl-application.c:112
 msgid "Delete the selected text"
 msgstr "Geselecteerde tekst verwijderen"
 
-#: tepl/tepl-application.c:127
+#: tepl/tepl-application.c:114
 msgid "Select _All"
 msgstr "_Alles selecteren"
 
-#: tepl/tepl-application.c:128
+#: tepl/tepl-application.c:115
 msgid "Select all the text"
 msgstr "Alle tekst selecteren"
 
-#: tepl/tepl-application.c:130
+#: tepl/tepl-application.c:117
 msgid "_Indent"
 msgstr "_Inspringen"
 
-#: tepl/tepl-application.c:131
+#: tepl/tepl-application.c:118
 msgid "Indent the selected lines"
 msgstr "De geselecteerde regels inspringen"
 
-#: tepl/tepl-application.c:133
+#: tepl/tepl-application.c:120
 msgid "_Unindent"
 msgstr "_Niet inspringen"
 
-#: tepl/tepl-application.c:134
+#: tepl/tepl-application.c:121
 msgid "Unindent the selected lines"
 msgstr "De geselecteerde regels niet inspringen"
 
+#. Search menu
+#: tepl/tepl-application.c:125
+msgid "_Go to Line…"
+msgstr "_Ga naar regel…"
+
+#: tepl/tepl-application.c:126
+msgid "Go to a specific line"
+msgstr "Naar een opgegeven regel springen"
+
+#: tepl/tepl-application-window.c:156
+msgid "Read-Only"
+msgstr "Alleen-lezen"
+
+#: tepl/tepl-close-confirm-dialog-single.c:119
+#, c-format
+msgid "Save changes to file “%s” before closing?"
+msgstr "Wijzigingen aan bestand ‘%s’ opslaan alvorens te sluiten?"
+
+#: tepl/tepl-close-confirm-dialog-single.c:125
+msgid "Close _without Saving"
+msgstr "Sluiten _zonder opslaan"
+
+#: tepl/tepl-close-confirm-dialog-single.c:131 tepl/tepl-tab-saving.c:280
+#: tepl/tepl-window-actions-file.c:82
+msgid "_Cancel"
+msgstr "_Annuleren"
+
+#: tepl/tepl-close-confirm-dialog-single.c:143
+msgid "_Save As…"
+msgstr "Op_slaan als…"
+
+#: tepl/tepl-file.c:426
+#, c-format
+msgid "Untitled File %d"
+msgstr "Naamloos bestand %d"
+
+#: tepl/tepl-file-loader.c:341
+msgid "The content must be encoded with the UTF-8 character encoding."
+msgstr "De inhoud moet gecodeerd zijn met de UTF-8-tekencodering."
+
+#: tepl/tepl-goto-line-bar.c:235
+msgid "Go to line:"
+msgstr "Ga naar regel:"
+
+#: tepl/tepl-goto-line-bar.c:243
+msgid "Close"
+msgstr "Sluiten"
+
+#: tepl/tepl-io-error-info-bars.c:42
+msgid "_Edit Anyway"
+msgstr "Toch b_ewerken"
+
+#: tepl/tepl-io-error-info-bars.c:46
+msgid "_Don’t Edit"
+msgstr "Niet _bewerken"
+
+#: tepl/tepl-io-error-info-bars.c:52
+#, c-format
+msgid "This file “%s” is already open in another window."
+msgstr "Dit bestand ‘%s’ is al geopend in een ander venster."
+
+#: tepl/tepl-io-error-info-bars.c:57
+msgid "Do you want to edit it anyway?"
+msgstr "Wilt u het bestand toch bewerken?"
+
+#: tepl/tepl-io-error-info-bars.c:91 tepl/tepl-io-error-info-bars.c:193
+msgid "S_ave Anyway"
+msgstr "Toc_h opslaan"
+
+#: tepl/tepl-io-error-info-bars.c:95 tepl/tepl-io-error-info-bars.c:197
+msgid "_Don’t Save"
+msgstr "_Niet opslaan"
+
+#: tepl/tepl-io-error-info-bars.c:101
+#, c-format
+msgid "Could not create a backup file while saving “%s”"
+msgstr "Maken van een reservekopie tijdens het opslaan van ‘%s’ is mislukt"
+
+#: tepl/tepl-io-error-info-bars.c:106
+msgid ""
+"Could not back up the old copy of the file before saving the new one. You "
+"can ignore this warning and save the file anyway, but if an error occurs "
+"while saving, you could lose the old copy of the file. Save anyway?"
+msgstr ""
+"Kon geen reservekopie maken van het oude bestand alvorens het nieuwe bestand "
+"op te slaan. U kunt deze waarschuwing negeren en het nieuwe bestand toch "
+"opslaan, maar als er een fout optreedt tijdens het opslaan van het nieuwe "
+"bestand, dan kunt u mogelijk het oude bestand verliezen. Toch opslaan?"
+
+#: tepl/tepl-io-error-info-bars.c:115
+#, c-format
+msgid "Error message: %s"
+msgstr "Foutbericht: %s"
+
+#: tepl/tepl-io-error-info-bars.c:152
+#, c-format
+msgid "The file “%s” changed on disk."
+msgstr "Het bestand ‘%s’ is gewijzigd op de schijf."
+
+#: tepl/tepl-io-error-info-bars.c:157
+msgid "Drop Changes and _Reload"
+msgstr "Wijzigingen annuleren en he_rladen"
+
+#: tepl/tepl-io-error-info-bars.c:157
+msgid "_Reload"
+msgstr "He_rladen"
+
+#: tepl/tepl-io-error-info-bars.c:203
+#, c-format
+msgid "Some invalid characters have been detected while saving “%s”."
+msgstr "Er zijn enkele ongeldige tekens gedetecteerd bij het opslaan van ‘%s’."
+
+#: tepl/tepl-io-error-info-bars.c:208
+msgid ""
+"If you continue saving this file you can corrupt the document. Save anyway?"
+msgstr ""
+"Als u doorgaat met opslaan kan dit het document beschadigen. Toch opslaan?"
+
+#. Translators: do not translate <metadata>.
+#: tepl/tepl-metadata-parser.c:83
+#, c-format
+msgid "The XML file must start with a <metadata> element, not “%s”."
+msgstr ""
+"Het XML-bestand moet beginnen met een <metadata>-element, niet met ‘%s’."
+
+#. Translators: do not translate <document>.
+#: tepl/tepl-metadata-parser.c:115
+#, c-format
+msgid "Expected a <document> element, got “%s” instead."
+msgstr "<document>-element verwacht, ‘%s’ gekregen."
+
+#. Translators: do not translate “atime”.
+#: tepl/tepl-metadata-parser.c:141
+#, c-format
+msgid "Failed to parse the “atime” attribute value “%s”."
+msgstr "Ontleden van ‘atime’-attribuutwaarde ‘%s’ mislukt."
+
+#. Translators: do not translate <document>, “uri” and “atime”.
+#: tepl/tepl-metadata-parser.c:156
+msgid "The <document> element must contain the “uri” and “atime” attributes."
+msgstr "Het <document>-element moet de attributen ‘uri’ en ‘atime’ bevatten."
+
+#. Translators: do not translate <entry>.
+#: tepl/tepl-metadata-parser.c:185
+#, c-format
+msgid "Expected an <entry> element, got “%s” instead."
+msgstr "<entry>-element verwacht, ‘%s’ gekregen."
+
+#. Translators: do not translate <entry>, “key” and “value”.
+#: tepl/tepl-metadata-parser.c:211
+msgid "The <entry> element is missing the “key” or “value” attribute."
+msgstr "Het attribuut ‘key’ of ‘value’ ontbreekt in het <entry>-element."
+
+#: tepl/tepl-panel.c:92
+msgid "Hide panel"
+msgstr "Paneel verbergen"
+
+#. Translators: "Ln" is an abbreviation for "Line", Col is an
+#. * abbreviation for "Column". Please, use abbreviations if possible.
+#.
+#: tepl/tepl-statusbar.c:103
+#, c-format
+msgid "Ln %d, Col %d"
+msgstr "Rg %d, kol %d"
+
+#. Translators: location of a file.
+#: tepl/tepl-tab-label.c:249
+msgid "Location:"
+msgstr "Locatie:"
+
+#: tepl/tepl-tab-label.c:318
+msgid "Close file"
+msgstr "Bestand sluiten"
+
+#: tepl/tepl-tab-loading.c:36
+msgid "Error when loading the file."
+msgstr "Fout bij laden van bestand."
+
+#: tepl/tepl-tab-saving.c:49
+msgid "Error when saving the file."
+msgstr "Fout bij opslaan van bestand."
+
+#: tepl/tepl-tab-saving.c:277
+msgid "Save File"
+msgstr "Bestand opslaan"
+
 #. Create a GtkFileChooserDialog, not a GtkFileChooserNative, because
 #. * with GtkFileChooserNative the GFile that we obtain (in flatpak)
-#. * doesn't have the real path to the file, so it would screw up some
+#. * doesn't have the real path to the file, so it would ruin some
 #. * features for text editors:
 #. * - showing the directory in parentheses in the window title, or in the
 #. *   tab tooltip;
 #. * - opening a recent file.
 #. * Basically everywhere where the directory is shown.
 #.
-#: tepl/tepl-application-window.c:174
+#: tepl/tepl-window-actions-file.c:79
 msgid "Open File"
 msgstr "Bestand openen"
 
-#: tepl/tepl-application-window.c:177
-#: tepl/tepl-close-confirm-dialog-single.c:138 tepl/tepl-tab.c:751
-msgid "_Cancel"
-msgstr "_Annuleren"
+#~ msgid "Unicode"
+#~ msgstr "Unicode"
 
-#: tepl/tepl-application-window.c:708
-msgid "Read-Only"
-msgstr "Alleen-lezen"
+#~ msgid "Western"
+#~ msgstr "Westers"
 
-#: tepl/tepl-close-confirm-dialog-single.c:133
-#, c-format
-msgid "Save changes to file “%s” before closing?"
-msgstr "Wijzigingen aan bestand ‘%s’ opslaan alvorens te sluiten?"
+#~ msgid "Central European"
+#~ msgstr "Centraal-Europees"
 
-#: tepl/tepl-close-confirm-dialog-single.c:137
-msgid "Close _without Saving"
-msgstr "Sluiten _zonder opslaan"
+#~ msgid "South European"
+#~ msgstr "Zuid-Europees"
 
-#: tepl/tepl-close-confirm-dialog-single.c:150
-msgid "_Save As…"
-msgstr "Op_slaan als…"
+#~ msgid "Baltic"
+#~ msgstr "Baltisch"
 
-#. UTF-8 first, so that it's the first encoding returned by
-#. * tepl_encoding_get_all().
-#.
-#: tepl/tepl-encoding.c:115 tepl/tepl-encoding.c:132 tepl/tepl-encoding.c:133
-#: tepl/tepl-encoding.c:134 tepl/tepl-encoding.c:135 tepl/tepl-encoding.c:136
-#: tepl/tepl-encoding.c:137 tepl/tepl-encoding.c:138
-msgid "Unicode"
-msgstr "Unicode"
+#~ msgid "Cyrillic"
+#~ msgstr "Cyrillisch"
 
-#. FIXME GEOSTD8 ?
-#: tepl/tepl-encoding.c:117 tepl/tepl-encoding.c:129 tepl/tepl-encoding.c:157
-#: tepl/tepl-encoding.c:180
-msgid "Western"
-msgstr "Westers"
+#~ msgid "Arabic"
+#~ msgstr "Arabisch"
 
-#: tepl/tepl-encoding.c:118 tepl/tepl-encoding.c:158 tepl/tepl-encoding.c:178
-msgid "Central European"
-msgstr "Centraal-Europees"
+#~ msgid "Greek"
+#~ msgstr "Grieks"
 
-#: tepl/tepl-encoding.c:119
-msgid "South European"
-msgstr "Zuid-Europees"
+#~ msgid "Hebrew Visual"
+#~ msgstr "Hebreeuws visueel"
 
-#: tepl/tepl-encoding.c:120 tepl/tepl-encoding.c:127 tepl/tepl-encoding.c:185
-msgid "Baltic"
-msgstr "Baltisch"
+#~ msgid "Turkish"
+#~ msgstr "Turks"
 
-#: tepl/tepl-encoding.c:121 tepl/tepl-encoding.c:159 tepl/tepl-encoding.c:166
-#: tepl/tepl-encoding.c:168 tepl/tepl-encoding.c:169 tepl/tepl-encoding.c:179
-msgid "Cyrillic"
-msgstr "Cyrillisch"
+#~ msgid "Nordic"
+#~ msgstr "Noors"
 
-#: tepl/tepl-encoding.c:122 tepl/tepl-encoding.c:162 tepl/tepl-encoding.c:184
-msgid "Arabic"
-msgstr "Arabisch"
+#~ msgid "Celtic"
+#~ msgstr "Keltisch"
 
-#: tepl/tepl-encoding.c:123 tepl/tepl-encoding.c:181
-msgid "Greek"
-msgstr "Grieks"
+#~ msgid "Romanian"
+#~ msgstr "Roemeens"
 
-#: tepl/tepl-encoding.c:124
-msgid "Hebrew Visual"
-msgstr "Hebreeuws visueel"
+#~ msgid "Armenian"
+#~ msgstr "Armeens"
 
-#: tepl/tepl-encoding.c:125 tepl/tepl-encoding.c:160 tepl/tepl-encoding.c:182
-msgid "Turkish"
-msgstr "Turks"
+#~ msgid "Chinese Traditional"
+#~ msgstr "Traditioneel Chinees"
 
-#: tepl/tepl-encoding.c:126
-msgid "Nordic"
-msgstr "Noors"
+#~ msgid "Cyrillic/Russian"
+#~ msgstr "Cyrillisch/Russisch"
 
-#: tepl/tepl-encoding.c:128
-msgid "Celtic"
-msgstr "Keltisch"
+#~ msgid "Japanese"
+#~ msgstr "Japans"
 
-#: tepl/tepl-encoding.c:130
-msgid "Romanian"
-msgstr "Roemeens"
+#~ msgid "Korean"
+#~ msgstr "Koreaans"
 
-#: tepl/tepl-encoding.c:140
-msgid "Armenian"
-msgstr "Armeens"
+#~ msgid "Chinese Simplified"
+#~ msgstr "Vereenvoudigd Chinees"
 
-#: tepl/tepl-encoding.c:141 tepl/tepl-encoding.c:142 tepl/tepl-encoding.c:150
-msgid "Chinese Traditional"
-msgstr "Traditioneel Chinees"
+#~ msgid "Georgian"
+#~ msgstr "Georgisch"
 
-#: tepl/tepl-encoding.c:143
-msgid "Cyrillic/Russian"
-msgstr "Cyrillisch/Russisch"
+#~ msgid "Hebrew"
+#~ msgstr "Hebreeuws"
 
-#: tepl/tepl-encoding.c:145 tepl/tepl-encoding.c:146 tepl/tepl-encoding.c:147
-#: tepl/tepl-encoding.c:164 tepl/tepl-encoding.c:172
-msgid "Japanese"
-msgstr "Japans"
+#~ msgid "Cyrillic/Ukrainian"
+#~ msgstr "Cyrillisch/Oekraïens"
 
-#: tepl/tepl-encoding.c:149 tepl/tepl-encoding.c:165 tepl/tepl-encoding.c:167
-#: tepl/tepl-encoding.c:175
-msgid "Korean"
-msgstr "Koreaans"
+#~ msgid "Vietnamese"
+#~ msgstr "Vietnamees"
 
-#: tepl/tepl-encoding.c:152 tepl/tepl-encoding.c:153 tepl/tepl-encoding.c:154
-msgid "Chinese Simplified"
-msgstr "Vereenvoudigd Chinees"
+#~ msgid "Thai"
+#~ msgstr "Thais"
 
-#: tepl/tepl-encoding.c:155
-msgid "Georgian"
-msgstr "Georgisch"
+#~ msgid "Unknown"
+#~ msgstr "Onbekend"
 
-#: tepl/tepl-encoding.c:161 tepl/tepl-encoding.c:183
-msgid "Hebrew"
-msgstr "Hebreeuws"
+#~ msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
+#~ msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'ISO-8859-1', 'UTF-16']"
 
-#: tepl/tepl-encoding.c:170
-msgid "Cyrillic/Ukrainian"
-msgstr "Cyrillisch/Oekraïens"
+#~ msgid "Conversion from character set “%s” to “%s” is not supported."
+#~ msgstr "Conversie van tekenset ‘%s’ naar ‘%s’ wordt niet ondersteund."
 
-#: tepl/tepl-encoding.c:173 tepl/tepl-encoding.c:176 tepl/tepl-encoding.c:186
-msgid "Vietnamese"
-msgstr "Vietnamees"
+#~ msgid "Could not open converter from “%s” to “%s”: %s"
+#~ msgstr "Converteerder van ‘%s’ naar ‘%s’ kon niet geopend worden: %s"
 
-#: tepl/tepl-encoding.c:174
-msgid "Thai"
-msgstr "Thais"
+#~ msgid "The input data contains an invalid sequence."
+#~ msgstr "De invoergegevens bevatten een ongeldige sequentie."
 
-#: tepl/tepl-encoding.c:370
-msgid "Unknown"
-msgstr "Onbekend"
+#~ msgid "Error when converting data: %s"
+#~ msgstr "Fout bij converteren van gegevens: %s"
 
-#. Translators: This is the sorted list of encodings used by Tepl for
-#. * automatic detection of the file encoding. You may want to customize
-#. * it adding encodings that are common in your country, for instance the
-#. * GB18030 encoding for the Chinese translation. You may also want to
-#. * remove the ISO-8859-15 encoding (covering English and most Western
-#. * European languages) if you think people in your country will rarely
-#. * use it. 'CURRENT' is a magic value used by Tepl and it represents
-#. * the encoding for the current locale, so please don't translate the
-#. * 'CURRENT' term. Keep the same format: square brackets, single quotes,
-#. * commas.
-#.
-#: tepl/tepl-encoding.c:695
-msgid "['UTF-8', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
-msgstr "['UTF-8', 'CURRENT', 'ISO-8859-15', 'ISO-8859-1', 'UTF-16']"
+#~ msgid "The input data ends with an incomplete multi-byte sequence."
+#~ msgstr "De invoergegevens eindigen op een onvolledige multi-byte-sequentie."
 
-#: tepl/tepl-encoding-converter.c:302
-#, c-format
-msgid "Conversion from character set “%s” to “%s” is not supported."
-msgstr "Conversie van tekenset ‘%s’ naar ‘%s’ wordt niet ondersteund."
+#~ msgid "The input content ends with incomplete data."
+#~ msgstr "De invoerinhoud eindigt op onvolledige gegevens."
 
-#: tepl/tepl-encoding-converter.c:311
-#, c-format
-msgid "Could not open converter from “%s” to “%s”: %s"
-msgstr "Converteerder van ‘%s’ naar ‘%s’ kon niet geopend worden: %s"
+#~ msgid "The file is too big. Maximum %s can be loaded."
+#~ msgstr "Het bestand is te groot. Er kan maximaal %s geladen worden."
 
-#: tepl/tepl-encoding-converter.c:368
-msgid "The input data contains an invalid sequence."
-msgstr "De invoergegevens bevatten een ongeldige sequentie."
+#~ msgid "It is not possible to detect the character encoding automatically."
+#~ msgstr "Het is niet mogelijk de tekenset automatisch te detecteren."
 
-#: tepl/tepl-encoding-converter.c:377
-#, c-format
-msgid "Error when converting data: %s"
-msgstr "Fout bij converteren van gegevens: %s"
+#~ msgid "The file is externally modified."
+#~ msgstr "Het bestand is extern gewijzigd."
 
-#: tepl/tepl-encoding-converter.c:556
-msgid "The input data ends with an incomplete multi-byte sequence."
-msgstr "De invoergegevens eindigen op een onvolledige multi-byte-sequentie."
-
-#: tepl/tepl-encoding-converter.c:579
-msgid "The input content ends with incomplete data."
-msgstr "De invoerinhoud eindigt op onvolledige gegevens."
-
-#: tepl/tepl-file.c:413
-#, c-format
-msgid "Untitled File %d"
-msgstr "Naamloos bestand %d"
-
-#: tepl/tepl-file-content-loader.c:331
-#, c-format
-msgid "The file is too big. Maximum %s can be loaded."
-msgstr "Het bestand is te groot. Er kan maximaal %s geladen worden."
-
-#: tepl/tepl-file-loader.c:872
-msgid "It is not possible to detect the character encoding automatically."
-msgstr "Het is niet mogelijk de tekenset automatisch te detecteren."
-
-#: tepl/tepl-file-saver.c:784
-msgid "The file is externally modified."
-msgstr "Het bestand is extern gewijzigd."
-
-#: tepl/tepl-file-saver.c:1318
-msgid "The buffer contains invalid characters."
-msgstr "De buffer bevat ongeldige tekens."
-
-#: tepl/tepl-tab.c:534
-msgid "Error when loading the file."
-msgstr "Fout bij laden van bestand."
-
-#: tepl/tepl-tab.c:748
-msgid "Save File"
-msgstr "Bestand opslaan"
-
-#. Translators: location of a file.
-#: tepl/tepl-tab-label.c:273
-msgid "Location:"
-msgstr "Locatie:"
-
-#: tepl/tepl-tab-label.c:342
-msgid "Close file"
-msgstr "Bestand sluiten"
-
-#: tepl/tepl-tab-saving.c:64
-msgid "Error when saving the file."
-msgstr "Fout bij opslaan van bestand."
+#~ msgid "The buffer contains invalid characters."
+#~ msgstr "De buffer bevat ongeldige tekens."

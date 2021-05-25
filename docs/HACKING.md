@@ -16,9 +16,5 @@ What I just ask for the new project:
 Notes
 -----
 
-Tepl follows the same guidelines and code conventions as GtkSourceView (when
-GtkSourceView was still developed by Sébastien Wilmet).
-
-The Tepl GitLab:
-
-    https://gitlab.gnome.org/GNOME/tepl
+Tepl follows the same guidelines and code conventions as GtkSourceView. See the
+[HACKING file of GtkSourceView](https://github.com/gedit-org/gtksourceview/blob/master/HACKING).

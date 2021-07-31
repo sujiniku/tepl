@@ -42,7 +42,7 @@ TEPL_LT_VERSION = '@0@.@1@.@2@'.format(lt_current, lt_revision, lt_age)
 TEPL_API_VERSION = '6'
 
 TEPL_PUBLIC_DEPS = [
-  dependency('gio-2.0', version: '>= 2.64'),
+  dependency('gio-2.0', version: '>= 2.62'),
   dependency('gtk+-3.0', version: '>= 3.22'),
   dependency('gtksourceview-4', version: '>= 4.0'),
   dependency('amtk-5', version: '>= 5.0')
